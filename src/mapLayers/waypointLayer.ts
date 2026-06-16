@@ -1,0 +1,38 @@
+import Feature from 'ol/Feature';
+import Point from 'ol/geom/Point';
+import VectorLayer from 'ol/layer/Vector';
+import VectorSource from 'ol/source/Vector';
+import { Circle as CircleStyle, Fill, Stroke, Style, Text } from 'ol/style';
+import { fromLonLat } from 'ol/proj';
+import type { NavPoint } from '../domain/navigation.types';
+
+export function createWaypointLayer(points: NavPoint[], selectedPointId: string | null) {
+  const features = points.map((point, index) => {
+    const feature = new Feature(new Point(fromLonLat([point.longitude, point.latitude])));
+    const label = point.type === 'depart' ? 'D' : point.type === 'destination' ? 'A' : String(index);
+    feature.set('label', label);
+    feature.set('selected', point.id === selectedPointId);
+    return feature;
+  });
+
+  return new VectorLayer({
+    source: new VectorSource({ features }),
+    style: (feature) => {
+      const selected = Boolean(feature.get('selected'));
+      return new Style({
+        image: new CircleStyle({
+          radius: selected ? 12 : 9,
+          fill: new Fill({ color: selected ? '#F3F7FA' : '#18AEEF' }),
+          stroke: new Stroke({ color: '#07111C', width: 3 })
+        }),
+        text: new Text({
+          text: String(feature.get('label')),
+          font: '700 12px system-ui',
+          fill: new Fill({ color: selected ? '#050B12' : '#F3F7FA' })
+        })
+      });
+    },
+    properties: { name: 'waypoints' },
+    zIndex: 30
+  });
+}
