@@ -1,1 +1,1 @@
-export type MapSourceStatus = 'loading' | 'oaci' | 'fallback' | 'error';
+export type MapSourceStatus = 'loading' | 'oaci' | 'fallback' | 'error' | 'sia-dev';

@@ -9,9 +9,9 @@ export default defineConfig({
       registerType: 'autoUpdate',
       includeAssets: ['icons/icon-192.png', 'icons/icon-512.png'],
       manifest: {
-        name: 'CAP CLAIR DEV01 - Navigation VFR',
+        name: 'CAP CLAIR DEV02 - SIA 500K Test',
         short_name: 'CAP CLAIR',
-        description: 'Prototype PWA CAP CLAIR DEV01 pour préparation et suivi VFR app ouverte.',
+        description: 'Prototype PWA CAP CLAIR DEV02 avec tuiles SIA 500K DEV locales pour test Poitiers.',
         theme_color: '#050B12',
         background_color: '#050B12',
         display: 'standalone',

@@ -1,13 +1,11 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import Map from 'ol/Map';
 import View from 'ol/View';
-import TileLayer from 'ol/layer/Tile';
 import { fromLonLat } from 'ol/proj';
 import { boundingExtent } from 'ol/extent';
 import type BaseLayer from 'ol/layer/Base';
-import { createIgnOaciVfrSource } from '../../mapSources/ignOaciVfrSource';
+import { createSia500kDevLayer } from '../../mapSources/sia500kDevSource';
 import { createDemoFallbackLayer } from '../../mapSources/demoFallbackSource';
-import { wmtsSourceConfig } from '../../mapSources/mapSourceConfig';
 import { initialMapCenter, initialMapZoom } from '../../mapEngine/mapViewConfig';
 import type { MapSourceStatus } from '../../mapEngine/mapTypes';
 import { createPlannedRouteLayer } from '../../mapLayers/plannedRouteLayer';
@@ -48,7 +46,7 @@ export function OpenLayersMap({ route, trace, aircraft, selectedPointId, compact
   const zonesLayerRef = useRef<BaseLayer | null>(null);
   const traceLayerRef = useRef<ActualTraceLayer | null>(null);
   const aircraftLayerRef = useRef<AircraftLayer | null>(null);
-  const [sourceStatus, setSourceStatus] = useState<MapSourceStatus>('loading');
+  const [sourceStatus, setSourceStatus] = useState<MapSourceStatus>('sia-dev');
 
   const routeExtent = useMemo(() => {
     const coords = route.points.map((point) => fromLonLat([point.longitude, point.latitude]));
@@ -63,40 +61,27 @@ export function OpenLayersMap({ route, trace, aircraft, selectedPointId, compact
     traceLayerRef.current = traceLayer;
     aircraftLayerRef.current = aircraftLayer;
 
+    const useSiaDevTiles = true;
+    const baseLayer = useSiaDevTiles ? createSia500kDevLayer() : createDemoFallbackLayer();
+
     const map = new Map({
       target: mapElementRef.current,
       controls: [],
-      layers: [createDemoFallbackLayer(), traceLayer, aircraftLayer],
+      layers: [baseLayer, traceLayer, aircraftLayer],
       view: new View({
         center: initialMapCenter,
         zoom: initialMapZoom,
-        minZoom: 5,
-        maxZoom: 17,
+        minZoom: 7,
+        maxZoom: 13,
         smoothExtentConstraint: false,
         smoothResolutionConstraint: false
       })
     });
     mapRef.current = map;
-
-    let alive = true;
-    createIgnOaciVfrSource(wmtsSourceConfig)
-      .then((source) => {
-        if (!alive) return;
-        const officialLayer = new TileLayer({ source, properties: { name: 'oaci-vfr' } });
-        const currentBase = map.getLayers().item(0);
-        map.getLayers().setAt(0, officialLayer);
-        if (currentBase) currentBase.dispose();
-        setSourceStatus('oaci');
-        onSourceStatusChange?.('oaci');
-      })
-      .catch(() => {
-        if (!alive) return;
-        setSourceStatus('fallback');
-        onSourceStatusChange?.('fallback');
-      });
+    setSourceStatus(useSiaDevTiles ? 'sia-dev' : 'fallback');
+    onSourceStatusChange?.(useSiaDevTiles ? 'sia-dev' : 'fallback');
 
     return () => {
-      alive = false;
       plannedRouteLayerRef.current?.dispose();
       waypointsLayerRef.current?.dispose();
       zonesLayerRef.current?.dispose();
@@ -168,12 +153,12 @@ export function OpenLayersMap({ route, trace, aircraft, selectedPointId, compact
     <div className="map-shell">
       <div ref={mapElementRef} className="ol-map" aria-label="Carte CAP CLAIR" />
       <div className="map-topline">
-        <span>{sourceStatus === 'oaci' ? 'Carte OACI-VFR' : sourceStatus === 'loading' ? 'Chargement carte' : 'Fond demo'}</span>
-        <span>Données DEV01</span>
+        <span>{sourceStatus === 'sia-dev' ? 'SIA 500K DEV' : sourceStatus === 'oaci' ? 'Carte OACI-VFR' : sourceStatus === 'loading' ? 'Chargement carte' : 'Fond demo'}</span>
+        <span>Données DEV02 test</span>
       </div>
       <MapControls onZoomIn={() => zoom(1)} onZoomOut={() => zoom(-1)} onRecenter={recenter} />
-      {sourceStatus !== 'oaci' && <MapFallbackNotice />}
-      <MapAttribution official={sourceStatus === 'oaci'} />
+      {sourceStatus === 'fallback' && <MapFallbackNotice />}
+      <MapAttribution sourceStatus={sourceStatus} />
     </div>
   );
 }

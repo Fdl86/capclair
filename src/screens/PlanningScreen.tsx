@@ -19,10 +19,10 @@ interface PlanningScreenProps {
 }
 
 export function PlanningScreen({ route, selectedPointId, onSelectPoint, onAddPoint, onRemovePoint, onCalculations, onZones }: PlanningScreenProps) {
-  const [scale, setScale] = useState('1/500 000');
+  const [scale, setScale] = useState('SIA DEV 500K');
 
   return (
-    <Page title="Planification" subtitle="Route prévue sur fond OACI-VFR 1/500 000 quand la couche est accessible.">
+    <Page title="Planification" subtitle="Route de test Poitiers sur tuiles SIA 1/500 000 DEV locales.">
       <div className="planning-layout">
         <div className="map-card tall">
           <MapScaleSelector value={scale} onChange={setScale} />
