@@ -154,7 +154,7 @@ export function OpenLayersMap({ route, trace, aircraft, selectedPointId, compact
       <div ref={mapElementRef} className="ol-map" aria-label="Carte CAP CLAIR" />
       <div className="map-topline">
         <span>{sourceStatus === 'sia-dev' ? 'SIA 500K DEV' : sourceStatus === 'oaci' ? 'Carte OACI-VFR' : sourceStatus === 'loading' ? 'Chargement carte' : 'Fond demo'}</span>
-        <span>Données DEV02 test</span>
+        <span>Données DEV03 LFCA-Tours</span>
       </div>
       <MapControls onZoomIn={() => zoom(1)} onZoomOut={() => zoom(-1)} onRecenter={recenter} />
       {sourceStatus === 'fallback' && <MapFallbackNotice />}

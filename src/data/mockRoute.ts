@@ -3,11 +3,10 @@ import { bearingDeg } from '../services/geo/bearing';
 import { distanceNm } from '../services/geo/distance';
 
 export const mockPoints: NavPoint[] = [
-  { id: 'lfbi', nom: 'LFBI', type: 'depart', latitude: 46.5877, longitude: 0.3067 },
-  { id: 'wpt1', nom: 'POITIERS NORD', type: 'waypoint', latitude: 46.7200, longitude: 0.3300 },
-  { id: 'lfca', nom: 'LFCA', type: 'waypoint', latitude: 46.8150, longitude: 0.5450 },
-  { id: 'wpt2', nom: 'CHAUVIGNY', type: 'waypoint', latitude: 46.5750, longitude: 0.6500 },
-  { id: 'lfbi-retour', nom: 'LFBI', type: 'destination', latitude: 46.5877, longitude: 0.3067 }
+  { id: 'lfca', nom: 'LFCA', type: 'depart', latitude: 46.7817, longitude: 0.5500 },
+  { id: 'wpt1', nom: 'WPT1', type: 'waypoint', latitude: 47.0000, longitude: 0.6100 },
+  { id: 'wpt2', nom: 'WPT2', type: 'waypoint', latitude: 47.2100, longitude: 0.6750 },
+  { id: 'lfot', nom: 'LFOT TOURS', type: 'destination', latitude: 47.4322, longitude: 0.7276 }
 ];
 
 export function buildBranches(points: NavPoint[]): NavBranch[] {
@@ -15,7 +14,7 @@ export function buildBranches(points: NavPoint[]): NavBranch[] {
     const next = points[index + 1];
     const distance = distanceNm(point, next);
     const routeVraie = Math.round(bearingDeg(point, next));
-    const derive = [-4, -2, 3, 1][index] ?? 0;
+    const derive = [-3, -2, 1][index] ?? 0;
     const vitesseSol = 102;
     const tempsBrancheMin = Math.max(1, Math.round((distance / vitesseSol) * 60));
     return {
@@ -35,8 +34,8 @@ export function buildBranches(points: NavPoint[]): NavBranch[] {
 export function buildRoute(points: NavPoint[] = mockPoints): NavRoute {
   const branches = buildBranches(points);
   return {
-    id: 'route-demo-poitiers-local',
-    nom: 'Test Poitiers - LFBI / LFCA',
+    id: 'route-demo-lfca-lfot-tours',
+    nom: 'LFCA - LFOT Tours',
     points,
     branches,
     distanceTotale: Number(branches.reduce((sum, branch) => sum + branch.distanceNm, 0).toFixed(1)),

@@ -1,7 +1,7 @@
 import TileLayer from 'ol/layer/Tile';
 import XYZ from 'ol/source/XYZ';
 
-const TILE_ROOT = '/tiles/sia-500k-no-2026-poitiers/xyz';
+const TILE_ROOT = '/tiles/sia-500k-no-2026-lfca-tours/xyz';
 
 export function createSia500kDevLayer() {
   return new TileLayer({
@@ -9,7 +9,7 @@ export function createSia500kDevLayer() {
       url: `${TILE_ROOT}/{z}/{x}/{y}.webp`,
       tileSize: 256,
       minZoom: 7,
-      maxZoom: 11,
+      maxZoom: 9,
       wrapX: false,
       transition: 0
     }),

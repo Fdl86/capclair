@@ -1,0 +1,18 @@
+{
+  "tilejson": "3.0.0",
+  "name": "CAP CLAIR DEV - SIA 500k Nord-Ouest 2026 - LFCA Tours test",
+  "format": "webp",
+  "minzoom": 7,
+  "maxzoom": 9,
+  "bounds": [
+    -4.457996552155926,
+    46.790188202287894,
+    3.132780425221308,
+    50.63694422306835
+  ],
+  "tiles": [
+    "./xyz/{z}/{x}/{y}.webp"
+  ],
+  "attribution": "Source SIA - Carte OACI SIA Nord-Ouest 2026. Retuilage CAP CLAIR DEV. Produit non officiel, non réglementaire.",
+  "devWarning": "Test technique de géoréférencement. Ne pas utiliser pour la navigation."
+}

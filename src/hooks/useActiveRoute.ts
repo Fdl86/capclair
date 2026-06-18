@@ -8,13 +8,13 @@ function createMockPoint(index: number): NavPoint {
     id: `wpt-local-${Date.now()}`,
     nom: `WPT${index}`,
     type: 'waypoint',
-    latitude: 45.7 + index * 0.08,
-    longitude: -0.05 + index * 0.12
+    latitude: 46.9 + index * 0.1,
+    longitude: 0.55 + index * 0.05
   };
 }
 
 export function useActiveRoute() {
-  const [route, setRoute] = useLocalStorageState<NavRoute>('capclair.activeRoute', mockRoute);
+  const [route, setRoute] = useLocalStorageState<NavRoute>('capclair.activeRoute.dev03.lfcaTours', mockRoute);
   const [selectedPointId, setSelectedPointId] = useState(route.points[1]?.id ?? route.points[0]?.id ?? null);
 
   const selectedPoint = useMemo(() => route.points.find((point) => point.id === selectedPointId) ?? null, [route.points, selectedPointId]);
