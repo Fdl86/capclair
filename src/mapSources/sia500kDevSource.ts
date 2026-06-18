@@ -15,7 +15,7 @@ export function createSia500kDevLayer() {
     }),
     preload: 0,
     properties: {
-      name: 'sia-500k-dev-poitiers'
+      name: 'sia-500k-dev-lfca-tours'
     }
   });
 }

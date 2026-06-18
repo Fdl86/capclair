@@ -25,7 +25,7 @@ export function PlanningScreen({ route, selectedPointId, onSelectPoint, onAddPoi
       <div className="planning-layout">
         <div className="map-card tall">
           <MapScaleSelector value={scale} onChange={setScale} />
-          <OpenLayersMap route={route} trace={[]} aircraft={null} selectedPointId={selectedPointId} />
+          <OpenLayersMap route={route} trace={[]} aircraft={null} selectedPointId={selectedPointId} showZones={false} />
         </div>
 
         <Card className="route-panel">
