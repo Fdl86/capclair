@@ -4,8 +4,7 @@ import { distanceNm } from '../services/geo/distance';
 
 export const mockPoints: NavPoint[] = [
   { id: 'lfca', nom: 'LFCA', type: 'depart', latitude: 46.780278, longitude: 0.550556 },
-  { id: 'wpt1', nom: 'NORD CHATELLERAULT', type: 'waypoint', latitude: 47.0000, longitude: 0.6070 },
-  { id: 'wpt2', nom: 'SUD TOURS', type: 'waypoint', latitude: 47.2150, longitude: 0.6650 },
+  { id: 'lfod', nom: 'LFOD SAUMUR', type: 'waypoint', latitude: 47.256667, longitude: -0.113611 },
   { id: 'lfot', nom: 'LFOT TOURS', type: 'destination', latitude: 47.431944, longitude: 0.723056 }
 ];
 
@@ -14,7 +13,7 @@ export function buildBranches(points: NavPoint[]): NavBranch[] {
     const next = points[index + 1];
     const distance = distanceNm(point, next);
     const routeVraie = Math.round(bearingDeg(point, next));
-    const derive = [-3, -2, 1][index] ?? 0;
+    const derive = [-3, 2][index] ?? 0;
     const vitesseSol = 102;
     const tempsBrancheMin = Math.max(1, Math.round((distance / vitesseSol) * 60));
     return {
@@ -34,8 +33,8 @@ export function buildBranches(points: NavPoint[]): NavBranch[] {
 export function buildRoute(points: NavPoint[] = mockPoints): NavRoute {
   const branches = buildBranches(points);
   return {
-    id: 'route-demo-lfca-lfot-tours-precise',
-    nom: 'LFCA - LFOT Tours',
+    id: 'route-demo-lfca-lfod-lfot',
+    nom: 'LFCA - LFOD Saumur - LFOT Tours',
     points,
     branches,
     distanceTotale: Number(branches.reduce((sum, branch) => sum + branch.distanceNm, 0).toFixed(1)),
