@@ -72,7 +72,7 @@ export function OpenLayersMap({ route, trace, aircraft, selectedPointId, compact
         center: initialMapCenter,
         zoom: initialMapZoom,
         minZoom: 7,
-        maxZoom: 13,
+        maxZoom: 9,
         smoothExtentConstraint: false,
         smoothResolutionConstraint: false
       })
@@ -130,7 +130,7 @@ export function OpenLayersMap({ route, trace, aircraft, selectedPointId, compact
   useEffect(() => {
     const map = mapRef.current;
     if (!map) return;
-    map.getView().fit(routeExtent, { padding: compact ? [48, 48, 48, 48] : [70, 55, 90, 55], duration: 0, maxZoom: compact ? 9 : 10 });
+    map.getView().fit(routeExtent, { padding: compact ? [48, 48, 48, 48] : [70, 55, 90, 55], duration: 0, maxZoom: 9 });
   }, [routeExtent, compact]);
 
   const zoom = (delta: number) => {
@@ -146,7 +146,7 @@ export function OpenLayersMap({ route, trace, aircraft, selectedPointId, compact
       map.getView().animate({ center: fromLonLat([aircraft.longitude, aircraft.latitude]), duration: 120 });
       return;
     }
-    map.getView().fit(routeExtent, { padding: [70, 55, 90, 55], duration: 0, maxZoom: 10 });
+    map.getView().fit(routeExtent, { padding: [70, 55, 90, 55], duration: 0, maxZoom: 9 });
   };
 
   return (
@@ -154,7 +154,7 @@ export function OpenLayersMap({ route, trace, aircraft, selectedPointId, compact
       <div ref={mapElementRef} className="ol-map" aria-label="Carte CAP CLAIR" />
       <div className="map-topline">
         <span>{sourceStatus === 'sia-dev' ? 'SIA 500K DEV' : sourceStatus === 'oaci' ? 'Carte OACI-VFR' : sourceStatus === 'loading' ? 'Chargement carte' : 'Fond demo'}</span>
-        <span>Données DEV03 LFCA-Tours</span>
+        <span>Données DEV04 précis</span>
       </div>
       <MapControls onZoomIn={() => zoom(1)} onZoomOut={() => zoom(-1)} onRecenter={recenter} />
       {sourceStatus === 'fallback' && <MapFallbackNotice />}

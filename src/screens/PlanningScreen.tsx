@@ -6,7 +6,6 @@ import { Card } from '../components/ui/Card';
 import { OpenLayersMap } from '../components/map/OpenLayersMap';
 import { MapScaleSelector } from '../components/map/MapScaleSelector';
 import { RoutePointList } from '../components/navigation/RoutePointList';
-import { mockTrace } from '../data/mockTrace';
 
 interface PlanningScreenProps {
   route: NavRoute;
@@ -22,11 +21,11 @@ export function PlanningScreen({ route, selectedPointId, onSelectPoint, onAddPoi
   const [scale, setScale] = useState('SIA DEV 500K');
 
   return (
-    <Page title="Planification" subtitle="Route de test LFCA vers Tours sur tuiles SIA 1/500 000 DEV locales.">
+    <Page title="Planification" subtitle="Route de test LFCA vers Tours - points ARP corrigés - tuiles SIA DEV.">
       <div className="planning-layout">
         <div className="map-card tall">
           <MapScaleSelector value={scale} onChange={setScale} />
-          <OpenLayersMap route={route} trace={mockTrace.slice(0, 2)} aircraft={null} selectedPointId={selectedPointId} />
+          <OpenLayersMap route={route} trace={[]} aircraft={null} selectedPointId={selectedPointId} />
         </div>
 
         <Card className="route-panel">

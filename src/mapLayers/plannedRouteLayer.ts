@@ -13,7 +13,7 @@ export function createPlannedRouteLayer(points: NavPoint[]) {
   return new VectorLayer({
     source: new VectorSource({ features: [feature] }),
     style: new Style({
-      stroke: new Stroke({ color: '#18AEEF', width: 5, lineCap: 'round', lineJoin: 'round' })
+      stroke: new Stroke({ color: '#18AEEF', width: 3, lineCap: 'round', lineJoin: 'round' })
     }),
     properties: { name: 'planned-route' },
     zIndex: 20

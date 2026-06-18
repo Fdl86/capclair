@@ -21,13 +21,13 @@ export function createWaypointLayer(points: NavPoint[], selectedPointId: string 
       const selected = Boolean(feature.get('selected'));
       return new Style({
         image: new CircleStyle({
-          radius: selected ? 12 : 9,
+          radius: selected ? 10 : 8,
           fill: new Fill({ color: selected ? '#F3F7FA' : '#18AEEF' }),
-          stroke: new Stroke({ color: '#07111C', width: 3 })
+          stroke: new Stroke({ color: '#07111C', width: 2 })
         }),
         text: new Text({
           text: String(feature.get('label')),
-          font: '700 12px system-ui',
+          font: '800 11px system-ui',
           fill: new Fill({ color: selected ? '#050B12' : '#F3F7FA' })
         })
       });

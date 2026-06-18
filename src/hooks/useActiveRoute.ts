@@ -14,7 +14,7 @@ function createMockPoint(index: number): NavPoint {
 }
 
 export function useActiveRoute() {
-  const [route, setRoute] = useLocalStorageState<NavRoute>('capclair.activeRoute.dev03.lfcaTours', mockRoute);
+  const [route, setRoute] = useLocalStorageState<NavRoute>('capclair.activeRoute.dev04.lfcaToursPrecise', mockRoute);
   const [selectedPointId, setSelectedPointId] = useState(route.points[1]?.id ?? route.points[0]?.id ?? null);
 
   const selectedPoint = useMemo(() => route.points.find((point) => point.id === selectedPointId) ?? null, [route.points, selectedPointId]);

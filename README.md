@@ -1,27 +1,20 @@
-# CAP CLAIR DEV03 - Test SIA 500K LFCA vers Tours
+# CAP CLAIR DEV04 - Test LFCA Tours précision
 
-Cette version teste directement dans CAP CLAIR une navigation LFCA vers Tours sur les tuiles SIA 1/500 000 DEV.
+Cette version corrige le test LFCA vers Tours.
 
-## A vérifier
+## A tester
 
-- Ouvrir Planification.
-- La route doit s'appeler `LFCA - LFOT Tours`.
-- Le fond SIA DEV doit apparaître autour de l'axe Châtellerault / Tours.
-- Les tuiles peuvent afficher du blanc en bord de carte, mais la route doit rester géographiquement au bon endroit.
-- L'attribution SIA DEV doit rester visible.
+1. Ouvrir Planification.
+2. Vérifier que la route affiche `LFCA - LFOT Tours`.
+3. Vérifier que LFCA et LFOT tombent mieux sur la carte.
+4. Vérifier que l'affichage est plus propre : plus de double ligne orange/bleue, route plus fine, zoom limité pour éviter le flou.
 
-## Important
+## Note
 
-La clé localStorage a été changée pour éviter que l'ancienne route `LFBD - LFEH` reste affichée après déploiement.
-
-## Build
-
-```bash
-npm run build
-```
+Le tilepack est encore un test z7-z9. La prochaine étape, si le calage est bon, sera de générer un tilepack z10-z11 local sur LFCA - Tours.
 
 ## Commit proposé
 
 ```txt
-test sia 500k lfca tours route
+fix lfca tours test point precision
 ```

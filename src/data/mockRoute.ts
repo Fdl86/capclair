@@ -3,10 +3,10 @@ import { bearingDeg } from '../services/geo/bearing';
 import { distanceNm } from '../services/geo/distance';
 
 export const mockPoints: NavPoint[] = [
-  { id: 'lfca', nom: 'LFCA', type: 'depart', latitude: 46.7817, longitude: 0.5500 },
-  { id: 'wpt1', nom: 'WPT1', type: 'waypoint', latitude: 47.0000, longitude: 0.6100 },
-  { id: 'wpt2', nom: 'WPT2', type: 'waypoint', latitude: 47.2100, longitude: 0.6750 },
-  { id: 'lfot', nom: 'LFOT TOURS', type: 'destination', latitude: 47.4322, longitude: 0.7276 }
+  { id: 'lfca', nom: 'LFCA', type: 'depart', latitude: 46.780278, longitude: 0.550556 },
+  { id: 'wpt1', nom: 'NORD CHATELLERAULT', type: 'waypoint', latitude: 47.0000, longitude: 0.6070 },
+  { id: 'wpt2', nom: 'SUD TOURS', type: 'waypoint', latitude: 47.2150, longitude: 0.6650 },
+  { id: 'lfot', nom: 'LFOT TOURS', type: 'destination', latitude: 47.431944, longitude: 0.723056 }
 ];
 
 export function buildBranches(points: NavPoint[]): NavBranch[] {
@@ -34,7 +34,7 @@ export function buildBranches(points: NavPoint[]): NavBranch[] {
 export function buildRoute(points: NavPoint[] = mockPoints): NavRoute {
   const branches = buildBranches(points);
   return {
-    id: 'route-demo-lfca-lfot-tours',
+    id: 'route-demo-lfca-lfot-tours-precise',
     nom: 'LFCA - LFOT Tours',
     points,
     branches,
