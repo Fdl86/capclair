@@ -24,18 +24,31 @@ export function App() {
           route={routeState.route}
           selectedPointId={routeState.selectedPointId}
           routeMessage={routeState.routeMessage}
+          weatherStatus={routeState.weatherStatus}
           onSelectPoint={routeState.setSelectedPointId}
           onSetDepartureCode={routeState.setDepartureCode}
           onSetDestinationCode={routeState.setDestinationCode}
           onAddWaypointAt={routeState.addWaypointAt}
           onRemovePoint={routeState.removePoint}
           onReverseRoute={routeState.reverseRoute}
+          onSetTasKt={routeState.setTasKt}
+          onSetDefaultAltitudeFt={routeState.setDefaultAltitudeFt}
+          onSetDepartureTimeIso={routeState.setDepartureTimeIso}
+          onRefreshWinds={routeState.refreshWinds}
           onCalculations={() => setCurrentScreen('calculations')}
           onZones={() => setCurrentScreen('zones')}
         />
       )}
       {currentScreen === 'calculations' && (
-        <CalculationsScreen route={routeState.route} onValidate={() => setCurrentScreen('tracking')} onExport={() => setCurrentScreen('traces')} />
+        <CalculationsScreen
+          route={routeState.route}
+          weatherStatus={routeState.weatherStatus}
+          onSetBranchAltitude={routeState.setBranchAltitudeFt}
+          onRefreshWinds={routeState.refreshWinds}
+          onValidate={() => setCurrentScreen('tracking')}
+          onExport={() => setCurrentScreen('traces')}
+          onBackPlanning={() => setCurrentScreen('planning')}
+        />
       )}
       {currentScreen === 'zones' && <ZonesScreen />}
       {currentScreen === 'tracking' && <TrackingScreen route={routeState.route} onTraceReady={traceState.saveTrace} />}

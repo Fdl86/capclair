@@ -41,8 +41,8 @@ export function estimatedMagneticVariationDeg(latitude: number, longitude: numbe
 }
 
 export function formatMagneticVariation(value: number): string {
-  const absolute = Math.abs(value).toFixed(1).replace('.', ',');
+  const absolute = Math.abs(Math.round(value));
   if (value > 0.05) return `${absolute}E`;
   if (value < -0.05) return `${absolute}W`;
-  return '0,0';
+  return '0';
 }

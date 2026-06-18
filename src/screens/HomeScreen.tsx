@@ -32,7 +32,7 @@ export function HomeScreen({ onNavigate }: HomeScreenProps) {
         <h2>Système</h2>
         <div className="system-badges">
           <span className="system-badge green"><strong>GPS</strong> Prêt</span>
-          <span className="system-badge cyan"><strong>Météo</strong> À venir</span>
+          <span className="system-badge cyan"><strong>Météo</strong> Vent</span>
           <span className="system-badge amber"><strong>Carte</strong> Aéro</span>
         </div>
       </Card>

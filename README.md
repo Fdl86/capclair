@@ -1,19 +1,31 @@
-# CAP CLAIR DEV12 - Route builder et carte aéro propre
+# CAP CLAIR DEV13 - Wind aloft et log de nav
 
 ## A tester
 
-- Carte aéro avec Fond topo ON/OFF.
-- Départ / arrivée par code OACI.
-- Ajout de point tournant par clic sur la carte.
-- Suppression de point tournant.
-- Calculs : distance, route vraie, variation, route magnétique, temps.
+1. Ouvrir Planification.
+2. Vérifier TAS, altitude défaut et heure UTC.
+3. Cliquer `Mettre à jour vent`.
+4. Ouvrir `Log nav`.
+5. Modifier une altitude de branche.
+6. Relancer `Modifier vents`.
+7. Vérifier le tableau :
+   - Vent
+   - RV
+   - Var au format 1E / 1W
+   - RM
+   - Dérive
+   - CM
+   - GS
+   - ETE / ETA
 
-## Variable Cloudflare requise
+## Variables Cloudflare
 
-`OPENAIP_API_KEY`
+`OPENAIP_API_KEY` reste nécessaire pour les tuiles openAIP.
+
+La météo Open-Meteo ne nécessite pas de clé.
 
 ## Commit proposé
 
 ```txt
-dev12 route builder aero map cleanup
+dev13 add wind aloft navlog
 ```

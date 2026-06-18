@@ -1,13 +1,45 @@
-import type { NavBranch, NavPoint, NavPointType, NavRoute } from '../../domain/navigation.types';
+import type { BranchWind, FlightProfile, NavBranch, NavPoint, NavPointType, NavRoute } from '../../domain/navigation.types';
 import { findAerodrome } from '../../data/aerodromeCatalog';
 import { bearingDeg } from '../geo/bearing';
 import { distanceNm } from '../geo/distance';
 import { estimatedMagneticVariationDeg } from '../geo/magneticVariation';
 
-const DEFAULT_SPEED_KT = 105;
+const DEFAULT_TAS_KT = 105;
+const DEFAULT_ALTITUDE_FT = 2500;
+
+export interface RouteBuildOptions {
+  profile?: Partial<FlightProfile>;
+  branchAltitudeById?: Record<string, number>;
+  branchWindById?: Record<string, BranchWind>;
+}
+
+function isoNowRoundedHour(): string {
+  const date = new Date();
+  date.setUTCMinutes(0, 0, 0);
+  if (date.getTime() < Date.now()) date.setUTCHours(date.getUTCHours() + 1);
+  return date.toISOString();
+}
 
 function normalizeHeading(value: number): number {
   return ((Math.round(value) % 360) + 360) % 360;
+}
+
+function clamp(value: number, min: number, max: number): number {
+  return Math.max(min, Math.min(max, value));
+}
+
+function toRad(value: number): number {
+  return (value * Math.PI) / 180;
+}
+
+function toDeg(value: number): number {
+  return (value * 180) / Math.PI;
+}
+
+function addMinutes(iso: string, minutes: number): string {
+  const base = new Date(iso);
+  if (Number.isNaN(base.getTime())) return isoNowRoundedHour();
+  return new Date(base.getTime() + minutes * 60_000).toISOString();
 }
 
 function midpoint(a: NavPoint, b: NavPoint) {
@@ -24,6 +56,42 @@ function pointLabel(point: NavPoint): string {
 
 function pointId(type: NavPointType, code: string): string {
   return `${type}-${code.toLowerCase()}`;
+}
+
+function branchId(from: NavPoint, to: NavPoint): string {
+  return `${from.id}-${to.id}`;
+}
+
+function sanitizeProfile(profile?: Partial<FlightProfile>): FlightProfile {
+  const tasKt = clamp(Math.round(profile?.tasKt ?? DEFAULT_TAS_KT), 45, 220);
+  const defaultAltitudeFt = clamp(Math.round((profile?.defaultAltitudeFt ?? DEFAULT_ALTITUDE_FT) / 100) * 100, 500, 12500);
+  const departureTimeIso = profile?.departureTimeIso && !Number.isNaN(new Date(profile.departureTimeIso).getTime())
+    ? profile.departureTimeIso
+    : isoNowRoundedHour();
+
+  return { tasKt, defaultAltitudeFt, departureTimeIso };
+}
+
+function computeWindCorrection(routeVraie: number, tasKt: number, wind?: BranchWind | null) {
+  if (!wind || wind.speedKt <= 0) {
+    return {
+      derive: 0,
+      capVrai: normalizeHeading(routeVraie),
+      vitesseSol: tasKt
+    };
+  }
+
+  const angle = toRad(wind.directionDeg - routeVraie);
+  const driftRad = Math.asin(clamp((wind.speedKt * Math.sin(angle)) / tasKt, -0.95, 0.95));
+  const driftDeg = toDeg(driftRad);
+  const capVrai = normalizeHeading(routeVraie + driftDeg);
+  const vitesseSol = Math.max(35, Math.round(tasKt * Math.cos(driftRad) - wind.speedKt * Math.cos(angle)));
+
+  return {
+    derive: Math.round(driftDeg),
+    capVrai,
+    vitesseSol
+  };
 }
 
 export function createAerodromePoint(codeValue: string, type: NavPointType): NavPoint | null {
@@ -69,35 +137,60 @@ export function relabelRoutePoints(points: NavPoint[]): NavPoint[] {
   });
 }
 
-export function buildBranches(points: NavPoint[], speedKt = DEFAULT_SPEED_KT): NavBranch[] {
+export function buildBranches(points: NavPoint[], options: RouteBuildOptions = {}): NavBranch[] {
+  const profile = sanitizeProfile(options.profile);
+  const branchAltitudeById = options.branchAltitudeById ?? {};
+  const branchWindById = options.branchWindById ?? {};
+  let elapsedMinutes = 0;
+
   return points.slice(0, -1).map((point, index) => {
     const next = points[index + 1];
+    const id = branchId(point, next);
     const distance = distanceNm(point, next);
     const routeVraie = normalizeHeading(bearingDeg(point, next));
     const mid = midpoint(point, next);
     const magneticVariationDeg = estimatedMagneticVariationDeg(mid.latitude, mid.longitude);
     const routeMagnetique = normalizeHeading(routeVraie - magneticVariationDeg);
-    const tempsBrancheMin = Math.max(1, Math.round((distance / speedKt) * 60));
+    const altitudeFt = branchAltitudeById[id] ?? profile.defaultAltitudeFt;
+    const wind = branchWindById[id] ?? null;
+    const windCorrection = computeWindCorrection(routeVraie, profile.tasKt, wind);
+    const capCorrige = normalizeHeading(windCorrection.capVrai - magneticVariationDeg);
+    const tempsBrancheMin = Math.max(1, Math.round((distance / windCorrection.vitesseSol) * 60));
+    const estimatedStartIso = addMinutes(profile.departureTimeIso, elapsedMinutes);
+    const estimatedMidIso = addMinutes(profile.departureTimeIso, elapsedMinutes + tempsBrancheMin / 2);
+    elapsedMinutes += tempsBrancheMin;
+    const estimatedArrivalIso = addMinutes(profile.departureTimeIso, elapsedMinutes);
 
     return {
-      id: `${point.id}-${next.id}`,
+      id,
       from: point.id,
       to: next.id,
       distanceNm: Number(distance.toFixed(1)),
       routeVraie,
       magneticVariationDeg,
       routeMagnetique,
-      derive: 0,
-      capCorrige: routeMagnetique,
-      vitesseSol: speedKt,
-      tempsBrancheMin
+      altitudeFt,
+      wind,
+      derive: windCorrection.derive,
+      capVrai: windCorrection.capVrai,
+      capCorrige,
+      vitesseSol: windCorrection.vitesseSol,
+      tempsBrancheMin,
+      estimatedStartIso,
+      estimatedMidIso,
+      estimatedArrivalIso,
+      frequencyMhz: index === 0 ? '123.500' : index === points.length - 2 ? '118.355' : '123.500',
+      remarks: index === 0 ? 'Départ à confirmer' : index === points.length - 2 ? 'Arrivée à préparer' : 'Point tournant'
     };
   });
 }
 
-export function buildRoute(points: NavPoint[], speedKt = DEFAULT_SPEED_KT): NavRoute {
+export function buildRoute(points: NavPoint[], options: RouteBuildOptions = {}): NavRoute {
+  const profile = sanitizeProfile(options.profile);
   const normalizedPoints = relabelRoutePoints(points);
-  const branches = buildBranches(normalizedPoints, speedKt);
+  const branchAltitudeById = options.branchAltitudeById ?? {};
+  const branchWindById = options.branchWindById ?? {};
+  const branches = buildBranches(normalizedPoints, { profile, branchAltitudeById, branchWindById });
   const departure = normalizedPoints[0];
   const destination = normalizedPoints[normalizedPoints.length - 1];
 
@@ -108,7 +201,10 @@ export function buildRoute(points: NavPoint[], speedKt = DEFAULT_SPEED_KT): NavR
     branches,
     distanceTotale: Number(branches.reduce((sum, branch) => sum + branch.distanceNm, 0).toFixed(1)),
     tempsEstimeMin: branches.reduce((sum, branch) => sum + branch.tempsBrancheMin, 0),
-    vitesseSolKt: speedKt,
+    vitesseSolKt: profile.tasKt,
+    profile,
+    branchAltitudeById: Object.fromEntries(branches.map((branch) => [branch.id, branch.altitudeFt])),
+    branchWindById: Object.fromEntries(branches.filter((branch) => branch.wind).map((branch) => [branch.id, branch.wind as BranchWind])),
     dateModification: new Date().toISOString()
   };
 }

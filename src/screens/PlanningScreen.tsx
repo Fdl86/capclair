@@ -18,6 +18,11 @@ interface PlanningScreenProps {
   onAddWaypointAt: (longitude: number, latitude: number) => void;
   onRemovePoint: (pointId: string) => void;
   onReverseRoute: () => void;
+  onSetTasKt: (tasKt: number) => void;
+  onSetDefaultAltitudeFt: (altitudeFt: number) => void;
+  onSetDepartureTimeIso: (timeIso: string) => void;
+  onRefreshWinds: () => void;
+  weatherStatus: string;
   onCalculations: () => void;
   onZones: () => void;
 }
@@ -32,6 +37,20 @@ function formatDuration(minutes: number) {
   return `${hours}:${String(mins).padStart(2, '0')}`;
 }
 
+function toUtcTimeInput(iso: string) {
+  const date = new Date(iso);
+  if (Number.isNaN(date.getTime())) return '12:00';
+  return `${String(date.getUTCHours()).padStart(2, '0')}:${String(date.getUTCMinutes()).padStart(2, '0')}`;
+}
+
+function fromUtcTimeInput(value: string, currentIso: string) {
+  const [hours, minutes] = value.split(':').map(Number);
+  const date = new Date(currentIso);
+  if (Number.isNaN(date.getTime()) || !Number.isFinite(hours) || !Number.isFinite(minutes)) return new Date().toISOString();
+  date.setUTCHours(hours, minutes, 0, 0);
+  return date.toISOString();
+}
+
 export function PlanningScreen({
   route,
   selectedPointId,
@@ -42,6 +61,11 @@ export function PlanningScreen({
   onAddWaypointAt,
   onRemovePoint,
   onReverseRoute,
+  onSetTasKt,
+  onSetDefaultAltitudeFt,
+  onSetDepartureTimeIso,
+  onRefreshWinds,
+  weatherStatus,
   onCalculations,
   onZones
 }: PlanningScreenProps) {
@@ -71,7 +95,7 @@ export function PlanningScreen({
   };
 
   return (
-    <Page title="Planification" subtitle="Carte aéro prioritaire, route modifiable et points par clic.">
+    <Page title="Planification" subtitle="Carte aéro, route modifiable, profil de vol et vent par branche.">
       <div className="planning-layout">
         <div className="map-card tall planning-map-card">
           <MapLayerToggle showTopo={showTopo} onChange={setShowTopo} />
@@ -92,7 +116,7 @@ export function PlanningScreen({
               <span>Route active</span>
               <strong>{route.nom}</strong>
             </div>
-            <button type="button" onClick={onCalculations}>Calculs</button>
+            <button type="button" onClick={onCalculations}>Log de nav</button>
           </div>
 
           <div className="route-builder">
@@ -128,6 +152,44 @@ export function PlanningScreen({
                 <option key={aerodrome.code} value={aerodrome.code}>{aerodrome.cartoName}</option>
               ))}
             </datalist>
+          </div>
+
+          <div className="flight-profile-panel">
+            <label>
+              <span>TAS</span>
+              <input
+                type="number"
+                min={45}
+                max={220}
+                step={5}
+                value={route.profile.tasKt}
+                onChange={(event) => onSetTasKt(Number(event.target.value))}
+              />
+            </label>
+            <label>
+              <span>Alt défaut</span>
+              <input
+                type="number"
+                min={500}
+                max={12500}
+                step={500}
+                value={route.profile.defaultAltitudeFt}
+                onChange={(event) => onSetDefaultAltitudeFt(Number(event.target.value))}
+              />
+            </label>
+            <label>
+              <span>Départ UTC</span>
+              <input
+                type="time"
+                value={toUtcTimeInput(route.profile.departureTimeIso)}
+                onChange={(event) => onSetDepartureTimeIso(fromUtcTimeInput(event.target.value, route.profile.departureTimeIso))}
+              />
+            </label>
+          </div>
+
+          <div className="weather-action-row">
+            <span>{weatherStatus}</span>
+            <Button variant="secondary" onClick={onRefreshWinds}>Mettre à jour vent</Button>
           </div>
 
           <div className="route-summary-line">

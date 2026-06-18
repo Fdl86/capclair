@@ -8,8 +8,8 @@ interface BottomNavProps {
 const items: Array<{ id: ScreenId; label: string; icon: string }> = [
   { id: 'home', label: 'Accueil', icon: '⌂' },
   { id: 'planning', label: 'Planifier', icon: '✣' },
+  { id: 'calculations', label: 'Log nav', icon: '▦' },
   { id: 'tracking', label: 'Suivi', icon: '⌖' },
-  { id: 'traces', label: 'Traces', icon: '⌁' },
   { id: 'more', label: 'Plus', icon: '•••' }
 ];
 

@@ -1,7 +1,7 @@
 {
-  "name": "cap-clair-dev12-route-builder-aero",
+  "name": "cap-clair-dev13-wind-log-nav",
   "private": true,
-  "version": "0.12.0",
+  "version": "0.13.0",
   "type": "module",
   "scripts": {
     "dev": "vite",

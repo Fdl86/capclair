@@ -12,7 +12,7 @@ export function HeaderBar() {
       </div>
       <div className="header-status">
         <span>App ouverte</span>
-        <span>Données DEV01</span>
+        <span>Carte aéro</span>
         <span>{APP_VERSION}</span>
       </div>
     </header>
