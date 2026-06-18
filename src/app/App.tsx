@@ -23,9 +23,13 @@ export function App() {
         <PlanningScreen
           route={routeState.route}
           selectedPointId={routeState.selectedPointId}
+          routeMessage={routeState.routeMessage}
           onSelectPoint={routeState.setSelectedPointId}
-          onAddPoint={routeState.addMockPoint}
+          onSetDepartureCode={routeState.setDepartureCode}
+          onSetDestinationCode={routeState.setDestinationCode}
+          onAddWaypointAt={routeState.addWaypointAt}
           onRemovePoint={routeState.removePoint}
+          onReverseRoute={routeState.reverseRoute}
           onCalculations={() => setCurrentScreen('calculations')}
           onZones={() => setCurrentScreen('zones')}
         />

@@ -1,27 +1,19 @@
-# CAP CLAIR DEV11 - Carte aéro openAIP raster
+# CAP CLAIR DEV12 - Route builder et carte aéro propre
 
-Cette version met enfin la bonne option en priorité : la carte aéro openAIP complète en surcouche raster.
+## A tester
 
-## Ordre des cartes
-
-1. Carte aéro
-   - fond topo libre
-   - tuiles aviation openAIP via proxy Cloudflare
-
-2. Fond libre
-   - fond topo seul
-
-3. SIA XML
-   - réservé aux données officielles France à venir
+- Carte aéro avec Fond topo ON/OFF.
+- Départ / arrivée par code OACI.
+- Ajout de point tournant par clic sur la carte.
+- Suppression de point tournant.
+- Calculs : distance, route vraie, variation, route magnétique, temps.
 
 ## Variable Cloudflare requise
 
 `OPENAIP_API_KEY`
 
-La clé ne doit pas être mise dans Vite, ni dans GitHub, ni dans le frontend.
-
 ## Commit proposé
 
 ```txt
-dev11 add openaip raster aero tiles
+dev12 route builder aero map cleanup
 ```

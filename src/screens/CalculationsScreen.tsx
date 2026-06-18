@@ -21,7 +21,7 @@ export function CalculationsScreen({ route, onValidate, onExport }: Calculations
   const fuel = Math.round(route.tempsEstimeMin * 0.34);
 
   return (
-    <Page title="Calculs de navigation" subtitle="Log structuré DEV01 avec valeurs mockées et calculs simplifiés.">
+    <Page title="Calculs de navigation" subtitle="Distances, routes vraies, variation estimée et routes magnétiques.">
       <div className="calculation-grid">
         <Card className="wide-card">
           <h2>Branches</h2>
@@ -30,13 +30,13 @@ export function CalculationsScreen({ route, onValidate, onExport }: Calculations
 
         <div className="metric-grid">
           <MetricCard label="Distance totale" value={`${route.distanceTotale.toFixed(1).replace('.', ',')} NM`} />
-          <MetricCard label="Temps total estimé" value={formatDuration(route.tempsEstimeMin)} />
+          <MetricCard label="Temps estimé" value={formatDuration(route.tempsEstimeMin)} />
           <MetricCard label="Carburant estimé" value={`${fuel},0 L`} />
         </div>
 
         <Card className="safety-card wide-card">
-          <strong>Données DEV01</strong>
-          <p>Les caps, dérives et consommations sont des données prototype. Aucune donnée météo réelle, NOTAM ou SIA n’est intégrée.</p>
+          <strong>Calculs préparatoires</strong>
+          <p>La route magnétique utilise une variation estimée au milieu de chaque branche. Les valeurs restent à confirmer avec les documents de préparation réglementaires.</p>
         </Card>
 
         <div className="bottom-action-row">

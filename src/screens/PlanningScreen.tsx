@@ -1,45 +1,150 @@
-import { useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import type { NavRoute } from '../domain/navigation.types';
+import { AERODROMES } from '../data/aerodromeCatalog';
 import { Page } from '../components/layout/Page';
 import { Button } from '../components/ui/Button';
 import { Card } from '../components/ui/Card';
 import { OpenLayersMap } from '../components/map/OpenLayersMap';
-import { MapScaleSelector, type MapMode } from '../components/map/MapScaleSelector';
+import { MapLayerToggle } from '../components/map/MapLayerToggle';
 import { RoutePointList } from '../components/navigation/RoutePointList';
 
 interface PlanningScreenProps {
   route: NavRoute;
   selectedPointId: string | null;
+  routeMessage: string;
   onSelectPoint: (pointId: string) => void;
-  onAddPoint: () => void;
+  onSetDepartureCode: (code: string) => boolean;
+  onSetDestinationCode: (code: string) => boolean;
+  onAddWaypointAt: (longitude: number, latitude: number) => void;
   onRemovePoint: (pointId: string) => void;
+  onReverseRoute: () => void;
   onCalculations: () => void;
   onZones: () => void;
 }
 
-export function PlanningScreen({ route, selectedPointId, onSelectPoint, onAddPoint, onRemovePoint, onCalculations, onZones }: PlanningScreenProps) {
-  const [mapMode, setMapMode] = useState<MapMode>('aero');
+function endpointCode(route: NavRoute, type: 'depart' | 'destination') {
+  return route.points.find((point) => point.type === type)?.code ?? '';
+}
+
+function formatDuration(minutes: number) {
+  const hours = Math.floor(minutes / 60);
+  const mins = minutes % 60;
+  return `${hours}:${String(mins).padStart(2, '0')}`;
+}
+
+export function PlanningScreen({
+  route,
+  selectedPointId,
+  routeMessage,
+  onSelectPoint,
+  onSetDepartureCode,
+  onSetDestinationCode,
+  onAddWaypointAt,
+  onRemovePoint,
+  onReverseRoute,
+  onCalculations,
+  onZones
+}: PlanningScreenProps) {
+  const [showTopo, setShowTopo] = useState(true);
+  const [addWaypointMode, setAddWaypointMode] = useState(false);
+  const [departureInput, setDepartureInput] = useState(endpointCode(route, 'depart'));
+  const [destinationInput, setDestinationInput] = useState(endpointCode(route, 'destination'));
+
+  useEffect(() => {
+    setDepartureInput(endpointCode(route, 'depart'));
+    setDestinationInput(endpointCode(route, 'destination'));
+  }, [route.points]);
+
+  const datalistId = useMemo(() => 'cap-clair-aerodromes', []);
+
+  const applyDeparture = () => {
+    if (departureInput.trim().length >= 4) onSetDepartureCode(departureInput);
+  };
+
+  const applyDestination = () => {
+    if (destinationInput.trim().length >= 4) onSetDestinationCode(destinationInput);
+  };
+
+  const handleAddWaypoint = (longitude: number, latitude: number) => {
+    onAddWaypointAt(longitude, latitude);
+    setAddWaypointMode(false);
+  };
 
   return (
-    <Page title="Planification" subtitle="Carte aéro openAIP prioritaire, fond libre en second. Route test LFCA - LFOD Saumur - LFOT Tours.">
+    <Page title="Planification" subtitle="Carte aéro prioritaire, route modifiable et points par clic.">
       <div className="planning-layout">
-        <div className="map-card tall">
-          <MapScaleSelector value={mapMode} onChange={setMapMode} />
-          <OpenLayersMap route={route} trace={[]} aircraft={null} selectedPointId={selectedPointId} showZones={false} mapMode={mapMode} />
+        <div className="map-card tall planning-map-card">
+          <MapLayerToggle showTopo={showTopo} onChange={setShowTopo} />
+          <OpenLayersMap
+            route={route}
+            trace={[]}
+            aircraft={null}
+            selectedPointId={selectedPointId}
+            showTopo={showTopo}
+            addWaypointMode={addWaypointMode}
+            onMapAddWaypoint={handleAddWaypoint}
+          />
         </div>
 
-        <Card className="route-panel">
+        <Card className="route-panel compact-route-panel">
           <div className="panel-title-row">
             <div>
-              <span>Route ({route.points.length} points)</span>
+              <span>Route active</span>
               <strong>{route.nom}</strong>
             </div>
             <button type="button" onClick={onCalculations}>Calculs</button>
           </div>
+
+          <div className="route-builder">
+            <label>
+              <span>Départ</span>
+              <input
+                value={departureInput}
+                onChange={(event) => setDepartureInput(event.target.value.toUpperCase())}
+                onBlur={applyDeparture}
+                onKeyDown={(event) => { if (event.key === 'Enter') applyDeparture(); }}
+                maxLength={4}
+                list={datalistId}
+                autoCapitalize="characters"
+                spellCheck={false}
+              />
+            </label>
+            <label>
+              <span>Arrivée</span>
+              <input
+                value={destinationInput}
+                onChange={(event) => setDestinationInput(event.target.value.toUpperCase())}
+                onBlur={applyDestination}
+                onKeyDown={(event) => { if (event.key === 'Enter') applyDestination(); }}
+                maxLength={4}
+                list={datalistId}
+                autoCapitalize="characters"
+                spellCheck={false}
+              />
+            </label>
+            <Button variant="ghost" className="route-builder-reverse" onClick={onReverseRoute}>Inverser</Button>
+            <datalist id={datalistId}>
+              {AERODROMES.map((aerodrome) => (
+                <option key={aerodrome.code} value={aerodrome.code}>{aerodrome.cartoName}</option>
+              ))}
+            </datalist>
+          </div>
+
+          <div className="route-summary-line">
+            <strong>{route.distanceTotale.toFixed(1).replace('.', ',')} NM</strong>
+            <span>{formatDuration(route.tempsEstimeMin)}</span>
+            <span>{route.vitesseSolKt} kt</span>
+          </div>
+
           <RoutePointList points={route.points} selectedPointId={selectedPointId} onSelect={onSelectPoint} onRemove={onRemovePoint} />
+
+          <div className="route-hint">{routeMessage}</div>
+
           <div className="route-actions-row">
             <Button variant="secondary" onClick={onZones}>Zones</Button>
-            <Button variant="primary" onClick={onAddPoint}>Ajouter un point</Button>
+            <Button variant={addWaypointMode ? 'danger' : 'primary'} onClick={() => setAddWaypointMode((value) => !value)}>
+              {addWaypointMode ? 'Annuler' : '+ Point'}
+            </Button>
           </div>
         </Card>
       </div>

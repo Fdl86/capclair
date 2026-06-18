@@ -1,4 +1,4 @@
-export type MapMode = 'aero' | 'free' | 'sia';
+export type MapMode = 'aero' | 'free';
 
 interface MapScaleSelectorProps {
   value: MapMode;
@@ -6,9 +6,8 @@ interface MapScaleSelectorProps {
 }
 
 const values: Array<{ value: MapMode; label: string; description: string }> = [
-  { value: 'aero', label: 'Carte aéro', description: 'Fond topo + tuiles aviation openAIP' },
-  { value: 'free', label: 'Fond libre', description: 'Fond topo seul' },
-  { value: 'sia', label: 'SIA XML', description: 'Données France à venir' }
+  { value: 'aero', label: 'Carte aéro', description: 'Fond topo + couche aviation' },
+  { value: 'free', label: 'Fond libre', description: 'Fond topo seul' }
 ];
 
 export function MapScaleSelector({ value, onChange }: MapScaleSelectorProps) {

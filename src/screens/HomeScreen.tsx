@@ -32,13 +32,13 @@ export function HomeScreen({ onNavigate }: HomeScreenProps) {
         <h2>Système</h2>
         <div className="system-badges">
           <span className="system-badge green"><strong>GPS</strong> Prêt</span>
-          <span className="system-badge cyan"><strong>Météo</strong> Mock DEV01</span>
-          <span className="system-badge amber"><strong>Carte</strong> openAIP prioritaire</span>
+          <span className="system-badge cyan"><strong>Météo</strong> À venir</span>
+          <span className="system-badge amber"><strong>Carte</strong> Aéro</span>
         </div>
       </Card>
 
       <Card className="safety-card">
-        <strong>Données DEV01</strong>
+        <strong>Prototype</strong>
         <p>Prototype technique et UX. Ne pas utiliser pour une navigation réelle. Le suivi GPS fonctionne uniquement app ouverte au premier plan.</p>
       </Card>
     </section>

@@ -22,7 +22,7 @@
   }
 
   .planning-layout {
-    grid-template-columns: minmax(0, 1fr) 360px;
+    grid-template-columns: minmax(0, 1.75fr) 320px;
     align-items: stretch;
   }
 
@@ -121,5 +121,38 @@
   .branch-row span:nth-child(6),
   .branch-row span:nth-child(7) {
     display: none;
+  }
+}
+
+@media (min-width: 1024px) {
+  .app-main {
+    max-width: 1440px;
+  }
+
+  .planning-map-card {
+    min-height: calc(100dvh - 190px);
+  }
+
+  .route-panel {
+    max-height: calc(100dvh - 190px);
+    overflow-y: auto;
+  }
+}
+
+@media (max-width: 520px) {
+  .route-builder {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .route-builder-reverse {
+    grid-column: 1 / -1;
+  }
+
+  .map-layer-toggle {
+    max-width: calc(100% - 20px);
+  }
+
+  .map-topline {
+    top: 54px;
   }
 }

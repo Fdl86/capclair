@@ -168,7 +168,7 @@
 }
 
 .map-card.tall {
-  min-height: min(58vh, 560px);
+  min-height: min(64vh, 640px);
 }
 
 .route-panel {
@@ -207,16 +207,16 @@
 
 .route-point-list {
   display: grid;
-  gap: 7px;
+  gap: 5px;
 }
 
 .route-point {
   display: grid;
   grid-template-columns: auto 1fr auto;
   align-items: center;
-  gap: 10px;
-  min-height: 56px;
-  padding: 8px;
+  gap: 8px;
+  min-height: 42px;
+  padding: 6px 7px;
   border: 1px solid rgba(30, 49, 69, 0.78);
   border-radius: 13px;
   background: rgba(7, 17, 28, 0.52);
@@ -234,8 +234,8 @@
 }
 
 .point-chip {
-  width: 28px;
-  height: 28px;
+  width: 24px;
+  height: 24px;
   border-radius: 999px;
   display: grid;
   place-items: center;
@@ -606,4 +606,96 @@
   color: var(--text-2);
   font-size: 1.6rem;
   cursor: pointer;
+}
+
+.route-builder {
+  display: grid;
+  grid-template-columns: 1fr 1fr auto;
+  gap: 8px;
+  align-items: end;
+}
+
+.route-builder label {
+  display: grid;
+  gap: 4px;
+}
+
+.route-builder label span {
+  color: var(--text-3);
+  font-size: 0.64rem;
+  font-weight: 850;
+  text-transform: uppercase;
+}
+
+.route-builder input {
+  width: 100%;
+  height: 38px;
+  border: 1px solid rgba(30, 49, 69, 0.9);
+  border-radius: 11px;
+  background: rgba(5, 11, 18, 0.82);
+  color: var(--text);
+  font-size: 0.94rem;
+  font-weight: 900;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 0 10px;
+  outline: none;
+}
+
+.route-builder input:focus {
+  border-color: rgba(89, 207, 255, 0.8);
+}
+
+.route-builder-reverse {
+  min-height: 38px;
+  padding: 0 10px;
+}
+
+.route-summary-line {
+  display: grid;
+  grid-template-columns: 1fr auto auto;
+  gap: 8px;
+  align-items: center;
+  min-height: 36px;
+  border: 1px solid rgba(30, 49, 69, 0.76);
+  border-radius: 12px;
+  padding: 0 10px;
+  background: rgba(7, 17, 28, 0.58);
+  color: var(--text-2);
+  font-size: 0.8rem;
+}
+
+.route-summary-line strong {
+  color: var(--cyan-soft);
+}
+
+.route-hint {
+  min-height: 26px;
+  color: var(--text-3);
+  font-size: 0.72rem;
+}
+
+.route-point-main strong {
+  display: block;
+  font-size: 0.88rem;
+  letter-spacing: 0.04em;
+}
+
+.route-point-main small {
+  font-size: 0.66rem;
+}
+
+.route-point-remove {
+  min-height: 28px;
+  width: 32px;
+  padding: 0;
+  border-radius: 9px;
+}
+
+.compact-route-panel {
+  align-content: start;
+}
+
+.planning-map-card {
+  min-height: min(66vh, 680px);
 }

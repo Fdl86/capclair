@@ -1,11 +1,19 @@
 import type { NavRoute } from '../../domain/navigation.types';
+import { formatMagneticVariation } from '../../services/geo/magneticVariation';
 
 interface BranchTableProps {
   route: NavRoute;
 }
 
 function pointName(route: NavRoute, id: string) {
-  return route.points.find((point) => point.id === id)?.nom ?? id.toUpperCase();
+  const point = route.points.find((item) => item.id === id);
+  return point?.code ?? point?.nom ?? id.toUpperCase();
+}
+
+function minutesToClock(minutes: number) {
+  const hours = Math.floor(minutes / 60);
+  const mins = minutes % 60;
+  return `${hours}:${String(mins).padStart(2, '0')}`;
 }
 
 export function BranchTable({ route }: BranchTableProps) {
@@ -14,21 +22,19 @@ export function BranchTable({ route }: BranchTableProps) {
       <div className="branch-row head" role="row">
         <span>Branche</span>
         <span>Dist</span>
-        <span>Route</span>
-        <span>Dérive</span>
-        <span>Cap</span>
-        <span>GS</span>
-        <span>Temps</span>
+        <span>RV</span>
+        <span>Var</span>
+        <span>RM</span>
+        <span>ETE</span>
       </div>
       {route.branches.map((branch) => (
         <div key={branch.id} className="branch-row" role="row">
-          <span>{pointName(route, branch.from)} → {pointName(route, branch.to)}</span>
+          <span>{pointName(route, branch.from)} - {pointName(route, branch.to)}</span>
           <span>{branch.distanceNm.toFixed(1)}</span>
           <span>{String(branch.routeVraie).padStart(3, '0')}°</span>
-          <span>{branch.derive > 0 ? '+' : ''}{branch.derive}°</span>
-          <span>{String(branch.capCorrige).padStart(3, '0')}°</span>
-          <span>{branch.vitesseSol}</span>
-          <span>0:{String(branch.tempsBrancheMin).padStart(2, '0')}</span>
+          <span>{formatMagneticVariation(branch.magneticVariationDeg)}</span>
+          <span>{String(branch.routeMagnetique).padStart(3, '0')}°</span>
+          <span>{minutesToClock(branch.tempsBrancheMin)}</span>
         </div>
       ))}
     </div>
