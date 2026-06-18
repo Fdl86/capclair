@@ -1,33 +1,22 @@
-# CAP CLAIR DEV09 - Free map + openAIP proxy
+# CAP CLAIR DEV10 - Carte aéro prioritaire
 
-Version de transition propre après abandon temporaire du recalage PDF 500K.
+Cette version met le mode `Carte aéro` en priorité dans l'écran Planification.
 
-## Ce que fait DEV09
-
-- Fond carte gratuit DEV.
-- Route test LFCA - LFOD Saumur - LFOT Tours.
-- Proxy Cloudflare Pages Function pour openAIP.
-- Secret requis côté Cloudflare : `OPENAIP_API_KEY`.
-- Aérodromes openAIP affichés autour de la route.
-- Cache local léger.
-
-## À vérifier après déploiement Cloudflare Pages
+## À tester
 
 1. Ouvrir Planification.
-2. Vérifier que le fond libre s'affiche.
-3. Vérifier le badge en haut de carte : `openAIP chargement`, puis `openAIP X terrains` ou `cache X terrains`.
-4. Vérifier que des points aérodromes apparaissent autour de LFCA - LFOD - LFOT.
-5. Tester `/api/openaip/status` dans le navigateur : il doit répondre `keyConfigured: true`.
+2. Vérifier que le premier bouton est `Carte aéro`.
+3. Vérifier que le deuxième bouton est `Fond libre`.
+4. Vérifier que `500K plus tard` a disparu.
+5. En mode `Carte aéro`, vérifier que les terrains openAIP se chargent.
+6. En mode `Fond libre`, vérifier que le fond reste lisible et que la surcouche openAIP disparaît.
 
-## Secret Cloudflare attendu
+## Cloudflare
 
-`OPENAIP_API_KEY`
-
-Ne pas créer de variable `VITE_OPENAIP_API_KEY`.
-Une variable Vite serait exposée dans le navigateur.
+La clé openAIP reste côté Cloudflare dans le secret `OPENAIP_API_KEY`.
 
 ## Commit proposé
 
 ```txt
-dev09 add openaip cloudflare proxy
+dev10 prioritize aero map mode
 ```

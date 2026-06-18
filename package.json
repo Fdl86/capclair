@@ -1,7 +1,7 @@
 {
-  "name": "cap-clair-dev09-openaip-proxy",
+  "name": "cap-clair-dev10-aero-priority",
   "private": true,
-  "version": "0.9.0",
+  "version": "0.10.0",
   "type": "module",
   "scripts": {
     "dev": "vite",

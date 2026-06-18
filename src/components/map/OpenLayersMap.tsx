@@ -19,6 +19,7 @@ import type { NavRoute } from '../../domain/navigation.types';
 import { MapControls } from './MapControls';
 import { MapFallbackNotice } from './MapFallbackNotice';
 import { MapAttribution } from './MapAttribution';
+import type { MapMode } from './MapScaleSelector';
 
 interface OpenLayersMapProps {
   route: NavRoute;
@@ -27,6 +28,7 @@ interface OpenLayersMapProps {
   selectedPointId: string | null;
   compact?: boolean;
   showZones?: boolean;
+  mapMode?: MapMode;
   onSourceStatusChange?: (status: MapSourceStatus) => void;
 }
 
@@ -39,7 +41,7 @@ function replaceLayer(map: Map, previousLayer: BaseLayer | null, nextLayer: Base
   return nextLayer;
 }
 
-export function OpenLayersMap({ route, trace, aircraft, selectedPointId, compact = false, showZones = true, onSourceStatusChange }: OpenLayersMapProps) {
+export function OpenLayersMap({ route, trace, aircraft, selectedPointId, compact = false, showZones = true, mapMode = 'aero', onSourceStatusChange }: OpenLayersMapProps) {
   const mapElementRef = useRef<HTMLDivElement | null>(null);
   const mapRef = useRef<Map | null>(null);
   const plannedRouteLayerRef = useRef<BaseLayer | null>(null);
@@ -126,6 +128,12 @@ export function OpenLayersMap({ route, trace, aircraft, selectedPointId, compact
     const layer = openAipAirportsLayerRef.current;
     if (!layer) return undefined;
 
+    if (mapMode !== 'aero') {
+      updateOpenAipAirportsLayer(layer, []);
+      setOpenAipStatus(mapMode === 'free' ? 'fond libre seul' : 'SIA XML bientôt');
+      return undefined;
+    }
+
     setOpenAipStatus('openAIP chargement');
     fetchOpenAipAirportsForRoute(route.points)
       .then((data) => {
@@ -142,7 +150,7 @@ export function OpenLayersMap({ route, trace, aircraft, selectedPointId, compact
     return () => {
       isCancelled = true;
     };
-  }, [route.points]);
+  }, [route.points, mapMode]);
 
   useEffect(() => {
     const traceLayer = traceLayerRef.current;
@@ -182,12 +190,12 @@ export function OpenLayersMap({ route, trace, aircraft, selectedPointId, compact
     <div className="map-shell">
       <div ref={mapElementRef} className="ol-map" aria-label="Carte CAP CLAIR" />
       <div className="map-topline">
-        <span>{sourceStatus === 'free' ? 'Fond libre DEV' : sourceStatus === 'loading' ? 'Chargement carte' : 'Fond demo'}</span>
+        <span>{mapMode === 'aero' ? 'Carte aéro DEV' : mapMode === 'free' ? 'Fond libre' : 'SIA XML bientôt'}</span>
         <span>{openAipStatus}</span>
       </div>
       <MapControls onZoomIn={() => zoom(1)} onZoomOut={() => zoom(-1)} onRecenter={recenter} />
       {sourceStatus === 'fallback' && <MapFallbackNotice />}
-      <MapAttribution sourceStatus={sourceStatus} />
+      <MapAttribution sourceStatus={sourceStatus} mapMode={mapMode} />
     </div>
   );
 }

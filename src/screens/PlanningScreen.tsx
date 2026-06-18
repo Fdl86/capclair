@@ -4,7 +4,7 @@ import { Page } from '../components/layout/Page';
 import { Button } from '../components/ui/Button';
 import { Card } from '../components/ui/Card';
 import { OpenLayersMap } from '../components/map/OpenLayersMap';
-import { MapScaleSelector } from '../components/map/MapScaleSelector';
+import { MapScaleSelector, type MapMode } from '../components/map/MapScaleSelector';
 import { RoutePointList } from '../components/navigation/RoutePointList';
 
 interface PlanningScreenProps {
@@ -18,14 +18,14 @@ interface PlanningScreenProps {
 }
 
 export function PlanningScreen({ route, selectedPointId, onSelectPoint, onAddPoint, onRemovePoint, onCalculations, onZones }: PlanningScreenProps) {
-  const [scale, setScale] = useState('Fond libre');
+  const [mapMode, setMapMode] = useState<MapMode>('aero');
 
   return (
-    <Page title="Planification" subtitle="Route test LFCA - LFOD Saumur - LFOT Tours sur fond libre + openAIP via Cloudflare.">
+    <Page title="Planification" subtitle="Carte aéro prioritaire, fond libre disponible en second. Route test LFCA - LFOD Saumur - LFOT Tours.">
       <div className="planning-layout">
         <div className="map-card tall">
-          <MapScaleSelector value={scale} onChange={setScale} />
-          <OpenLayersMap route={route} trace={[]} aircraft={null} selectedPointId={selectedPointId} showZones={false} />
+          <MapScaleSelector value={mapMode} onChange={setMapMode} />
+          <OpenLayersMap route={route} trace={[]} aircraft={null} selectedPointId={selectedPointId} showZones={false} mapMode={mapMode} />
         </div>
 
         <Card className="route-panel">
