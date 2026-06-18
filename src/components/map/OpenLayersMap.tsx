@@ -4,9 +4,7 @@ import View from 'ol/View';
 import { fromLonLat } from 'ol/proj';
 import { boundingExtent } from 'ol/extent';
 import type BaseLayer from 'ol/layer/Base';
-import { createSia500kDevLayer } from '../../mapSources/sia500kDevSource';
-import { createSia500kSouthWestDevLayer } from '../../mapSources/sia500kSouthWestDevSource';
-import { createDemoFallbackLayer } from '../../mapSources/demoFallbackSource';
+import { createFreeMapLayer } from '../../mapSources/freeMapSource';
 import { initialMapCenter, initialMapZoom } from '../../mapEngine/mapViewConfig';
 import type { MapSourceStatus } from '../../mapEngine/mapTypes';
 import { createPlannedRouteLayer } from '../../mapLayers/plannedRouteLayer';
@@ -14,6 +12,8 @@ import { createActualTraceLayer, updateActualTraceLayer, type ActualTraceLayer }
 import { createWaypointLayer } from '../../mapLayers/waypointLayer';
 import { createAircraftLayer, updateAircraftLayer, type AircraftLayer } from '../../mapLayers/aircraftLayer';
 import { createPrototypeZonesLayer } from '../../mapLayers/prototypeZonesLayer';
+import { createOpenAipAirportsLayer, updateOpenAipAirportsLayer } from '../../mapLayers/openAipAirportsLayer';
+import { fetchOpenAipAirportsForRoute } from '../../services/openaip/openAipClient';
 import type { GpsPosition } from '../../domain/gps.types';
 import type { NavRoute } from '../../domain/navigation.types';
 import { MapControls } from './MapControls';
@@ -45,9 +45,11 @@ export function OpenLayersMap({ route, trace, aircraft, selectedPointId, compact
   const plannedRouteLayerRef = useRef<BaseLayer | null>(null);
   const waypointsLayerRef = useRef<BaseLayer | null>(null);
   const zonesLayerRef = useRef<BaseLayer | null>(null);
+  const openAipAirportsLayerRef = useRef<ReturnType<typeof createOpenAipAirportsLayer> | null>(null);
   const traceLayerRef = useRef<ActualTraceLayer | null>(null);
   const aircraftLayerRef = useRef<AircraftLayer | null>(null);
-  const [sourceStatus, setSourceStatus] = useState<MapSourceStatus>('sia-dev');
+  const [sourceStatus, setSourceStatus] = useState<MapSourceStatus>('free');
+  const [openAipStatus, setOpenAipStatus] = useState('openAIP attente');
 
   const routeExtent = useMemo(() => {
     const coords = route.points.map((point) => fromLonLat([point.longitude, point.latitude]));
@@ -57,35 +59,37 @@ export function OpenLayersMap({ route, trace, aircraft, selectedPointId, compact
   useEffect(() => {
     if (!mapElementRef.current || mapRef.current) return;
 
+    const baseLayer = createFreeMapLayer();
+    const openAipAirportsLayer = createOpenAipAirportsLayer([]);
     const traceLayer = createActualTraceLayer();
     const aircraftLayer = createAircraftLayer(null);
+
+    openAipAirportsLayerRef.current = openAipAirportsLayer;
     traceLayerRef.current = traceLayer;
     aircraftLayerRef.current = aircraftLayer;
-
-    const useSiaDevTiles = true;
-    const baseLayers = useSiaDevTiles ? [createSia500kDevLayer(), createSia500kSouthWestDevLayer()] : [createDemoFallbackLayer()];
 
     const map = new Map({
       target: mapElementRef.current,
       controls: [],
-      layers: [...baseLayers, traceLayer, aircraftLayer],
+      layers: [baseLayer, openAipAirportsLayer, traceLayer, aircraftLayer],
       view: new View({
         center: initialMapCenter,
         zoom: initialMapZoom,
-        minZoom: 7,
-        maxZoom: 9,
+        minZoom: 6,
+        maxZoom: 13,
         smoothExtentConstraint: false,
         smoothResolutionConstraint: false
       })
     });
     mapRef.current = map;
-    setSourceStatus(useSiaDevTiles ? 'sia-dev' : 'fallback');
-    onSourceStatusChange?.(useSiaDevTiles ? 'sia-dev' : 'fallback');
+    setSourceStatus('free');
+    onSourceStatusChange?.('free');
 
     return () => {
       plannedRouteLayerRef.current?.dispose();
       waypointsLayerRef.current?.dispose();
       zonesLayerRef.current?.dispose();
+      openAipAirportsLayerRef.current?.dispose();
       traceLayerRef.current?.dispose();
       aircraftLayerRef.current?.dispose();
       map.setTarget(undefined);
@@ -93,6 +97,7 @@ export function OpenLayersMap({ route, trace, aircraft, selectedPointId, compact
       plannedRouteLayerRef.current = null;
       waypointsLayerRef.current = null;
       zonesLayerRef.current = null;
+      openAipAirportsLayerRef.current = null;
       traceLayerRef.current = null;
       aircraftLayerRef.current = null;
     };
@@ -117,6 +122,29 @@ export function OpenLayersMap({ route, trace, aircraft, selectedPointId, compact
   }, [showZones]);
 
   useEffect(() => {
+    let isCancelled = false;
+    const layer = openAipAirportsLayerRef.current;
+    if (!layer) return undefined;
+
+    setOpenAipStatus('openAIP chargement');
+    fetchOpenAipAirportsForRoute(route.points)
+      .then((data) => {
+        if (isCancelled) return;
+        updateOpenAipAirportsLayer(layer, data.airports);
+        setOpenAipStatus(`${data.cachedAt ? 'cache' : 'openAIP'} ${data.airports.length} terrains`);
+      })
+      .catch(() => {
+        if (isCancelled) return;
+        updateOpenAipAirportsLayer(layer, []);
+        setOpenAipStatus('openAIP non chargé');
+      });
+
+    return () => {
+      isCancelled = true;
+    };
+  }, [route.points]);
+
+  useEffect(() => {
     const traceLayer = traceLayerRef.current;
     if (!traceLayer) return;
     updateActualTraceLayer(traceLayer, trace);
@@ -131,7 +159,7 @@ export function OpenLayersMap({ route, trace, aircraft, selectedPointId, compact
   useEffect(() => {
     const map = mapRef.current;
     if (!map) return;
-    map.getView().fit(routeExtent, { padding: compact ? [48, 48, 48, 48] : [70, 55, 90, 55], duration: 0, maxZoom: 9 });
+    map.getView().fit(routeExtent, { padding: compact ? [48, 48, 48, 48] : [70, 55, 90, 55], duration: 0, maxZoom: 10 });
   }, [routeExtent, compact]);
 
   const zoom = (delta: number) => {
@@ -147,15 +175,15 @@ export function OpenLayersMap({ route, trace, aircraft, selectedPointId, compact
       map.getView().animate({ center: fromLonLat([aircraft.longitude, aircraft.latitude]), duration: 120 });
       return;
     }
-    map.getView().fit(routeExtent, { padding: [70, 55, 90, 55], duration: 0, maxZoom: 9 });
+    map.getView().fit(routeExtent, { padding: [70, 55, 90, 55], duration: 0, maxZoom: 10 });
   };
 
   return (
     <div className="map-shell">
       <div ref={mapElementRef} className="ol-map" aria-label="Carte CAP CLAIR" />
       <div className="map-topline">
-        <span>{sourceStatus === 'sia-dev' ? 'SIA 500K DEV' : sourceStatus === 'oaci' ? 'Carte OACI-VFR' : sourceStatus === 'loading' ? 'Chargement carte' : 'Fond demo'}</span>
-        <span>Données DEV07 NO+SO</span>
+        <span>{sourceStatus === 'free' ? 'Fond libre DEV' : sourceStatus === 'loading' ? 'Chargement carte' : 'Fond demo'}</span>
+        <span>{openAipStatus}</span>
       </div>
       <MapControls onZoomIn={() => zoom(1)} onZoomOut={() => zoom(-1)} onRecenter={recenter} />
       {sourceStatus === 'fallback' && <MapFallbackNotice />}

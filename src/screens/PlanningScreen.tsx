@@ -18,10 +18,10 @@ interface PlanningScreenProps {
 }
 
 export function PlanningScreen({ route, selectedPointId, onSelectPoint, onAddPoint, onRemovePoint, onCalculations, onZones }: PlanningScreenProps) {
-  const [scale, setScale] = useState('SIA DEV 500K');
+  const [scale, setScale] = useState('Fond libre');
 
   return (
-    <Page title="Planification" subtitle="Route test LFCA - LFOD Saumur - LFOT Tours sur jonction SIA NO + SO DEV.">
+    <Page title="Planification" subtitle="Route test LFCA - LFOD Saumur - LFOT Tours sur fond libre + openAIP via Cloudflare.">
       <div className="planning-layout">
         <div className="map-card tall">
           <MapScaleSelector value={scale} onChange={setScale} />

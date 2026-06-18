@@ -3,7 +3,7 @@ interface MapScaleSelectorProps {
   onChange: (value: string) => void;
 }
 
-const values = ['SIA DEV 500K', 'Auto', '1/500 000', 'Fond simplifié'];
+const values = ['Fond libre', 'openAIP', 'SIA XML', '500K plus tard'];
 
 export function MapScaleSelector({ value, onChange }: MapScaleSelectorProps) {
   return (
