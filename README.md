@@ -1,22 +1,27 @@
-# CAP CLAIR DEV10 - Carte aéro prioritaire
+# CAP CLAIR DEV11 - Carte aéro openAIP raster
 
-Cette version met le mode `Carte aéro` en priorité dans l'écran Planification.
+Cette version met enfin la bonne option en priorité : la carte aéro openAIP complète en surcouche raster.
 
-## À tester
+## Ordre des cartes
 
-1. Ouvrir Planification.
-2. Vérifier que le premier bouton est `Carte aéro`.
-3. Vérifier que le deuxième bouton est `Fond libre`.
-4. Vérifier que `500K plus tard` a disparu.
-5. En mode `Carte aéro`, vérifier que les terrains openAIP se chargent.
-6. En mode `Fond libre`, vérifier que le fond reste lisible et que la surcouche openAIP disparaît.
+1. Carte aéro
+   - fond topo libre
+   - tuiles aviation openAIP via proxy Cloudflare
 
-## Cloudflare
+2. Fond libre
+   - fond topo seul
 
-La clé openAIP reste côté Cloudflare dans le secret `OPENAIP_API_KEY`.
+3. SIA XML
+   - réservé aux données officielles France à venir
+
+## Variable Cloudflare requise
+
+`OPENAIP_API_KEY`
+
+La clé ne doit pas être mise dans Vite, ni dans GitHub, ni dans le frontend.
 
 ## Commit proposé
 
 ```txt
-dev10 prioritize aero map mode
+dev11 add openaip raster aero tiles
 ```

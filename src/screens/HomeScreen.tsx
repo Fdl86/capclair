@@ -33,7 +33,7 @@ export function HomeScreen({ onNavigate }: HomeScreenProps) {
         <div className="system-badges">
           <span className="system-badge green"><strong>GPS</strong> Prêt</span>
           <span className="system-badge cyan"><strong>Météo</strong> Mock DEV01</span>
-          <span className="system-badge amber"><strong>Carte</strong> OACI si accès OK</span>
+          <span className="system-badge amber"><strong>Carte</strong> openAIP prioritaire</span>
         </div>
       </Card>
 

@@ -21,7 +21,7 @@ export function PlanningScreen({ route, selectedPointId, onSelectPoint, onAddPoi
   const [mapMode, setMapMode] = useState<MapMode>('aero');
 
   return (
-    <Page title="Planification" subtitle="Carte aéro prioritaire, fond libre disponible en second. Route test LFCA - LFOD Saumur - LFOT Tours.">
+    <Page title="Planification" subtitle="Carte aéro openAIP prioritaire, fond libre en second. Route test LFCA - LFOD Saumur - LFOT Tours.">
       <div className="planning-layout">
         <div className="map-card tall">
           <MapScaleSelector value={mapMode} onChange={setMapMode} />

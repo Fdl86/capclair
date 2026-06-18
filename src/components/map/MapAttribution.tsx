@@ -8,7 +8,7 @@ interface MapAttributionProps {
 
 export function MapAttribution({ sourceStatus, mapMode = 'aero' }: MapAttributionProps) {
   const modeText = mapMode === 'aero'
-    ? 'Surcouche aviation openAIP via proxy Cloudflare.'
+    ? 'Surcouche raster aviation openAIP via proxy Cloudflare.'
     : mapMode === 'free'
       ? 'Fond libre seul, sans surcouche aviation active.'
       : 'Données SIA XML prévues en surcouche France.';

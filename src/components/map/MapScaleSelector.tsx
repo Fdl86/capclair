@@ -6,8 +6,8 @@ interface MapScaleSelectorProps {
 }
 
 const values: Array<{ value: MapMode; label: string; description: string }> = [
-  { value: 'aero', label: 'Carte aéro', description: 'Fond libre + surcouches aviation' },
-  { value: 'free', label: 'Fond libre', description: 'Carte topo simple' },
+  { value: 'aero', label: 'Carte aéro', description: 'Fond topo + tuiles aviation openAIP' },
+  { value: 'free', label: 'Fond libre', description: 'Fond topo seul' },
   { value: 'sia', label: 'SIA XML', description: 'Données France à venir' }
 ];
 
