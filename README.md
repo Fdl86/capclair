@@ -1,25 +1,22 @@
-# CAP CLAIR DEV06 - Test LFCA / Saumur / Tours
+# CAP CLAIR DEV07 - SIA NO + SO LFCA test
 
-Cette version remplace la navigation de test par :
-
-```txt
-LFCA -> LFOD Saumur Saint-Florent -> LFOT Tours Val de Loire
-```
+Cette version teste la jonction entre la carte Nord-Ouest et la carte Sud-Ouest.
 
 ## A tester
 
 1. Ouvrir Planification.
-2. Vérifier que la route est `LFCA - LFOD Saumur - LFOT Tours`.
-3. Vérifier le placement du point LFOD Saumur.
-4. Vérifier le placement de LFOT Tours.
-5. Observer LFCA en limite sud : c'est probablement une zone de jonction avec la future carte Sud-Ouest.
+2. Vérifier LFCA.
+3. Vérifier LFOD Saumur.
+4. Vérifier LFOT Tours.
+5. Observer la jonction NO/SO autour de LFCA / Poitiers.
 
-## Note importante
+## Principe
 
-La bande beige au sud n'est pas un bug noir restant : c'est le hors couverture / bord du tilepack Nord-Ouest actuel. Pour traiter LFCA proprement, il faudra intégrer la carte Sud-Ouest et gérer la jonction NO/SO.
+- Nord-Ouest : fond principal pour Saumur / Tours.
+- Sud-Ouest : overlay transparent limité à LFCA / Poitiers.
 
 ## Commit proposé
 
 ```txt
-test sia lfca saumur tours route
+test sia no so lfca join
 ```

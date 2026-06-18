@@ -21,7 +21,7 @@ export function PlanningScreen({ route, selectedPointId, onSelectPoint, onAddPoi
   const [scale, setScale] = useState('SIA DEV 500K');
 
   return (
-    <Page title="Planification" subtitle="Route test LFCA - LFOD Saumur - LFOT Tours sur tuiles SIA DEV.">
+    <Page title="Planification" subtitle="Route test LFCA - LFOD Saumur - LFOT Tours sur jonction SIA NO + SO DEV.">
       <div className="planning-layout">
         <div className="map-card tall">
           <MapScaleSelector value={scale} onChange={setScale} />

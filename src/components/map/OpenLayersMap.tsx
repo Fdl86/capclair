@@ -5,6 +5,7 @@ import { fromLonLat } from 'ol/proj';
 import { boundingExtent } from 'ol/extent';
 import type BaseLayer from 'ol/layer/Base';
 import { createSia500kDevLayer } from '../../mapSources/sia500kDevSource';
+import { createSia500kSouthWestDevLayer } from '../../mapSources/sia500kSouthWestDevSource';
 import { createDemoFallbackLayer } from '../../mapSources/demoFallbackSource';
 import { initialMapCenter, initialMapZoom } from '../../mapEngine/mapViewConfig';
 import type { MapSourceStatus } from '../../mapEngine/mapTypes';
@@ -62,12 +63,12 @@ export function OpenLayersMap({ route, trace, aircraft, selectedPointId, compact
     aircraftLayerRef.current = aircraftLayer;
 
     const useSiaDevTiles = true;
-    const baseLayer = useSiaDevTiles ? createSia500kDevLayer() : createDemoFallbackLayer();
+    const baseLayers = useSiaDevTiles ? [createSia500kDevLayer(), createSia500kSouthWestDevLayer()] : [createDemoFallbackLayer()];
 
     const map = new Map({
       target: mapElementRef.current,
       controls: [],
-      layers: [baseLayer, traceLayer, aircraftLayer],
+      layers: [...baseLayers, traceLayer, aircraftLayer],
       view: new View({
         center: initialMapCenter,
         zoom: initialMapZoom,
@@ -154,7 +155,7 @@ export function OpenLayersMap({ route, trace, aircraft, selectedPointId, compact
       <div ref={mapElementRef} className="ol-map" aria-label="Carte CAP CLAIR" />
       <div className="map-topline">
         <span>{sourceStatus === 'sia-dev' ? 'SIA 500K DEV' : sourceStatus === 'oaci' ? 'Carte OACI-VFR' : sourceStatus === 'loading' ? 'Chargement carte' : 'Fond demo'}</span>
-        <span>Données DEV06 LFOD</span>
+        <span>Données DEV07 NO+SO</span>
       </div>
       <MapControls onZoomIn={() => zoom(1)} onZoomOut={() => zoom(-1)} onRecenter={recenter} />
       {sourceStatus === 'fallback' && <MapFallbackNotice />}

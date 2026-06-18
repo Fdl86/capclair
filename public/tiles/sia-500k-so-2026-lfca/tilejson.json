@@ -1,0 +1,19 @@
+{
+  "tilejson": "3.0.0",
+  "name": "CAP CLAIR DEV - SIA OACI 500k Sud-Ouest 2026 - LFCA Poitiers join test",
+  "format": "webp",
+  "minzoom": 7,
+  "maxzoom": 12,
+  "bounds": [
+    -0.25,
+    46.5,
+    0.85,
+    47.08
+  ],
+  "tiles": [
+    "./xyz/{z}/{x}/{y}.webp"
+  ],
+  "attribution": "Source SIA - Carte OACI SIA Sud-Ouest 2026. Retuilage CAP CLAIR DEV. Produit non officiel, non réglementaire.",
+  "devWarning": "Test technique de géoréférencement. Ne pas utiliser pour la navigation.",
+  "alpha": true
+}
