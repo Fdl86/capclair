@@ -1123,3 +1123,115 @@
     grid-column: auto;
   }
 }
+
+/* DEV13.4 - weather audit */
+.weather-audit-card {
+  padding: 0;
+  overflow: hidden;
+}
+
+.weather-audit-card .panel-title-row {
+  padding: 14px 16px;
+  border-bottom: 1px solid rgba(30, 49, 69, 0.72);
+}
+
+.weather-audit-list {
+  display: grid;
+}
+
+.weather-audit-row {
+  display: grid;
+  gap: 10px;
+  padding: 13px 16px;
+  border-bottom: 1px solid rgba(30, 49, 69, 0.52);
+  background: rgba(7, 17, 28, 0.35);
+}
+
+.weather-audit-row:last-child {
+  border-bottom: 0;
+}
+
+.weather-audit-row.ok {
+  box-shadow: inset 3px 0 0 rgba(61, 220, 132, 0.72);
+}
+
+.weather-audit-row.missing {
+  box-shadow: inset 3px 0 0 rgba(255, 154, 61, 0.8);
+}
+
+.weather-audit-main {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  align-items: center;
+}
+
+.weather-audit-main strong {
+  color: var(--text);
+  font-size: 0.9rem;
+}
+
+.weather-audit-main span {
+  color: var(--cyan-soft);
+  font-weight: 850;
+}
+
+.weather-audit-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.weather-audit-grid span {
+  min-height: 44px;
+  display: grid;
+  align-content: center;
+  gap: 3px;
+  border: 1px solid rgba(30, 49, 69, 0.68);
+  border-radius: 10px;
+  background: rgba(5, 11, 18, 0.55);
+  padding: 7px 9px;
+  color: var(--text-2);
+  font-size: 0.74rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.weather-audit-grid span.wide {
+  grid-column: span 2;
+}
+
+.weather-audit-grid b {
+  color: var(--text-3);
+  font-size: 0.56rem;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.weather-audit-missing {
+  margin: 0;
+  color: var(--text-2);
+  font-size: 0.82rem;
+  line-height: 1.45;
+}
+
+@media (max-width: 980px) {
+  .weather-audit-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 520px) {
+  .weather-audit-main {
+    display: grid;
+  }
+
+  .weather-audit-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .weather-audit-grid span.wide {
+    grid-column: auto;
+  }
+}

@@ -1,7 +1,7 @@
 {
-  "name": "cap-clair-dev13-3-wind-now-mode",
+  "name": "cap-clair-dev13-4-weather-audit",
   "private": true,
-  "version": "0.13.3",
+  "version": "0.13.4",
   "type": "module",
   "scripts": {
     "dev": "vite",

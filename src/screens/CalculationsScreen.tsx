@@ -1,4 +1,4 @@
-import type { NavPoint, NavRoute } from '../domain/navigation.types';
+import type { BranchWindAuditLevel, NavBranch, NavPoint, NavRoute } from '../domain/navigation.types';
 import { Page } from '../components/layout/Page';
 import { BranchTable } from '../components/navigation/BranchTable';
 import { Button } from '../components/ui/Button';
@@ -18,16 +18,51 @@ function pointByType(route: NavRoute, type: NavPoint['type']) {
   return route.points.find((point) => point.type === type);
 }
 
+function pointName(route: NavRoute, id: string) {
+  const point = route.points.find((item) => item.id === id);
+  return point?.code ?? point?.nom ?? id.toUpperCase();
+}
+
+function branchName(route: NavRoute, branch: NavBranch) {
+  return `${pointName(route, branch.from)} - ${pointName(route, branch.to)}`;
+}
+
 function formatDuration(minutes: number): string {
   const hours = Math.floor(minutes / 60);
   const mins = minutes % 60;
   return `${hours}:${String(mins).padStart(2, '0')}`;
 }
 
-function timeZulu(iso: string) {
+function timeZulu(iso?: string) {
+  if (!iso) return '-';
   const date = new Date(iso);
   if (Number.isNaN(date.getTime())) return '-';
   return `${String(date.getUTCHours()).padStart(2, '0')}:${String(date.getUTCMinutes()).padStart(2, '0')}Z`;
+}
+
+function localTime(iso?: string) {
+  if (!iso) return '-';
+  const date = new Date(iso);
+  if (Number.isNaN(date.getTime())) return '-';
+  return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+}
+
+function windText(directionDeg?: number, speedKt?: number) {
+  if (typeof directionDeg !== 'number' || typeof speedKt !== 'number') return '-';
+  return `${String(directionDeg).padStart(3, '0')}/${speedKt}`;
+}
+
+function levelText(level?: BranchWindAuditLevel | null) {
+  if (!level) return '-';
+  return `${level.pressureHpa} hPa - ${level.heightFt} ft - ${windText(level.directionDeg, level.speedKt)}`;
+}
+
+function modelLabel(provider?: string) {
+  if (!provider) return '-';
+  if (provider === 'mixed') return 'Mix modèles';
+  if (provider.includes('meteofrance')) return 'Météo-France via Open-Meteo';
+  if (provider.includes('forecast')) return 'Open-Meteo fallback';
+  return provider;
 }
 
 function SummaryCard({ label, value, detail }: { label: string; value: string; detail?: string }) {
@@ -36,6 +71,39 @@ function SummaryCard({ label, value, detail }: { label: string; value: string; d
       <span>{label}</span>
       <strong>{value}</strong>
       {detail && <small>{detail}</small>}
+    </div>
+  );
+}
+
+function WeatherAuditCard({ route, branch }: { route: NavRoute; branch: NavBranch }) {
+  const audit = branch.wind?.auditSamples?.[0];
+  const sampleCount = branch.wind?.auditSamples?.length ?? 0;
+
+  return (
+    <div className={`weather-audit-row ${branch.wind ? 'ok' : 'missing'}`}>
+      <div className="weather-audit-main">
+        <strong>{branchName(route, branch)}</strong>
+        <span>{branch.wind ? `Vent ${windText(branch.wind.directionDeg, branch.wind.speedKt)}` : 'Vent non reçu'}</span>
+      </div>
+
+      {audit ? (
+        <div className="weather-audit-grid">
+          <span><b>Point</b>{audit.latitude.toFixed(1)} / {audit.longitude.toFixed(1)}</span>
+          <span><b>Altitude</b>{audit.altitudeFt} ft</span>
+          <span><b>Heure UTC</b>{timeZulu(audit.sourceTimeIso)}</span>
+          <span><b>Heure locale</b>{localTime(audit.sourceTimeIso)}</span>
+          <span><b>Source</b>{modelLabel(branch.wind?.provider)}</span>
+          <span><b>Endpoint</b>{branch.wind?.endpoint ?? audit.endpoint}</span>
+          <span><b>Fallback</b>{branch.wind?.fallback ? 'oui' : 'non'}</span>
+          <span><b>Cache</b>{branch.wind?.cache ?? audit.cache}</span>
+          <span className="wide"><b>Niveau bas</b>{levelText(audit.lowerLevel)}</span>
+          <span className="wide"><b>Niveau haut</b>{levelText(audit.upperLevel)}</span>
+          <span><b>Samples</b>{sampleCount}</span>
+          <span><b>Clé</b>{audit.normalizedKey}</span>
+        </div>
+      ) : (
+        <p className="weather-audit-missing">Relancer Maj vent. Si la branche reste sans vent, comparer le point et l'altitude avec Windy puis vérifier la console.</p>
+      )}
     </div>
   );
 }
@@ -53,6 +121,7 @@ export function CalculationsScreen({
   const destination = pointByType(route, 'destination');
   const lastBranch = route.branches[route.branches.length - 1];
   const windModelTime = route.branches.find((branch) => branch.wind?.sourceTimeIso)?.wind?.sourceTimeIso;
+  const loadedWinds = route.branches.filter((branch) => branch.wind).length;
 
   return (
     <Page title="Log de nav" subtitle="Préparation VFR - calculs, vent et suivi de branche.">
@@ -76,6 +145,21 @@ export function CalculationsScreen({
             <Button variant="secondary" onClick={onRefreshWinds}>Modifier vents</Button>
           </div>
           <BranchTable route={route} onSetBranchAltitude={onSetBranchAltitude} />
+        </Card>
+
+        <Card className="weather-audit-card">
+          <div className="panel-title-row">
+            <div>
+              <span>Audit météo</span>
+              <strong>{loadedWinds}/{route.branches.length} branches avec vent</strong>
+            </div>
+            <Button variant="secondary" onClick={onRefreshWinds}>Relancer audit</Button>
+          </div>
+          <div className="weather-audit-list">
+            {route.branches.map((branch) => (
+              <WeatherAuditCard key={branch.id} route={route} branch={branch} />
+            ))}
+          </div>
         </Card>
 
         <div className="navlog-bottom-grid">
@@ -111,7 +195,7 @@ export function CalculationsScreen({
         {lastBranch && (
           <Card className="safety-card">
             <strong>Info calcul</strong>
-            <p>Les vents sont récupérés à l'instant où l'utilisateur lance la mise à jour, par échantillons optimisés sur les branches. Les routes magnétiques utilisent la variation affichée au format aviation, par exemple 1E ou 1W.</p>
+            <p>Les vents sont récupérés à l'instant où l'utilisateur lance la mise à jour. L'audit affiche le point exact, l'heure UTC, l'heure locale, l'endpoint, le fallback et les niveaux pression utilisés pour comparer proprement avec Windy.</p>
           </Card>
         )}
       </div>

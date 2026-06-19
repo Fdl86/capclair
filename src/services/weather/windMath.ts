@@ -17,6 +17,12 @@ export function componentsToWind(u: number, v: number): BranchWind {
   return { directionDeg, speedKt };
 }
 
+function commonValue(values: Array<string | undefined>): string | undefined {
+  const filtered = values.filter(Boolean) as string[];
+  if (!filtered.length) return undefined;
+  return filtered.every((value) => value === filtered[0]) ? filtered[0] : 'mixed';
+}
+
 export function averageWind(winds: BranchWind[]): BranchWind | null {
   if (!winds.length) return null;
   const sum = winds.reduce((acc, wind) => {
@@ -25,9 +31,16 @@ export function averageWind(winds: BranchWind[]): BranchWind | null {
   }, { u: 0, v: 0 });
 
   const averaged = componentsToWind(sum.u / winds.length, sum.v / winds.length);
+  const auditSamples = winds.flatMap((wind) => wind.auditSamples ?? []);
+
   return {
     ...averaged,
     sourceTimeIso: winds[0]?.sourceTimeIso,
-    provider: winds[0]?.provider
+    provider: commonValue(winds.map((wind) => wind.provider)),
+    endpoint: commonValue(winds.map((wind) => wind.endpoint)),
+    fallback: winds.some((wind) => wind.fallback),
+    cache: commonValue(winds.map((wind) => wind.cache)) as BranchWind['cache'],
+    normalizedKey: winds[0]?.normalizedKey,
+    auditSamples
   };
 }

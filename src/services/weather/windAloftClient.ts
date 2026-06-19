@@ -1,7 +1,7 @@
 import type { BranchWind, NavBranch, NavPoint, NavRoute } from '../../domain/navigation.types';
 import { averageWind } from './windMath';
 
-const CACHE_PREFIX = 'capclair.weather.windAloft.';
+const CACHE_PREFIX = 'capclair.weather.windAloft.v13_4.';
 const CACHE_TTL_MS = 60 * 60 * 1000;
 
 interface WindSampleRequest {
@@ -55,7 +55,11 @@ function readCache(sample: WindSampleRequest): WindSampleResponse | null {
     if (!raw) return null;
     const parsed = JSON.parse(raw) as { savedAt: number; data: WindSampleResponse };
     if (Date.now() - parsed.savedAt > CACHE_TTL_MS) return null;
-    return parsed.data;
+    return {
+      ...parsed.data,
+      cache: 'browser',
+      auditSamples: (parsed.data.auditSamples ?? []).map((sample) => ({ ...sample, cache: 'browser' }))
+    };
   } catch {
     return null;
   }

@@ -44,18 +44,24 @@ function clamp(value, min, max) {
   return Math.max(min, Math.min(max, value));
 }
 
-function roundHourIso(value) {
+function roundNearestHourIso(value) {
   const date = new Date(value);
-  if (Number.isNaN(date.getTime())) return new Date().toISOString().slice(0, 13) + ':00:00.000Z';
-  date.setUTCMinutes(0, 0, 0);
-  return date.toISOString();
+  if (Number.isNaN(date.getTime())) return new Date(Math.round(Date.now() / 3600000) * 3600000).toISOString();
+  return new Date(Math.round(date.getTime() / 3600000) * 3600000).toISOString();
+}
+
+function normalizeOpenMeteoTime(value) {
+  const text = String(value);
+  if (text.endsWith('Z')) return text;
+  if (text.length === 16) return `${text}:00Z`;
+  return `${text}Z`;
 }
 
 function normalizeSample(sample) {
   const latitude = clamp(Number(sample.latitude), -90, 90);
   const longitude = clamp(Number(sample.longitude), -180, 180);
   const altitudeFt = clamp(Math.round(Number(sample.altitudeFt) / 500) * 500, 0, 12500);
-  const timeIso = roundHourIso(sample.timeIso);
+  const timeIso = roundNearestHourIso(sample.timeIso);
   const latCell = Math.round(latitude * 10) / 10;
   const lonCell = Math.round(longitude * 10) / 10;
 
@@ -94,8 +100,7 @@ function pickHourIndex(times, targetIso) {
   let bestDelta = Number.POSITIVE_INFINITY;
 
   for (let index = 0; index < times.length; index += 1) {
-    const time = String(times[index]);
-    const candidate = new Date(time.endsWith('Z') ? time : `${time}:00Z`);
+    const candidate = new Date(normalizeOpenMeteoTime(times[index]));
     const delta = Math.abs(candidate.getTime() - targetDate.getTime());
     if (Number.isFinite(delta) && delta < bestDelta) {
       bestDelta = delta;
@@ -106,8 +111,18 @@ function pickHourIndex(times, targetIso) {
   return bestIndex;
 }
 
-function interpolateWind(hourly, index, altitudeFt) {
-  const altitudeM = altitudeFt * 0.3048;
+function auditLevel(value) {
+  if (!value) return null;
+  return {
+    pressureHpa: value.level,
+    heightFt: Math.round(value.height * 3.28084),
+    directionDeg: Math.round(value.direction),
+    speedKt: Math.round(value.speed)
+  };
+}
+
+function interpolateWind(hourly, index, sample, providerName, endpoint) {
+  const altitudeM = sample.altitudeFt * 0.3048;
   const values = LEVELS.map((level) => {
     const speed = hourly[`wind_speed_${level}hPa`]?.[index];
     const direction = hourly[`wind_direction_${level}hPa`]?.[index];
@@ -119,10 +134,41 @@ function interpolateWind(hourly, index, altitudeFt) {
   }).filter(Boolean).sort((a, b) => a.height - b.height);
 
   if (!values.length) return null;
-  if (altitudeM <= values[0].height) return { directionDeg: Math.round(values[0].direction), speedKt: Math.round(values[0].speed) };
+
+  const build = (wind, lower, upper, ratio) => ({
+    directionDeg: wind.directionDeg,
+    speedKt: wind.speedKt,
+    sourceTimeIso: null,
+    provider: providerName,
+    endpoint,
+    fallback: providerName !== 'open-meteo-meteofrance',
+    normalizedKey: sample.normalizedKey,
+    auditSamples: [{
+      sampleId: sample.sampleId,
+      latitude: sample.latitude,
+      longitude: sample.longitude,
+      altitudeFt: sample.altitudeFt,
+      requestedTimeIso: sample.timeIso,
+      sourceTimeIso: null,
+      provider: providerName,
+      endpoint,
+      fallback: providerName !== 'open-meteo-meteofrance',
+      cache: 'live',
+      normalizedKey: sample.normalizedKey,
+      lowerLevel: auditLevel(lower),
+      upperLevel: auditLevel(upper),
+      interpolationRatio: Number.isFinite(ratio) ? Number(ratio.toFixed(3)) : null
+    }]
+  });
+
+  if (altitudeM <= values[0].height) {
+    const first = values[0];
+    return build({ directionDeg: Math.round(first.direction), speedKt: Math.round(first.speed) }, first, first, null);
+  }
+
   if (altitudeM >= values[values.length - 1].height) {
     const last = values[values.length - 1];
-    return { directionDeg: Math.round(last.direction), speedKt: Math.round(last.speed) };
+    return build({ directionDeg: Math.round(last.direction), speedKt: Math.round(last.speed) }, last, last, null);
   }
 
   for (let indexValue = 0; indexValue < values.length - 1; indexValue += 1) {
@@ -133,12 +179,12 @@ function interpolateWind(hourly, index, altitudeFt) {
       const ratio = (altitudeM - lower.height) / Math.max(1, upper.height - lower.height);
       const u = lower.u + (upper.u - lower.u) * ratio;
       const v = lower.v + (upper.v - lower.v) * ratio;
-      return componentsToWind(u, v);
+      return build(componentsToWind(u, v), lower, upper, ratio);
     }
   }
 
   const nearest = values[0];
-  return { directionDeg: Math.round(nearest.direction), speedKt: Math.round(nearest.speed) };
+  return build({ directionDeg: Math.round(nearest.direction), speedKt: Math.round(nearest.speed) }, nearest, nearest, null);
 }
 
 function createOpenMeteoUrl(baseUrl, sample) {
@@ -173,8 +219,25 @@ async function fetchWithTimeout(url, options, timeoutMs) {
   }
 }
 
+function markCache(wind, cache) {
+  return {
+    ...wind,
+    cache,
+    auditSamples: (wind.auditSamples ?? []).map((sample) => ({ ...sample, cache }))
+  };
+}
+
+function withSourceTime(wind, sourceTimeIso) {
+  return {
+    ...wind,
+    sourceTimeIso,
+    auditSamples: (wind.auditSamples ?? []).map((sample) => ({ ...sample, sourceTimeIso }))
+  };
+}
+
 async function fetchFromOpenMeteo(baseUrl, providerName, sample) {
   const upstreamUrl = createOpenMeteoUrl(baseUrl, sample);
+  const endpoint = new URL(baseUrl).pathname.replace('/v1/', '');
   let upstream;
 
   for (let attempt = 0; attempt < 2; attempt += 1) {
@@ -183,7 +246,7 @@ async function fetchFromOpenMeteo(baseUrl, providerName, sample) {
         headers: { Accept: 'application/json' }
       }, 12000);
       break;
-    } catch (error) {
+    } catch {
       if (attempt === 1) return { wind: null, error: `${providerName}: timeout` };
       await sleep(500);
     }
@@ -209,38 +272,33 @@ async function fetchFromOpenMeteo(baseUrl, providerName, sample) {
   }
 
   const hourIndex = pickHourIndex(times, sample.timeIso);
-  const wind = interpolateWind(data.hourly, hourIndex, sample.altitudeFt);
+  const sourceTimeIso = normalizeOpenMeteoTime(times[hourIndex]);
+  const wind = interpolateWind(data.hourly, hourIndex, sample, providerName, endpoint);
   if (!wind) {
     return { wind: null, error: `${providerName}: no pressure-level wind for sample` };
   }
 
   return {
-    wind: {
-      ...wind,
-      sourceTimeIso: `${String(times[hourIndex])}:00Z`,
-      provider: providerName,
-      normalizedKey: sample.normalizedKey
-    },
+    wind: markCache(withSourceTime(wind, sourceTimeIso), 'live'),
     error: null
   };
 }
 
 async function fetchOpenMeteo(sample, request, context) {
   const cache = getRuntimeCache();
+  const attempts = [
+    ['https://api.open-meteo.com/v1/meteofrance', 'open-meteo-meteofrance'],
+    ['https://api.open-meteo.com/v1/forecast', 'open-meteo-forecast']
+  ];
 
   if (cache) {
     const cacheUrl = new URL(request.url);
-    cacheUrl.pathname = `/api/weather/wind-cache/${encodeURIComponent(sample.normalizedKey)}`;
+    cacheUrl.pathname = `/api/weather/wind-cache-v2/${encodeURIComponent(sample.normalizedKey)}`;
     const cacheKey = new Request(cacheUrl.toString(), { method: 'GET' });
     const cached = await cache.match(cacheKey);
-    if (cached) return { wind: await cached.json(), errors: [] };
+    if (cached) return { wind: markCache(await cached.json(), 'cloudflare'), errors: [] };
 
-    const attempts = [
-      ['https://api.open-meteo.com/v1/meteofrance', 'open-meteo-meteofrance'],
-      ['https://api.open-meteo.com/v1/forecast', 'open-meteo-forecast']
-    ];
     const errors = [];
-
     for (const [baseUrl, providerName] of attempts) {
       const result = await fetchFromOpenMeteo(baseUrl, providerName, sample);
       if (result.wind) {
@@ -254,12 +312,7 @@ async function fetchOpenMeteo(sample, request, context) {
     return { wind: null, errors };
   }
 
-  const attempts = [
-    ['https://api.open-meteo.com/v1/meteofrance', 'open-meteo-meteofrance'],
-    ['https://api.open-meteo.com/v1/forecast', 'open-meteo-forecast']
-  ];
   const errors = [];
-
   for (const [baseUrl, providerName] of attempts) {
     const result = await fetchFromOpenMeteo(baseUrl, providerName, sample);
     if (result.wind) return { wind: result.wind, errors };
@@ -306,6 +359,17 @@ export async function onRequestPost(context) {
     .map((sample) => {
       const wind = fetchedByKey.get(sample.normalizedKey);
       if (!wind) return null;
+      const auditTemplate = wind.auditSamples?.[0];
+      const auditSamples = auditTemplate ? [{
+        ...auditTemplate,
+        sampleId: sample.sampleId,
+        latitude: sample.latitude,
+        longitude: sample.longitude,
+        altitudeFt: sample.altitudeFt,
+        requestedTimeIso: sample.timeIso,
+        normalizedKey: sample.normalizedKey
+      }] : [];
+
       return {
         sampleId: sample.sampleId,
         branchId: sample.branchId,
@@ -313,7 +377,11 @@ export async function onRequestPost(context) {
         speedKt: wind.speedKt,
         sourceTimeIso: wind.sourceTimeIso,
         provider: wind.provider,
-        normalizedKey: sample.normalizedKey
+        endpoint: wind.endpoint,
+        fallback: wind.fallback,
+        cache: wind.cache,
+        normalizedKey: sample.normalizedKey,
+        auditSamples
       };
     })
     .filter(Boolean);

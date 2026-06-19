@@ -13,11 +13,40 @@ export interface NavPoint {
   magneticVariationDeg?: number | null;
 }
 
+export interface BranchWindAuditLevel {
+  pressureHpa: number;
+  heightFt: number;
+  directionDeg: number;
+  speedKt: number;
+}
+
+export interface BranchWindSampleAudit {
+  sampleId: string;
+  latitude: number;
+  longitude: number;
+  altitudeFt: number;
+  requestedTimeIso: string;
+  sourceTimeIso: string;
+  provider: string;
+  endpoint: string;
+  fallback: boolean;
+  cache: 'browser' | 'cloudflare' | 'live' | 'unknown';
+  normalizedKey: string;
+  lowerLevel?: BranchWindAuditLevel | null;
+  upperLevel?: BranchWindAuditLevel | null;
+  interpolationRatio?: number | null;
+}
+
 export interface BranchWind {
   directionDeg: number;
   speedKt: number;
   sourceTimeIso?: string;
   provider?: string;
+  endpoint?: string;
+  fallback?: boolean;
+  cache?: 'browser' | 'cloudflare' | 'live' | 'mixed' | 'unknown';
+  normalizedKey?: string;
+  auditSamples?: BranchWindSampleAudit[];
   ageMinutes?: number;
 }
 

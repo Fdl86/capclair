@@ -33,3 +33,20 @@ dev13 add wind aloft navlog
 ## DEV13.3
 
 Le vent est analysé à l'heure du clic sur `Maj vent`. Le champ heure UTC a été retiré.
+
+## DEV13.4
+
+Le log de nav contient maintenant un panneau `Audit météo`.
+
+Utilisation :
+1. Ouvrir Planification.
+2. Cliquer `Maj vent`.
+3. Ouvrir `Log nav`.
+4. Lire `Audit météo`.
+5. Comparer avec Windy en utilisant le même point, la même heure locale et la même altitude.
+
+Commit proposé :
+
+```txt
+dev13.4 add weather audit
+```

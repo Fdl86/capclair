@@ -4,8 +4,20 @@ import { useLocalStorageState } from './useLocalStorageState';
 import { buildRoute, createAerodromePoint, createDefaultRoute, createManualWaypoint, relabelRoutePoints } from '../services/navigation/routeBuilder';
 import { fetchWindAloftForRoute } from '../services/weather/windAloftClient';
 
-const STORAGE_KEY = 'capclair.activeRoute.dev13.windLog';
+const STORAGE_KEY = 'capclair.activeRoute.dev13_4.weatherAudit';
 const defaultRoute = createDefaultRoute();
+
+function pointCode(route: NavRoute, id: string): string {
+  const point = route.points.find((item) => item.id === id);
+  return point?.code ?? point?.nom ?? id.toUpperCase();
+}
+
+function branchLabel(route: NavRoute, branchId: string): string {
+  const branch = route.branches.find((item) => item.id === branchId);
+  if (!branch) return branchId;
+  return `${pointCode(route, branch.from)}-${pointCode(route, branch.to)}`;
+}
+
 
 function safeRoute(route: NavRoute): NavRoute {
   if (!route.points || route.points.length < 2) return defaultRoute;
@@ -139,7 +151,14 @@ export function useActiveRoute() {
         ...winds
       }, 'Vent mis à jour');
       const loaded = Object.keys(winds).length;
-      setWeatherStatus(loaded ? `Vent OK ${loaded}/${next.branches.length}` : 'Vent non reçu');
+      const missingBranches = next.branches.filter((branch) => !winds[branch.id]).map((branch) => branchLabel(next, branch.id));
+      setWeatherStatus(
+        loaded === next.branches.length
+          ? `Vent OK ${loaded}/${next.branches.length}`
+          : loaded > 0
+            ? `Vent partiel ${loaded}/${next.branches.length} - manque ${missingBranches.slice(0, 2).join(', ')}`
+            : 'Vent non reçu'
+      );
     } catch {
       setWeatherStatus('Erreur météo');
     }
