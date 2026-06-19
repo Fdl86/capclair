@@ -1,84 +1,47 @@
-# CAP CLAIR DEV13 - Wind aloft et log de nav
+# CAP CLAIR
 
-## A tester
+Application VFR mobile-first pour préparation de navigation, log de nav, météo vent et suivi GPS.
 
-1. Ouvrir Planification.
-2. Vérifier TAS et altitude défaut.
-3. Cliquer `Maj vent`.
-4. Ouvrir `Log nav`.
-5. Modifier une altitude de branche.
-6. Relancer `Modifier vents`.
-7. Vérifier le tableau :
-   - Vent
-   - RV
-   - Var au format 1E / 1W
-   - RM
-   - Dérive
-   - CM
-   - GS
-   - ETE / ETA
+## Base actuelle
 
-## Variables Cloudflare
+- Carte aéro openAIP via proxy Cloudflare.
+- Planification route avec départ, arrivée et points intermédiaires.
+- Profil de vol avec TAS et altitude.
+- Vent Météo-France strict via Open-Meteo.
+- Log de navigation premium.
+- Frise zones globale optimisée sur l'ensemble de la nav.
+- PWA Vite / React / TypeScript.
+- Traitement local côté navigateur.
+- Proxy Cloudflare Pages Functions pour les API externes.
 
-`OPENAIP_API_KEY` reste nécessaire pour les tuiles openAIP.
+## Installation
 
-La météo Open-Meteo ne nécessite pas de clé.
-
-## Commit proposé
-
-```txt
-dev13 add wind aloft navlog
+```bash
+npm ci
+npm run build
 ```
 
-## DEV13.3
+## Déploiement Cloudflare Pages
 
-Le vent est analysé à l'heure du clic sur `Maj vent`. Le champ heure UTC a été retiré.
-
-## DEV13.4
-
-Le log de nav contient maintenant une bannière zones par altitude.
-
-Utilisation :
-1. Ouvrir Planification.
-2. Cliquer `Maj vent`.
-3. Ouvrir `Log nav`.
-4. Lire la bannière zones.
-5. Comparer avec Windy en utilisant le même point, la même heure locale et la même altitude.
-
-Commit proposé :
+Variable requise pour les tuiles openAIP :
 
 ```txt
-dev13.4 add weather audit
+OPENAIP_API_KEY
 ```
 
-## DEV13.5
+La météo Météo-France via Open-Meteo ne nécessite pas de clé.
 
-Mode météo strict Météo-France.
+## Notes
 
-Ce hotfix supprime le fallback Forecast pour éviter de mélanger les sources météo dans le log. Si une branche ne reçoit pas de donnée Météo-France exploitable, elle reste sans vent plutôt que d'afficher une donnée non comparable avec Windy AROME.
+Prototype non réglementaire. Ne pas utiliser comme source unique pour une navigation réelle.
 
-Commit proposé :
+## Version courante
 
-```txt
-dev13.5 strict meteofrance wind
-```
+DEV13.6.2 - Frise UX optimized
 
-## DEV13.6
-
-Ajout d'une bannière zones dans le log de nav, calculée par position et altitude de branche.
-
-Commit proposé :
-
-```txt
-dev13.6 add zones altitude banner
-```
-
-## DEV13.6.1
-
-La bannière zones est maintenant une frise unique sur toute la navigation, avec distance cumulée, points de route, altitude planifiée et blocs de zones sur l'ensemble du trajet.
-
-Commit proposé :
-
-```txt
-dev13.6.1 global zone frieze
-```
+- Bouton Zones retiré de Planification.
+- Commandes TAS et altitude avec boutons - / +.
+- Frise zones allégée.
+- Altitude route affichée sur la frise sans libellé long.
+- Graphique limité aux couches réellement utiles autour de l'altitude prévue.
+- Météo Météo-France strict conservée.

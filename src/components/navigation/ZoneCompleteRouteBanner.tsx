@@ -1,5 +1,5 @@
 import type { BranchZoneBlock, BranchZoneProfile } from '../../domain/airspace.types';
-import type { NavBranch, NavRoute } from '../../domain/navigation.types';
+import type { NavRoute } from '../../domain/navigation.types';
 
 interface ZoneCompleteRouteBannerProps {
   route: NavRoute;
@@ -31,7 +31,19 @@ function plannedAltitude(route: NavRoute) {
   const altitudes = route.branches.map((branch) => branch.altitudeFt);
   if (!altitudes.length) return route.profile.defaultAltitudeFt;
   const first = altitudes[0];
-  return altitudes.every((altitude) => altitude === first) ? first : first;
+  return altitudes.every((altitude) => altitude === first) ? first : route.profile.defaultAltitudeFt;
+}
+
+function blockRelevance(block: GlobalZoneBlock, altitude: number): number {
+  if (block.containsPlannedAltitude) return 1000 + block.priority;
+  if (block.altitudeRelation === 'uncertain') return 850 + block.priority;
+  if (block.altitudeRelation === 'above' && block.ceilingFt >= altitude - 4500) return 450 + block.priority;
+  if (block.altitudeRelation === 'below' && block.floorFt <= altitude + 1500) return 300 + block.priority;
+  return -1000;
+}
+
+function isUsefulBlock(block: GlobalZoneBlock, altitude: number): boolean {
+  return blockRelevance(block, altitude) > 0;
 }
 
 function buildRouteMarkers(route: NavRoute): RouteMarker[] {
@@ -73,21 +85,24 @@ function buildGlobalBlocks(route: NavRoute, profiles: Record<string, BranchZoneP
     cumulative += branch.distanceNm;
   }
 
+  const altitude = plannedAltitude(route);
+
   return blocks
     .filter((block) => block.globalEnd > block.globalStart)
-    .sort((a, b) => b.priority - a.priority || a.floorFt - b.floorFt)
-    .slice(0, 48);
+    .filter((block) => isUsefulBlock(block, altitude))
+    .sort((a, b) => blockRelevance(b, altitude) - blockRelevance(a, altitude) || a.floorFt - b.floorFt)
+    .slice(0, 32);
 }
 
 function scaleBounds(route: NavRoute, blocks: GlobalZoneBlock[]) {
   const altitude = plannedAltitude(route);
-  const relevant = blocks.filter((block) => block.floorFt < 18000);
+  const activeOrClose = blocks.filter((block) => block.containsPlannedAltitude || block.altitudeRelation === 'uncertain' || block.floorFt <= altitude + 1500);
   const maxCeiling = Math.max(
-    altitude + 1000,
-    ...relevant.map((block) => Math.min(block.ceilingFt, 14000)),
+    altitude + 1200,
+    ...activeOrClose.map((block) => Math.min(block.ceilingFt, 12500)),
     3000
   );
-  return { min: 0, max: Math.min(Math.max(maxCeiling, 4500), 14000) };
+  return { min: 0, max: Math.min(Math.max(maxCeiling + 400, 4500), 12500) };
 }
 
 function blockStyle(block: GlobalZoneBlock, min: number, max: number) {
@@ -137,7 +152,9 @@ export function ZoneCompleteRouteBanner({ route, profiles }: ZoneCompleteRouteBa
   const altitude = plannedAltitude(route);
   const markers = buildRouteMarkers(route);
   const contacts = bestActiveBlocks(profiles);
-  const visibleBlocks = blocks.filter((block) => block.ceilingFt > bounds.min && block.floorFt < bounds.max);
+  const visibleBlocks = blocks
+    .filter((block) => block.ceilingFt > bounds.min && block.floorFt < bounds.max)
+    .sort((a, b) => a.floorFt - b.floorFt || b.priority - a.priority);
 
   return (
     <div className="complete-zone-frieze">
@@ -145,10 +162,6 @@ export function ZoneCompleteRouteBanner({ route, profiles }: ZoneCompleteRouteBa
         <div>
           <span>Frise zones</span>
           <strong>Navigation complète</strong>
-        </div>
-        <div>
-          <span>ALT planifiée</span>
-          <strong>{altitude} ft</strong>
         </div>
         <div>
           <span>Distance</span>
@@ -167,7 +180,7 @@ export function ZoneCompleteRouteBanner({ route, profiles }: ZoneCompleteRouteBa
 
         <div className="complete-zone-canvas">
           <div className="complete-zone-altitude-line" style={altitudeStyle(altitude, bounds.min, bounds.max)}>
-            <span>ALT planifiée {altitude} ft</span>
+            <span>{altitude} ft</span>
           </div>
 
           {visibleBlocks.map((block, index) => (

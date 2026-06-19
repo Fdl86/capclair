@@ -35,7 +35,6 @@ export function App() {
           onSetDefaultAltitudeFt={routeState.setDefaultAltitudeFt}
           onRefreshWinds={routeState.refreshWinds}
           onCalculations={() => setCurrentScreen('calculations')}
-          onZones={() => setCurrentScreen('zones')}
         />
       )}
       {currentScreen === 'calculations' && (

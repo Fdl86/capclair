@@ -23,7 +23,6 @@ interface PlanningScreenProps {
   onRefreshWinds: () => void;
   weatherStatus: string;
   onCalculations: () => void;
-  onZones: () => void;
 }
 
 function endpointCode(route: NavRoute, type: 'depart' | 'destination') {
@@ -51,8 +50,7 @@ export function PlanningScreen({
   onSetDefaultAltitudeFt,
   onRefreshWinds,
   weatherStatus,
-  onCalculations,
-  onZones
+  onCalculations
 }: PlanningScreenProps) {
   const [showTopo, setShowTopo] = useState(true);
   const [addWaypointMode, setAddWaypointMode] = useState(false);
@@ -139,29 +137,23 @@ export function PlanningScreen({
             </datalist>
           </div>
 
-          <div className="flight-profile-panel flight-profile-panel-compact">
-            <label>
+          <div className="flight-profile-panel flight-profile-panel-compact cockpit-stepper-grid">
+            <div className="cockpit-stepper">
               <span>TAS</span>
-              <input
-                type="number"
-                min={45}
-                max={220}
-                step={5}
-                value={route.profile.tasKt}
-                onChange={(event) => onSetTasKt(Number(event.target.value))}
-              />
-            </label>
-            <label>
+              <div>
+                <button type="button" onClick={() => onSetTasKt(route.profile.tasKt - 1)} aria-label="Réduire la TAS">-</button>
+                <strong>{route.profile.tasKt}</strong>
+                <button type="button" onClick={() => onSetTasKt(route.profile.tasKt + 1)} aria-label="Augmenter la TAS">+</button>
+              </div>
+            </div>
+            <div className="cockpit-stepper">
               <span>Alt défaut</span>
-              <input
-                type="number"
-                min={500}
-                max={12500}
-                step={500}
-                value={route.profile.defaultAltitudeFt}
-                onChange={(event) => onSetDefaultAltitudeFt(Number(event.target.value))}
-              />
-            </label>
+              <div>
+                <button type="button" onClick={() => onSetDefaultAltitudeFt(route.profile.defaultAltitudeFt - 500)} aria-label="Réduire l'altitude">-</button>
+                <strong>{route.profile.defaultAltitudeFt}</strong>
+                <button type="button" onClick={() => onSetDefaultAltitudeFt(route.profile.defaultAltitudeFt + 500)} aria-label="Augmenter l'altitude">+</button>
+              </div>
+            </div>
           </div>
 
           <div className="weather-action-row">
@@ -179,8 +171,7 @@ export function PlanningScreen({
 
           <div className="route-hint">{routeMessage}</div>
 
-          <div className="route-actions-row">
-            <Button variant="secondary" onClick={onZones}>Zones</Button>
+          <div className="route-actions-row route-actions-row-single">
             <Button variant={addWaypointMode ? 'danger' : 'primary'} onClick={() => setAddWaypointMode((value) => !value)}>
               {addWaypointMode ? 'Annuler' : '+ Point'}
             </Button>
