@@ -36,13 +36,13 @@ Le vent est analysé à l'heure du clic sur `Maj vent`. Le champ heure UTC a ét
 
 ## DEV13.4
 
-Le log de nav contient maintenant un panneau `Audit météo`.
+Le log de nav contient maintenant une bannière zones par altitude.
 
 Utilisation :
 1. Ouvrir Planification.
 2. Cliquer `Maj vent`.
 3. Ouvrir `Log nav`.
-4. Lire `Audit météo`.
+4. Lire la bannière zones.
 5. Comparer avec Windy en utilisant le même point, la même heure locale et la même altitude.
 
 Commit proposé :
@@ -61,4 +61,14 @@ Commit proposé :
 
 ```txt
 dev13.5 strict meteofrance wind
+```
+
+## DEV13.6
+
+Ajout d'une bannière zones dans le log de nav, calculée par position et altitude de branche.
+
+Commit proposé :
+
+```txt
+dev13.6 add zones altitude banner
 ```

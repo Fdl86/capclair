@@ -1,8 +1,12 @@
-import type { BranchWindAuditLevel, NavBranch, NavPoint, NavRoute } from '../domain/navigation.types';
+import { useEffect, useState } from 'react';
+import type { BranchZoneProfile } from '../domain/airspace.types';
+import type { NavPoint, NavRoute } from '../domain/navigation.types';
 import { Page } from '../components/layout/Page';
 import { BranchTable } from '../components/navigation/BranchTable';
+import { ZoneAltitudeBanner } from '../components/navigation/ZoneAltitudeBanner';
 import { Button } from '../components/ui/Button';
 import { Card } from '../components/ui/Card';
+import { buildZoneProfiles } from '../services/airspace/airspaceEngine';
 
 interface CalculationsScreenProps {
   route: NavRoute;
@@ -18,15 +22,6 @@ function pointByType(route: NavRoute, type: NavPoint['type']) {
   return route.points.find((point) => point.type === type);
 }
 
-function pointName(route: NavRoute, id: string) {
-  const point = route.points.find((item) => item.id === id);
-  return point?.code ?? point?.nom ?? id.toUpperCase();
-}
-
-function branchName(route: NavRoute, branch: NavBranch) {
-  return `${pointName(route, branch.from)} - ${pointName(route, branch.to)}`;
-}
-
 function formatDuration(minutes: number): string {
   const hours = Math.floor(minutes / 60);
   const mins = minutes % 60;
@@ -40,79 +35,12 @@ function timeZulu(iso?: string) {
   return `${String(date.getUTCHours()).padStart(2, '0')}:${String(date.getUTCMinutes()).padStart(2, '0')}Z`;
 }
 
-function localTime(iso?: string) {
-  if (!iso) return '-';
-  const date = new Date(iso);
-  if (Number.isNaN(date.getTime())) return '-';
-  return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-}
-
-function windText(directionDeg?: number, speedKt?: number) {
-  if (typeof directionDeg !== 'number' || typeof speedKt !== 'number') return '-';
-  return `${String(directionDeg).padStart(3, '0')}/${speedKt}`;
-}
-
-function levelText(level?: BranchWindAuditLevel | null) {
-  if (!level) return '-';
-  return `${level.pressureHpa} hPa - ${level.heightFt} ft - ${windText(level.directionDeg, level.speedKt)}`;
-}
-
-function modelLabel(provider?: string) {
-  if (!provider) return '-';
-  if (provider === 'mixed') return 'Mix modèles';
-  if (provider.includes('meteofrance')) return 'Météo-France strict via Open-Meteo';
-  if (provider.includes('forecast')) return 'Open-Meteo fallback';
-  return provider;
-}
-
-function comparableWindy(branch: NavBranch) {
-  if (!branch.wind) return 'non - vent absent';
-  if (branch.wind.fallback) return 'non - fallback';
-  if (!branch.wind.provider?.includes('meteofrance')) return 'non - source différente';
-  return 'oui - même famille MF';
-}
-
 function SummaryCard({ label, value, detail }: { label: string; value: string; detail?: string }) {
   return (
     <div className="navlog-summary-card">
       <span>{label}</span>
       <strong>{value}</strong>
       {detail && <small>{detail}</small>}
-    </div>
-  );
-}
-
-function WeatherAuditCard({ route, branch }: { route: NavRoute; branch: NavBranch }) {
-  const audit = branch.wind?.auditSamples?.[0];
-  const sampleCount = branch.wind?.auditSamples?.length ?? 0;
-
-  return (
-    <div className={`weather-audit-row ${branch.wind ? 'ok' : 'missing'}`}>
-      <div className="weather-audit-main">
-        <strong>{branchName(route, branch)}</strong>
-        <span>{branch.wind ? `Vent ${windText(branch.wind.directionDeg, branch.wind.speedKt)}` : 'Vent non reçu'}</span>
-      </div>
-
-      {audit ? (
-        <div className="weather-audit-grid">
-          <span><b>Point</b>{audit.latitude.toFixed(1)} / {audit.longitude.toFixed(1)}</span>
-          <span><b>Altitude</b>{audit.altitudeFt} ft</span>
-          <span><b>Heure UTC</b>{timeZulu(audit.sourceTimeIso)}</span>
-          <span><b>Heure locale</b>{localTime(audit.sourceTimeIso)}</span>
-          <span><b>Régler Windy</b>{localTime(audit.sourceTimeIso)}</span>
-          <span><b>Comparable Windy</b>{comparableWindy(branch)}</span>
-          <span><b>Source</b>{modelLabel(branch.wind?.provider)}</span>
-          <span><b>Endpoint</b>{branch.wind?.endpoint ?? audit.endpoint}</span>
-          <span><b>Fallback</b>{branch.wind?.fallback ? 'oui' : 'non'}</span>
-          <span><b>Cache</b>{branch.wind?.cache ?? audit.cache}</span>
-          <span className="wide"><b>Niveau bas</b>{levelText(audit.lowerLevel)}</span>
-          <span className="wide"><b>Niveau haut</b>{levelText(audit.upperLevel)}</span>
-          <span><b>Samples</b>{sampleCount}</span>
-          <span><b>Clé</b>{audit.normalizedKey}</span>
-        </div>
-      ) : (
-        <p className="weather-audit-missing">Relancer Maj vent. En mode strict Météo-France, une branche sans vent n'est pas remplacée par un fallback afin de rester comparable avec Windy AROME.</p>
-      )}
     </div>
   );
 }
@@ -128,12 +56,34 @@ export function CalculationsScreen({
 }: CalculationsScreenProps) {
   const departure = pointByType(route, 'depart');
   const destination = pointByType(route, 'destination');
-  const lastBranch = route.branches[route.branches.length - 1];
   const windModelTime = route.branches.find((branch) => branch.wind?.sourceTimeIso)?.wind?.sourceTimeIso;
-  const loadedWinds = route.branches.filter((branch) => branch.wind).length;
+  const [zoneProfiles, setZoneProfiles] = useState<Record<string, BranchZoneProfile>>({});
+  const [zoneStatus, setZoneStatus] = useState('Calcul zones...');
+
+  useEffect(() => {
+    let cancelled = false;
+    setZoneStatus('Calcul zones...');
+    buildZoneProfiles(route)
+      .then((profiles) => {
+        if (cancelled) return;
+        setZoneProfiles(profiles);
+        setZoneStatus('Zones calculées');
+      })
+      .catch(() => {
+        if (cancelled) return;
+        setZoneProfiles({});
+        setZoneStatus('Zones à confirmer');
+      });
+
+    return () => {
+      cancelled = true;
+    };
+  }, [route]);
+
+  const activeZoneCount = Object.values(zoneProfiles).reduce((sum, profile) => sum + profile.activeBlocks.length, 0);
 
   return (
-    <Page title="Log de nav" subtitle="Préparation VFR - calculs, vent et suivi de branche.">
+    <Page title="Log de nav" subtitle="Préparation VFR - calculs, vent et zones par altitude.">
       <div className="navlog-screen">
         <div className="navlog-summary-grid">
           <SummaryCard label="Départ" value={departure?.code ?? '----'} detail={departure?.nom} />
@@ -153,40 +103,39 @@ export function CalculationsScreen({
             </div>
             <Button variant="secondary" onClick={onRefreshWinds}>Modifier vents</Button>
           </div>
-          <BranchTable route={route} onSetBranchAltitude={onSetBranchAltitude} />
+          <BranchTable route={route} zoneProfiles={zoneProfiles} onSetBranchAltitude={onSetBranchAltitude} />
         </Card>
 
-        <Card className="weather-audit-card">
+        <Card className="zone-banner-card">
           <div className="panel-title-row">
             <div>
-              <span>Audit météo</span>
-              <strong>{loadedWinds}/{route.branches.length} branches avec vent</strong>
+              <span>Bannière zones</span>
+              <strong>{activeZoneCount ? `${activeZoneCount} zones actives à l'altitude prévue` : zoneStatus}</strong>
             </div>
-            <Button variant="secondary" onClick={onRefreshWinds}>Relancer audit</Button>
+            <Button variant="secondary" onClick={onBackPlanning}>Modifier route</Button>
           </div>
-          <div className="weather-audit-list">
-            {route.branches.map((branch) => (
-              <WeatherAuditCard key={branch.id} route={route} branch={branch} />
-            ))}
-          </div>
+          {Object.keys(zoneProfiles).length ? (
+            <ZoneAltitudeBanner route={route} profiles={zoneProfiles} />
+          ) : (
+            <div className="zone-banner-loading">{zoneStatus}</div>
+          )}
         </Card>
 
         <div className="navlog-bottom-grid">
           <Card className="navlog-zones-card">
-            <h2>Zones traversées</h2>
-            <div className="navlog-zone-chips">
-              <span className="zone-chip blue">CTR TOURS <b>D</b><small>2500 ft AMSL</small></span>
-              <span className="zone-chip amber">TMA TOURS 1 <b>D</b><small>2500 ft - FL065</small></span>
-              <span className="zone-chip blue">TMA ANGERS <b>D</b><small>2500 ft - FL065</small></span>
-              <span className="zone-chip green">SIV PARIS <b>C</b><small>SFC - FL115</small></span>
+            <h2>Règle d'affichage</h2>
+            <div className="zone-rule-list">
+              <span><b>Bloc plein</b> altitude de branche dans la zone</span>
+              <span><b>Bloc atténué</b> zone traversée mais hors altitude</span>
+              <span><b>À confirmer</b> limite verticale incertaine ou contact multiple</span>
             </div>
           </Card>
 
           <Card className="navlog-notes-card">
             <h2>Notes pilote</h2>
             <div className="pilot-notes-box">
-              <p>Navigation VFR. Surveiller les zones à statut particulier.</p>
-              <p>Prévoir contournement ou contact radio selon trajectoire finale.</p>
+              <p>Navigation VFR. Contrôler les zones et fréquences sur documentation officielle avant vol.</p>
+              <p>En cas de recouvrement, le log affiche une zone principale et les contacts secondaires plausibles.</p>
               <small>Préparation non réglementaire</small>
             </div>
           </Card>
@@ -201,12 +150,10 @@ export function CalculationsScreen({
           </div>
         </div>
 
-        {lastBranch && (
-          <Card className="safety-card">
-            <strong>Info calcul</strong>
-            <p>Les vents sont récupérés à l'instant où l'utilisateur lance la mise à jour, en mode Météo-France strict. Aucun fallback forecast n'est injecté, pour éviter les comparaisons faussées avec Windy AROME.</p>
-          </Card>
-        )}
+        <Card className="safety-card">
+          <strong>Info zones</strong>
+          <p>Les zones sont calculées par position et altitude de branche. Les fréquences sont affichées seulement lorsqu'une fréquence exploitable est liée à la zone ; sinon le log indique à confirmer.</p>
+        </Card>
       </div>
     </Page>
   );

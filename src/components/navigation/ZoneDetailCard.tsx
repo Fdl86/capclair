@@ -15,11 +15,11 @@ export function ZoneDetailCard({ zone }: ZoneDetailCardProps) {
   return (
     <div className={`zone-detail ${zone.statut}`}>
       <div>
-        <span>Zone prototype</span>
+        <span>Zone</span>
         <strong>{zone.nom}</strong>
       </div>
       <p>{zone.type} - {zone.plancher} / {zone.plafond} - {statusLabel[zone.statut]}</p>
-      <small>Données simulées DEV01. Vérification réglementaire non intégrée.</small>
+      <small>Vérification officielle nécessaire avant vol.</small>
     </div>
   );
 }

@@ -49,7 +49,7 @@ export function App() {
           onBackPlanning={() => setCurrentScreen('planning')}
         />
       )}
-      {currentScreen === 'zones' && <ZonesScreen />}
+      {currentScreen === 'zones' && <ZonesScreen route={routeState.route} />}
       {currentScreen === 'tracking' && <TrackingScreen route={routeState.route} onTraceReady={traceState.saveTrace} />}
       {currentScreen === 'traces' && <TracesScreen traces={traceState.traces} onDeleteTrace={traceState.deleteTrace} />}
       {currentScreen === 'more' && <MoreScreen onNavigate={setCurrentScreen} />}

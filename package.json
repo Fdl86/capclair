@@ -1,7 +1,7 @@
 {
-  "name": "cap-clair-dev13-5-meteofrance-strict",
+  "name": "cap-clair-dev13-6-zones-banner",
   "private": true,
-  "version": "0.13.5",
+  "version": "0.13.6",
   "type": "module",
   "scripts": {
     "dev": "vite",

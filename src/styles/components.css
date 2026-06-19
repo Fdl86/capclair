@@ -1235,3 +1235,226 @@
     grid-column: auto;
   }
 }
+/* DEV13.6 - zone altitude banner */
+.zone-banner-card {
+  padding: 0;
+  overflow: hidden;
+}
+
+.zone-banner-card .panel-title-row {
+  padding: 14px 16px;
+  border-bottom: 1px solid rgba(30, 49, 69, 0.72);
+}
+
+.zone-altitude-banner-list {
+  display: grid;
+  gap: 12px;
+  padding: 14px;
+}
+
+.zone-altitude-banner-card {
+  border: 1px solid rgba(30, 49, 69, 0.72);
+  border-radius: 14px;
+  background: rgba(7, 17, 28, 0.52);
+  overflow: hidden;
+}
+
+.zone-altitude-banner-head,
+.zone-altitude-banner-foot {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  padding: 10px 12px;
+  border-bottom: 1px solid rgba(30, 49, 69, 0.58);
+}
+
+.zone-altitude-banner-foot {
+  grid-template-columns: 1fr;
+  border-top: 1px solid rgba(30, 49, 69, 0.58);
+  border-bottom: 0;
+  color: var(--text-2);
+  font-size: 0.78rem;
+}
+
+.zone-altitude-banner-head span {
+  display: block;
+  color: var(--text-3);
+  font-size: 0.6rem;
+  font-weight: 900;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.zone-altitude-banner-head strong {
+  color: var(--text);
+  font-size: 0.86rem;
+}
+
+.zone-altitude-banner-body {
+  display: grid;
+  grid-template-columns: 54px 1fr;
+  min-height: 164px;
+}
+
+.zone-altitude-axis {
+  display: grid;
+  align-content: space-between;
+  padding: 12px 8px;
+  border-right: 1px solid rgba(30, 49, 69, 0.58);
+  color: var(--text-3);
+  font-size: 0.64rem;
+  text-align: right;
+}
+
+.zone-altitude-canvas {
+  position: relative;
+  min-height: 164px;
+  background:
+    linear-gradient(to bottom, rgba(255,255,255,0.04) 1px, transparent 1px) 0 0 / 100% 33.333%,
+    linear-gradient(180deg, rgba(8, 25, 39, 0.85), rgba(5, 11, 18, 0.72));
+  overflow: hidden;
+}
+
+.zone-altitude-line {
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: rgba(89, 207, 255, 0.96);
+  box-shadow: 0 0 12px rgba(89, 207, 255, 0.34);
+  z-index: 8;
+}
+
+.zone-altitude-line span {
+  position: absolute;
+  right: 8px;
+  top: -18px;
+  border: 1px solid rgba(89, 207, 255, 0.55);
+  border-radius: 999px;
+  background: rgba(5, 11, 18, 0.9);
+  color: var(--cyan-soft);
+  padding: 2px 7px;
+  font-size: 0.64rem;
+  font-weight: 900;
+}
+
+.zone-altitude-block {
+  position: absolute;
+  min-height: 24px;
+  border: 1px solid rgba(89, 207, 255, 0.42);
+  border-radius: 10px;
+  padding: 5px 7px;
+  overflow: hidden;
+  color: var(--text);
+  background: rgba(24, 174, 239, 0.2);
+  z-index: 4;
+}
+
+.zone-altitude-block b,
+.zone-altitude-block small {
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.zone-altitude-block b {
+  font-size: 0.68rem;
+  line-height: 1.05;
+}
+
+.zone-altitude-block small {
+  margin-top: 2px;
+  color: var(--text-2);
+  font-size: 0.58rem;
+}
+
+.zone-altitude-block.activeAltitude {
+  border-color: rgba(89, 207, 255, 0.9);
+  background: rgba(24, 174, 239, 0.32);
+}
+
+.zone-altitude-block.crossedOutAltitude {
+  opacity: 0.42;
+  background: rgba(111, 127, 145, 0.16);
+  border-color: rgba(111, 127, 145, 0.32);
+}
+
+.zone-altitude-block.confirm {
+  border-color: rgba(255, 154, 61, 0.78);
+  background: rgba(255, 154, 61, 0.18);
+}
+
+.zone-altitude-block.siv {
+  border-color: rgba(61, 220, 132, 0.55);
+  background: rgba(61, 220, 132, 0.12);
+}
+
+.zone-altitude-block.ctr,
+.zone-altitude-block.tma,
+.zone-altitude-block.cta {
+  border-color: rgba(89, 207, 255, 0.72);
+}
+
+.zone-altitude-block.r,
+.zone-altitude-block.d,
+.zone-altitude-block.p {
+  border-color: rgba(255, 154, 61, 0.72);
+  background: rgba(255, 154, 61, 0.16);
+}
+
+.zone-altitude-progress-labels {
+  position: absolute;
+  left: 8px;
+  right: 8px;
+  bottom: 6px;
+  display: flex;
+  justify-content: space-between;
+  color: var(--text-3);
+  font-size: 0.62rem;
+  font-weight: 900;
+  pointer-events: none;
+  z-index: 9;
+}
+
+.zone-rule-list {
+  display: grid;
+  gap: 8px;
+}
+
+.zone-rule-list span {
+  border: 1px solid rgba(30, 49, 69, 0.68);
+  border-radius: 10px;
+  padding: 9px 10px;
+  color: var(--text-2);
+  background: rgba(7, 17, 28, 0.58);
+  font-size: 0.82rem;
+}
+
+.zone-rule-list b {
+  color: var(--cyan-soft);
+  margin-right: 6px;
+}
+
+@media (max-width: 720px) {
+  .zone-altitude-banner-head {
+    grid-template-columns: 1fr;
+  }
+
+  .zone-altitude-banner-body {
+    grid-template-columns: 46px 1fr;
+  }
+
+  .zone-altitude-block b {
+    font-size: 0.62rem;
+  }
+
+  .zone-altitude-block small {
+    display: none;
+  }
+}
+.zone-banner-loading {
+  padding: 18px;
+  color: var(--text-2);
+  font-weight: 800;
+}
