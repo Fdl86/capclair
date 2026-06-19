@@ -122,10 +122,20 @@ export function useActiveRoute() {
 
   const refreshWinds = async () => {
     setWeatherStatus('Vent en cours...');
+    const analysisTimeIso = new Date().toISOString();
+
     try {
-      const winds = await fetchWindAloftForRoute(normalizedRoute);
-      const next = rebuild(normalizedRoute.points, normalizedRoute.profile, normalizedRoute.branchAltitudeById, {
-        ...normalizedRoute.branchWindById,
+      const routeAtAnalysisTime = rebuild(
+        normalizedRoute.points,
+        { ...normalizedRoute.profile, departureTimeIso: analysisTimeIso },
+        normalizedRoute.branchAltitudeById,
+        normalizedRoute.branchWindById,
+        'Analyse météo en cours'
+      );
+
+      const winds = await fetchWindAloftForRoute(routeAtAnalysisTime, analysisTimeIso);
+      const next = rebuild(routeAtAnalysisTime.points, routeAtAnalysisTime.profile, routeAtAnalysisTime.branchAltitudeById, {
+        ...routeAtAnalysisTime.branchWindById,
         ...winds
       }, 'Vent mis à jour');
       const loaded = Object.keys(winds).length;

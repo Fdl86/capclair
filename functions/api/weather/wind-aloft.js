@@ -159,11 +159,37 @@ function createOpenMeteoUrl(baseUrl, sample) {
   return upstreamUrl;
 }
 
+function sleep(ms) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
+async function fetchWithTimeout(url, options, timeoutMs) {
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), timeoutMs);
+  try {
+    return await fetch(url, { ...options, signal: controller.signal });
+  } finally {
+    clearTimeout(timeout);
+  }
+}
+
 async function fetchFromOpenMeteo(baseUrl, providerName, sample) {
   const upstreamUrl = createOpenMeteoUrl(baseUrl, sample);
-  const upstream = await fetch(upstreamUrl.toString(), {
-    headers: { Accept: 'application/json' }
-  });
+  let upstream;
+
+  for (let attempt = 0; attempt < 2; attempt += 1) {
+    try {
+      upstream = await fetchWithTimeout(upstreamUrl.toString(), {
+        headers: { Accept: 'application/json' }
+      }, 12000);
+      break;
+    } catch (error) {
+      if (attempt === 1) return { wind: null, error: `${providerName}: timeout` };
+      await sleep(500);
+    }
+  }
+
+  if (!upstream) return { wind: null, error: `${providerName}: no response` };
 
   if (!upstream.ok) {
     let reason = `HTTP ${upstream.status}`;

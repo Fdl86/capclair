@@ -33,7 +33,6 @@ export function App() {
           onReverseRoute={routeState.reverseRoute}
           onSetTasKt={routeState.setTasKt}
           onSetDefaultAltitudeFt={routeState.setDefaultAltitudeFt}
-          onSetDepartureTimeIso={routeState.setDepartureTimeIso}
           onRefreshWinds={routeState.refreshWinds}
           onCalculations={() => setCurrentScreen('calculations')}
           onZones={() => setCurrentScreen('zones')}

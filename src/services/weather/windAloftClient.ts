@@ -69,7 +69,7 @@ function writeCache(sample: WindSampleRequest, data: WindSampleResponse): void {
   }
 }
 
-function buildSamplesForBranch(route: NavRoute, branch: NavBranch): WindSampleRequest[] {
+function buildSamplesForBranch(route: NavRoute, branch: NavBranch, analysisTimeIso: string): WindSampleRequest[] {
   const from = pointById(route.points, branch.from);
   const to = pointById(route.points, branch.to);
   const fractions = branch.distanceNm > 50 ? [0.25, 0.5, 0.75] : [0.5];
@@ -82,13 +82,38 @@ function buildSamplesForBranch(route: NavRoute, branch: NavBranch): WindSampleRe
       latitude: Number(point.latitude.toFixed(4)),
       longitude: Number(point.longitude.toFixed(4)),
       altitudeFt: branch.altitudeFt,
-      timeIso: branch.estimatedMidIso
+      timeIso: analysisTimeIso
     };
   });
 }
 
-export async function fetchWindAloftForRoute(route: NavRoute): Promise<Record<string, BranchWind>> {
-  const samples = route.branches.flatMap((branch) => buildSamplesForBranch(route, branch));
+function wait(ms: number) {
+  return new Promise((resolve) => window.setTimeout(resolve, ms));
+}
+
+async function requestWindSamples(samples: WindSampleRequest[]): Promise<WindSampleResponse[]> {
+  if (!samples.length) return [];
+
+  const response = await fetch('/api/weather/wind-aloft', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+    body: JSON.stringify({ samples })
+  });
+
+  if (!response.ok) {
+    throw new Error(`wind aloft proxy ${response.status}`);
+  }
+
+  const data = (await response.json()) as WindAloftResponse;
+  const fetched = data.samples ?? [];
+  if (!fetched.length && data.errors?.length) {
+    console.warn('CAP CLAIR wind aloft unavailable', data.errors);
+  }
+  return fetched;
+}
+
+export async function fetchWindAloftForRoute(route: NavRoute, analysisTimeIso = new Date().toISOString()): Promise<Record<string, BranchWind>> {
+  const samples = route.branches.flatMap((branch) => buildSamplesForBranch(route, branch, analysisTimeIso));
   const cachedSamples: WindSampleResponse[] = [];
   const missingSamples: WindSampleRequest[] = [];
 
@@ -104,20 +129,22 @@ export async function fetchWindAloftForRoute(route: NavRoute): Promise<Record<st
   let fetchedSamples: WindSampleResponse[] = [];
 
   if (missingSamples.length) {
-    const response = await fetch('/api/weather/wind-aloft', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
-      body: JSON.stringify({ samples: missingSamples })
-    });
+    fetchedSamples = await requestWindSamples(missingSamples);
 
-    if (!response.ok) {
-      throw new Error(`wind aloft proxy ${response.status}`);
-    }
+    const fetchedIds = new Set(fetchedSamples.map((sample) => sample.sampleId));
+    const firstRetrySamples = missingSamples.filter((sample) => !fetchedIds.has(sample.sampleId));
 
-    const data = (await response.json()) as WindAloftResponse;
-    fetchedSamples = data.samples ?? [];
-    if (!fetchedSamples.length && data.errors?.length) {
-      console.warn('CAP CLAIR wind aloft unavailable', data.errors);
+    if (firstRetrySamples.length) {
+      await wait(850);
+      fetchedSamples = [...fetchedSamples, ...(await requestWindSamples(firstRetrySamples))];
+
+      const retryIds = new Set(fetchedSamples.map((sample) => sample.sampleId));
+      const secondRetrySamples = missingSamples.filter((sample) => !retryIds.has(sample.sampleId));
+
+      if (secondRetrySamples.length) {
+        await wait(1250);
+        fetchedSamples = [...fetchedSamples, ...(await requestWindSamples(secondRetrySamples))];
+      }
     }
 
     for (const sample of missingSamples) {

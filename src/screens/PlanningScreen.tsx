@@ -20,7 +20,6 @@ interface PlanningScreenProps {
   onReverseRoute: () => void;
   onSetTasKt: (tasKt: number) => void;
   onSetDefaultAltitudeFt: (altitudeFt: number) => void;
-  onSetDepartureTimeIso: (timeIso: string) => void;
   onRefreshWinds: () => void;
   weatherStatus: string;
   onCalculations: () => void;
@@ -37,23 +36,6 @@ function formatDuration(minutes: number) {
   return `${hours}:${String(mins).padStart(2, '0')}`;
 }
 
-function toUtcTimeInput(iso: string) {
-  const date = new Date(iso);
-  if (Number.isNaN(date.getTime())) return '12:00Z';
-  return `${String(date.getUTCHours()).padStart(2, '0')}:${String(date.getUTCMinutes()).padStart(2, '0')}Z`;
-}
-
-function fromUtcTimeInput(value: string, currentIso: string) {
-  const cleaned = value.trim().toUpperCase().replace('Z', '');
-  const match = cleaned.match(/^(\d{1,2}):(\d{2})$/);
-  const date = new Date(currentIso);
-  if (!match || Number.isNaN(date.getTime())) return currentIso;
-  const hours = Number(match[1]);
-  const minutes = Number(match[2]);
-  if (hours < 0 || hours > 23 || minutes < 0 || minutes > 59) return currentIso;
-  date.setUTCHours(hours, minutes, 0, 0);
-  return date.toISOString();
-}
 
 export function PlanningScreen({
   route,
@@ -67,7 +49,6 @@ export function PlanningScreen({
   onReverseRoute,
   onSetTasKt,
   onSetDefaultAltitudeFt,
-  onSetDepartureTimeIso,
   onRefreshWinds,
   weatherStatus,
   onCalculations,
@@ -99,7 +80,7 @@ export function PlanningScreen({
   };
 
   return (
-    <Page title="Planification" subtitle="Carte aéro, route modifiable, profil de vol et vent par branche.">
+    <Page title="Planification" subtitle="Carte aéro, route modifiable, profil de vol et vent instantané par branche.">
       <div className="planning-layout">
         <div className="map-card tall planning-map-card">
           <MapLayerToggle showTopo={showTopo} onChange={setShowTopo} />
@@ -158,7 +139,7 @@ export function PlanningScreen({
             </datalist>
           </div>
 
-          <div className="flight-profile-panel">
+          <div className="flight-profile-panel flight-profile-panel-compact">
             <label>
               <span>TAS</span>
               <input
@@ -179,16 +160,6 @@ export function PlanningScreen({
                 step={500}
                 value={route.profile.defaultAltitudeFt}
                 onChange={(event) => onSetDefaultAltitudeFt(Number(event.target.value))}
-              />
-            </label>
-            <label>
-              <span>Départ UTC</span>
-              <input
-                type="text"
-                inputMode="numeric"
-                value={toUtcTimeInput(route.profile.departureTimeIso)}
-                onChange={(event) => onSetDepartureTimeIso(fromUtcTimeInput(event.target.value, route.profile.departureTimeIso))}
-                aria-label="Heure de départ UTC"
               />
             </label>
           </div>

@@ -1102,3 +1102,24 @@
     grid-column: 1 / -1;
   }
 }
+
+/* DEV13.3 - wind now mode */
+.flight-profile-panel-compact {
+  grid-template-columns: 1fr 1fr;
+}
+
+@media (max-width: 520px) {
+  .flight-profile-panel-compact {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .flight-profile-panel-compact label:last-child {
+    grid-column: auto;
+  }
+}
+
+@media (max-width: 360px) {
+  .flight-profile-panel-compact label:last-child {
+    grid-column: auto;
+  }
+}

@@ -3,8 +3,8 @@
 ## A tester
 
 1. Ouvrir Planification.
-2. Vérifier TAS, altitude défaut et heure UTC.
-3. Cliquer `Mettre à jour vent`.
+2. Vérifier TAS et altitude défaut.
+3. Cliquer `Maj vent`.
 4. Ouvrir `Log nav`.
 5. Modifier une altitude de branche.
 6. Relancer `Modifier vents`.
@@ -29,3 +29,7 @@ La météo Open-Meteo ne nécessite pas de clé.
 ```txt
 dev13 add wind aloft navlog
 ```
+
+## DEV13.3
+
+Le vent est analysé à l'heure du clic sur `Maj vent`. Le champ heure UTC a été retiré.

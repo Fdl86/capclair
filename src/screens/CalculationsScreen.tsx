@@ -111,7 +111,7 @@ export function CalculationsScreen({
         {lastBranch && (
           <Card className="safety-card">
             <strong>Info calcul</strong>
-            <p>Les vents sont récupérés par échantillons optimisés sur les branches, avec cache local et cache Cloudflare. Les routes magnétiques utilisent la variation affichée au format aviation, par exemple 1E ou 1W.</p>
+            <p>Les vents sont récupérés à l'instant où l'utilisateur lance la mise à jour, par échantillons optimisés sur les branches. Les routes magnétiques utilisent la variation affichée au format aviation, par exemple 1E ou 1W.</p>
           </Card>
         )}
       </div>
