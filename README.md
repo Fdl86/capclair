@@ -72,3 +72,13 @@ Commit proposé :
 ```txt
 dev13.6 add zones altitude banner
 ```
+
+## DEV13.6.1
+
+La bannière zones est maintenant une frise unique sur toute la navigation, avec distance cumulée, points de route, altitude planifiée et blocs de zones sur l'ensemble du trajet.
+
+Commit proposé :
+
+```txt
+dev13.6.1 global zone frieze
+```

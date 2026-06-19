@@ -1,7 +1,7 @@
 {
-  "name": "cap-clair-dev13-6-zones-banner",
+  "name": "cap-clair-dev13-6-1-global-zone-frieze",
   "private": true,
-  "version": "0.13.6",
+  "version": "0.13.6-1",
   "type": "module",
   "scripts": {
     "dev": "vite",

@@ -3,7 +3,7 @@ import type { BranchZoneProfile } from '../domain/airspace.types';
 import type { NavPoint, NavRoute } from '../domain/navigation.types';
 import { Page } from '../components/layout/Page';
 import { BranchTable } from '../components/navigation/BranchTable';
-import { ZoneAltitudeBanner } from '../components/navigation/ZoneAltitudeBanner';
+import { ZoneCompleteRouteBanner } from '../components/navigation/ZoneCompleteRouteBanner';
 import { Button } from '../components/ui/Button';
 import { Card } from '../components/ui/Card';
 import { buildZoneProfiles } from '../services/airspace/airspaceEngine';
@@ -83,7 +83,7 @@ export function CalculationsScreen({
   const activeZoneCount = Object.values(zoneProfiles).reduce((sum, profile) => sum + profile.activeBlocks.length, 0);
 
   return (
-    <Page title="Log de nav" subtitle="Préparation VFR - calculs, vent et zones par altitude.">
+    <Page title="Log de nav" subtitle="Préparation VFR - calculs, vent et frise zones complète.">
       <div className="navlog-screen">
         <div className="navlog-summary-grid">
           <SummaryCard label="Départ" value={departure?.code ?? '----'} detail={departure?.nom} />
@@ -109,13 +109,13 @@ export function CalculationsScreen({
         <Card className="zone-banner-card">
           <div className="panel-title-row">
             <div>
-              <span>Bannière zones</span>
-              <strong>{activeZoneCount ? `${activeZoneCount} zones actives à l'altitude prévue` : zoneStatus}</strong>
+              <span>Frise zones</span>
+              <strong>{activeZoneCount ? `${activeZoneCount} zones actives sur la nav` : zoneStatus}</strong>
             </div>
             <Button variant="secondary" onClick={onBackPlanning}>Modifier route</Button>
           </div>
           {Object.keys(zoneProfiles).length ? (
-            <ZoneAltitudeBanner route={route} profiles={zoneProfiles} />
+            <ZoneCompleteRouteBanner route={route} profiles={zoneProfiles} />
           ) : (
             <div className="zone-banner-loading">{zoneStatus}</div>
           )}
@@ -151,7 +151,7 @@ export function CalculationsScreen({
         </div>
 
         <Card className="safety-card">
-          <strong>Info zones</strong>
+          <strong>Info frise</strong>
           <p>Les zones sont calculées par position et altitude de branche. Les fréquences sont affichées seulement lorsqu'une fréquence exploitable est liée à la zone ; sinon le log indique à confirmer.</p>
         </Card>
       </div>
