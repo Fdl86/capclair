@@ -45,3 +45,10 @@ DEV13.6.2 - Frise UX optimized
 - Altitude route affichée sur la frise sans libellé long.
 - Graphique limité aux couches réellement utiles autour de l'altitude prévue.
 - Météo Météo-France strict conservée.
+
+## DEV13.6.3
+
+Hotfix frise zones :
+- alignement réel des valeurs d'altitude à gauche avec les lignes du graphique
+- altitude route affichée à gauche dans la colonne altitude
+- suppression du libellé long dans le graphe

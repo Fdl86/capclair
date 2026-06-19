@@ -124,6 +124,18 @@ function altitudeStyle(altitudeFt: number, min: number, max: number) {
   return { top: `${clamp(y, 2, 98)}%` };
 }
 
+function axisLevels(min: number, max: number) {
+  return [max, max * 0.75, max * 0.5, max * 0.25, min].map((value) => Math.round(value));
+}
+
+function altitudeLabel(value: number) {
+  return value <= 0 ? 'SFC' : `${value} ft`;
+}
+
+function isCloseAltitude(a: number, b: number) {
+  return Math.abs(a - b) < 120;
+}
+
 function blockLabel(block: BranchZoneBlock) {
   const classLabel = block.classCode ? ` ${block.classCode}` : '';
   return `${block.zoneType} ${block.zoneName}${classLabel}`;
@@ -171,17 +183,20 @@ export function ZoneCompleteRouteBanner({ route, profiles }: ZoneCompleteRouteBa
 
       <div className="complete-zone-frieze-body">
         <div className="complete-zone-axis">
-          <span>{bounds.max} ft</span>
-          <span>{Math.round(bounds.max * 0.75)} ft</span>
-          <span>{Math.round(bounds.max * 0.5)} ft</span>
-          <span>{Math.round(bounds.max * 0.25)} ft</span>
-          <span>SFC</span>
+          {axisLevels(bounds.min, bounds.max)
+            .filter((level) => !isCloseAltitude(level, altitude))
+            .map((level) => (
+              <span key={level} className="axis-label" style={altitudeStyle(level, bounds.min, bounds.max)}>
+                {altitudeLabel(level)}
+              </span>
+            ))}
+          <strong className="axis-label planned-axis-label" style={altitudeStyle(altitude, bounds.min, bounds.max)}>
+            {altitude} ft
+          </strong>
         </div>
 
         <div className="complete-zone-canvas">
-          <div className="complete-zone-altitude-line" style={altitudeStyle(altitude, bounds.min, bounds.max)}>
-            <span>{altitude} ft</span>
-          </div>
+          <div className="complete-zone-altitude-line" style={altitudeStyle(altitude, bounds.min, bounds.max)} />
 
           {visibleBlocks.map((block, index) => (
             <div

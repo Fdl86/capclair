@@ -1,7 +1,7 @@
 {
-  "name": "cap-clair-dev13-6-2-frieze-ux-optimized",
+  "name": "cap-clair-dev13-6-3-frieze-axis-hotfix",
   "private": true,
-  "version": "0.13.6-2",
+  "version": "0.13.6-3",
   "type": "module",
   "scripts": {
     "dev": "vite",
