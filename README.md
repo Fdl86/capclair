@@ -50,3 +50,15 @@ Commit proposé :
 ```txt
 dev13.4 add weather audit
 ```
+
+## DEV13.5
+
+Mode météo strict Météo-France.
+
+Ce hotfix supprime le fallback Forecast pour éviter de mélanger les sources météo dans le log. Si une branche ne reçoit pas de donnée Météo-France exploitable, elle reste sans vent plutôt que d'afficher une donnée non comparable avec Windy AROME.
+
+Commit proposé :
+
+```txt
+dev13.5 strict meteofrance wind
+```

@@ -133,7 +133,7 @@ export function useActiveRoute() {
   };
 
   const refreshWinds = async () => {
-    setWeatherStatus('Vent en cours...');
+    setWeatherStatus('Météo-France en cours...');
     const analysisTimeIso = new Date().toISOString();
 
     try {
@@ -157,10 +157,10 @@ export function useActiveRoute() {
           ? `Vent OK ${loaded}/${next.branches.length}`
           : loaded > 0
             ? `Vent partiel ${loaded}/${next.branches.length} - manque ${missingBranches.slice(0, 2).join(', ')}`
-            : 'Vent non reçu'
+            : 'Météo-France non reçu'
       );
     } catch {
-      setWeatherStatus('Erreur météo');
+      setWeatherStatus('Erreur Météo-France');
     }
   };
 

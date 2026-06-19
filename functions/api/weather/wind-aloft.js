@@ -141,7 +141,7 @@ function interpolateWind(hourly, index, sample, providerName, endpoint) {
     sourceTimeIso: null,
     provider: providerName,
     endpoint,
-    fallback: providerName !== 'open-meteo-meteofrance',
+    fallback: false,
     normalizedKey: sample.normalizedKey,
     auditSamples: [{
       sampleId: sample.sampleId,
@@ -152,7 +152,7 @@ function interpolateWind(hourly, index, sample, providerName, endpoint) {
       sourceTimeIso: null,
       provider: providerName,
       endpoint,
-      fallback: providerName !== 'open-meteo-meteofrance',
+      fallback: false,
       cache: 'live',
       normalizedKey: sample.normalizedKey,
       lowerLevel: auditLevel(lower),
@@ -287,13 +287,12 @@ async function fetchFromOpenMeteo(baseUrl, providerName, sample) {
 async function fetchOpenMeteo(sample, request, context) {
   const cache = getRuntimeCache();
   const attempts = [
-    ['https://api.open-meteo.com/v1/meteofrance', 'open-meteo-meteofrance'],
-    ['https://api.open-meteo.com/v1/forecast', 'open-meteo-forecast']
+    ['https://api.open-meteo.com/v1/meteofrance', 'open-meteo-meteofrance']
   ];
 
   if (cache) {
     const cacheUrl = new URL(request.url);
-    cacheUrl.pathname = `/api/weather/wind-cache-v2/${encodeURIComponent(sample.normalizedKey)}`;
+    cacheUrl.pathname = `/api/weather/wind-cache-v3/${encodeURIComponent(sample.normalizedKey)}`;
     const cacheKey = new Request(cacheUrl.toString(), { method: 'GET' });
     const cached = await cache.match(cacheKey);
     if (cached) return { wind: markCache(await cached.json(), 'cloudflare'), errors: [] };
@@ -387,7 +386,8 @@ export async function onRequestPost(context) {
     .filter(Boolean);
 
   return jsonResponse({
-    source: 'open-meteo',
+    source: 'open-meteo-meteofrance-strict',
+    mode: 'meteofrance-strict',
     generatedAt: new Date().toISOString(),
     samples,
     errors: errors.slice(0, 8),

@@ -60,9 +60,16 @@ function levelText(level?: BranchWindAuditLevel | null) {
 function modelLabel(provider?: string) {
   if (!provider) return '-';
   if (provider === 'mixed') return 'Mix modèles';
-  if (provider.includes('meteofrance')) return 'Météo-France via Open-Meteo';
+  if (provider.includes('meteofrance')) return 'Météo-France strict via Open-Meteo';
   if (provider.includes('forecast')) return 'Open-Meteo fallback';
   return provider;
+}
+
+function comparableWindy(branch: NavBranch) {
+  if (!branch.wind) return 'non - vent absent';
+  if (branch.wind.fallback) return 'non - fallback';
+  if (!branch.wind.provider?.includes('meteofrance')) return 'non - source différente';
+  return 'oui - même famille MF';
 }
 
 function SummaryCard({ label, value, detail }: { label: string; value: string; detail?: string }) {
@@ -92,6 +99,8 @@ function WeatherAuditCard({ route, branch }: { route: NavRoute; branch: NavBranc
           <span><b>Altitude</b>{audit.altitudeFt} ft</span>
           <span><b>Heure UTC</b>{timeZulu(audit.sourceTimeIso)}</span>
           <span><b>Heure locale</b>{localTime(audit.sourceTimeIso)}</span>
+          <span><b>Régler Windy</b>{localTime(audit.sourceTimeIso)}</span>
+          <span><b>Comparable Windy</b>{comparableWindy(branch)}</span>
           <span><b>Source</b>{modelLabel(branch.wind?.provider)}</span>
           <span><b>Endpoint</b>{branch.wind?.endpoint ?? audit.endpoint}</span>
           <span><b>Fallback</b>{branch.wind?.fallback ? 'oui' : 'non'}</span>
@@ -102,7 +111,7 @@ function WeatherAuditCard({ route, branch }: { route: NavRoute; branch: NavBranc
           <span><b>Clé</b>{audit.normalizedKey}</span>
         </div>
       ) : (
-        <p className="weather-audit-missing">Relancer Maj vent. Si la branche reste sans vent, comparer le point et l'altitude avec Windy puis vérifier la console.</p>
+        <p className="weather-audit-missing">Relancer Maj vent. En mode strict Météo-France, une branche sans vent n'est pas remplacée par un fallback afin de rester comparable avec Windy AROME.</p>
       )}
     </div>
   );
@@ -195,7 +204,7 @@ export function CalculationsScreen({
         {lastBranch && (
           <Card className="safety-card">
             <strong>Info calcul</strong>
-            <p>Les vents sont récupérés à l'instant où l'utilisateur lance la mise à jour. L'audit affiche le point exact, l'heure UTC, l'heure locale, l'endpoint, le fallback et les niveaux pression utilisés pour comparer proprement avec Windy.</p>
+            <p>Les vents sont récupérés à l'instant où l'utilisateur lance la mise à jour, en mode Météo-France strict. Aucun fallback forecast n'est injecté, pour éviter les comparaisons faussées avec Windy AROME.</p>
           </Card>
         )}
       </div>

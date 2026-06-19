@@ -1,7 +1,7 @@
 import type { BranchWind, NavBranch, NavPoint, NavRoute } from '../../domain/navigation.types';
 import { averageWind } from './windMath';
 
-const CACHE_PREFIX = 'capclair.weather.windAloft.v13_4.';
+const CACHE_PREFIX = 'capclair.weather.windAloft.v13_5.meteofranceStrict.';
 const CACHE_TTL_MS = 60 * 60 * 1000;
 
 interface WindSampleRequest {
@@ -20,11 +20,12 @@ interface WindSampleResponse extends BranchWind {
 }
 
 interface WindAloftResponse {
-  source: 'open-meteo' | 'open-meteo-meteofrance';
+  source: 'open-meteo' | 'open-meteo-meteofrance' | 'open-meteo-meteofrance-strict';
   generatedAt: string;
   samples: WindSampleResponse[];
   errors?: Array<{ key: string; reasons: string[] }>;
   cacheRuntime?: string;
+  mode?: string;
 }
 
 function pointById(points: NavPoint[], id: string): NavPoint {
