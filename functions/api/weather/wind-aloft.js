@@ -31,6 +31,15 @@ export function onRequestOptions() {
   });
 }
 
+function getRuntimeCache() {
+  try {
+    if (typeof caches !== 'undefined' && caches.default) return caches.default;
+  } catch {
+    // Cache API can be unavailable in some runtimes.
+  }
+  return null;
+}
+
 function clamp(value, min, max) {
   return Math.max(min, Math.min(max, value));
 }
@@ -80,14 +89,15 @@ function componentsToWind(u, v) {
 }
 
 function pickHourIndex(times, targetIso) {
-  const target = targetIso.slice(0, 13);
+  const targetDate = new Date(targetIso);
   let bestIndex = 0;
   let bestDelta = Number.POSITIVE_INFINITY;
 
   for (let index = 0; index < times.length; index += 1) {
     const time = String(times[index]);
-    const delta = Math.abs(new Date(`${time}:00Z`).getTime() - new Date(`${target}:00:00Z`).getTime());
-    if (delta < bestDelta) {
+    const candidate = new Date(time.endsWith('Z') ? time : `${time}:00Z`);
+    const delta = Math.abs(candidate.getTime() - targetDate.getTime());
+    if (Number.isFinite(delta) && delta < bestDelta) {
       bestDelta = delta;
       bestIndex = index;
     }
@@ -131,67 +141,115 @@ function interpolateWind(hourly, index, altitudeFt) {
   return { directionDeg: Math.round(nearest.direction), speedKt: Math.round(nearest.speed) };
 }
 
-async function fetchOpenMeteo(sample, request) {
-  const cacheUrl = new URL(request.url);
-  cacheUrl.pathname = `/api/weather/wind-cache/${encodeURIComponent(sample.normalizedKey)}`;
-  const cacheKey = new Request(cacheUrl.toString(), request);
-  const cache = caches.default;
-  const cached = await cache.match(cacheKey);
-  if (cached) return cached.json();
-
+function createOpenMeteoUrl(baseUrl, sample) {
   const hourly = LEVELS.flatMap((level) => [
     `wind_speed_${level}hPa`,
     `wind_direction_${level}hPa`,
     `geopotential_height_${level}hPa`
   ]).join(',');
 
-  const upstreamUrl = new URL('https://api.open-meteo.com/v1/meteofrance');
+  const upstreamUrl = new URL(baseUrl);
   upstreamUrl.searchParams.set('latitude', String(sample.latitude));
   upstreamUrl.searchParams.set('longitude', String(sample.longitude));
   upstreamUrl.searchParams.set('hourly', hourly);
   upstreamUrl.searchParams.set('forecast_days', '3');
   upstreamUrl.searchParams.set('timezone', 'GMT');
   upstreamUrl.searchParams.set('wind_speed_unit', 'kn');
+  upstreamUrl.searchParams.set('cell_selection', 'nearest');
+  return upstreamUrl;
+}
 
+async function fetchFromOpenMeteo(baseUrl, providerName, sample) {
+  const upstreamUrl = createOpenMeteoUrl(baseUrl, sample);
   const upstream = await fetch(upstreamUrl.toString(), {
     headers: { Accept: 'application/json' }
   });
 
-  if (!upstream.ok) return null;
+  if (!upstream.ok) {
+    let reason = `HTTP ${upstream.status}`;
+    try {
+      const errorBody = await upstream.json();
+      reason = errorBody?.reason || reason;
+    } catch {
+      // Ignore body parse.
+    }
+    return { wind: null, error: `${providerName}: ${reason}` };
+  }
 
   const data = await upstream.json();
   const times = data.hourly?.time ?? [];
-  if (!times.length) return null;
+  if (!times.length) {
+    return { wind: null, error: `${providerName}: no hourly time array` };
+  }
 
   const hourIndex = pickHourIndex(times, sample.timeIso);
   const wind = interpolateWind(data.hourly, hourIndex, sample.altitudeFt);
-  if (!wind) return null;
+  if (!wind) {
+    return { wind: null, error: `${providerName}: no pressure-level wind for sample` };
+  }
 
-  const result = {
-    ...wind,
-    sourceTimeIso: `${String(times[hourIndex])}:00Z`,
-    provider: 'open-meteo-meteofrance',
-    normalizedKey: sample.normalizedKey
+  return {
+    wind: {
+      ...wind,
+      sourceTimeIso: `${String(times[hourIndex])}:00Z`,
+      provider: providerName,
+      normalizedKey: sample.normalizedKey
+    },
+    error: null
   };
-
-  const response = jsonResponse(result, 200, 3600);
-  contextWaitUntilSafe(cache.put(cacheKey, response.clone()));
-  return result;
 }
 
-let pendingTasks = [];
-function contextWaitUntilSafe(promise) {
-  pendingTasks.push(promise.catch(() => undefined));
+async function fetchOpenMeteo(sample, request, context) {
+  const cache = getRuntimeCache();
+
+  if (cache) {
+    const cacheUrl = new URL(request.url);
+    cacheUrl.pathname = `/api/weather/wind-cache/${encodeURIComponent(sample.normalizedKey)}`;
+    const cacheKey = new Request(cacheUrl.toString(), { method: 'GET' });
+    const cached = await cache.match(cacheKey);
+    if (cached) return { wind: await cached.json(), errors: [] };
+
+    const attempts = [
+      ['https://api.open-meteo.com/v1/meteofrance', 'open-meteo-meteofrance'],
+      ['https://api.open-meteo.com/v1/forecast', 'open-meteo-forecast']
+    ];
+    const errors = [];
+
+    for (const [baseUrl, providerName] of attempts) {
+      const result = await fetchFromOpenMeteo(baseUrl, providerName, sample);
+      if (result.wind) {
+        const response = jsonResponse(result.wind, 200, 3600);
+        context.waitUntil(cache.put(cacheKey, response.clone()));
+        return { wind: result.wind, errors };
+      }
+      errors.push(result.error);
+    }
+
+    return { wind: null, errors };
+  }
+
+  const attempts = [
+    ['https://api.open-meteo.com/v1/meteofrance', 'open-meteo-meteofrance'],
+    ['https://api.open-meteo.com/v1/forecast', 'open-meteo-forecast']
+  ];
+  const errors = [];
+
+  for (const [baseUrl, providerName] of attempts) {
+    const result = await fetchFromOpenMeteo(baseUrl, providerName, sample);
+    if (result.wind) return { wind: result.wind, errors };
+    errors.push(result.error);
+  }
+
+  return { wind: null, errors };
 }
 
 export async function onRequestPost(context) {
-  pendingTasks = [];
   let body;
 
   try {
     body = await context.request.json();
   } catch {
-    return jsonResponse({ error: 'invalid json' }, 400);
+    return jsonResponse({ error: 'invalid json', samples: [] }, 400);
   }
 
   const incoming = Array.isArray(body?.samples) ? body.samples.slice(0, 40) : [];
@@ -203,12 +261,18 @@ export async function onRequestPost(context) {
   }
 
   const fetchedByKey = new Map();
+  const errors = [];
+
   await Promise.all([...uniqueByKey.values()].map(async (sample) => {
     try {
-      const wind = await fetchOpenMeteo(sample, context.request);
-      if (wind) fetchedByKey.set(sample.normalizedKey, wind);
-    } catch {
-      // missing value is allowed
+      const result = await fetchOpenMeteo(sample, context.request, context);
+      if (result.wind) {
+        fetchedByKey.set(sample.normalizedKey, result.wind);
+      } else {
+        errors.push({ key: sample.normalizedKey, reasons: result.errors });
+      }
+    } catch (error) {
+      errors.push({ key: sample.normalizedKey, reasons: [error instanceof Error ? error.message : 'unknown error'] });
     }
   }));
 
@@ -228,13 +292,11 @@ export async function onRequestPost(context) {
     })
     .filter(Boolean);
 
-  for (const task of pendingTasks) {
-    context.waitUntil(task);
-  }
-
   return jsonResponse({
-    source: 'open-meteo-meteofrance',
+    source: 'open-meteo',
     generatedAt: new Date().toISOString(),
-    samples
+    samples,
+    errors: errors.slice(0, 8),
+    cacheRuntime: getRuntimeCache() ? 'available' : 'unavailable'
   });
 }

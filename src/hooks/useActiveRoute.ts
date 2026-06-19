@@ -129,9 +129,9 @@ export function useActiveRoute() {
         ...winds
       }, 'Vent mis à jour');
       const loaded = Object.keys(winds).length;
-      setWeatherStatus(loaded ? `Vent OK ${loaded}/${next.branches.length}` : 'Vent indisponible');
+      setWeatherStatus(loaded ? `Vent OK ${loaded}/${next.branches.length}` : 'Vent non reçu');
     } catch {
-      setWeatherStatus('Vent indisponible');
+      setWeatherStatus('Erreur météo');
     }
   };
 

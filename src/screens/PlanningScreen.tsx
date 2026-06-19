@@ -39,14 +39,18 @@ function formatDuration(minutes: number) {
 
 function toUtcTimeInput(iso: string) {
   const date = new Date(iso);
-  if (Number.isNaN(date.getTime())) return '12:00';
-  return `${String(date.getUTCHours()).padStart(2, '0')}:${String(date.getUTCMinutes()).padStart(2, '0')}`;
+  if (Number.isNaN(date.getTime())) return '12:00Z';
+  return `${String(date.getUTCHours()).padStart(2, '0')}:${String(date.getUTCMinutes()).padStart(2, '0')}Z`;
 }
 
 function fromUtcTimeInput(value: string, currentIso: string) {
-  const [hours, minutes] = value.split(':').map(Number);
+  const cleaned = value.trim().toUpperCase().replace('Z', '');
+  const match = cleaned.match(/^(\d{1,2}):(\d{2})$/);
   const date = new Date(currentIso);
-  if (Number.isNaN(date.getTime()) || !Number.isFinite(hours) || !Number.isFinite(minutes)) return new Date().toISOString();
+  if (!match || Number.isNaN(date.getTime())) return currentIso;
+  const hours = Number(match[1]);
+  const minutes = Number(match[2]);
+  if (hours < 0 || hours > 23 || minutes < 0 || minutes > 59) return currentIso;
   date.setUTCHours(hours, minutes, 0, 0);
   return date.toISOString();
 }
@@ -180,16 +184,18 @@ export function PlanningScreen({
             <label>
               <span>Départ UTC</span>
               <input
-                type="time"
+                type="text"
+                inputMode="numeric"
                 value={toUtcTimeInput(route.profile.departureTimeIso)}
                 onChange={(event) => onSetDepartureTimeIso(fromUtcTimeInput(event.target.value, route.profile.departureTimeIso))}
+                aria-label="Heure de départ UTC"
               />
             </label>
           </div>
 
           <div className="weather-action-row">
             <span>{weatherStatus}</span>
-            <Button variant="secondary" onClick={onRefreshWinds}>Mettre à jour vent</Button>
+            <Button variant="secondary" onClick={onRefreshWinds}>Maj vent</Button>
           </div>
 
           <div className="route-summary-line">

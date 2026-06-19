@@ -985,3 +985,120 @@
     grid-template-columns: 1fr;
   }
 }
+
+/* DEV13.1 - mobile cockpit controls cleanup */
+.route-builder {
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) auto;
+}
+
+.route-builder input,
+.flight-profile-panel input {
+  min-width: 0;
+}
+
+.route-builder input,
+.flight-profile-panel input,
+.branch-alt-input {
+  appearance: textfield;
+  -moz-appearance: textfield;
+}
+
+.route-builder input::-webkit-outer-spin-button,
+.route-builder input::-webkit-inner-spin-button,
+.flight-profile-panel input::-webkit-outer-spin-button,
+.flight-profile-panel input::-webkit-inner-spin-button,
+.branch-alt-input::-webkit-outer-spin-button,
+.branch-alt-input::-webkit-inner-spin-button {
+  appearance: none;
+  margin: 0;
+}
+
+@media (max-width: 520px) {
+  .route-panel {
+    gap: 9px;
+  }
+
+  .panel-title-row {
+    align-items: start;
+  }
+
+  .route-builder {
+    grid-template-columns: 1fr 1fr auto;
+    gap: 7px;
+  }
+
+  .route-builder label span,
+  .flight-profile-panel label span {
+    font-size: 0.58rem;
+    letter-spacing: 0.04em;
+  }
+
+  .route-builder input {
+    height: 36px;
+    border-radius: 10px;
+    font-size: 0.88rem;
+    padding: 0 9px;
+  }
+
+  .route-builder-reverse {
+    height: 36px;
+    min-height: 36px;
+    padding: 0 8px;
+    font-size: 0.78rem;
+  }
+
+  .flight-profile-panel {
+    grid-template-columns: 0.72fr 0.95fr 1.05fr;
+    gap: 7px;
+  }
+
+  .flight-profile-panel input {
+    height: 36px;
+    border-radius: 10px;
+    font-size: 0.86rem;
+    padding: 0 8px;
+    text-align: center;
+  }
+
+  .weather-action-row {
+    grid-template-columns: 0.82fr 1.18fr;
+    gap: 8px;
+  }
+
+  .weather-action-row span {
+    min-height: 42px;
+    padding: 0 10px;
+    font-size: 0.72rem;
+    line-height: 1.15;
+  }
+
+  .weather-action-row .btn {
+    min-height: 42px;
+    padding: 0 10px;
+    font-size: 0.86rem;
+    line-height: 1.15;
+  }
+
+  .route-summary-line {
+    min-height: 34px;
+    font-size: 0.74rem;
+  }
+}
+
+@media (max-width: 360px) {
+  .route-builder {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .route-builder-reverse {
+    grid-column: 1 / -1;
+  }
+
+  .flight-profile-panel {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .flight-profile-panel label:last-child {
+    grid-column: 1 / -1;
+  }
+}

@@ -20,9 +20,11 @@ interface WindSampleResponse extends BranchWind {
 }
 
 interface WindAloftResponse {
-  source: 'open-meteo-meteofrance';
+  source: 'open-meteo' | 'open-meteo-meteofrance';
   generatedAt: string;
   samples: WindSampleResponse[];
+  errors?: Array<{ key: string; reasons: string[] }>;
+  cacheRuntime?: string;
 }
 
 function pointById(points: NavPoint[], id: string): NavPoint {
@@ -114,6 +116,9 @@ export async function fetchWindAloftForRoute(route: NavRoute): Promise<Record<st
 
     const data = (await response.json()) as WindAloftResponse;
     fetchedSamples = data.samples ?? [];
+    if (!fetchedSamples.length && data.errors?.length) {
+      console.warn('CAP CLAIR wind aloft unavailable', data.errors);
+    }
 
     for (const sample of missingSamples) {
       const found = fetchedSamples.find((item) => item.sampleId === sample.sampleId);
