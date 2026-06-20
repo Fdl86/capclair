@@ -113,8 +113,8 @@ export function useGpsTracking(route: NavRoute, onTraceReady: (trace: Trace) => 
     };
   }, []);
 
-  const nextPoint = route.points[2] ?? route.points[1] ?? route.points.at(-1) ?? null;
-  const nextPointDistance = currentPosition && nextPoint ? distanceNm(currentPosition, nextPoint) : 31.2;
+  const nextPoint = route.points[crossTrack.segmentIndex + 1] ?? route.points.at(-1) ?? null;
+  const nextPointDistance = currentPosition && nextPoint ? distanceNm(currentPosition, nextPoint) : null;
 
   return {
     status,

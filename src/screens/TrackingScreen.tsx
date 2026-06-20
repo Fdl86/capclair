@@ -1,5 +1,5 @@
 import { useMemo, useState } from 'react';
-import type { NavRoute } from '../domain/navigation.types';
+import type { NavPoint, NavRoute } from '../domain/navigation.types';
 import type { Trace } from '../domain/trace.types';
 import { useGpsTracking } from '../hooks/useGpsTracking';
 import { OpenLayersMap } from '../components/map/OpenLayersMap';
@@ -9,7 +9,9 @@ import { RouteDeviationGauge } from '../components/cockpit/RouteDeviationGauge';
 import { Button } from '../components/ui/Button';
 import { ConfirmDialog } from '../components/ui/ConfirmDialog';
 import { Card } from '../components/ui/Card';
-import { mockZones } from '../data/mockZones';
+import { bearingDeg } from '../services/geo/bearing';
+import { distanceNm } from '../services/geo/distance';
+import type { GpsPosition } from '../domain/gps.types';
 
 interface TrackingScreenProps {
   route: NavRoute;
@@ -28,19 +30,53 @@ function statusLabel(status: string): string {
   }
 }
 
-function formatTime(date = new Date()): string {
+function formatClock(date = new Date()): string {
   return date.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' });
+}
+
+function formatDuration(minutes: number): string {
+  const safeMinutes = Math.max(0, Math.round(minutes));
+  const hours = Math.floor(safeMinutes / 60);
+  const mins = safeMinutes % 60;
+  return hours > 0 ? `${hours}:${String(mins).padStart(2, '0')}` : `${mins} min`;
+}
+
+function routePointDistanceRemainingNm(route: NavRoute, currentPosition: GpsPosition | null, nextPoint: NavPoint | null, segmentIndex: number) {
+  if (!currentPosition || !nextPoint || route.points.length < 2) return null;
+
+  const nextPointIndex = Math.min(Math.max(segmentIndex + 1, 1), route.points.length - 1);
+  let remaining = distanceNm(currentPosition, nextPoint);
+
+  for (let index = nextPointIndex; index < route.points.length - 1; index += 1) {
+    remaining += distanceNm(route.points[index], route.points[index + 1]);
+  }
+
+  return remaining;
+}
+
+function metricNumber(value: number | null | undefined, suffix: string, digits = 0) {
+  if (typeof value !== 'number' || !Number.isFinite(value)) return '--';
+  return `${value.toFixed(digits).replace('.', ',')} ${suffix}`;
 }
 
 export function TrackingScreen({ route, onTraceReady }: TrackingScreenProps) {
   const [confirmStop, setConfirmStop] = useState(false);
   const gps = useGpsTracking(route, onTraceReady);
   const isRecording = gps.status === 'active' || gps.status === 'simulating';
-  const currentTrack = gps.currentPosition?.track ?? 118;
-  const groundSpeed = gps.currentPosition?.vitesse ?? 102;
-  const altitude = gps.currentPosition?.altitude ?? 1050;
-  const nextZone = mockZones.find((zone) => zone.statut === 'traversee') ?? mockZones[0];
   const traceForMap = useMemo(() => gps.positions, [gps.positions]);
+
+  const headingToNext = gps.currentPosition && gps.nextPoint
+    ? Math.round(bearingDeg(gps.currentPosition, gps.nextPoint))
+    : null;
+
+  const groundSpeed = gps.currentPosition?.vitesse ?? null;
+  const altitude = gps.currentPosition?.altitude ?? null;
+  const currentTrack = gps.currentPosition?.track ?? null;
+  const remainingDistanceNm = routePointDistanceRemainingNm(route, gps.currentPosition, gps.nextPoint, gps.crossTrack.segmentIndex);
+  const eteMinutes = groundSpeed && groundSpeed > 5 && remainingDistanceNm !== null
+    ? (remainingDistanceNm / groundSpeed) * 60
+    : null;
+  const eta = eteMinutes !== null ? new Date(Date.now() + eteMinutes * 60000) : null;
 
   return (
     <section className="tracking-screen">
@@ -52,14 +88,17 @@ export function TrackingScreen({ route, onTraceReady }: TrackingScreenProps) {
         <div className="cockpit-badges">
           <CockpitBadge label={statusLabel(gps.status)} state={gps.status === 'active' || gps.status === 'simulating' ? 'ok' : gps.status === 'requesting' ? 'warn' : 'off'} />
           <CockpitBadge label={isRecording ? 'Trace REC' : 'Trace prête'} state={isRecording ? 'rec' : 'off'} />
-          <CockpitBadge label="Météo mock" state="warn" />
-          <CockpitBadge label="Données DEV01" state="warn" />
         </div>
 
         <div className="tracking-metrics-top">
-          <MetricCard label="Prochain point" value={gps.nextPoint?.nom ?? 'WPT2'} detail={`${gps.nextPointDistance.toFixed(1).replace('.', ',')} NM`} strong />
-          <MetricCard label="Cap corrigé" value="121°" strong />
-          <MetricCard label="ETA" value={formatTime()} detail="dans 18 min" strong />
+          <MetricCard
+            label="Prochain point"
+            value={gps.nextPoint?.nom ?? '--'}
+            detail={gps.nextPointDistance !== null ? `${gps.nextPointDistance.toFixed(1).replace('.', ',')} NM` : '--'}
+            strong
+          />
+          <MetricCard label="Cap point" value={headingToNext !== null ? `${headingToNext}°` : '--'} strong />
+          <MetricCard label="ETA" value={eta ? formatClock(eta) : '--'} detail={eteMinutes !== null ? `dans ${formatDuration(eteMinutes)}` : '--'} strong />
         </div>
 
         <RouteDeviationGauge result={gps.crossTrack} />
@@ -72,16 +111,16 @@ export function TrackingScreen({ route, onTraceReady }: TrackingScreenProps) {
         )}
 
         <div className="cockpit-value-grid">
-          <MetricCard label="GS" value={`${Math.round(groundSpeed)} kt`} />
-          <MetricCard label="ALT" value={`${Math.round(altitude * 3.28084).toLocaleString('fr-FR')} ft`} />
-          <MetricCard label="TRK" value={`${Math.round(currentTrack)}°`} />
-          <MetricCard label="ETE dest" value="0:42" />
+          <MetricCard label="GS" value={metricNumber(groundSpeed, 'kt')} />
+          <MetricCard label="ALT" value={altitude !== null ? `${Math.round(altitude * 3.28084).toLocaleString('fr-FR')} ft` : '--'} />
+          <MetricCard label="TRK" value={currentTrack !== null ? `${Math.round(currentTrack)}°` : '--'} />
+          <MetricCard label="ETE dest" value={eteMinutes !== null ? formatDuration(eteMinutes) : '--'} />
         </div>
 
         <Card className="next-zone-card">
           <span>Prochaine zone</span>
-          <strong>{nextZone.nom}</strong>
-          <p>{nextZone.plancher} / {nextZone.plafond} - Traversée dans 14 NM</p>
+          <strong>--</strong>
+          <p>Calcul en suivi à raccorder au moteur zones.</p>
         </Card>
 
         <div className="tracking-actions">
@@ -94,7 +133,7 @@ export function TrackingScreen({ route, onTraceReady }: TrackingScreenProps) {
       <ConfirmDialog
         open={confirmStop}
         title="Arrêter le suivi ?"
-        message="La trace actuelle sera sauvegardée localement. Cette action met fin à l’enregistrement DEV01."
+        message="La trace actuelle sera sauvegardée localement. Cette action met fin à l'enregistrement."
         confirmLabel="Arrêter"
         onCancel={() => setConfirmStop(false)}
         onConfirm={() => {

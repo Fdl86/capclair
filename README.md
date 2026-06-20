@@ -72,3 +72,15 @@ METAR/TAF nearest fallback :
 - affiche uniquement `Station météo à X km` quand une station voisine est utilisée
 - ne rajoute pas de ligne inutile pour les stations exactes
 - cache METAR/TAF isolé en v3
+
+## DEV13.7.3
+
+Hotfix suivi GPS :
+- prochain point basé sur le segment GPS le plus proche
+- suppression de la distance placeholder 31.2 NM
+- suppression des badges mock/dev sur l'écran Suivi
+- cap vers prochain point calculé réellement
+- ETA et ETE destination calculés quand GS et position sont disponibles
+- zone suivante affichée en placeholder non trompeur
+- garde-fou anti réponse obsolète METAR/TAF
+- chargement METAR/TAF automatique avec cache

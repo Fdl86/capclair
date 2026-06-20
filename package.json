@@ -1,7 +1,7 @@
 {
-  "name": "cap-clair-dev13-7-2-metar-nearest",
+  "name": "cap-clair-dev13-7-3-tracking-hotfix",
   "private": true,
-  "version": "0.13.7-2",
+  "version": "0.13.7-3",
   "type": "module",
   "scripts": {
     "dev": "vite",
