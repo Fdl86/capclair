@@ -61,6 +61,7 @@ function metricNumber(value: number | null | undefined, suffix: string, digits =
 
 export function TrackingScreen({ route, onTraceReady }: TrackingScreenProps) {
   const [confirmStop, setConfirmStop] = useState(false);
+  const [showLiveHeading, setShowLiveHeading] = useState(false);
   const gps = useGpsTracking(route, onTraceReady);
   const isRecording = gps.status === 'active' || gps.status === 'simulating';
   const traceForMap = useMemo(() => gps.positions, [gps.positions]);
@@ -89,6 +90,14 @@ export function TrackingScreen({ route, onTraceReady }: TrackingScreenProps) {
           <CockpitBadge label={statusLabel(gps.status)} state={gps.status === 'active' || gps.status === 'simulating' ? 'ok' : gps.status === 'requesting' ? 'warn' : 'off'} />
           <CockpitBadge label={isRecording ? 'Trace REC' : 'Trace prête'} state={isRecording ? 'rec' : 'off'} />
         </div>
+
+        {showLiveHeading && (
+          <Card className="live-heading-card">
+            <span>Cap GPS live</span>
+            <strong>{currentTrack !== null ? `${Math.round(currentTrack)}°` : '--'}</strong>
+            <small>{currentTrack !== null ? 'Donnée GPS de déplacement' : 'Disponible uniquement en mouvement GPS'}</small>
+          </Card>
+        )}
 
         <div className="tracking-metrics-top">
           <MetricCard
@@ -126,6 +135,7 @@ export function TrackingScreen({ route, onTraceReady }: TrackingScreenProps) {
         <div className="tracking-actions">
           {!isRecording && <Button variant="primary" onClick={gps.startGps}>Démarrer GPS</Button>}
           {!isRecording && <Button variant="secondary" onClick={gps.startSimulation}>Tester simulation</Button>}
+          <Button variant="secondary" onClick={() => setShowLiveHeading((value) => !value)}>{showLiveHeading ? 'Masquer cap live' : 'Cap live'}</Button>
           {isRecording && <Button variant="danger" onClick={() => setConfirmStop(true)}>Arrêter et sauvegarder</Button>}
         </div>
       </aside>

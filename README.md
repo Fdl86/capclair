@@ -110,3 +110,21 @@ Fuel compact + title release :
 - marge saisie en litres
 - libellé `Vol à bord` remplacé par `Carburant embarqué`
 - seuls restent éditables : réserve finale, marge, carburant embarqué
+
+## DEV13.7.6
+
+Planning first + fuel and zones cleanup :
+- ouverture directe sur Planification
+- suppression de l'entrée Accueil dans la navigation basse
+- bouton Nouvelle nav dans Planification
+- reset route sur une route propre LFBI - LFEY sans waypoint intermédiaire
+- cap GPS live en option dans Suivi
+- frise zones : couleur active appliquée aux zones réellement traversées à l'altitude prévue
+- frise zones : couleur doute dédiée en cas d'incertitude
+- suppression de la carte Règle d'affichage
+- devis carburant : Total minimum renommé Total nécessaire
+- Total nécessaire placé avant Marge
+- Marge en litres uniquement
+- suppression de Carburant embarqué
+- ajout Carburant à prévoir calculé automatiquement
+- titre d'onglet mis à jour DEV13.7.6

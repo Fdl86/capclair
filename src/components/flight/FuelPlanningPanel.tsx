@@ -84,10 +84,9 @@ export function FuelPlanningPanel({ fuel, config, onChangeConfig }: FuelPlanning
         <FixedPill label="Arr. déroutement" line={fuel.lines.alternateArrival} />
       </div>
 
-      <div className="fuel-input-grid fuel-input-grid-compact">
+      <div className="fuel-input-grid fuel-input-grid-compact fuel-input-grid-two">
         <EditableMinute label="Réserve finale" value={config.finalReserveMin} onChange={(value) => onChangeConfig({ finalReserveMin: value })} />
         <EditableLiter label="Marge" value={config.marginLiters ?? 0} onChange={(value) => onChangeConfig({ marginLiters: value })} />
-        <EditableLiter label="Carburant embarqué" value={config.fuelOnBoardL} onChange={(value) => onChangeConfig({ fuelOnBoardL: value })} />
       </div>
 
       <div className="fuel-table fuel-table-compact">
@@ -97,8 +96,9 @@ export function FuelPlanningPanel({ fuel, config, onChangeConfig }: FuelPlanning
         <FuelRow line={fuel.lines.diversion} />
         <FuelRow line={fuel.lines.alternateArrival} />
         <FuelRow line={fuel.lines.finalReserve} />
+        <FuelRow line={fuel.lines.totalNecessary} strong />
         <FuelRow line={fuel.lines.margin} />
-        <FuelRow line={fuel.lines.totalMinimum} strong />
+        <FuelRow line={fuel.lines.fuelRequired} strong />
       </div>
 
       <div className="fuel-kpi-strip">
@@ -107,18 +107,18 @@ export function FuelPlanningPanel({ fuel, config, onChangeConfig }: FuelPlanning
           <strong>{formatLitersCompact(fuel.lines.regulatory.liters)}</strong>
         </div>
         <div>
-          <span>Carburant embarqué</span>
-          <strong>{formatLitersCompact(fuel.fuelOnBoardL)}</strong>
+          <span>Carburant à prévoir</span>
+          <strong>{formatLitersCompact(fuel.lines.fuelRequired.liters)}</strong>
         </div>
         <div>
-          <span>Autonomie totale</span>
+          <span>Autonomie utilisable</span>
           <strong>{formatMinutes(fuel.lines.timeLimit.minutes)}</strong>
         </div>
       </div>
 
-      <div className={`fuel-margin ${fuel.remainingAfterMinimumL >= 0 ? 'ok' : 'warn'}`}>
-        <strong>Reste après minimum</strong>
-        <span>{formatLiters(fuel.remainingAfterMinimumL)}</span>
+      <div className={`fuel-margin ${fuel.remainingUsableFuelL >= 0 ? 'ok' : 'warn'}`}>
+        <strong>Reste utilisable après minimum</strong>
+        <span>{formatLiters(fuel.remainingUsableFuelL)}</span>
       </div>
     </div>
   );

@@ -143,7 +143,7 @@ export function CalculationsScreen({
           <SummaryCard label="Temps estimé" value={formatDuration(route.tempsEstimeMin)} />
           <SummaryCard label="Vent modèle" value={windModelTime ? timeZulu(windModelTime) : 'À charger'} detail={weatherStatus} />
           <SummaryCard label="Avion" value={activeAircraft.label} detail={`${activeAircraft.fuelBurnLh} L/h`} />
-          <SummaryCard label="Carburant mini" value={`${fuel.lines.regulatory.liters.toFixed(0)} L`} detail={`${fuel.lines.regulatory.minutes} min`} />
+          <SummaryCard label="Carburant à prévoir" value={`${fuel.lines.fuelRequired.liters.toFixed(1)} L`} detail={`Total nécessaire ${fuel.lines.totalNecessary.minutes} min`} />
         </div>
 
         <Card className="navlog-prep-card">
@@ -206,16 +206,7 @@ export function CalculationsScreen({
         </Card>
 
         <div className="navlog-bottom-grid navlog-bottom-grid-wide">
-          <Card className="navlog-zones-card">
-            <h2>Règle d'affichage</h2>
-            <div className="zone-rule-list">
-              <span><b>Bloc plein</b> altitude de branche dans la zone</span>
-              <span><b>Bloc atténué</b> zone traversée mais hors altitude</span>
-              <span><b>À confirmer</b> limite verticale incertaine ou contact multiple</span>
-            </div>
-</Card>
-
-          <Card className="navlog-weather-card">
+<Card className="navlog-weather-card">
             <AerodromeWeatherPanel
               items={[
                 { role: 'Départ', code: departure?.code ?? '', name: aerodromeName(departure?.code ?? '') },

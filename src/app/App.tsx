@@ -2,7 +2,6 @@ import { useState } from 'react';
 import type { ScreenId } from './routes';
 import { findAerodrome } from '../data/aerodromeCatalog';
 import { AppShell } from '../components/layout/AppShell';
-import { HomeScreen } from '../screens/HomeScreen';
 import { PlanningScreen } from '../screens/PlanningScreen';
 import { CalculationsScreen } from '../screens/CalculationsScreen';
 import { ZonesScreen } from '../screens/ZonesScreen';
@@ -26,7 +25,7 @@ function safeAerodromeCode(code: string, fallback: string) {
 }
 
 export function App() {
-  const [currentScreen, setCurrentScreen] = useState<ScreenId>('home');
+  const [currentScreen, setCurrentScreen] = useState<ScreenId>('planning');
   const routeState = useActiveRoute();
   const traceState = useTraces();
   const aircraftState = useAircraftProfiles();
@@ -66,7 +65,6 @@ export function App() {
 
   return (
     <AppShell currentScreen={currentScreen} onNavigate={setCurrentScreen}>
-      {currentScreen === 'home' && <HomeScreen onNavigate={setCurrentScreen} />}
       {currentScreen === 'planning' && (
         <PlanningScreen
           route={routeState.route}
@@ -78,6 +76,7 @@ export function App() {
           onAddWaypointAt={routeState.addWaypointAt}
           onRemovePoint={routeState.removePoint}
           onReverseRoute={routeState.reverseRoute}
+          onResetRoute={routeState.resetRoute}
           alternateCode={safeAlternateCode}
           onSetAlternateCode={setAlternate}
           onCalculations={() => setCurrentScreen('calculations')}

@@ -21,7 +21,7 @@ export interface FuelPlanConfig {
   alternateArrivalMin: number;
   finalReserveMin: number;
   marginLiters: number;
-  fuelOnBoardL: number;
+  fuelOnBoardL?: number;
   marginMin?: number;
 }
 
@@ -36,6 +36,7 @@ export interface FuelPlanSummary {
   fuelPerHourL: number;
   fuelPerMinuteL: number;
   unusableFuelL: number;
+  usableFuelL: number;
   routeMinutes: number;
   diversionMinutes: number;
   lines: {
@@ -45,14 +46,15 @@ export interface FuelPlanSummary {
     diversion: FuelLine;
     alternateArrival: FuelLine;
     finalReserve: FuelLine;
+    totalNecessary: FuelLine;
     margin: FuelLine;
-    totalMinimum: FuelLine;
+    fuelRequired: FuelLine;
     regulatory: FuelLine;
     timeLimit: FuelLine;
   };
-  fuelOnBoardL: number;
+  fuelRequiredL: number;
   enduranceMinutes: number;
-  remainingAfterMinimumL: number;
+  remainingUsableFuelL: number;
 }
 
 export interface FuelSummary {
@@ -67,8 +69,7 @@ export const DEFAULT_FUEL_PLAN_CONFIG: FuelPlanConfig = {
   arrivalMin: 12,
   alternateArrivalMin: 12,
   finalReserveMin: 30,
-  marginLiters: 0,
-  fuelOnBoardL: 120
+  marginLiters: 0
 };
 
 export const FIXED_FUEL_MINUTES = {

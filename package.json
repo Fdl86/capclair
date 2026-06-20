@@ -1,7 +1,7 @@
 {
-  "name": "cap-clair-dev13-7-5-fuel-compact-title",
+  "name": "cap-clair-dev13-7-6-planning-fuel-zones",
   "private": true,
-  "version": "0.13.7-5",
+  "version": "0.13.7-6",
   "type": "module",
   "scripts": {
     "dev": "vite",

@@ -57,6 +57,7 @@ export function computeFuelPlan(
   const fuelPerMinuteL = fuelPerHourL > 0 ? fuelPerHourL / 60 : 0;
   const routeMinutes = safeMinute(route.tempsEstimeMin);
   const diversionMin = safeMinute(diversionMinutes);
+  const usableFuelL = safeLiter(aircraft.usableFuelL);
 
   const routeLine = makeLine('Trajet + vent', routeMinutes, fuelPerMinuteL);
   const taxiDepartureLine = makeLine('Roulage départ', FIXED_FUEL_MINUTES.taxiDepartureMin, fuelPerMinuteL);
@@ -65,55 +66,61 @@ export function computeFuelPlan(
   const alternateArrivalLine = makeLine('Arr. déroutement', FIXED_FUEL_MINUTES.alternateArrivalMin, fuelPerMinuteL);
   const finalReserveLine = makeLine('Réserve finale', config.finalReserveMin, fuelPerMinuteL, true);
 
-  const legacyMarginLiters = typeof config.marginMin === 'number' ? safeMinute(config.marginMin) * fuelPerMinuteL : 0;
-  const marginLiters = typeof config.marginLiters === 'number' ? config.marginLiters : legacyMarginLiters;
-  const marginLine = makeLiterLine('Marge', marginLiters, true);
-
-  const totalMinimumMinutes = routeLine.minutes!
+  const totalNecessaryMinutes = routeLine.minutes!
     + taxiDepartureLine.minutes!
     + arrivalLine.minutes!
     + diversionLine.minutes!
     + alternateArrivalLine.minutes!
     + finalReserveLine.minutes!;
 
-  const totalMinimumLiters = routeLine.liters
+  const totalNecessaryLiters = routeLine.liters
     + taxiDepartureLine.liters
     + arrivalLine.liters
     + diversionLine.liters
     + alternateArrivalLine.liters
-    + finalReserveLine.liters
-    + marginLine.liters;
+    + finalReserveLine.liters;
 
-  const totalMinimumLine: FuelLine = {
-    label: 'Total minimum',
-    minutes: totalMinimumMinutes,
-    liters: safeLiter(totalMinimumLiters)
+  const totalNecessaryLine: FuelLine = {
+    label: 'Total nécessaire',
+    minutes: totalNecessaryMinutes,
+    liters: safeLiter(totalNecessaryLiters)
   };
 
-  const regulatoryLiters = Math.ceil(totalMinimumLine.liters);
+  const legacyMarginLiters = typeof config.marginMin === 'number' ? safeMinute(config.marginMin) * fuelPerMinuteL : 0;
+  const marginLiters = typeof config.marginLiters === 'number' ? config.marginLiters : legacyMarginLiters;
+  const marginLine = makeLiterLine('Marge', marginLiters, true);
+
+  const fuelRequiredLiters = safeLiter(totalNecessaryLine.liters + marginLine.liters);
+  const fuelRequiredLine: FuelLine = {
+    label: 'Carburant à prévoir',
+    minutes: null,
+    liters: fuelRequiredLiters
+  };
+
+  const regulatoryLiters = Math.ceil(fuelRequiredLiters);
   const regulatoryLine: FuelLine = {
     label: 'Vol réglementaire',
-    minutes: totalMinimumLine.minutes,
+    minutes: totalNecessaryLine.minutes,
     liters: regulatoryLiters
   };
 
-  const fuelOnBoardL = safeLiter(config.fuelOnBoardL);
-  const enduranceMinutes = fuelPerMinuteL > 0 ? Math.floor(fuelOnBoardL / fuelPerMinuteL) : 0;
+  const enduranceMinutes = fuelPerMinuteL > 0 ? Math.floor(usableFuelL / fuelPerMinuteL) : 0;
   const timeLimitLine: FuelLine = {
     label: 'Autonomie totale',
     minutes: enduranceMinutes,
-    liters: fuelOnBoardL
+    liters: usableFuelL
   };
 
   return {
     fuelPerHourL,
     fuelPerMinuteL,
     unusableFuelL: safeLiter(aircraft.unusableFuelL ?? 0),
+    usableFuelL,
     routeMinutes,
     diversionMinutes: diversionMin,
-    fuelOnBoardL,
+    fuelRequiredL: fuelRequiredLiters,
     enduranceMinutes,
-    remainingAfterMinimumL: safeLiter(fuelOnBoardL - regulatoryLiters),
+    remainingUsableFuelL: safeLiter(usableFuelL - regulatoryLiters),
     lines: {
       route: routeLine,
       taxiDeparture: taxiDepartureLine,
@@ -121,8 +128,9 @@ export function computeFuelPlan(
       diversion: diversionLine,
       alternateArrival: alternateArrivalLine,
       finalReserve: finalReserveLine,
+      totalNecessary: totalNecessaryLine,
       margin: marginLine,
-      totalMinimum: totalMinimumLine,
+      fuelRequired: fuelRequiredLine,
       regulatory: regulatoryLine,
       timeLimit: timeLimitLine
     }

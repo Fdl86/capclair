@@ -211,12 +211,11 @@ export function buildRoute(points: NavPoint[], options: RouteBuildOptions = {}):
 
 export function createDefaultRoute(): NavRoute {
   const departure = createAerodromePoint('LFBI', 'depart');
-  const waypoint = createAerodromePoint('LFOD', 'waypoint');
   const destination = createAerodromePoint('LFEY', 'destination');
 
-  if (!departure || !waypoint || !destination) {
+  if (!departure || !destination) {
     throw new Error('Default aerodromes missing from catalogue');
   }
 
-  return buildRoute([departure, waypoint, destination]);
+  return buildRoute([departure, destination]);
 }

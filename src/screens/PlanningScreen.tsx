@@ -18,6 +18,7 @@ interface PlanningScreenProps {
   onAddWaypointAt: (longitude: number, latitude: number) => void;
   onRemovePoint: (pointId: string) => void;
   onReverseRoute: () => void;
+  onResetRoute: () => void;
   alternateCode: string;
   onSetAlternateCode: (code: string) => void;
   onCalculations: () => void;
@@ -44,6 +45,7 @@ export function PlanningScreen({
   onAddWaypointAt,
   onRemovePoint,
   onReverseRoute,
+  onResetRoute,
   alternateCode,
   onSetAlternateCode,
   onCalculations
@@ -165,10 +167,11 @@ export function PlanningScreen({
 
           <div className="route-hint">{routeMessage}</div>
 
-          <div className="route-actions-row route-actions-row-single">
+          <div className="route-actions-row route-actions-row-two">
             <Button variant={addWaypointMode ? 'danger' : 'primary'} onClick={() => setAddWaypointMode((value) => !value)}>
               {addWaypointMode ? 'Annuler' : '+ Point'}
             </Button>
+            <Button variant="secondary" onClick={onResetRoute}>Nouvelle nav</Button>
           </div>
         </Card>
       </div>

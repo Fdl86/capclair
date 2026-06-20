@@ -167,7 +167,7 @@ export function useActiveRoute() {
   const resetRoute = () => {
     setRoute(defaultRoute);
     setSelectedPointId(defaultRoute.points[1]?.id ?? defaultRoute.points[0].id);
-    setRouteMessage('Route exemple restaurée');
+    setRouteMessage('Nouvelle navigation prête');
     setWeatherStatus('Vent non chargé');
   };
 
