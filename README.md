@@ -63,3 +63,12 @@ Hotfix frise zones :
 - Dégagement renseignable dans Planification.
 - Bandeau attribution carte masqué.
 - Pas de SUP AIP automatique dans cette version.
+
+## DEV13.7.2
+
+METAR/TAF nearest fallback :
+- recherche d'abord l'aérodrome demandé
+- si absent, recherche les stations proches
+- affiche uniquement `Station météo à X km` quand une station voisine est utilisée
+- ne rajoute pas de ligne inutile pour les stations exactes
+- cache METAR/TAF isolé en v3

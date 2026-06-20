@@ -1,6 +1,6 @@
-import type { AerodromeWeather } from '../../domain/weather.types';
+import type { AerodromeWeather, AerodromeWeatherRequestItem } from '../../domain/weather.types';
 
-const CACHE_PREFIX = 'capclair.weather.metarTaf.v2.';
+const CACHE_PREFIX = 'capclair.weather.metarTaf.v3.nearest.';
 const CACHE_TTL_MS = 5 * 60 * 1000;
 
 interface WeatherResponse {
@@ -8,17 +8,30 @@ interface WeatherResponse {
   reports: AerodromeWeather[];
 }
 
-function normalizeCodes(codes: string[]) {
-  return [...new Set(codes.map((code) => code.trim().toUpperCase()).filter((code) => /^[A-Z0-9]{4}$/.test(code)))];
+function normalizeItems(items: AerodromeWeatherRequestItem[]) {
+  return items
+    .filter((item) => /^[A-Z0-9]{4}$/.test(item.icao))
+    .map((item) => ({
+      ...item,
+      icao: item.icao.trim().toUpperCase(),
+      candidates: item.candidates
+        .map((candidate) => ({
+          icao: candidate.icao.trim().toUpperCase(),
+          distanceKm: Number(candidate.distanceKm.toFixed(1))
+        }))
+        .filter((candidate) => /^[A-Z0-9]{4}$/.test(candidate.icao))
+        .slice(0, 16)
+    }));
 }
 
-function cacheKey(codes: string[]) {
-  return CACHE_PREFIX + normalizeCodes(codes).join(',');
+function cacheKey(items: AerodromeWeatherRequestItem[]) {
+  const parts = normalizeItems(items).map((item) => `${item.icao}:${item.candidates.map((candidate) => candidate.icao).join('-')}`);
+  return CACHE_PREFIX + parts.join(',');
 }
 
-function readCache(codes: string[]): WeatherResponse | null {
+function readCache(items: AerodromeWeatherRequestItem[]): WeatherResponse | null {
   try {
-    const raw = window.localStorage.getItem(cacheKey(codes));
+    const raw = window.localStorage.getItem(cacheKey(items));
     if (!raw) return null;
     const parsed = JSON.parse(raw) as { savedAt: number; data: WeatherResponse };
     if (Date.now() - parsed.savedAt > CACHE_TTL_MS) return null;
@@ -28,27 +41,27 @@ function readCache(codes: string[]): WeatherResponse | null {
   }
 }
 
-function writeCache(codes: string[], data: WeatherResponse) {
+function writeCache(items: AerodromeWeatherRequestItem[], data: WeatherResponse) {
   try {
-    window.localStorage.setItem(cacheKey(codes), JSON.stringify({ savedAt: Date.now(), data }));
+    window.localStorage.setItem(cacheKey(items), JSON.stringify({ savedAt: Date.now(), data }));
   } catch {
     // best effort
   }
 }
 
-export async function fetchAerodromeWeather(codes: string[], force = false): Promise<WeatherResponse> {
-  const ids = normalizeCodes(codes);
-  if (!ids.length) return { generatedAt: new Date().toISOString(), reports: [] };
+export async function fetchAerodromeWeather(items: AerodromeWeatherRequestItem[], force = false): Promise<WeatherResponse> {
+  const payloadItems = normalizeItems(items);
+  if (!payloadItems.length) return { generatedAt: new Date().toISOString(), reports: [] };
 
   if (!force) {
-    const cached = readCache(ids);
+    const cached = readCache(payloadItems);
     if (cached) return cached;
   }
 
   const response = await fetch('/api/weather/metar-taf', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
-    body: JSON.stringify({ ids })
+    body: JSON.stringify({ items: payloadItems })
   });
 
   if (!response.ok) {
@@ -56,6 +69,6 @@ export async function fetchAerodromeWeather(codes: string[], force = false): Pro
   }
 
   const data = (await response.json()) as WeatherResponse;
-  writeCache(ids, data);
+  writeCache(payloadItems, data);
   return data;
 }

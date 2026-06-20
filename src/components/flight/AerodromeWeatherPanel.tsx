@@ -25,7 +25,12 @@ function timeZulu(iso?: string | null) {
 }
 
 function reportText(value?: string) {
-  return value?.trim() || 'Non publié';
+  return value?.trim() || 'Non reçu';
+}
+
+function stationDistanceText(report: AerodromeWeather | undefined) {
+  if (!report || report.stationDistanceKm <= 1) return null;
+  return `Station météo à ${Math.round(report.stationDistanceKm)} km`;
 }
 
 function radioText(radios: AerodromeRadioRef[]) {
@@ -55,6 +60,7 @@ export function AerodromeWeatherPanel({ items, reports, status, updatedAtIso, on
                 <span>{item.role}</span>
                 <strong>{item.code}{item.name ? ` - ${item.name}` : ''}</strong>
               </div>
+              {stationDistanceText(report) && <p className="weather-station-distance">{stationDistanceText(report)}</p>}
               <dl>
                 <dt>METAR</dt>
                 <dd>{reportText(report?.metarRaw)}</dd>

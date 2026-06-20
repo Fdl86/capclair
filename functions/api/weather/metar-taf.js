@@ -19,10 +19,30 @@ export function onRequestOptions() {
   });
 }
 
-function normalizeIds(ids) {
-  return [...new Set((Array.isArray(ids) ? ids : [])
-    .map((id) => String(id || '').trim().toUpperCase())
-    .filter((id) => /^[A-Z0-9]{4}$/.test(id)))]
+function normalizeItems(body) {
+  const rawItems = Array.isArray(body?.items)
+    ? body.items
+    : (Array.isArray(body?.ids) ? body.ids.map((id) => ({ icao: id, candidates: [{ icao: id, distanceKm: 0 }] })) : []);
+
+  return rawItems
+    .map((item) => {
+      const icao = String(item?.icao || '').trim().toUpperCase();
+      const candidates = Array.isArray(item?.candidates) ? item.candidates : [];
+      const normalizedCandidates = candidates
+        .map((candidate) => ({
+          icao: String(candidate?.icao || '').trim().toUpperCase(),
+          distanceKm: Number(candidate?.distanceKm ?? 0)
+        }))
+        .filter((candidate) => /^[A-Z0-9]{4}$/.test(candidate.icao))
+        .slice(0, 16);
+
+      if (/^[A-Z0-9]{4}$/.test(icao) && !normalizedCandidates.some((candidate) => candidate.icao === icao)) {
+        normalizedCandidates.unshift({ icao, distanceKm: 0 });
+      }
+
+      return { icao, candidates: normalizedCandidates };
+    })
+    .filter((item) => /^[A-Z0-9]{4}$/.test(item.icao))
     .slice(0, 6);
 }
 
@@ -54,6 +74,51 @@ async function fetchJsonProduct(product, ids) {
   }
 }
 
+function itemId(item) {
+  return String(item?.icaoId || item?.station_id || item?.id || '').toUpperCase();
+}
+
+function makeEmptyReport(requestedIcao) {
+  return {
+    icao: requestedIcao,
+    requestedIcao,
+    stationIcao: requestedIcao,
+    stationDistanceKm: 0,
+    metarRaw: '',
+    tafRaw: '',
+    updatedAtIso: new Date().toISOString(),
+    source: 'aviationweather.gov',
+    status: 'missing'
+  };
+}
+
+function buildReportForItem(item, metarById, tafById) {
+  const selected = item.candidates.find((candidate) => {
+    const metar = metarById.get(candidate.icao);
+    const taf = tafById.get(candidate.icao);
+    return Boolean(rawMetar(metar) || rawTaf(taf));
+  });
+
+  if (!selected) return makeEmptyReport(item.icao);
+
+  const metar = metarById.get(selected.icao);
+  const taf = tafById.get(selected.icao);
+  const metarRaw = rawMetar(metar);
+  const tafRaw = rawTaf(taf);
+
+  return {
+    icao: item.icao,
+    requestedIcao: item.icao,
+    stationIcao: selected.icao,
+    stationDistanceKm: Number(selected.distanceKm.toFixed(1)),
+    metarRaw,
+    tafRaw,
+    updatedAtIso: new Date().toISOString(),
+    source: 'aviationweather.gov',
+    status: metarRaw || tafRaw ? 'ok' : 'missing'
+  };
+}
+
 export async function onRequestPost(context) {
   let body;
   try {
@@ -62,8 +127,10 @@ export async function onRequestPost(context) {
     return jsonResponse({ error: 'invalid json', reports: [] }, 400);
   }
 
-  const ids = normalizeIds(body?.ids);
-  if (!ids.length) return jsonResponse({ generatedAt: new Date().toISOString(), reports: [] });
+  const items = normalizeItems(body);
+  if (!items.length) return jsonResponse({ generatedAt: new Date().toISOString(), reports: [] });
+
+  const ids = [...new Set(items.flatMap((item) => item.candidates.map((candidate) => candidate.icao)))].slice(0, 80);
 
   try {
     const [metars, tafs] = await Promise.all([
@@ -71,40 +138,28 @@ export async function onRequestPost(context) {
       fetchJsonProduct('taf', ids)
     ]);
 
-    const byId = new Map(ids.map((id) => [id, {
-      icao: id,
-      metarRaw: '',
-      tafRaw: '',
-      updatedAtIso: new Date().toISOString(),
-      source: 'aviationweather.gov',
-      status: 'missing'
-    }]));
+    const metarById = new Map();
+    const tafById = new Map();
 
     for (const item of metars) {
-      const id = String(item?.icaoId || item?.station_id || item?.id || '').toUpperCase();
-      if (!byId.has(id)) continue;
-      const current = byId.get(id);
-      current.metarRaw = rawMetar(item);
-      current.status = current.metarRaw || current.tafRaw ? 'ok' : current.status;
+      const id = itemId(item);
+      if (id) metarById.set(id, item);
     }
 
     for (const item of tafs) {
-      const id = String(item?.icaoId || item?.station_id || item?.id || '').toUpperCase();
-      if (!byId.has(id)) continue;
-      const current = byId.get(id);
-      current.tafRaw = rawTaf(item);
-      current.status = current.metarRaw || current.tafRaw ? 'ok' : current.status;
+      const id = itemId(item);
+      if (id) tafById.set(id, item);
     }
 
     return jsonResponse({
       generatedAt: new Date().toISOString(),
-      reports: [...byId.values()]
+      reports: items.map((item) => buildReportForItem(item, metarById, tafById))
     }, 200, 300);
   } catch (error) {
     return jsonResponse({
       generatedAt: new Date().toISOString(),
       error: error instanceof Error ? error.message : 'weather fetch failed',
-      reports: ids.map((id) => ({ icao: id, status: 'error' }))
+      reports: items.map((item) => ({ ...makeEmptyReport(item.icao), status: 'error' }))
     }, 200);
   }
 }
