@@ -99,3 +99,14 @@ Cleanup + devis carburant :
 - vol à bord modifiable en litres
 - déroutement calculé destination vers dégagement
 - total minimum, vol réglementaire, vol à bord et heure limite
+
+## DEV13.7.5
+
+Fuel compact + title release :
+- titre d'onglet mis à jour avec la version DEV13.7.5
+- description HTML mise à jour
+- devis carburant rendu plus compact et premium
+- roulage départ, arrivée et arrivée déroutement en valeurs fixes non éditables
+- marge saisie en litres
+- libellé `Vol à bord` remplacé par `Carburant embarqué`
+- seuls restent éditables : réserve finale, marge, carburant embarqué

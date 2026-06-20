@@ -20,13 +20,14 @@ export interface FuelPlanConfig {
   arrivalMin: number;
   alternateArrivalMin: number;
   finalReserveMin: number;
-  marginMin: number;
+  marginLiters: number;
   fuelOnBoardL: number;
+  marginMin?: number;
 }
 
 export interface FuelLine {
   label: string;
-  minutes: number;
+  minutes: number | null;
   liters: number;
   editable?: boolean;
 }
@@ -66,6 +67,12 @@ export const DEFAULT_FUEL_PLAN_CONFIG: FuelPlanConfig = {
   arrivalMin: 12,
   alternateArrivalMin: 12,
   finalReserveMin: 30,
-  marginMin: 0,
+  marginLiters: 0,
   fuelOnBoardL: 120
+};
+
+export const FIXED_FUEL_MINUTES = {
+  taxiDepartureMin: 8,
+  arrivalMin: 12,
+  alternateArrivalMin: 12
 };

@@ -1,7 +1,7 @@
 {
-  "name": "cap-clair-dev13-7-4-fuel-cleanup",
+  "name": "cap-clair-dev13-7-5-fuel-compact-title",
   "private": true,
-  "version": "0.13.7-4",
+  "version": "0.13.7-5",
   "type": "module",
   "scripts": {
     "dev": "vite",

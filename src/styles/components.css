@@ -2470,3 +2470,159 @@
     display: grid;
   }
 }
+
+/* DEV13.7.5 - compact premium fuel panel */
+.fuel-planning-panel-compact {
+  gap: 10px;
+  padding: 12px;
+}
+
+.fuel-premium-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  border: 1px solid rgba(30, 49, 69, 0.72);
+  border-radius: 14px;
+  background: linear-gradient(135deg, rgba(7, 17, 28, 0.86), rgba(8, 24, 38, 0.72));
+  padding: 10px 12px;
+}
+
+.fuel-premium-head span {
+  display: block;
+  color: var(--text-3);
+  font-size: 0.58rem;
+  font-weight: 950;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.fuel-premium-head strong {
+  display: block;
+  color: var(--text);
+  font-size: 1rem;
+  margin-top: 2px;
+}
+
+.fuel-premium-head em {
+  color: var(--cyan-soft);
+  font-style: normal;
+  font-weight: 950;
+  font-size: 0.8rem;
+  white-space: nowrap;
+}
+
+.fuel-fixed-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+}
+
+.fuel-fixed-pill {
+  min-height: 52px;
+  border: 1px solid rgba(30, 49, 69, 0.68);
+  border-radius: 12px;
+  background: rgba(5, 11, 18, 0.46);
+  padding: 8px 10px;
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 2px 8px;
+  align-items: baseline;
+}
+
+.fuel-fixed-pill span {
+  color: var(--text-3);
+  font-size: 0.62rem;
+  font-weight: 900;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.fuel-fixed-pill strong {
+  color: var(--text);
+  font-size: 0.98rem;
+  font-weight: 950;
+}
+
+.fuel-fixed-pill small {
+  grid-column: 1 / -1;
+  color: var(--text-2);
+  font-size: 0.72rem;
+  font-weight: 800;
+}
+
+.fuel-input-grid-compact {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.fuel-input-compact input {
+  height: 34px;
+}
+
+.fuel-table-compact .fuel-row {
+  min-height: 31px;
+  padding: 5px 9px;
+}
+
+.fuel-table-compact .fuel-row span,
+.fuel-table-compact .fuel-row strong,
+.fuel-table-compact .fuel-row b {
+  font-size: 0.78rem;
+}
+
+.fuel-kpi-strip {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+}
+
+.fuel-kpi-strip div {
+  border: 1px solid rgba(30, 49, 69, 0.72);
+  border-radius: 13px;
+  background: rgba(5, 11, 18, 0.52);
+  min-height: 58px;
+  padding: 9px 11px;
+  display: grid;
+  align-content: center;
+  gap: 3px;
+}
+
+.fuel-kpi-strip span {
+  color: var(--text-3);
+  font-size: 0.6rem;
+  font-weight: 950;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.fuel-kpi-strip strong {
+  color: var(--text);
+  font-size: 1.18rem;
+  font-weight: 1000;
+}
+
+.fuel-kpi-strip div:first-child strong,
+.fuel-kpi-strip div:last-child strong {
+  color: var(--cyan-soft);
+}
+
+@media (max-width: 720px) {
+  .fuel-premium-head {
+    align-items: flex-start;
+    display: grid;
+  }
+
+  .fuel-premium-head em {
+    white-space: normal;
+  }
+
+  .fuel-fixed-grid,
+  .fuel-input-grid-compact,
+  .fuel-kpi-strip {
+    grid-template-columns: 1fr;
+  }
+
+  .fuel-fixed-pill {
+    min-height: 48px;
+  }
+}

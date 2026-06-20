@@ -14,8 +14,8 @@ function formatLitersCompact(value: number) {
   return `${Math.round(value)} L`;
 }
 
-function formatMinutes(value: number) {
-  return `${Math.round(value)} min`;
+function formatMinutes(value: number | null) {
+  return value === null ? '-' : `${Math.round(value)} min`;
 }
 
 function numberValue(value: string, fallback: number) {
@@ -25,7 +25,7 @@ function numberValue(value: string, fallback: number) {
 
 function EditableMinute({ label, value, onChange }: { label: string; value: number; onChange: (value: number) => void }) {
   return (
-    <label className="fuel-input">
+    <label className="fuel-input fuel-input-compact">
       <span>{label}</span>
       <div>
         <input type="number" min={0} step={1} value={value} onChange={(event) => onChange(numberValue(event.target.value, value))} />
@@ -37,13 +37,23 @@ function EditableMinute({ label, value, onChange }: { label: string; value: numb
 
 function EditableLiter({ label, value, onChange }: { label: string; value: number; onChange: (value: number) => void }) {
   return (
-    <label className="fuel-input">
+    <label className="fuel-input fuel-input-compact">
       <span>{label}</span>
       <div>
-        <input type="number" min={0} step={1} value={value} onChange={(event) => onChange(numberValue(event.target.value, value))} />
+        <input type="number" min={0} step={0.5} value={value} onChange={(event) => onChange(numberValue(event.target.value, value))} />
         <small>L</small>
       </div>
     </label>
+  );
+}
+
+function FixedPill({ label, line }: { label: string; line: FuelLine }) {
+  return (
+    <div className="fuel-fixed-pill">
+      <span>{label}</span>
+      <strong>{formatMinutes(line.minutes)}</strong>
+      <small>{formatLiters(line.liters)}</small>
+    </div>
   );
 }
 
@@ -59,8 +69,8 @@ function FuelRow({ line, strong = false }: { line: FuelLine; strong?: boolean })
 
 export function FuelPlanningPanel({ fuel, config, onChangeConfig }: FuelPlanningPanelProps) {
   return (
-    <div className="fuel-planning-panel">
-      <div className="subpanel-title-row">
+    <div className="fuel-planning-panel fuel-planning-panel-compact">
+      <div className="fuel-premium-head">
         <div>
           <span>Devis carburant</span>
           <strong>Minutes + litres</strong>
@@ -68,21 +78,19 @@ export function FuelPlanningPanel({ fuel, config, onChangeConfig }: FuelPlanning
         <em>{formatLiters(fuel.fuelPerHourL)} - {fuel.fuelPerMinuteL.toFixed(2).replace('.', ',')} L/min</em>
       </div>
 
-      <div className="fuel-input-grid">
-        <EditableMinute label="Roulage départ" value={config.taxiDepartureMin} onChange={(value) => onChangeConfig({ taxiDepartureMin: value })} />
-        <EditableMinute label="Arrivée" value={config.arrivalMin} onChange={(value) => onChangeConfig({ arrivalMin: value })} />
-        <EditableMinute label="Arr. déroutement" value={config.alternateArrivalMin} onChange={(value) => onChangeConfig({ alternateArrivalMin: value })} />
+      <div className="fuel-fixed-grid">
+        <FixedPill label="Roulage départ" line={fuel.lines.taxiDeparture} />
+        <FixedPill label="Arrivée" line={fuel.lines.arrival} />
+        <FixedPill label="Arr. déroutement" line={fuel.lines.alternateArrival} />
+      </div>
+
+      <div className="fuel-input-grid fuel-input-grid-compact">
         <EditableMinute label="Réserve finale" value={config.finalReserveMin} onChange={(value) => onChangeConfig({ finalReserveMin: value })} />
-        <EditableMinute label="Marge" value={config.marginMin} onChange={(value) => onChangeConfig({ marginMin: value })} />
-        <EditableLiter label="Vol à bord" value={config.fuelOnBoardL} onChange={(value) => onChangeConfig({ fuelOnBoardL: value })} />
+        <EditableLiter label="Marge" value={config.marginLiters ?? 0} onChange={(value) => onChangeConfig({ marginLiters: value })} />
+        <EditableLiter label="Carburant embarqué" value={config.fuelOnBoardL} onChange={(value) => onChangeConfig({ fuelOnBoardL: value })} />
       </div>
 
-      <div className="fuel-meta-grid">
-        <span><b>Conso</b>{formatLiters(fuel.fuelPerHourL)} / {fuel.fuelPerMinuteL.toFixed(2).replace('.', ',')} L/min</span>
-        <span><b>Essence non utilisable</b>{formatLiters(fuel.unusableFuelL)}</span>
-      </div>
-
-      <div className="fuel-table">
+      <div className="fuel-table fuel-table-compact">
         <FuelRow line={fuel.lines.route} />
         <FuelRow line={fuel.lines.taxiDeparture} />
         <FuelRow line={fuel.lines.arrival} />
@@ -91,21 +99,25 @@ export function FuelPlanningPanel({ fuel, config, onChangeConfig }: FuelPlanning
         <FuelRow line={fuel.lines.finalReserve} />
         <FuelRow line={fuel.lines.margin} />
         <FuelRow line={fuel.lines.totalMinimum} strong />
-        <FuelRow line={fuel.lines.regulatory} strong />
-        <div className="fuel-row strong">
-          <span>Vol à bord</span>
-          <strong>-</strong>
-          <b>{formatLitersCompact(fuel.fuelOnBoardL)}</b>
+      </div>
+
+      <div className="fuel-kpi-strip">
+        <div>
+          <span>Vol réglementaire</span>
+          <strong>{formatLitersCompact(fuel.lines.regulatory.liters)}</strong>
         </div>
-        <div className="fuel-row strong">
-          <span>Heure limite</span>
+        <div>
+          <span>Carburant embarqué</span>
+          <strong>{formatLitersCompact(fuel.fuelOnBoardL)}</strong>
+        </div>
+        <div>
+          <span>Autonomie totale</span>
           <strong>{formatMinutes(fuel.lines.timeLimit.minutes)}</strong>
-          <b>{formatLitersCompact(fuel.lines.timeLimit.liters)}</b>
         </div>
       </div>
 
       <div className={`fuel-margin ${fuel.remainingAfterMinimumL >= 0 ? 'ok' : 'warn'}`}>
-        <strong>Marge restante après minimum</strong>
+        <strong>Reste après minimum</strong>
         <span>{formatLiters(fuel.remainingAfterMinimumL)}</span>
       </div>
     </div>

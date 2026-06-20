@@ -31,7 +31,8 @@ export function App() {
   const traceState = useTraces();
   const aircraftState = useAircraftProfiles();
   const [alternateCode, setAlternateCode] = useLocalStorageState('capclair.alternateCode.v1', 'LFOO');
-  const [fuelPlanConfig, setFuelPlanConfig] = useLocalStorageState('capclair.fuelPlan.v1', DEFAULT_FUEL_PLAN_CONFIG);
+  const [fuelPlanConfigRaw, setFuelPlanConfig] = useLocalStorageState('capclair.fuelPlan.v1', DEFAULT_FUEL_PLAN_CONFIG);
+  const fuelPlanConfig = { ...DEFAULT_FUEL_PLAN_CONFIG, ...fuelPlanConfigRaw };
 
   const departureCode = routeEndpointCode(routeState.route, 'depart');
   const destinationCode = routeEndpointCode(routeState.route, 'destination');
