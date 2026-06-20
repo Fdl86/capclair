@@ -1,7 +1,7 @@
 {
-  "name": "cap-clair-dev13-6-3-frieze-axis-hotfix",
+  "name": "cap-clair-dev13-7-aircraft-metar-taf",
   "private": true,
-  "version": "0.13.6-3",
+  "version": "0.13.7",
   "type": "module",
   "scripts": {
     "dev": "vite",

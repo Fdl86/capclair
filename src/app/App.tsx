@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import type { ScreenId } from './routes';
+import { findAerodrome } from '../data/aerodromeCatalog';
 import { AppShell } from '../components/layout/AppShell';
 import { HomeScreen } from '../screens/HomeScreen';
 import { PlanningScreen } from '../screens/PlanningScreen';
@@ -10,11 +11,51 @@ import { TracesScreen } from '../screens/TracesScreen';
 import { MoreScreen } from '../screens/MoreScreen';
 import { useActiveRoute } from '../hooks/useActiveRoute';
 import { useTraces } from '../hooks/useTraces';
+import { useLocalStorageState } from '../hooks/useLocalStorageState';
+import { useAircraftProfiles } from '../hooks/useAircraftProfiles';
+import { useAerodromeWeather } from '../hooks/useAerodromeWeather';
+
+function routeEndpointCode(route: ReturnType<typeof useActiveRoute>['route'], type: 'depart' | 'destination') {
+  return route.points.find((point) => point.type === type)?.code ?? '';
+}
+
+function safeAerodromeCode(code: string, fallback: string) {
+  const normalized = code.trim().toUpperCase();
+  return findAerodrome(normalized) ? normalized : fallback;
+}
 
 export function App() {
   const [currentScreen, setCurrentScreen] = useState<ScreenId>('home');
   const routeState = useActiveRoute();
   const traceState = useTraces();
+  const aircraftState = useAircraftProfiles();
+  const [alternateCode, setAlternateCode] = useLocalStorageState('capclair.alternateCode.v1', 'LFRS');
+
+  const departureCode = routeEndpointCode(routeState.route, 'depart');
+  const destinationCode = routeEndpointCode(routeState.route, 'destination');
+  const safeAlternateCode = safeAerodromeCode(alternateCode, 'LFRS');
+  const aerodromeWeatherState = useAerodromeWeather([departureCode, destinationCode, safeAlternateCode]);
+
+  const setAlternate = (code: string) => {
+    setAlternateCode(safeAerodromeCode(code, safeAlternateCode));
+  };
+
+  const selectAircraft = (profileId: string) => {
+    const selected = aircraftState.selectProfile(profileId);
+    routeState.setTasKt(selected.cruiseTasKt);
+  };
+
+  const updateAircraft = (profileId: string, patch: Parameters<typeof aircraftState.updateProfile>[1]) => {
+    aircraftState.updateProfile(profileId, patch);
+    if (profileId === aircraftState.activeProfile.id && typeof patch.cruiseTasKt === 'number') {
+      routeState.setTasKt(patch.cruiseTasKt);
+    }
+  };
+
+  const createAircraft = () => {
+    const profile = aircraftState.createProfile();
+    routeState.setTasKt(profile.cruiseTasKt);
+  };
 
   return (
     <AppShell currentScreen={currentScreen} onNavigate={setCurrentScreen}>
@@ -25,6 +66,17 @@ export function App() {
           selectedPointId={routeState.selectedPointId}
           routeMessage={routeState.routeMessage}
           weatherStatus={routeState.weatherStatus}
+          alternateCode={safeAlternateCode}
+          onSetAlternateCode={setAlternate}
+          aircraftProfiles={aircraftState.profiles}
+          activeAircraft={aircraftState.activeProfile}
+          onSelectAircraft={selectAircraft}
+          onUpdateAircraft={updateAircraft}
+          onCreateAircraft={createAircraft}
+          aerodromeWeatherReports={aerodromeWeatherState.reports}
+          aerodromeWeatherStatus={aerodromeWeatherState.status}
+          aerodromeWeatherUpdatedAt={aerodromeWeatherState.updatedAtIso}
+          onRefreshAerodromeWeather={aerodromeWeatherState.refresh}
           onSelectPoint={routeState.setSelectedPointId}
           onSetDepartureCode={routeState.setDepartureCode}
           onSetDestinationCode={routeState.setDestinationCode}
@@ -43,6 +95,12 @@ export function App() {
           weatherStatus={routeState.weatherStatus}
           onSetBranchAltitude={routeState.setBranchAltitudeFt}
           onRefreshWinds={routeState.refreshWinds}
+          activeAircraft={aircraftState.activeProfile}
+          alternateCode={safeAlternateCode}
+          aerodromeWeatherReports={aerodromeWeatherState.reports}
+          aerodromeWeatherStatus={aerodromeWeatherState.status}
+          aerodromeWeatherUpdatedAt={aerodromeWeatherState.updatedAtIso}
+          onRefreshAerodromeWeather={aerodromeWeatherState.refresh}
           onValidate={() => setCurrentScreen('tracking')}
           onExport={() => setCurrentScreen('traces')}
           onBackPlanning={() => setCurrentScreen('planning')}

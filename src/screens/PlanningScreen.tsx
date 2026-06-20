@@ -1,12 +1,16 @@
 import { useEffect, useMemo, useState } from 'react';
+import type { AircraftProfile } from '../domain/aircraft.types';
+import type { AerodromeWeather } from '../domain/weather.types';
 import type { NavRoute } from '../domain/navigation.types';
-import { AERODROMES } from '../data/aerodromeCatalog';
+import { AERODROMES, findAerodrome } from '../data/aerodromeCatalog';
 import { Page } from '../components/layout/Page';
 import { Button } from '../components/ui/Button';
 import { Card } from '../components/ui/Card';
 import { OpenLayersMap } from '../components/map/OpenLayersMap';
 import { MapLayerToggle } from '../components/map/MapLayerToggle';
 import { RoutePointList } from '../components/navigation/RoutePointList';
+import { AircraftProfilePanel } from '../components/flight/AircraftProfilePanel';
+import { AerodromeWeatherPanel } from '../components/flight/AerodromeWeatherPanel';
 
 interface PlanningScreenProps {
   route: NavRoute;
@@ -22,11 +26,26 @@ interface PlanningScreenProps {
   onSetDefaultAltitudeFt: (altitudeFt: number) => void;
   onRefreshWinds: () => void;
   weatherStatus: string;
+  alternateCode: string;
+  onSetAlternateCode: (code: string) => void;
+  aircraftProfiles: AircraftProfile[];
+  activeAircraft: AircraftProfile;
+  onSelectAircraft: (profileId: string) => void;
+  onUpdateAircraft: (profileId: string, patch: Partial<AircraftProfile>) => void;
+  onCreateAircraft: () => void;
+  aerodromeWeatherReports: Record<string, AerodromeWeather>;
+  aerodromeWeatherStatus: string;
+  aerodromeWeatherUpdatedAt: string | null;
+  onRefreshAerodromeWeather: () => void;
   onCalculations: () => void;
 }
 
 function endpointCode(route: NavRoute, type: 'depart' | 'destination') {
   return route.points.find((point) => point.type === type)?.code ?? '';
+}
+
+function aerodromeName(code: string) {
+  return findAerodrome(code)?.cartoName;
 }
 
 function formatDuration(minutes: number) {
@@ -50,17 +69,33 @@ export function PlanningScreen({
   onSetDefaultAltitudeFt,
   onRefreshWinds,
   weatherStatus,
+  alternateCode,
+  onSetAlternateCode,
+  aircraftProfiles,
+  activeAircraft,
+  onSelectAircraft,
+  onUpdateAircraft,
+  onCreateAircraft,
+  aerodromeWeatherReports,
+  aerodromeWeatherStatus,
+  aerodromeWeatherUpdatedAt,
+  onRefreshAerodromeWeather,
   onCalculations
 }: PlanningScreenProps) {
   const [showTopo, setShowTopo] = useState(true);
   const [addWaypointMode, setAddWaypointMode] = useState(false);
   const [departureInput, setDepartureInput] = useState(endpointCode(route, 'depart'));
   const [destinationInput, setDestinationInput] = useState(endpointCode(route, 'destination'));
+  const [alternateInput, setAlternateInput] = useState(alternateCode);
 
   useEffect(() => {
     setDepartureInput(endpointCode(route, 'depart'));
     setDestinationInput(endpointCode(route, 'destination'));
   }, [route.points]);
+
+  useEffect(() => {
+    setAlternateInput(alternateCode);
+  }, [alternateCode]);
 
   const datalistId = useMemo(() => 'cap-clair-aerodromes', []);
 
@@ -70,6 +105,10 @@ export function PlanningScreen({
 
   const applyDestination = () => {
     if (destinationInput.trim().length >= 4) onSetDestinationCode(destinationInput);
+  };
+
+  const applyAlternate = () => {
+    if (alternateInput.trim().length >= 4) onSetAlternateCode(alternateInput.trim().toUpperCase());
   };
 
   const handleAddWaypoint = (longitude: number, latitude: number) => {
@@ -129,6 +168,19 @@ export function PlanningScreen({
                 spellCheck={false}
               />
             </label>
+            <label>
+              <span>Dégagement</span>
+              <input
+                value={alternateInput}
+                onChange={(event) => setAlternateInput(event.target.value.toUpperCase())}
+                onBlur={applyAlternate}
+                onKeyDown={(event) => { if (event.key === 'Enter') applyAlternate(); }}
+                maxLength={4}
+                list={datalistId}
+                autoCapitalize="characters"
+                spellCheck={false}
+              />
+            </label>
             <Button variant="ghost" className="route-builder-reverse" onClick={onReverseRoute}>Inverser</Button>
             <datalist id={datalistId}>
               {AERODROMES.map((aerodrome) => (
@@ -166,6 +218,26 @@ export function PlanningScreen({
             <span>{formatDuration(route.tempsEstimeMin)}</span>
             <span>{route.vitesseSolKt} kt</span>
           </div>
+
+          <AircraftProfilePanel
+            profiles={aircraftProfiles}
+            activeProfile={activeAircraft}
+            onSelectProfile={onSelectAircraft}
+            onUpdateProfile={onUpdateAircraft}
+            onCreateProfile={onCreateAircraft}
+          />
+
+          <AerodromeWeatherPanel
+            items={[
+              { role: 'Départ', code: endpointCode(route, 'depart'), name: aerodromeName(endpointCode(route, 'depart')) },
+              { role: 'Arrivée', code: endpointCode(route, 'destination'), name: aerodromeName(endpointCode(route, 'destination')) },
+              { role: 'Dégagement', code: alternateCode, name: aerodromeName(alternateCode) }
+            ]}
+            reports={aerodromeWeatherReports}
+            status={aerodromeWeatherStatus}
+            updatedAtIso={aerodromeWeatherUpdatedAt}
+            onRefresh={onRefreshAerodromeWeather}
+          />
 
           <RoutePointList points={route.points} selectedPointId={selectedPointId} onSelect={onSelectPoint} onRemove={onRemovePoint} />
 
