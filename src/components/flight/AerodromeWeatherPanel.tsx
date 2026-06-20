@@ -1,4 +1,6 @@
 import type { AerodromeWeather } from '../../domain/weather.types';
+import type { AerodromeRadioRef } from '../../data/aerodromeRadioCatalog';
+import { getAerodromeRadios } from '../../data/aerodromeRadioCatalog';
 import { Button } from '../ui/Button';
 
 interface WeatherItem {
@@ -23,7 +25,12 @@ function timeZulu(iso?: string | null) {
 }
 
 function reportText(value?: string) {
-  return value?.trim() || 'Non reçu';
+  return value?.trim() || 'Non publié';
+}
+
+function radioText(radios: AerodromeRadioRef[]) {
+  if (!radios.length) return 'À confirmer';
+  return radios.slice(0, 5).map((radio) => `${radio.type} ${radio.frequency}`).join(' / ');
 }
 
 export function AerodromeWeatherPanel({ items, reports, status, updatedAtIso, onRefresh }: AerodromeWeatherPanelProps) {
@@ -41,6 +48,7 @@ export function AerodromeWeatherPanel({ items, reports, status, updatedAtIso, on
       <div className="weather-report-list">
         {items.map((item) => {
           const report = reports[item.code];
+          const radios = getAerodromeRadios(item.code);
           return (
             <div key={`${item.role}:${item.code}`} className={`weather-report-card ${report?.status ?? 'idle'}`}>
               <div>
@@ -52,6 +60,8 @@ export function AerodromeWeatherPanel({ items, reports, status, updatedAtIso, on
                 <dd>{reportText(report?.metarRaw)}</dd>
                 <dt>TAF</dt>
                 <dd>{reportText(report?.tafRaw)}</dd>
+                <dt>Radio</dt>
+                <dd>{radioText(radios)}</dd>
               </dl>
             </div>
           );

@@ -1,16 +1,12 @@
 import { useEffect, useMemo, useState } from 'react';
-import type { AircraftProfile } from '../domain/aircraft.types';
-import type { AerodromeWeather } from '../domain/weather.types';
 import type { NavRoute } from '../domain/navigation.types';
-import { AERODROMES, findAerodrome } from '../data/aerodromeCatalog';
+import { AERODROMES } from '../data/aerodromeCatalog';
 import { Page } from '../components/layout/Page';
 import { Button } from '../components/ui/Button';
 import { Card } from '../components/ui/Card';
 import { OpenLayersMap } from '../components/map/OpenLayersMap';
 import { MapLayerToggle } from '../components/map/MapLayerToggle';
 import { RoutePointList } from '../components/navigation/RoutePointList';
-import { AircraftProfilePanel } from '../components/flight/AircraftProfilePanel';
-import { AerodromeWeatherPanel } from '../components/flight/AerodromeWeatherPanel';
 
 interface PlanningScreenProps {
   route: NavRoute;
@@ -22,30 +18,13 @@ interface PlanningScreenProps {
   onAddWaypointAt: (longitude: number, latitude: number) => void;
   onRemovePoint: (pointId: string) => void;
   onReverseRoute: () => void;
-  onSetTasKt: (tasKt: number) => void;
-  onSetDefaultAltitudeFt: (altitudeFt: number) => void;
-  onRefreshWinds: () => void;
-  weatherStatus: string;
   alternateCode: string;
   onSetAlternateCode: (code: string) => void;
-  aircraftProfiles: AircraftProfile[];
-  activeAircraft: AircraftProfile;
-  onSelectAircraft: (profileId: string) => void;
-  onUpdateAircraft: (profileId: string, patch: Partial<AircraftProfile>) => void;
-  onCreateAircraft: () => void;
-  aerodromeWeatherReports: Record<string, AerodromeWeather>;
-  aerodromeWeatherStatus: string;
-  aerodromeWeatherUpdatedAt: string | null;
-  onRefreshAerodromeWeather: () => void;
   onCalculations: () => void;
 }
 
 function endpointCode(route: NavRoute, type: 'depart' | 'destination') {
   return route.points.find((point) => point.type === type)?.code ?? '';
-}
-
-function aerodromeName(code: string) {
-  return findAerodrome(code)?.cartoName;
 }
 
 function formatDuration(minutes: number) {
@@ -65,21 +44,8 @@ export function PlanningScreen({
   onAddWaypointAt,
   onRemovePoint,
   onReverseRoute,
-  onSetTasKt,
-  onSetDefaultAltitudeFt,
-  onRefreshWinds,
-  weatherStatus,
   alternateCode,
   onSetAlternateCode,
-  aircraftProfiles,
-  activeAircraft,
-  onSelectAircraft,
-  onUpdateAircraft,
-  onCreateAircraft,
-  aerodromeWeatherReports,
-  aerodromeWeatherStatus,
-  aerodromeWeatherUpdatedAt,
-  onRefreshAerodromeWeather,
   onCalculations
 }: PlanningScreenProps) {
   const [showTopo, setShowTopo] = useState(true);
@@ -117,7 +83,7 @@ export function PlanningScreen({
   };
 
   return (
-    <Page title="Planification" subtitle="Carte aéro, route modifiable, profil de vol et vent instantané par branche.">
+    <Page title="Planification" subtitle="Carte aéro, route, dégagement et points de navigation.">
       <div className="planning-layout">
         <div className="map-card tall planning-map-card">
           <MapLayerToggle showTopo={showTopo} onChange={setShowTopo} />
@@ -189,55 +155,11 @@ export function PlanningScreen({
             </datalist>
           </div>
 
-          <div className="flight-profile-panel flight-profile-panel-compact cockpit-stepper-grid">
-            <div className="cockpit-stepper">
-              <span>TAS</span>
-              <div>
-                <button type="button" onClick={() => onSetTasKt(route.profile.tasKt - 1)} aria-label="Réduire la TAS">-</button>
-                <strong>{route.profile.tasKt}</strong>
-                <button type="button" onClick={() => onSetTasKt(route.profile.tasKt + 1)} aria-label="Augmenter la TAS">+</button>
-              </div>
-            </div>
-            <div className="cockpit-stepper">
-              <span>Alt défaut</span>
-              <div>
-                <button type="button" onClick={() => onSetDefaultAltitudeFt(route.profile.defaultAltitudeFt - 500)} aria-label="Réduire l'altitude">-</button>
-                <strong>{route.profile.defaultAltitudeFt}</strong>
-                <button type="button" onClick={() => onSetDefaultAltitudeFt(route.profile.defaultAltitudeFt + 500)} aria-label="Augmenter l'altitude">+</button>
-              </div>
-            </div>
-          </div>
-
-          <div className="weather-action-row">
-            <span>{weatherStatus}</span>
-            <Button variant="secondary" onClick={onRefreshWinds}>Maj vent</Button>
-          </div>
-
           <div className="route-summary-line">
             <strong>{route.distanceTotale.toFixed(1).replace('.', ',')} NM</strong>
             <span>{formatDuration(route.tempsEstimeMin)}</span>
             <span>{route.vitesseSolKt} kt</span>
           </div>
-
-          <AircraftProfilePanel
-            profiles={aircraftProfiles}
-            activeProfile={activeAircraft}
-            onSelectProfile={onSelectAircraft}
-            onUpdateProfile={onUpdateAircraft}
-            onCreateProfile={onCreateAircraft}
-          />
-
-          <AerodromeWeatherPanel
-            items={[
-              { role: 'Départ', code: endpointCode(route, 'depart'), name: aerodromeName(endpointCode(route, 'depart')) },
-              { role: 'Arrivée', code: endpointCode(route, 'destination'), name: aerodromeName(endpointCode(route, 'destination')) },
-              { role: 'Dégagement', code: alternateCode, name: aerodromeName(alternateCode) }
-            ]}
-            reports={aerodromeWeatherReports}
-            status={aerodromeWeatherStatus}
-            updatedAtIso={aerodromeWeatherUpdatedAt}
-            onRefresh={onRefreshAerodromeWeather}
-          />
 
           <RoutePointList points={route.points} selectedPointId={selectedPointId} onSelect={onSelectPoint} onRemove={onRemovePoint} />
 

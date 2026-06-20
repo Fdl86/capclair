@@ -53,15 +53,13 @@ Hotfix frise zones :
 - altitude route affichée à gauche dans la colonne altitude
 - suppression du libellé long dans le graphe
 
-## DEV13.7
+## DEV13.7.1
 
-Préparation de vol enrichie :
-
-- Profils avion sauvegardés localement.
-- Profils de base : Evektor SportStar et C150.
-- Sélection par profil, avec modèle et immatriculation.
-- Données avion : TAS, conso, carburant utile, réserve, vitesse/taux de montée, vitesse/taux de descente.
-- METAR/TAF bruts pour départ, arrivée et dégagement.
-- Dégagement renseignable depuis Planification.
-- Proxy Cloudflare `/api/weather/metar-taf`.
+- Profils avion dans Plus.
+- Sélecteur avion dans Log de nav.
+- TAS, altitude défaut et mise à jour du vent déplacés dans Log de nav.
+- METAR/TAF bruts uniquement dans Log de nav.
+- Ajout des fréquences radio/ATIS/AFIS/TWR/APP/FIS disponibles depuis les données internes.
+- Dégagement renseignable dans Planification.
 - Bandeau attribution carte masqué.
+- Pas de SUP AIP automatique dans cette version.

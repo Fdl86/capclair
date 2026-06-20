@@ -16,7 +16,6 @@ import type { GpsPosition } from '../../domain/gps.types';
 import type { NavRoute } from '../../domain/navigation.types';
 import { MapControls } from './MapControls';
 import { MapFallbackNotice } from './MapFallbackNotice';
-import { MapAttribution } from './MapAttribution';
 
 interface OpenLayersMapProps {
   route: NavRoute;
@@ -192,7 +191,6 @@ export function OpenLayersMap({
       )}
       <MapControls onZoomIn={() => zoom(1)} onZoomOut={() => zoom(-1)} onRecenter={recenter} />
       {sourceStatus === 'fallback' && <MapFallbackNotice />}
-      <MapAttribution sourceStatus={sourceStatus} showTopo={showTopo} />
     </div>
   );
 }

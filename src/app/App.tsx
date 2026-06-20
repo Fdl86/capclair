@@ -29,11 +29,11 @@ export function App() {
   const routeState = useActiveRoute();
   const traceState = useTraces();
   const aircraftState = useAircraftProfiles();
-  const [alternateCode, setAlternateCode] = useLocalStorageState('capclair.alternateCode.v1', 'LFRS');
+  const [alternateCode, setAlternateCode] = useLocalStorageState('capclair.alternateCode.v1', 'LFOO');
 
   const departureCode = routeEndpointCode(routeState.route, 'depart');
   const destinationCode = routeEndpointCode(routeState.route, 'destination');
-  const safeAlternateCode = safeAerodromeCode(alternateCode, 'LFRS');
+  const safeAlternateCode = safeAerodromeCode(alternateCode, 'LFOO');
   const aerodromeWeatherState = useAerodromeWeather([departureCode, destinationCode, safeAlternateCode]);
 
   const setAlternate = (code: string) => {
@@ -65,27 +65,14 @@ export function App() {
           route={routeState.route}
           selectedPointId={routeState.selectedPointId}
           routeMessage={routeState.routeMessage}
-          weatherStatus={routeState.weatherStatus}
-          alternateCode={safeAlternateCode}
-          onSetAlternateCode={setAlternate}
-          aircraftProfiles={aircraftState.profiles}
-          activeAircraft={aircraftState.activeProfile}
-          onSelectAircraft={selectAircraft}
-          onUpdateAircraft={updateAircraft}
-          onCreateAircraft={createAircraft}
-          aerodromeWeatherReports={aerodromeWeatherState.reports}
-          aerodromeWeatherStatus={aerodromeWeatherState.status}
-          aerodromeWeatherUpdatedAt={aerodromeWeatherState.updatedAtIso}
-          onRefreshAerodromeWeather={aerodromeWeatherState.refresh}
           onSelectPoint={routeState.setSelectedPointId}
           onSetDepartureCode={routeState.setDepartureCode}
           onSetDestinationCode={routeState.setDestinationCode}
           onAddWaypointAt={routeState.addWaypointAt}
           onRemovePoint={routeState.removePoint}
           onReverseRoute={routeState.reverseRoute}
-          onSetTasKt={routeState.setTasKt}
-          onSetDefaultAltitudeFt={routeState.setDefaultAltitudeFt}
-          onRefreshWinds={routeState.refreshWinds}
+          alternateCode={safeAlternateCode}
+          onSetAlternateCode={setAlternate}
           onCalculations={() => setCurrentScreen('calculations')}
         />
       )}
@@ -95,7 +82,11 @@ export function App() {
           weatherStatus={routeState.weatherStatus}
           onSetBranchAltitude={routeState.setBranchAltitudeFt}
           onRefreshWinds={routeState.refreshWinds}
+          onSetTasKt={routeState.setTasKt}
+          onSetDefaultAltitudeFt={routeState.setDefaultAltitudeFt}
+          aircraftProfiles={aircraftState.profiles}
           activeAircraft={aircraftState.activeProfile}
+          onSelectAircraft={selectAircraft}
           alternateCode={safeAlternateCode}
           aerodromeWeatherReports={aerodromeWeatherState.reports}
           aerodromeWeatherStatus={aerodromeWeatherState.status}
@@ -109,7 +100,16 @@ export function App() {
       {currentScreen === 'zones' && <ZonesScreen route={routeState.route} />}
       {currentScreen === 'tracking' && <TrackingScreen route={routeState.route} onTraceReady={traceState.saveTrace} />}
       {currentScreen === 'traces' && <TracesScreen traces={traceState.traces} onDeleteTrace={traceState.deleteTrace} />}
-      {currentScreen === 'more' && <MoreScreen onNavigate={setCurrentScreen} />}
+      {currentScreen === 'more' && (
+        <MoreScreen
+          onNavigate={setCurrentScreen}
+          aircraftProfiles={aircraftState.profiles}
+          activeAircraft={aircraftState.activeProfile}
+          onSelectAircraft={selectAircraft}
+          onUpdateAircraft={updateAircraft}
+          onCreateAircraft={createAircraft}
+        />
+      )}
     </AppShell>
   );
 }

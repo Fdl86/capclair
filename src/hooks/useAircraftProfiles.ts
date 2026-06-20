@@ -44,6 +44,10 @@ function ensureProfiles(profiles: AircraftProfile[]) {
   return profiles.length ? profiles : DEFAULT_AIRCRAFT_PROFILES;
 }
 
+function profileLabel(profile: AircraftProfile) {
+  return profile.registration ? `${profile.model} ${profile.registration}` : profile.model;
+}
+
 export function useAircraftProfiles() {
   const [profiles, setProfiles] = useLocalStorageState<AircraftProfile[]>(STORAGE_KEY, DEFAULT_AIRCRAFT_PROFILES);
   const [activeAircraftId, setActiveAircraftId] = useLocalStorageState<string>('capclair.activeAircraftId.v1', DEFAULT_AIRCRAFT_PROFILES[0].id);
@@ -60,10 +64,7 @@ export function useAircraftProfiles() {
     setProfiles((current) => ensureProfiles(current).map((profile) => {
       if (profile.id !== profileId) return profile;
       const next = { ...profile, ...patch };
-      return {
-        ...next,
-        label: next.registration ? `${next.model} ${next.registration}` : next.model
-      };
+      return { ...next, label: profileLabel(next) };
     }));
   };
 

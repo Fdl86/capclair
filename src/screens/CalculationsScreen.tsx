@@ -10,6 +10,7 @@ import { Button } from '../components/ui/Button';
 import { Card } from '../components/ui/Card';
 import { buildZoneProfiles } from '../services/airspace/airspaceEngine';
 import { computeFuelSummary } from '../services/navigation/fuelPlanning';
+import { AircraftSelectorPanel } from '../components/flight/AircraftSelectorPanel';
 import { AerodromeWeatherPanel } from '../components/flight/AerodromeWeatherPanel';
 import { findAerodrome } from '../data/aerodromeCatalog';
 
@@ -18,7 +19,11 @@ interface CalculationsScreenProps {
   weatherStatus: string;
   onSetBranchAltitude: (branchId: string, altitudeFt: number) => void;
   onRefreshWinds: () => void;
+  onSetTasKt: (tasKt: number) => void;
+  onSetDefaultAltitudeFt: (altitudeFt: number) => void;
+  aircraftProfiles: AircraftProfile[];
   activeAircraft: AircraftProfile;
+  onSelectAircraft: (profileId: string) => void;
   alternateCode: string;
   aerodromeWeatherReports: Record<string, AerodromeWeather>;
   aerodromeWeatherStatus: string;
@@ -65,7 +70,11 @@ export function CalculationsScreen({
   weatherStatus,
   onSetBranchAltitude,
   onRefreshWinds,
+  onSetTasKt,
+  onSetDefaultAltitudeFt,
+  aircraftProfiles,
   activeAircraft,
+  onSelectAircraft,
   alternateCode,
   aerodromeWeatherReports,
   aerodromeWeatherStatus,
@@ -118,6 +127,35 @@ export function CalculationsScreen({
           <SummaryCard label="Avion" value={activeAircraft.label} detail={`${activeAircraft.fuelBurnLh} L/h`} />
           <SummaryCard label="Carburant mini" value={`${fuel.totalFuelL.toFixed(1)} L`} detail={`Route ${fuel.routeFuelL.toFixed(1)} L + réserve`} />
         </div>
+
+        <Card className="navlog-prep-card">
+          <div className="navlog-prep-grid">
+            <AircraftSelectorPanel
+              profiles={aircraftProfiles}
+              activeProfile={activeAircraft}
+              onSelectProfile={onSelectAircraft}
+            />
+            <div className="cockpit-stepper-grid navlog-stepper-grid">
+              <div className="cockpit-stepper">
+                <span>TAS</span>
+                <div>
+                  <button type="button" onClick={() => onSetTasKt(route.profile.tasKt - 1)} aria-label="Réduire la TAS">-</button>
+                  <strong>{route.profile.tasKt}</strong>
+                  <button type="button" onClick={() => onSetTasKt(route.profile.tasKt + 1)} aria-label="Augmenter la TAS">+</button>
+                </div>
+              </div>
+              <div className="cockpit-stepper">
+                <span>Alt défaut</span>
+                <div>
+                  <button type="button" onClick={() => onSetDefaultAltitudeFt(route.profile.defaultAltitudeFt - 500)} aria-label="Réduire l'altitude">-</button>
+                  <strong>{route.profile.defaultAltitudeFt}</strong>
+                  <button type="button" onClick={() => onSetDefaultAltitudeFt(route.profile.defaultAltitudeFt + 500)} aria-label="Augmenter l'altitude">+</button>
+                </div>
+              </div>
+            </div>
+            <Button variant="secondary" onClick={onRefreshWinds}>Maj vent</Button>
+          </div>
+        </Card>
 
         <Card className="navlog-card">
           <div className="panel-title-row">
