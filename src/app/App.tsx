@@ -14,6 +14,7 @@ import { useTraces } from '../hooks/useTraces';
 import { useLocalStorageState } from '../hooks/useLocalStorageState';
 import { useAircraftProfiles } from '../hooks/useAircraftProfiles';
 import { useAerodromeWeather } from '../hooks/useAerodromeWeather';
+import { DEFAULT_FUEL_PLAN_CONFIG } from '../domain/aircraft.types';
 
 function routeEndpointCode(route: ReturnType<typeof useActiveRoute>['route'], type: 'depart' | 'destination') {
   return route.points.find((point) => point.type === type)?.code ?? '';
@@ -30,6 +31,7 @@ export function App() {
   const traceState = useTraces();
   const aircraftState = useAircraftProfiles();
   const [alternateCode, setAlternateCode] = useLocalStorageState('capclair.alternateCode.v1', 'LFOO');
+  const [fuelPlanConfig, setFuelPlanConfig] = useLocalStorageState('capclair.fuelPlan.v1', DEFAULT_FUEL_PLAN_CONFIG);
 
   const departureCode = routeEndpointCode(routeState.route, 'depart');
   const destinationCode = routeEndpointCode(routeState.route, 'destination');
@@ -55,6 +57,10 @@ export function App() {
   const createAircraft = () => {
     const profile = aircraftState.createProfile();
     routeState.setTasKt(profile.cruiseTasKt);
+  };
+
+  const updateFuelPlanConfig = (patch: Partial<typeof DEFAULT_FUEL_PLAN_CONFIG>) => {
+    setFuelPlanConfig((current) => ({ ...current, ...patch }));
   };
 
   return (
@@ -87,6 +93,8 @@ export function App() {
           aircraftProfiles={aircraftState.profiles}
           activeAircraft={aircraftState.activeProfile}
           onSelectAircraft={selectAircraft}
+          fuelPlanConfig={fuelPlanConfig}
+          onSetFuelPlanConfig={updateFuelPlanConfig}
           alternateCode={safeAlternateCode}
           aerodromeWeatherReports={aerodromeWeatherState.reports}
           aerodromeWeatherStatus={aerodromeWeatherState.status}

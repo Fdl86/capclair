@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import type { BranchZoneProfile } from '../domain/airspace.types';
-import type { AircraftProfile } from '../domain/aircraft.types';
+import type { AircraftProfile, FuelPlanConfig } from '../domain/aircraft.types';
 import type { AerodromeWeather } from '../domain/weather.types';
 import type { NavPoint, NavRoute } from '../domain/navigation.types';
 import { Page } from '../components/layout/Page';
@@ -9,10 +9,12 @@ import { ZoneCompleteRouteBanner } from '../components/navigation/ZoneCompleteRo
 import { Button } from '../components/ui/Button';
 import { Card } from '../components/ui/Card';
 import { buildZoneProfiles } from '../services/airspace/airspaceEngine';
-import { computeFuelSummary } from '../services/navigation/fuelPlanning';
+import { computeFuelPlan } from '../services/navigation/fuelPlanning';
 import { AircraftSelectorPanel } from '../components/flight/AircraftSelectorPanel';
 import { AerodromeWeatherPanel } from '../components/flight/AerodromeWeatherPanel';
+import { FuelPlanningPanel } from '../components/flight/FuelPlanningPanel';
 import { findAerodrome } from '../data/aerodromeCatalog';
+import { distanceNm } from '../services/geo/distance';
 
 interface CalculationsScreenProps {
   route: NavRoute;
@@ -24,6 +26,8 @@ interface CalculationsScreenProps {
   aircraftProfiles: AircraftProfile[];
   activeAircraft: AircraftProfile;
   onSelectAircraft: (profileId: string) => void;
+  fuelPlanConfig: FuelPlanConfig;
+  onSetFuelPlanConfig: (patch: Partial<FuelPlanConfig>) => void;
   alternateCode: string;
   aerodromeWeatherReports: Record<string, AerodromeWeather>;
   aerodromeWeatherStatus: string;
@@ -55,6 +59,13 @@ function timeZulu(iso?: string) {
   return `${String(date.getUTCHours()).padStart(2, '0')}:${String(date.getUTCMinutes()).padStart(2, '0')}Z`;
 }
 
+function diversionMinutes(destinationCode: string | undefined, alternateCode: string, tasKt: number) {
+  const destination = destinationCode ? findAerodrome(destinationCode) : null;
+  const alternate = findAerodrome(alternateCode);
+  if (!destination || !alternate || tasKt <= 0) return 0;
+  return Math.round((distanceNm(destination, alternate) / tasKt) * 60);
+}
+
 function SummaryCard({ label, value, detail }: { label: string; value: string; detail?: string }) {
   return (
     <div className="navlog-summary-card">
@@ -75,6 +86,8 @@ export function CalculationsScreen({
   aircraftProfiles,
   activeAircraft,
   onSelectAircraft,
+  fuelPlanConfig,
+  onSetFuelPlanConfig,
   alternateCode,
   aerodromeWeatherReports,
   aerodromeWeatherStatus,
@@ -111,7 +124,12 @@ export function CalculationsScreen({
   }, [route]);
 
   const activeZoneCount = Object.values(zoneProfiles).reduce((sum, profile) => sum + profile.activeBlocks.length, 0);
-  const fuel = computeFuelSummary(route, activeAircraft);
+  const fuel = computeFuelPlan(
+    route,
+    activeAircraft,
+    fuelPlanConfig,
+    diversionMinutes(destination?.code, alternateCode, route.profile.tasKt || activeAircraft.cruiseTasKt)
+  );
 
   return (
     <Page title="Log de nav" subtitle="Préparation VFR - calculs, vent et frise zones complète.">
@@ -125,7 +143,7 @@ export function CalculationsScreen({
           <SummaryCard label="Temps estimé" value={formatDuration(route.tempsEstimeMin)} />
           <SummaryCard label="Vent modèle" value={windModelTime ? timeZulu(windModelTime) : 'À charger'} detail={weatherStatus} />
           <SummaryCard label="Avion" value={activeAircraft.label} detail={`${activeAircraft.fuelBurnLh} L/h`} />
-          <SummaryCard label="Carburant mini" value={`${fuel.totalFuelL.toFixed(1)} L`} detail={`Route ${fuel.routeFuelL.toFixed(1)} L + réserve`} />
+          <SummaryCard label="Carburant mini" value={`${fuel.lines.regulatory.liters.toFixed(0)} L`} detail={`${fuel.lines.regulatory.minutes} min`} />
         </div>
 
         <Card className="navlog-prep-card">
@@ -155,6 +173,10 @@ export function CalculationsScreen({
             </div>
             <Button variant="secondary" onClick={onRefreshWinds}>Maj vent</Button>
           </div>
+        </Card>
+
+        <Card className="fuel-card">
+          <FuelPlanningPanel fuel={fuel} config={fuelPlanConfig} onChangeConfig={onSetFuelPlanConfig} />
         </Card>
 
         <Card className="navlog-card">
@@ -191,13 +213,7 @@ export function CalculationsScreen({
               <span><b>Bloc atténué</b> zone traversée mais hors altitude</span>
               <span><b>À confirmer</b> limite verticale incertaine ou contact multiple</span>
             </div>
-            <div className="fuel-mini-card">
-              <strong>Carburant estimé</strong>
-              <span>Route {fuel.routeFuelL.toFixed(1)} L</span>
-              <span>Réserve {fuel.reserveFuelL.toFixed(1)} L</span>
-              <span>Total mini {fuel.totalFuelL.toFixed(1)} L</span>
-            </div>
-          </Card>
+</Card>
 
           <Card className="navlog-weather-card">
             <AerodromeWeatherPanel

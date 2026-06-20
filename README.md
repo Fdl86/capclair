@@ -84,3 +84,18 @@ Hotfix suivi GPS :
 - zone suivante affichée en placeholder non trompeur
 - garde-fou anti réponse obsolète METAR/TAF
 - chargement METAR/TAF automatique avec cache
+
+## DEV13.7.4
+
+Cleanup + devis carburant :
+- carte Zones supprimée de Plus
+- ajout d'un devis carburant dédié dans Log de nav
+- affichage en minutes avec correspondance litres
+- roulage départ 8 min par défaut
+- arrivée 12 min par défaut
+- arrivée déroutement 12 min par défaut
+- réserve finale modifiable en minutes
+- marge modifiable en minutes
+- vol à bord modifiable en litres
+- déroutement calculé destination vers dégagement
+- total minimum, vol réglementaire, vol à bord et heure limite

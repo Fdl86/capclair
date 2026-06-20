@@ -1,7 +1,7 @@
 {
-  "name": "cap-clair-dev13-7-3-tracking-hotfix",
+  "name": "cap-clair-dev13-7-4-fuel-cleanup",
   "private": true,
-  "version": "0.13.7-3",
+  "version": "0.13.7-4",
   "type": "module",
   "scripts": {
     "dev": "vite",

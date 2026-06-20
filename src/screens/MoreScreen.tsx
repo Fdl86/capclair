@@ -33,11 +33,6 @@ export function MoreScreen({ onNavigate, aircraftProfiles, activeAircraft, onSel
           <Button variant="secondary" onClick={() => onNavigate('calculations')}>Ouvrir le log</Button>
         </Card>
         <Card>
-          <h2>Zones</h2>
-          <p>Bannière de synthèse des superpositions de zones, à raccorder au moteur interne.</p>
-          <Button variant="secondary" onClick={() => onNavigate('zones')}>Ouvrir les zones</Button>
-        </Card>
-        <Card>
           <h2>Traces</h2>
           <p>Historique des suivis GPS enregistrés.</p>
           <Button variant="secondary" onClick={() => onNavigate('traces')}>Ouvrir les traces</Button>
