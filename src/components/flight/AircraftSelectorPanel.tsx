@@ -17,14 +17,6 @@ export function AircraftSelectorPanel({ profiles, activeProfile, onSelectProfile
           ))}
         </select>
       </label>
-      <div>
-        <strong>{activeProfile.cruiseTasKt} kt</strong>
-        <span>TAS</span>
-      </div>
-      <div>
-        <strong>{activeProfile.fuelBurnLh} L/h</strong>
-        <span>Conso</span>
-      </div>
     </div>
   );
 }

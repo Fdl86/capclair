@@ -57,7 +57,6 @@ export function computeFuelPlan(
   const fuelPerMinuteL = fuelPerHourL > 0 ? fuelPerHourL / 60 : 0;
   const routeMinutes = safeMinute(route.tempsEstimeMin);
   const diversionMin = safeMinute(diversionMinutes);
-  const usableFuelL = safeLiter(aircraft.usableFuelL);
 
   const routeLine = makeLine('Trajet + vent', routeMinutes, fuelPerMinuteL);
   const taxiDepartureLine = makeLine('Roulage départ', FIXED_FUEL_MINUTES.taxiDepartureMin, fuelPerMinuteL);
@@ -65,6 +64,10 @@ export function computeFuelPlan(
   const diversionLine = makeLine('Déroutement', diversionMin, fuelPerMinuteL);
   const alternateArrivalLine = makeLine('Arr. déroutement', FIXED_FUEL_MINUTES.alternateArrivalMin, fuelPerMinuteL);
   const finalReserveLine = makeLine('Réserve finale', config.finalReserveMin, fuelPerMinuteL, true);
+
+  const legacyMarginLiters = typeof config.marginMin === 'number' ? safeMinute(config.marginMin) * fuelPerMinuteL : 0;
+  const marginLiters = typeof config.marginLiters === 'number' ? config.marginLiters : legacyMarginLiters;
+  const marginLine = makeLiterLine('Marge', marginLiters, true);
 
   const totalNecessaryMinutes = routeLine.minutes!
     + taxiDepartureLine.minutes!
@@ -86,41 +89,38 @@ export function computeFuelPlan(
     liters: safeLiter(totalNecessaryLiters)
   };
 
-  const legacyMarginLiters = typeof config.marginMin === 'number' ? safeMinute(config.marginMin) * fuelPerMinuteL : 0;
-  const marginLiters = typeof config.marginLiters === 'number' ? config.marginLiters : legacyMarginLiters;
-  const marginLine = makeLiterLine('Marge', marginLiters, true);
-
-  const fuelRequiredLiters = safeLiter(totalNecessaryLine.liters + marginLine.liters);
+  const plannedFuelLiters = safeLiter(totalNecessaryLine.liters + marginLine.liters);
   const fuelRequiredLine: FuelLine = {
     label: 'Carburant à prévoir',
     minutes: null,
-    liters: fuelRequiredLiters
+    liters: plannedFuelLiters
   };
 
-  const regulatoryLiters = Math.ceil(fuelRequiredLiters);
+  const regulatoryLiters = Math.ceil(plannedFuelLiters);
   const regulatoryLine: FuelLine = {
     label: 'Vol réglementaire',
     minutes: totalNecessaryLine.minutes,
     liters: regulatoryLiters
   };
 
-  const enduranceMinutes = fuelPerMinuteL > 0 ? Math.floor(usableFuelL / fuelPerMinuteL) : 0;
+
+  const autonomyMinutes = fuelPerMinuteL > 0 ? Math.floor(plannedFuelLiters / fuelPerMinuteL) : 0;
   const timeLimitLine: FuelLine = {
-    label: 'Autonomie totale',
-    minutes: enduranceMinutes,
-    liters: usableFuelL
+    label: 'Autonomie prévue',
+    minutes: autonomyMinutes,
+    liters: plannedFuelLiters
   };
 
   return {
     fuelPerHourL,
     fuelPerMinuteL,
     unusableFuelL: safeLiter(aircraft.unusableFuelL ?? 0),
-    usableFuelL,
+    usableFuelL: safeLiter(aircraft.usableFuelL),
     routeMinutes,
     diversionMinutes: diversionMin,
-    fuelRequiredL: fuelRequiredLiters,
-    enduranceMinutes,
-    remainingUsableFuelL: safeLiter(usableFuelL - regulatoryLiters),
+    fuelRequiredL: plannedFuelLiters,
+    enduranceMinutes: autonomyMinutes,
+    remainingUsableFuelL: safeLiter(aircraft.usableFuelL - regulatoryLiters),
     lines: {
       route: routeLine,
       taxiDeparture: taxiDepartureLine,

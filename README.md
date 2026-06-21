@@ -128,3 +128,17 @@ Planning first + fuel and zones cleanup :
 - suppression de Carburant embarqué
 - ajout Carburant à prévoir calculé automatiquement
 - titre d'onglet mis à jour DEV13.7.6
+
+## DEV13.7.7
+
+Log UI cleanup :
+- suppression des badges TAS et conso redondants dans le sélecteur avion
+- suppression du bouton Maj vent du bandeau supérieur du log
+- Maj vent déplacé dans le tableau de navigation
+- suppression des pavés fixes du devis carburant
+- entête `Consommation horaire / minute`
+- Total nécessaire affiché avant Marge
+- Carburant à prévoir calculé automatiquement
+- Autonomie prévue calculée depuis le carburant à prévoir
+- Reste capacité utile affiché en bas du devis carburant
+- titre d'onglet mis à jour

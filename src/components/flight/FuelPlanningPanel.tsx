@@ -47,16 +47,6 @@ function EditableLiter({ label, value, onChange }: { label: string; value: numbe
   );
 }
 
-function FixedPill({ label, line }: { label: string; line: FuelLine }) {
-  return (
-    <div className="fuel-fixed-pill">
-      <span>{label}</span>
-      <strong>{formatMinutes(line.minutes)}</strong>
-      <small>{formatLiters(line.liters)}</small>
-    </div>
-  );
-}
-
 function FuelRow({ line, strong = false }: { line: FuelLine; strong?: boolean }) {
   return (
     <div className={`fuel-row ${strong ? 'strong' : ''}`}>
@@ -75,16 +65,10 @@ export function FuelPlanningPanel({ fuel, config, onChangeConfig }: FuelPlanning
           <span>Devis carburant</span>
           <strong>Minutes + litres</strong>
         </div>
-        <em>{formatLiters(fuel.fuelPerHourL)} - {fuel.fuelPerMinuteL.toFixed(2).replace('.', ',')} L/min</em>
+        <em><span>Consommation horaire / minute</span>{formatLiters(fuel.fuelPerHourL)} - {fuel.fuelPerMinuteL.toFixed(2).replace('.', ',')} L/min</em>
       </div>
 
-      <div className="fuel-fixed-grid">
-        <FixedPill label="Roulage départ" line={fuel.lines.taxiDeparture} />
-        <FixedPill label="Arrivée" line={fuel.lines.arrival} />
-        <FixedPill label="Arr. déroutement" line={fuel.lines.alternateArrival} />
-      </div>
-
-      <div className="fuel-input-grid fuel-input-grid-compact fuel-input-grid-two">
+      <div className="fuel-input-grid fuel-input-grid-compact fuel-input-grid-minimal">
         <EditableMinute label="Réserve finale" value={config.finalReserveMin} onChange={(value) => onChangeConfig({ finalReserveMin: value })} />
         <EditableLiter label="Marge" value={config.marginLiters ?? 0} onChange={(value) => onChangeConfig({ marginLiters: value })} />
       </div>
@@ -98,7 +82,6 @@ export function FuelPlanningPanel({ fuel, config, onChangeConfig }: FuelPlanning
         <FuelRow line={fuel.lines.finalReserve} />
         <FuelRow line={fuel.lines.totalNecessary} strong />
         <FuelRow line={fuel.lines.margin} />
-        <FuelRow line={fuel.lines.fuelRequired} strong />
       </div>
 
       <div className="fuel-kpi-strip">
@@ -108,16 +91,16 @@ export function FuelPlanningPanel({ fuel, config, onChangeConfig }: FuelPlanning
         </div>
         <div>
           <span>Carburant à prévoir</span>
-          <strong>{formatLitersCompact(fuel.lines.fuelRequired.liters)}</strong>
+          <strong>{formatLitersCompact(fuel.fuelRequiredL)}</strong>
         </div>
         <div>
-          <span>Autonomie utilisable</span>
+          <span>Autonomie prévue</span>
           <strong>{formatMinutes(fuel.lines.timeLimit.minutes)}</strong>
         </div>
       </div>
 
       <div className={`fuel-margin ${fuel.remainingUsableFuelL >= 0 ? 'ok' : 'warn'}`}>
-        <strong>Reste utilisable après minimum</strong>
+        <strong>Reste capacité utile</strong>
         <span>{formatLiters(fuel.remainingUsableFuelL)}</span>
       </div>
     </div>

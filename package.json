@@ -1,7 +1,7 @@
 {
-  "name": "cap-clair-dev13-7-6-planning-fuel-zones",
+  "name": "cap-clair-dev13-7-7-log-ui-cleanup",
   "private": true,
-  "version": "0.13.7-6",
+  "version": "0.13.7-7",
   "type": "module",
   "scripts": {
     "dev": "vite",

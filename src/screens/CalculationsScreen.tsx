@@ -171,7 +171,6 @@ export function CalculationsScreen({
                 </div>
               </div>
             </div>
-            <Button variant="secondary" onClick={onRefreshWinds}>Maj vent</Button>
           </div>
         </Card>
 
@@ -185,7 +184,7 @@ export function CalculationsScreen({
               <span>Tableau de navigation</span>
               <strong>{route.nom}</strong>
             </div>
-            <Button variant="secondary" onClick={onRefreshWinds}>Modifier vents</Button>
+            <Button variant="secondary" onClick={onRefreshWinds}>Maj vent</Button>
           </div>
           <BranchTable route={route} zoneProfiles={zoneProfiles} onSetBranchAltitude={onSetBranchAltitude} />
         </Card>
