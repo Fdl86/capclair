@@ -143,7 +143,7 @@ export function CalculationsScreen({
           <SummaryCard label="Temps estimé" value={formatDuration(route.tempsEstimeMin)} />
           <SummaryCard label="Vent modèle" value={windModelTime ? timeZulu(windModelTime) : 'À charger'} detail={weatherStatus} />
           <SummaryCard label="Avion" value={activeAircraft.label} detail={`${activeAircraft.fuelBurnLh} L/h`} />
-          <SummaryCard label="Carburant à prévoir" value={`${fuel.lines.fuelRequired.liters.toFixed(1)} L`} detail={`Total nécessaire ${fuel.lines.totalNecessary.minutes} min`} />
+          <SummaryCard label="Emport carburant" value={`${fuel.lines.fuelRequired.liters.toFixed(0)} L`} detail={`Total nécessaire ${fuel.lines.totalNecessary.minutes} min`} />
         </div>
 
         <Card className="navlog-prep-card">

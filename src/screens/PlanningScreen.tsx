@@ -5,7 +5,6 @@ import { Page } from '../components/layout/Page';
 import { Button } from '../components/ui/Button';
 import { Card } from '../components/ui/Card';
 import { OpenLayersMap } from '../components/map/OpenLayersMap';
-import { MapLayerToggle } from '../components/map/MapLayerToggle';
 import { RoutePointList } from '../components/navigation/RoutePointList';
 
 interface PlanningScreenProps {
@@ -50,7 +49,6 @@ export function PlanningScreen({
   onSetAlternateCode,
   onCalculations
 }: PlanningScreenProps) {
-  const [showTopo, setShowTopo] = useState(true);
   const [addWaypointMode, setAddWaypointMode] = useState(false);
   const [departureInput, setDepartureInput] = useState(endpointCode(route, 'depart'));
   const [destinationInput, setDestinationInput] = useState(endpointCode(route, 'destination'));
@@ -88,13 +86,12 @@ export function PlanningScreen({
     <Page title="Planification" subtitle="Carte aéro, route, dégagement et points de navigation.">
       <div className="planning-layout">
         <div className="map-card tall planning-map-card">
-          <MapLayerToggle showTopo={showTopo} onChange={setShowTopo} />
           <OpenLayersMap
             route={route}
             trace={[]}
             aircraft={null}
             selectedPointId={selectedPointId}
-            showTopo={showTopo}
+            showTopo={true}
             addWaypointMode={addWaypointMode}
             onMapAddWaypoint={handleAddWaypoint}
           />

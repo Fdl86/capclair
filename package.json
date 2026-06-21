@@ -1,7 +1,7 @@
 {
-  "name": "cap-clair-dev13-7-7-log-ui-cleanup",
+  "name": "cap-clair-dev13-7-9-emport-carburant",
   "private": true,
-  "version": "0.13.7-7",
+  "version": "0.13.7-9",
   "type": "module",
   "scripts": {
     "dev": "vite",

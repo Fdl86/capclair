@@ -142,3 +142,15 @@ Log UI cleanup :
 - Autonomie prévue calculée depuis le carburant à prévoir
 - Reste capacité utile affiché en bas du devis carburant
 - titre d'onglet mis à jour
+
+## DEV13.7.9
+
+Version finale devis carburant :
+- suppression de Fond topo dans Planification
+- suppression des tuiles fixes roulage, arrivée et arrivée déroutement
+- Total nécessaire puis Marge puis Emport carburant
+- Emport carburant = Total nécessaire + Marge, arrondi au litre supérieur
+- Autonomie calculée depuis l'emport carburant
+- suppression des termes non validés : Minimum arrondi, Vol réglementaire, Carburant embarqué, Carburant à prévoir
+- Reste capacité utile calculé depuis la capacité utile avion et l'emport carburant
+- titre d'onglet mis à jour

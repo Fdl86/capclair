@@ -82,26 +82,22 @@ export function FuelPlanningPanel({ fuel, config, onChangeConfig }: FuelPlanning
         <FuelRow line={fuel.lines.finalReserve} />
         <FuelRow line={fuel.lines.totalNecessary} strong />
         <FuelRow line={fuel.lines.margin} />
+        <FuelRow line={fuel.lines.fuelRequired} strong />
       </div>
 
       <div className="fuel-kpi-strip">
         <div>
-          <span>Vol réglementaire</span>
-          <strong>{formatLitersCompact(fuel.lines.regulatory.liters)}</strong>
+          <span>Emport carburant</span>
+          <strong>{formatLitersCompact(fuel.lines.fuelRequired.liters)}</strong>
         </div>
         <div>
-          <span>Carburant à prévoir</span>
-          <strong>{formatLitersCompact(fuel.fuelRequiredL)}</strong>
-        </div>
-        <div>
-          <span>Autonomie prévue</span>
+          <span>Autonomie</span>
           <strong>{formatMinutes(fuel.lines.timeLimit.minutes)}</strong>
         </div>
-      </div>
-
-      <div className={`fuel-margin ${fuel.remainingUsableFuelL >= 0 ? 'ok' : 'warn'}`}>
-        <strong>Reste capacité utile</strong>
-        <span>{formatLiters(fuel.remainingUsableFuelL)}</span>
+        <div>
+          <span>Reste capacité utile</span>
+          <strong>{formatLitersCompact(fuel.remainingUsableFuelL)}</strong>
+        </div>
       </div>
     </div>
   );

@@ -2758,3 +2758,46 @@
     text-align: left;
   }
 }
+
+/* DEV13.7.9 - emport carburant final */
+.map-layer-toggle {
+  display: none !important;
+}
+
+.fuel-input-grid-minimal {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.fuel-fixed-grid {
+  display: none !important;
+}
+
+.fuel-premium-head em {
+  display: grid;
+  gap: 2px;
+  text-align: right;
+}
+
+.fuel-premium-head em span {
+  display: block;
+  color: var(--text-3);
+  font-size: 0.58rem;
+  font-weight: 950;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.fuel-table-compact .fuel-row.strong {
+  border-top: 1px solid rgba(89, 207, 255, 0.38);
+  border-bottom: 1px solid rgba(89, 207, 255, 0.22);
+}
+
+@media (max-width: 720px) {
+  .fuel-input-grid-minimal {
+    grid-template-columns: 1fr;
+  }
+
+  .fuel-premium-head em {
+    text-align: left;
+  }
+}

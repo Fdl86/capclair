@@ -89,26 +89,26 @@ export function computeFuelPlan(
     liters: safeLiter(totalNecessaryLiters)
   };
 
-  const plannedFuelLiters = safeLiter(totalNecessaryLine.liters + marginLine.liters);
+  const exactRequiredLiters = safeLiter(totalNecessaryLine.liters + marginLine.liters);
+  const emportLiters = Math.ceil(exactRequiredLiters);
+  const emportMinutes = fuelPerMinuteL > 0 ? Math.floor(emportLiters / fuelPerMinuteL) : 0;
+
   const fuelRequiredLine: FuelLine = {
-    label: 'Carburant à prévoir',
-    minutes: null,
-    liters: plannedFuelLiters
+    label: 'Emport carburant',
+    minutes: emportMinutes,
+    liters: emportLiters
   };
 
-  const regulatoryLiters = Math.ceil(plannedFuelLiters);
   const regulatoryLine: FuelLine = {
-    label: 'Vol réglementaire',
-    minutes: totalNecessaryLine.minutes,
-    liters: regulatoryLiters
+    label: 'Emport carburant',
+    minutes: emportMinutes,
+    liters: emportLiters
   };
 
-
-  const autonomyMinutes = fuelPerMinuteL > 0 ? Math.floor(plannedFuelLiters / fuelPerMinuteL) : 0;
   const timeLimitLine: FuelLine = {
-    label: 'Autonomie prévue',
-    minutes: autonomyMinutes,
-    liters: plannedFuelLiters
+    label: 'Autonomie',
+    minutes: emportMinutes,
+    liters: emportLiters
   };
 
   return {
@@ -118,9 +118,9 @@ export function computeFuelPlan(
     usableFuelL: safeLiter(aircraft.usableFuelL),
     routeMinutes,
     diversionMinutes: diversionMin,
-    fuelRequiredL: plannedFuelLiters,
-    enduranceMinutes: autonomyMinutes,
-    remainingUsableFuelL: safeLiter(aircraft.usableFuelL - regulatoryLiters),
+    fuelRequiredL: emportLiters,
+    enduranceMinutes: emportMinutes,
+    remainingUsableFuelL: safeLiter(aircraft.usableFuelL - emportLiters),
     lines: {
       route: routeLine,
       taxiDeparture: taxiDepartureLine,
