@@ -177,3 +177,12 @@ Hotfix urgent fond topographique :
 - supprime uniquement le libellé ON/OFF visible dans le bouton
 - retire la règle CSS qui masquait le contrôle
 - titre d'onglet mis à jour
+
+## DEV13.7.12
+
+Hotfix toggle topo :
+- restaure le toggle Fond topo dans sa version précédente
+- conserve la possibilité ON/OFF directement dans le bouton
+- supprime uniquement la mention redondante Fond topo ON/OFF dans la barre d'information de carte
+- conserve Carte aéro openAIP dans la barre d'information
+- titre d'onglet mis à jour

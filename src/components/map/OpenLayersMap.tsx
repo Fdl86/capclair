@@ -182,7 +182,6 @@ export function OpenLayersMap({
       <div ref={mapElementRef} className="ol-map" aria-label="Carte CAP CLAIR" />
       <div className="map-topline">
         <span>Carte aéro openAIP</span>
-        <span>Fond topo {showTopo ? 'ON' : 'OFF'}</span>
       </div>
       {addWaypointMode && (
         <div className="map-add-banner">
