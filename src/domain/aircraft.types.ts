@@ -49,7 +49,6 @@ export interface FuelPlanSummary {
     totalNecessary: FuelLine;
     margin: FuelLine;
     fuelRequired: FuelLine;
-    regulatory: FuelLine;
     timeLimit: FuelLine;
   };
   fuelRequiredL: number;

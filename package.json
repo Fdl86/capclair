@@ -1,7 +1,7 @@
 {
-  "name": "cap-clair-dev13-7-9-emport-carburant",
+  "name": "cap-clair-dev13-7-10-precision-aero",
   "private": true,
-  "version": "0.13.7-9",
+  "version": "0.13.7-10",
   "type": "module",
   "scripts": {
     "dev": "vite",

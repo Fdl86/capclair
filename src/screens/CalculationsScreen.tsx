@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import type { BranchZoneProfile } from '../domain/airspace.types';
 import type { AircraftProfile, FuelPlanConfig } from '../domain/aircraft.types';
 import type { AerodromeWeather } from '../domain/weather.types';
@@ -124,11 +124,14 @@ export function CalculationsScreen({
   }, [route]);
 
   const activeZoneCount = Object.values(zoneProfiles).reduce((sum, profile) => sum + profile.activeBlocks.length, 0);
-  const fuel = computeFuelPlan(
-    route,
-    activeAircraft,
-    fuelPlanConfig,
-    diversionMinutes(destination?.code, alternateCode, route.profile.tasKt || activeAircraft.cruiseTasKt)
+  const fuel = useMemo(
+    () => computeFuelPlan(
+      route,
+      activeAircraft,
+      fuelPlanConfig,
+      diversionMinutes(destination?.code, alternateCode, route.profile.tasKt || activeAircraft.cruiseTasKt)
+    ),
+    [route, activeAircraft, fuelPlanConfig, destination?.code, alternateCode]
   );
 
   return (

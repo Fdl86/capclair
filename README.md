@@ -154,3 +154,17 @@ Version finale devis carburant :
 - suppression des termes non validés : Minimum arrondi, Vol réglementaire, Carburant embarqué, Carburant à prévoir
 - Reste capacité utile calculé depuis la capacité utile avion et l'emport carburant
 - titre d'onglet mis à jour
+
+## DEV13.7.10
+
+Hotfix précision aéro :
+- validation du libellé `Autonomie actuelle`
+- autonomie actuelle calculée depuis l'emport carburant
+- suppression définitive du champ `regulatoryLine` inutilisé
+- suppression de `regulatory` dans le type `FuelPlanSummary`
+- Suivi : `Cap point` remplacé par `Cap magnétique`
+- Suivi : le cap magnétique réutilise `capCorrige` de la branche active du log
+- Suivi : suppression du placeholder `Prochaine zone`
+- Profil avion : `Essence inutilisable` remplacé par `Carburant inutilisable`
+- Log de nav : `computeFuelPlan` mémoïsé avec `useMemo`
+- titre d'onglet mis à jour

@@ -9,7 +9,6 @@ import { RouteDeviationGauge } from '../components/cockpit/RouteDeviationGauge';
 import { Button } from '../components/ui/Button';
 import { ConfirmDialog } from '../components/ui/ConfirmDialog';
 import { Card } from '../components/ui/Card';
-import { bearingDeg } from '../services/geo/bearing';
 import { distanceNm } from '../services/geo/distance';
 import type { GpsPosition } from '../domain/gps.types';
 
@@ -66,9 +65,8 @@ export function TrackingScreen({ route, onTraceReady }: TrackingScreenProps) {
   const isRecording = gps.status === 'active' || gps.status === 'simulating';
   const traceForMap = useMemo(() => gps.positions, [gps.positions]);
 
-  const headingToNext = gps.currentPosition && gps.nextPoint
-    ? Math.round(bearingDeg(gps.currentPosition, gps.nextPoint))
-    : null;
+  const currentBranch = route.branches[gps.crossTrack.segmentIndex] ?? route.branches[0] ?? null;
+  const magneticHeading = currentBranch ? Math.round(currentBranch.capCorrige) : null;
 
   const groundSpeed = gps.currentPosition?.vitesse ?? null;
   const altitude = gps.currentPosition?.altitude ?? null;
@@ -106,7 +104,7 @@ export function TrackingScreen({ route, onTraceReady }: TrackingScreenProps) {
             detail={gps.nextPointDistance !== null ? `${gps.nextPointDistance.toFixed(1).replace('.', ',')} NM` : '--'}
             strong
           />
-          <MetricCard label="Cap point" value={headingToNext !== null ? `${headingToNext}°` : '--'} strong />
+          <MetricCard label="Cap magnétique" value={magneticHeading !== null ? `${magneticHeading}°` : '--'} strong />
           <MetricCard label="ETA" value={eta ? formatClock(eta) : '--'} detail={eteMinutes !== null ? `dans ${formatDuration(eteMinutes)}` : '--'} strong />
         </div>
 
@@ -126,11 +124,6 @@ export function TrackingScreen({ route, onTraceReady }: TrackingScreenProps) {
           <MetricCard label="ETE dest" value={eteMinutes !== null ? formatDuration(eteMinutes) : '--'} />
         </div>
 
-        <Card className="next-zone-card">
-          <span>Prochaine zone</span>
-          <strong>--</strong>
-          <p>Calcul en suivi à raccorder au moteur zones.</p>
-        </Card>
 
         <div className="tracking-actions">
           {!isRecording && <Button variant="primary" onClick={gps.startGps}>Démarrer GPS</Button>}

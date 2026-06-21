@@ -70,7 +70,7 @@ export function AircraftProfilePanel({
         <Field label="TAS croisière" value={activeProfile.cruiseTasKt} unit="kt" onChange={(value) => onUpdateProfile(activeProfile.id, { cruiseTasKt: value })} />
         <Field label="Conso" value={activeProfile.fuelBurnLh} unit="L/h" onChange={(value) => onUpdateProfile(activeProfile.id, { fuelBurnLh: value })} />
         <Field label="Carburant utile" value={activeProfile.usableFuelL} unit="L" onChange={(value) => onUpdateProfile(activeProfile.id, { usableFuelL: value })} />
-        <Field label="Essence inutilisable" value={activeProfile.unusableFuelL ?? 0} unit="L" onChange={(value) => onUpdateProfile(activeProfile.id, { unusableFuelL: value })} />
+        <Field label="Carburant inutilisable" value={activeProfile.unusableFuelL ?? 0} unit="L" onChange={(value) => onUpdateProfile(activeProfile.id, { unusableFuelL: value })} />
         <Field label="Réserve défaut" value={activeProfile.reserveMinutes} unit="min" onChange={(value) => onUpdateProfile(activeProfile.id, { reserveMinutes: value })} />
         <Field label="Vitesse montée" value={activeProfile.climbSpeedKt} unit="kt" onChange={(value) => onUpdateProfile(activeProfile.id, { climbSpeedKt: value })} />
         <Field label="Taux montée" value={activeProfile.climbRateFpm} unit="ft/min" step={50} onChange={(value) => onUpdateProfile(activeProfile.id, { climbRateFpm: value })} />

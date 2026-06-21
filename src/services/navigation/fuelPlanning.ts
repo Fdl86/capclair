@@ -99,14 +99,9 @@ export function computeFuelPlan(
     liters: emportLiters
   };
 
-  const regulatoryLine: FuelLine = {
-    label: 'Emport carburant',
-    minutes: emportMinutes,
-    liters: emportLiters
-  };
 
   const timeLimitLine: FuelLine = {
-    label: 'Autonomie',
+    label: 'Autonomie actuelle',
     minutes: emportMinutes,
     liters: emportLiters
   };
@@ -131,7 +126,6 @@ export function computeFuelPlan(
       totalNecessary: totalNecessaryLine,
       margin: marginLine,
       fuelRequired: fuelRequiredLine,
-      regulatory: regulatoryLine,
       timeLimit: timeLimitLine
     }
   };

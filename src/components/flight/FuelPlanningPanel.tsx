@@ -91,7 +91,7 @@ export function FuelPlanningPanel({ fuel, config, onChangeConfig }: FuelPlanning
           <strong>{formatLitersCompact(fuel.lines.fuelRequired.liters)}</strong>
         </div>
         <div>
-          <span>Autonomie</span>
+          <span>Autonomie actuelle</span>
           <strong>{formatMinutes(fuel.lines.timeLimit.minutes)}</strong>
         </div>
         <div>
