@@ -1,7 +1,7 @@
 {
-  "name": "cap-clair-dev13-7-10-precision-aero",
+  "name": "cap-clair-dev13-7-11-topo-toggle-hotfix",
   "private": true,
-  "version": "0.13.7-10",
+  "version": "0.13.7-11",
   "type": "module",
   "scripts": {
     "dev": "vite",

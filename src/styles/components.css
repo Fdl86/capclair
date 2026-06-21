@@ -2760,9 +2760,6 @@
 }
 
 /* DEV13.7.9 - emport carburant final */
-.map-layer-toggle {
-  display: none !important;
-}
 
 .fuel-input-grid-minimal {
   grid-template-columns: repeat(2, minmax(0, 1fr));

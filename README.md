@@ -168,3 +168,12 @@ Hotfix précision aéro :
 - Profil avion : `Essence inutilisable` remplacé par `Carburant inutilisable`
 - Log de nav : `computeFuelPlan` mémoïsé avec `useMemo`
 - titre d'onglet mis à jour
+
+## DEV13.7.11
+
+Hotfix urgent fond topographique :
+- rétablit la possibilité d'activer / désactiver le fond topographique dans Planification
+- conserve le bouton `Fond topo`
+- supprime uniquement le libellé ON/OFF visible dans le bouton
+- retire la règle CSS qui masquait le contrôle
+- titre d'onglet mis à jour
