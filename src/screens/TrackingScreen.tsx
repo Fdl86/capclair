@@ -72,7 +72,6 @@ function metricNumber(value: number | null | undefined, suffix: string, digits =
 
 export function TrackingScreen({ route, onTraceReady }: TrackingScreenProps) {
   const [confirmStop, setConfirmStop] = useState(false);
-  const [showLiveHeading, setShowLiveHeading] = useState(false);
   const [wakeLockActive, setWakeLockActive] = useState(false);
   const wakeLockRef = useRef<WakeLockSentinelLike | null>(null);
   const gps = useGpsTracking(route, onTraceReady);
@@ -184,14 +183,6 @@ export function TrackingScreen({ route, onTraceReady }: TrackingScreenProps) {
           </Card>
         )}
 
-        {showLiveHeading && (
-          <Card className="live-heading-card">
-            <span>Cap GPS live</span>
-            <strong>{currentTrack !== null ? `${Math.round(currentTrack)}°` : '--'}</strong>
-            <small>{currentTrack !== null ? 'Donnée GPS de déplacement' : 'Disponible uniquement en mouvement GPS'}</small>
-          </Card>
-        )}
-
         <div className="tracking-metrics-top">
           <MetricCard
             label="Prochain point"
@@ -215,7 +206,7 @@ export function TrackingScreen({ route, onTraceReady }: TrackingScreenProps) {
         <div className="cockpit-value-grid">
           <MetricCard label="GS" value={metricNumber(groundSpeed, 'kt')} />
           <MetricCard label="ALT" value={altitude !== null ? `${Math.round(altitude * 3.28084).toLocaleString('fr-FR')} ft` : '--'} />
-          <MetricCard label="TRK" value={currentTrack !== null ? `${Math.round(currentTrack)}°` : '--'} />
+          <MetricCard label="TRK GPS" value={currentTrack !== null ? `${Math.round(currentTrack)}°` : '--'} />
           <MetricCard label="ETE dest" value={eteMinutes !== null ? formatDuration(eteMinutes) : '--'} />
         </div>
 
@@ -223,7 +214,6 @@ export function TrackingScreen({ route, onTraceReady }: TrackingScreenProps) {
         <div className="tracking-actions">
           {!isRecording && <Button variant="primary" onClick={gps.startGps}>Démarrer GPS</Button>}
           {!isRecording && <Button variant="secondary" onClick={gps.startSimulation}>Tester simulation</Button>}
-          <Button variant="secondary" onClick={() => setShowLiveHeading((value) => !value)}>{showLiveHeading ? 'Masquer cap live' : 'Cap live'}</Button>
           {isRecording && <Button variant="danger" onClick={() => setConfirmStop(true)}>Arrêter et sauvegarder</Button>}
         </div>
       </aside>

@@ -8,12 +8,9 @@
 }
 
 .ol-map {
-  background: #f4f1e8;
-}
-
-.ol-map {
   position: absolute;
   inset: 0;
+  background: #f4f1e8;
 }
 
 .map-shell .ol-viewport,
@@ -34,7 +31,6 @@
 }
 
 .map-topline span,
-.map-attribution,
 .map-fallback-notice {
   border: 1px solid rgba(30, 49, 69, 0.82);
   border-radius: 999px;
@@ -69,6 +65,11 @@
   font-size: 1.2rem;
   font-weight: 900;
   cursor: pointer;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.28);
+}
+
+.map-controls button:active {
+  transform: scale(0.96);
 }
 
 .map-fallback-notice {
@@ -91,19 +92,6 @@
 .map-fallback-notice span {
   color: var(--text-2);
   font-size: 0.78rem;
-}
-
-.map-attribution {
-  position: absolute;
-  left: 10px;
-  right: 10px;
-  bottom: 10px;
-  z-index: 3;
-  border-radius: 10px;
-  padding: 7px 9px;
-  font-size: 0.64rem;
-  text-align: center;
-  pointer-events: none;
 }
 
 .scale-selector {

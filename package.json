@@ -1,7 +1,7 @@
 {
-  "name": "cap-clair-dev13-7-13-gps-follow-hotfix",
+  "name": "cap-clair-dev13-7-14-gps-css-premium",
   "private": true,
-  "version": "0.13.7-13",
+  "version": "0.13.7-14",
   "type": "module",
   "scripts": {
     "dev": "vite",

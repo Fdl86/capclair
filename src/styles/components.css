@@ -259,9 +259,9 @@
 .metric-card {
   min-height: 78px;
   padding: 12px;
-  border: 1px solid var(--border);
+  border: 1px solid rgba(30, 49, 69, 0.8);
   border-radius: 14px;
-  background: rgba(7, 17, 28, 0.74);
+  background: linear-gradient(180deg, rgba(12, 24, 37, 0.88), rgba(5, 11, 18, 0.76));
   display: grid;
   align-content: center;
   gap: 3px;
@@ -378,39 +378,41 @@
 
 .tracking-screen {
   display: grid;
-  gap: 12px;
+  gap: 10px;
 }
 
 .tracking-map-panel {
-  min-height: 42vh;
-  border: 1px solid var(--border);
+  min-height: 50vh;
+  border: 1px solid rgba(89, 207, 255, 0.24);
   border-radius: var(--radius-lg);
   overflow: hidden;
   background: var(--cockpit);
+  box-shadow: 0 18px 44px rgba(0, 0, 0, 0.24);
 }
 
 .tracking-panel {
   display: grid;
-  gap: 10px;
+  gap: 9px;
 }
 
 .cockpit-badges {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(3, 1fr);
   gap: 7px;
 }
 
 .cockpit-badge {
-  min-height: 44px;
+  min-height: 42px;
   border: 1px solid var(--border);
   border-radius: 12px;
   display: grid;
   place-items: center;
-  font-size: 0.68rem;
+  padding: 0 8px;
+  font-size: 0.66rem;
   font-weight: 900;
   text-transform: uppercase;
   text-align: center;
-  background: rgba(7, 17, 28, 0.74);
+  background: linear-gradient(180deg, rgba(12, 24, 37, 0.92), rgba(5, 11, 18, 0.82));
 }
 
 .cockpit-badge.ok { color: var(--green); border-color: rgba(61, 220, 132, 0.38); }
@@ -419,12 +421,12 @@
 .cockpit-badge.off { color: var(--text-3); }
 
 .deviation-gauge {
-  border: 1px solid var(--border);
+  border: 1px solid rgba(30, 49, 69, 0.82);
   border-radius: var(--radius);
-  padding: 16px;
-  background: rgba(7, 17, 28, 0.82);
+  padding: 15px;
+  background: linear-gradient(180deg, rgba(12, 24, 37, 0.9), rgba(5, 11, 18, 0.82));
   display: grid;
-  gap: 10px;
+  gap: 9px;
 }
 
 .deviation-gauge > span {
@@ -490,17 +492,6 @@
   height: 18px;
   background: var(--amber);
   border-radius: 999px;
-}
-
-.next-zone-card span,
-.next-zone-card p {
-  color: var(--text-2);
-}
-
-.next-zone-card strong {
-  display: block;
-  margin: 4px 0;
-  color: var(--cyan-soft);
 }
 
 .tracking-actions {
@@ -2211,10 +2202,6 @@
   font-size: 0.8rem;
 }
 
-.map-attribution {
-  display: none !important;
-}
-
 @media (max-width: 980px) {
   .route-builder {
     grid-template-columns: 1fr 1fr;
@@ -2512,45 +2499,6 @@
   white-space: nowrap;
 }
 
-.fuel-fixed-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 8px;
-}
-
-.fuel-fixed-pill {
-  min-height: 52px;
-  border: 1px solid rgba(30, 49, 69, 0.68);
-  border-radius: 12px;
-  background: rgba(5, 11, 18, 0.46);
-  padding: 8px 10px;
-  display: grid;
-  grid-template-columns: 1fr auto;
-  gap: 2px 8px;
-  align-items: baseline;
-}
-
-.fuel-fixed-pill span {
-  color: var(--text-3);
-  font-size: 0.62rem;
-  font-weight: 900;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
-}
-
-.fuel-fixed-pill strong {
-  color: var(--text);
-  font-size: 0.98rem;
-  font-weight: 950;
-}
-
-.fuel-fixed-pill small {
-  grid-column: 1 / -1;
-  color: var(--text-2);
-  font-size: 0.72rem;
-  font-weight: 800;
-}
-
 .fuel-input-grid-compact {
   grid-template-columns: repeat(3, minmax(0, 1fr));
 }
@@ -2616,15 +2564,11 @@
     white-space: normal;
   }
 
-  .fuel-fixed-grid,
   .fuel-input-grid-compact,
   .fuel-kpi-strip {
     grid-template-columns: 1fr;
   }
 
-  .fuel-fixed-pill {
-    min-height: 48px;
-  }
 }
 
 /* DEV13.7.6 - planning first, fuel, zones and tracking option */
@@ -2666,32 +2610,6 @@
   background-image: repeating-linear-gradient(135deg, rgba(255,255,255,0.055) 0 6px, transparent 6px 12px);
 }
 
-.live-heading-card {
-  display: grid;
-  gap: 3px;
-  border-color: rgba(89, 207, 255, 0.42);
-  background: rgba(7, 17, 28, 0.78);
-}
-
-.live-heading-card span {
-  color: var(--text-3);
-  font-size: 0.66rem;
-  font-weight: 950;
-  letter-spacing: 0.05em;
-  text-transform: uppercase;
-}
-
-.live-heading-card strong {
-  color: var(--cyan-soft);
-  font-size: clamp(1.8rem, 8vw, 3rem);
-  line-height: 1;
-}
-
-.live-heading-card small {
-  color: var(--text-2);
-  font-size: 0.72rem;
-}
-
 .fuel-table-compact .fuel-row.strong + .fuel-row:not(.strong) {
   border-top: 1px solid rgba(89, 207, 255, 0.26);
 }
@@ -2709,10 +2627,6 @@
 
 .navlog-prep-grid {
   grid-template-columns: 1.15fr 1fr;
-}
-
-.fuel-fixed-grid {
-  display: none;
 }
 
 .fuel-input-grid-minimal {
@@ -2765,10 +2679,6 @@
   grid-template-columns: repeat(2, minmax(0, 1fr));
 }
 
-.fuel-fixed-grid {
-  display: none !important;
-}
-
 .fuel-premium-head em {
   display: grid;
   gap: 2px;
@@ -2814,4 +2724,34 @@
   margin: 0;
   color: var(--text-2);
   font-size: 0.78rem;
+}
+
+/* DEV13.7.14 - GPS cleanup + premium tracking polish */
+.gps-signal-card {
+  display: grid;
+  gap: 4px;
+  border-color: rgba(89, 207, 255, 0.32);
+  background: linear-gradient(180deg, rgba(24, 174, 239, 0.09), rgba(7, 17, 28, 0.72));
+}
+
+.gps-signal-card strong {
+  color: var(--cyan-soft);
+}
+
+.gps-signal-card p {
+  margin: 0;
+  color: var(--text-2);
+  font-size: 0.78rem;
+}
+
+.tracking-actions {
+  align-items: stretch;
+}
+
+.tracking-actions .btn {
+  min-height: 46px;
+}
+
+.tracking-actions .btn-primary {
+  box-shadow: 0 10px 24px rgba(24, 174, 239, 0.18);
 }

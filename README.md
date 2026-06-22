@@ -202,3 +202,18 @@ Hotfix suivi GPS :
 - fallback sur la dernière orientation fiable si `track` absent ou vitesse faible
 - pas de changement Planification / Log / Carburant / Frise zones
 - titre d'onglet mis à jour
+
+## DEV13.7.14
+
+Hotfix GPS cleanup + optimisation CSS :
+- suppression du bouton `Cap live`
+- suppression de la carte `Cap GPS live`
+- conservation de `TRK GPS` comme trajectoire réelle issue du GPS
+- conservation de l'orientation avion via `track` GPS en interne
+- badges Suivi ramenés à 3 colonnes cohérentes
+- carte Suivi rendue plus dominante
+- métriques, badges, jauge d'écart route et signal GPS légèrement premiumisés
+- nettoyage CSS des blocs morts `next-zone-card`, `live-heading-card`, `fuel-fixed-grid`, `fuel-fixed-pill`, `map-attribution`
+- déduplication du bloc `.ol-map`
+- pas de changement Planification / Log / Carburant / Frise zones / moteur GPS
+- titre d'onglet mis à jour
