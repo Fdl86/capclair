@@ -1,7 +1,7 @@
 {
-  "name": "cap-clair-dev13-7-14-gps-css-premium",
+  "name": "cap-clair-dev13-7-16-gps-hardening",
   "private": true,
-  "version": "0.13.7-14",
+  "version": "0.13.7-16",
   "type": "module",
   "scripts": {
     "dev": "vite",

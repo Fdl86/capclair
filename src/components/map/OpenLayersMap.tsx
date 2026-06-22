@@ -4,6 +4,8 @@ import View from 'ol/View';
 import { fromLonLat, toLonLat } from 'ol/proj';
 import { boundingExtent } from 'ol/extent';
 import type BaseLayer from 'ol/layer/Base';
+import type { EventsKey } from 'ol/events';
+import { unByKey } from 'ol/Observable';
 import { createFreeMapLayer } from '../../mapSources/freeMapSource';
 import { createOpenAipRasterLayer } from '../../mapSources/openAipRasterSource';
 import { initialMapCenter, initialMapZoom } from '../../mapEngine/mapViewConfig';
@@ -59,6 +61,7 @@ export function OpenLayersMap({
   const openAipRasterLayerRef = useRef<BaseLayer | null>(null);
   const traceLayerRef = useRef<ActualTraceLayer | null>(null);
   const aircraftLayerRef = useRef<AircraftLayer | null>(null);
+  const latestAircraftRef = useRef<GpsPosition | null>(null);
   const [sourceStatus, setSourceStatus] = useState<MapSourceStatus>('free');
 
   const routeExtent = useMemo(() => {
@@ -72,7 +75,7 @@ export function OpenLayersMap({
     const baseLayer = createFreeMapLayer();
     const openAipRasterLayer = createOpenAipRasterLayer();
     const traceLayer = createActualTraceLayer();
-    const aircraftLayer = createAircraftLayer(null);
+    const aircraftLayer = createAircraftLayer(null, initialMapZoom);
 
     baseLayerRef.current = baseLayer;
     openAipRasterLayerRef.current = openAipRasterLayer;
@@ -137,10 +140,35 @@ export function OpenLayersMap({
   }, [trace]);
 
   useEffect(() => {
+    latestAircraftRef.current = aircraft;
     const aircraftLayer = aircraftLayerRef.current;
+    const map = mapRef.current;
     if (!aircraftLayer) return;
-    updateAircraftLayer(aircraftLayer, aircraft);
+    updateAircraftLayer(aircraftLayer, aircraft, map?.getView().getZoom());
   }, [aircraft]);
+
+  useEffect(() => {
+    const map = mapRef.current;
+    const aircraftLayer = aircraftLayerRef.current;
+    if (!map || !aircraftLayer) return undefined;
+
+    let animationFrame: number | null = null;
+    const updateScale = () => {
+      if (animationFrame !== null) window.cancelAnimationFrame(animationFrame);
+      animationFrame = window.requestAnimationFrame(() => {
+        updateAircraftLayer(aircraftLayer, latestAircraftRef.current, map.getView().getZoom());
+        animationFrame = null;
+      });
+    };
+
+    const key: EventsKey = map.getView().on('change:resolution', updateScale);
+    updateScale();
+
+    return () => {
+      if (animationFrame !== null) window.cancelAnimationFrame(animationFrame);
+      unByKey(key);
+    };
+  }, []);
 
   useEffect(() => {
     const map = mapRef.current;

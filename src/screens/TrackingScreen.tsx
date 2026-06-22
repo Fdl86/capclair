@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import type { NavPoint, NavRoute } from '../domain/navigation.types';
 import type { Trace } from '../domain/trace.types';
 import { useGpsTracking } from '../hooks/useGpsTracking';
@@ -76,7 +76,7 @@ export function TrackingScreen({ route, onTraceReady }: TrackingScreenProps) {
   const wakeLockRef = useRef<WakeLockSentinelLike | null>(null);
   const gps = useGpsTracking(route, onTraceReady);
   const isRecording = gps.status === 'active' || gps.status === 'simulating';
-  const traceForMap = useMemo(() => gps.positions, [gps.positions]);
+  const traceForMap = gps.positions;
 
   useEffect(() => {
     let cancelled = false;

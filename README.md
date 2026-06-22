@@ -217,3 +217,35 @@ Hotfix GPS cleanup + optimisation CSS :
 - déduplication du bloc `.ol-map`
 - pas de changement Planification / Log / Carburant / Frise zones / moteur GPS
 - titre d'onglet mis à jour
+
+## DEV13.7.15
+
+Hotfix icône avion :
+- taille de base de l'avion réduite
+- scale avion adapté au zoom carte
+- zoom éloigné : avion réduit et non envahissant
+- zoom proche : avion plus lisible
+- orientation avion conservée via TRK GPS
+- fallback orientation basse vitesse conservé
+- mise à jour de l'icône sur changement de zoom via `change:resolution`
+- throttling via `requestAnimationFrame` pour éviter les mises à jour excessives
+- réutilisation de la feature avion au lieu de clear/recreate à chaque position
+- pas de changement moteur GPS / Log / carburant / zones
+- titre d'onglet mis à jour
+
+## DEV13.7.16
+
+Hotfix GPS hardening + reprise DEV13.7.15 :
+- intègre les modifications DEV13.7.15 sur l'icône avion et le scale selon zoom
+- correction stale closure sur `status` via `statusRef` et `updateStatus`
+- suppression de `getCurrentPosition` pour éviter le double premier fix
+- `watchPosition` devient le flux GPS unique, avec `maximumAge: 0`
+- messages GPS cohérents selon le vrai statut courant
+- durcissement `crossTrackError` avec clamp `asin` / `acos`
+- fallback sûr si une position GPS produit une valeur non finie
+- suppression du `useMemo` inutile pour `traceForMap`
+- `lastSignalAt` passe en ref pour éviter un re-render GPS inutile
+- vérification du libellé `Carburant inutilisable`
+- conserve auto-follow, Wake Lock, TRK GPS et orientation avion
+- pas de modification carburant / zones / log de nav
+- titre d'onglet mis à jour

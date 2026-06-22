@@ -12,11 +12,17 @@ export function useGpsTracking(route: NavRoute, onTraceReady: (trace: Trace) => 
   const [positions, setPositions] = useState<GpsPosition[]>([]);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [lastAccuracy, setLastAccuracy] = useState<number | null>(null);
-  const [lastSignalAt, setLastSignalAt] = useState<number | null>(null);
   const watchId = useRef<number | null>(null);
   const simTimer = useRef<number | null>(null);
   const simStep = useRef(0);
   const startTime = useRef<number | null>(null);
+  const statusRef = useRef<GpsStatus>('idle');
+  const lastSignalAt = useRef<number | null>(null);
+
+  const updateStatus = (next: GpsStatus) => {
+    statusRef.current = next;
+    setStatus(next);
+  };
 
   const currentPosition = positions.at(-1) ?? null;
   const crossTrack = useMemo(() => getCrossTrackError(currentPosition, route.points), [currentPosition, route.points]);
@@ -38,7 +44,7 @@ export function useGpsTracking(route: NavRoute, onTraceReady: (trace: Trace) => 
 
   const appendPosition = (position: GpsPosition) => {
     setLastAccuracy(position.precision);
-    setLastSignalAt(Date.now());
+    lastSignalAt.current = Date.now();
     setPositions((current) => {
       const previous = current.at(-1) ?? null;
       if (!isUsableGpsPosition(position, previous)) return current;
@@ -47,7 +53,7 @@ export function useGpsTracking(route: NavRoute, onTraceReady: (trace: Trace) => 
   };
 
   const handleNativePosition = (nativePosition: GeolocationPosition) => {
-    setStatus('active');
+    updateStatus('active');
     setErrorMessage(null);
     appendPosition(toGpsPosition(nativePosition));
   };
@@ -58,34 +64,16 @@ export function useGpsTracking(route: NavRoute, onTraceReady: (trace: Trace) => 
     setErrorMessage(null);
     setPositions([]);
     setLastAccuracy(null);
-    setLastSignalAt(null);
+    lastSignalAt.current = null;
     startTime.current = Date.now();
 
     if (!('geolocation' in navigator)) {
-      setStatus('unavailable');
+      updateStatus('unavailable');
       setErrorMessage('GPS indisponible sur cet appareil. Mode simulation disponible.');
       return;
     }
 
-    setStatus('requesting');
-
-    navigator.geolocation.getCurrentPosition(
-      handleNativePosition,
-      (error) => {
-        if (error.code === error.PERMISSION_DENIED) {
-          clearGpsWatch();
-          setStatus('denied');
-          setErrorMessage('Permission GPS refusée. Mode simulation disponible.');
-          return;
-        }
-        setErrorMessage('Recherche GPS en cours. Placez le téléphone près d’une fenêtre ou en extérieur si le signal tarde.');
-      },
-      {
-        enableHighAccuracy: true,
-        maximumAge: 0,
-        timeout: 12000
-      }
-    );
+    updateStatus('requesting');
 
     watchId.current = navigator.geolocation.watchPosition(
       handleNativePosition,
@@ -93,20 +81,20 @@ export function useGpsTracking(route: NavRoute, onTraceReady: (trace: Trace) => 
         const denied = error.code === error.PERMISSION_DENIED;
         if (denied) {
           clearGpsWatch();
-          setStatus('denied');
+          updateStatus('denied');
           setErrorMessage('Permission GPS refusée. Mode simulation disponible.');
           return;
         }
 
         setErrorMessage(
-          status === 'active'
+          statusRef.current === 'active'
             ? 'Signal GPS momentanément faible. Le suivi continue dès la prochaine position.'
-            : 'Recherche GPS en cours. Signal lent ou imprécis.'
+            : 'Recherche GPS en cours. Placez le téléphone près d’une fenêtre ou en extérieur si le signal tarde.'
         );
       },
       {
         enableHighAccuracy: true,
-        maximumAge: 2000,
+        maximumAge: 0,
         timeout: 15000
       }
     );
@@ -115,11 +103,11 @@ export function useGpsTracking(route: NavRoute, onTraceReady: (trace: Trace) => 
   const startSimulation = () => {
     clearGpsWatch();
     clearSimulation();
-    setStatus('simulating');
+    updateStatus('simulating');
     setErrorMessage(null);
     setPositions([]);
     setLastAccuracy(18);
-    setLastSignalAt(Date.now());
+    lastSignalAt.current = Date.now();
     simStep.current = 0;
     startTime.current = Date.now();
     appendPosition(interpolateSimulationPoint(route.points, simStep.current));
@@ -143,7 +131,7 @@ export function useGpsTracking(route: NavRoute, onTraceReady: (trace: Trace) => 
       distanceNm: Number(distanceTravelledNm.toFixed(2))
     };
     onTraceReady(trace);
-    setStatus('stopped');
+    updateStatus('stopped');
   };
 
   useEffect(() => {
@@ -166,7 +154,7 @@ export function useGpsTracking(route: NavRoute, onTraceReady: (trace: Trace) => 
     nextPointDistance,
     errorMessage,
     lastAccuracy,
-    lastSignalAt,
+    lastSignalAt: lastSignalAt.current,
     startGps,
     startSimulation,
     stopAndSave
