@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import type { NavPoint, NavRoute } from '../domain/navigation.types';
 import type { Trace } from '../domain/trace.types';
 import { useGpsTracking } from '../hooks/useGpsTracking';
@@ -17,11 +17,23 @@ interface TrackingScreenProps {
   onTraceReady: (trace: Trace) => void;
 }
 
+type WakeLockSentinelLike = {
+  released?: boolean;
+  release: () => Promise<void>;
+  addEventListener?: (type: 'release', listener: () => void) => void;
+};
+
+type NavigatorWithWakeLock = Navigator & {
+  wakeLock?: {
+    request: (type: 'screen') => Promise<WakeLockSentinelLike>;
+  };
+};
+
 function statusLabel(status: string): string {
   switch (status) {
     case 'active': return 'GPS OK';
     case 'simulating': return 'SIM OK';
-    case 'requesting': return 'GPS...';
+    case 'requesting': return 'Recherche GPS';
     case 'denied': return 'GPS refusé';
     case 'unavailable': return 'GPS perdu';
     case 'stopped': return 'Sauvé';
@@ -61,9 +73,73 @@ function metricNumber(value: number | null | undefined, suffix: string, digits =
 export function TrackingScreen({ route, onTraceReady }: TrackingScreenProps) {
   const [confirmStop, setConfirmStop] = useState(false);
   const [showLiveHeading, setShowLiveHeading] = useState(false);
+  const [wakeLockActive, setWakeLockActive] = useState(false);
+  const wakeLockRef = useRef<WakeLockSentinelLike | null>(null);
   const gps = useGpsTracking(route, onTraceReady);
   const isRecording = gps.status === 'active' || gps.status === 'simulating';
   const traceForMap = useMemo(() => gps.positions, [gps.positions]);
+
+  useEffect(() => {
+    let cancelled = false;
+
+    const releaseWakeLock = async () => {
+      const sentinel = wakeLockRef.current;
+      wakeLockRef.current = null;
+      setWakeLockActive(false);
+      if (sentinel && !sentinel.released) {
+        try {
+          await sentinel.release();
+        } catch {
+          // Wake Lock release can fail silently on some mobile browsers.
+        }
+      }
+    };
+
+    const requestWakeLock = async () => {
+      const navigatorWithWakeLock = navigator as NavigatorWithWakeLock;
+      if (!isRecording || wakeLockRef.current || !navigatorWithWakeLock.wakeLock) {
+        setWakeLockActive(Boolean(wakeLockRef.current));
+        return;
+      }
+
+      try {
+        const sentinel = await navigatorWithWakeLock.wakeLock.request('screen');
+        if (cancelled || !isRecording) {
+          await sentinel.release();
+          return;
+        }
+        wakeLockRef.current = sentinel;
+        setWakeLockActive(true);
+        sentinel.addEventListener?.('release', () => {
+          if (wakeLockRef.current === sentinel) {
+            wakeLockRef.current = null;
+            setWakeLockActive(false);
+          }
+        });
+      } catch {
+        setWakeLockActive(false);
+      }
+    };
+
+    if (isRecording) {
+      void requestWakeLock();
+    } else {
+      void releaseWakeLock();
+    }
+
+    const handleVisibilityChange = () => {
+      if (document.visibilityState === 'visible' && isRecording && !wakeLockRef.current) {
+        void requestWakeLock();
+      }
+    };
+
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+    return () => {
+      cancelled = true;
+      document.removeEventListener('visibilitychange', handleVisibilityChange);
+      void releaseWakeLock();
+    };
+  }, [isRecording]);
 
   const currentBranch = route.branches[gps.crossTrack.segmentIndex] ?? route.branches[0] ?? null;
   const magneticHeading = currentBranch ? Math.round(currentBranch.capCorrige) : null;
@@ -80,14 +156,33 @@ export function TrackingScreen({ route, onTraceReady }: TrackingScreenProps) {
   return (
     <section className="tracking-screen">
       <div className="tracking-map-panel">
-        <OpenLayersMap route={route} trace={traceForMap} aircraft={gps.currentPosition} selectedPointId={gps.nextPoint?.id ?? null} compact />
+        <OpenLayersMap
+          route={route}
+          trace={traceForMap}
+          aircraft={gps.currentPosition}
+          selectedPointId={gps.nextPoint?.id ?? null}
+          compact
+          followAircraft={isRecording}
+        />
       </div>
 
       <aside className="tracking-panel">
         <div className="cockpit-badges">
           <CockpitBadge label={statusLabel(gps.status)} state={gps.status === 'active' || gps.status === 'simulating' ? 'ok' : gps.status === 'requesting' ? 'warn' : 'off'} />
           <CockpitBadge label={isRecording ? 'Trace REC' : 'Trace prête'} state={isRecording ? 'rec' : 'off'} />
+          <CockpitBadge label={wakeLockActive ? 'Écran actif' : isRecording ? 'Écran veille?' : 'Écran prêt'} state={wakeLockActive ? 'ok' : isRecording ? 'warn' : 'off'} />
         </div>
+
+        {(gps.status === 'requesting' || gps.lastAccuracy !== null) && (
+          <Card className="gps-signal-card">
+            <strong>{gps.status === 'requesting' ? 'Recherche position GPS...' : 'Position GPS reçue'}</strong>
+            <p>
+              {gps.lastAccuracy !== null
+                ? `Précision ${Math.round(gps.lastAccuracy)} m`
+                : 'Acquisition haute précision en cours. Le premier fix peut prendre quelques secondes.'}
+            </p>
+          </Card>
+        )}
 
         {showLiveHeading && (
           <Card className="live-heading-card">

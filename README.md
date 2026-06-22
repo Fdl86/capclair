@@ -186,3 +186,19 @@ Hotfix toggle topo :
 - supprime uniquement la mention redondante Fond topo ON/OFF dans la barre d'information de carte
 - conserve Carte aéro openAIP dans la barre d'information
 - titre d'onglet mis à jour
+
+## DEV13.7.13
+
+Hotfix suivi GPS :
+- acquisition GPS plus explicite avec carte `Recherche position GPS...`
+- première position demandée via `getCurrentPosition` puis suivi continu via `watchPosition`
+- `watchPosition` conserve le suivi sur erreur temporaire non bloquante
+- Wake Lock écran pendant GPS actif ou simulation lorsque le navigateur le permet
+- badge `Écran actif` / `Écran veille?`
+- carte en auto-follow dès que GPS ou simulation est actif
+- bouton Centrer conservé comme recentrage manuel
+- icône avion remplace le triangle
+- orientation avion basée sur la trajectoire GPS réelle (`track`) si vitesse >= 5 kt
+- fallback sur la dernière orientation fiable si `track` absent ou vitesse faible
+- pas de changement Planification / Log / Carburant / Frise zones
+- titre d'onglet mis à jour

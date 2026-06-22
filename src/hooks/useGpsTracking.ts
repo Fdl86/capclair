@@ -11,6 +11,8 @@ export function useGpsTracking(route: NavRoute, onTraceReady: (trace: Trace) => 
   const [status, setStatus] = useState<GpsStatus>('idle');
   const [positions, setPositions] = useState<GpsPosition[]>([]);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const [lastAccuracy, setLastAccuracy] = useState<number | null>(null);
+  const [lastSignalAt, setLastSignalAt] = useState<number | null>(null);
   const watchId = useRef<number | null>(null);
   const simTimer = useRef<number | null>(null);
   const simStep = useRef(0);
@@ -35,6 +37,8 @@ export function useGpsTracking(route: NavRoute, onTraceReady: (trace: Trace) => 
   };
 
   const appendPosition = (position: GpsPosition) => {
+    setLastAccuracy(position.precision);
+    setLastSignalAt(Date.now());
     setPositions((current) => {
       const previous = current.at(-1) ?? null;
       if (!isUsableGpsPosition(position, previous)) return current;
@@ -42,10 +46,19 @@ export function useGpsTracking(route: NavRoute, onTraceReady: (trace: Trace) => 
     });
   };
 
+  const handleNativePosition = (nativePosition: GeolocationPosition) => {
+    setStatus('active');
+    setErrorMessage(null);
+    appendPosition(toGpsPosition(nativePosition));
+  };
+
   const startGps = () => {
+    clearGpsWatch();
     clearSimulation();
     setErrorMessage(null);
     setPositions([]);
+    setLastAccuracy(null);
+    setLastSignalAt(null);
     startTime.current = Date.now();
 
     if (!('geolocation' in navigator)) {
@@ -55,21 +68,46 @@ export function useGpsTracking(route: NavRoute, onTraceReady: (trace: Trace) => 
     }
 
     setStatus('requesting');
-    watchId.current = navigator.geolocation.watchPosition(
-      (nativePosition) => {
-        setStatus('active');
-        appendPosition(toGpsPosition(nativePosition));
-      },
+
+    navigator.geolocation.getCurrentPosition(
+      handleNativePosition,
       (error) => {
-        clearGpsWatch();
-        const denied = error.code === error.PERMISSION_DENIED;
-        setStatus(denied ? 'denied' : 'unavailable');
-        setErrorMessage(denied ? 'Permission GPS refusée. Mode simulation disponible.' : 'Signal GPS indisponible ou imprécis. Mode simulation disponible.');
+        if (error.code === error.PERMISSION_DENIED) {
+          clearGpsWatch();
+          setStatus('denied');
+          setErrorMessage('Permission GPS refusée. Mode simulation disponible.');
+          return;
+        }
+        setErrorMessage('Recherche GPS en cours. Placez le téléphone près d’une fenêtre ou en extérieur si le signal tarde.');
       },
       {
         enableHighAccuracy: true,
-        maximumAge: 1000,
-        timeout: 9000
+        maximumAge: 0,
+        timeout: 12000
+      }
+    );
+
+    watchId.current = navigator.geolocation.watchPosition(
+      handleNativePosition,
+      (error) => {
+        const denied = error.code === error.PERMISSION_DENIED;
+        if (denied) {
+          clearGpsWatch();
+          setStatus('denied');
+          setErrorMessage('Permission GPS refusée. Mode simulation disponible.');
+          return;
+        }
+
+        setErrorMessage(
+          status === 'active'
+            ? 'Signal GPS momentanément faible. Le suivi continue dès la prochaine position.'
+            : 'Recherche GPS en cours. Signal lent ou imprécis.'
+        );
+      },
+      {
+        enableHighAccuracy: true,
+        maximumAge: 2000,
+        timeout: 15000
       }
     );
   };
@@ -80,6 +118,8 @@ export function useGpsTracking(route: NavRoute, onTraceReady: (trace: Trace) => 
     setStatus('simulating');
     setErrorMessage(null);
     setPositions([]);
+    setLastAccuracy(18);
+    setLastSignalAt(Date.now());
     simStep.current = 0;
     startTime.current = Date.now();
     appendPosition(interpolateSimulationPoint(route.points, simStep.current));
@@ -125,6 +165,8 @@ export function useGpsTracking(route: NavRoute, onTraceReady: (trace: Trace) => 
     nextPoint,
     nextPointDistance,
     errorMessage,
+    lastAccuracy,
+    lastSignalAt,
     startGps,
     startSimulation,
     stopAndSave

@@ -24,6 +24,7 @@ interface OpenLayersMapProps {
   selectedPointId: string | null;
   compact?: boolean;
   showTopo?: boolean;
+  followAircraft?: boolean;
   addWaypointMode?: boolean;
   onMapAddWaypoint?: (longitude: number, latitude: number) => void;
   onSourceStatusChange?: (status: MapSourceStatus) => void;
@@ -45,6 +46,7 @@ export function OpenLayersMap({
   selectedPointId,
   compact = false,
   showTopo = true,
+  followAircraft = false,
   addWaypointMode = false,
   onMapAddWaypoint,
   onSourceStatusChange
@@ -142,7 +144,20 @@ export function OpenLayersMap({
 
   useEffect(() => {
     const map = mapRef.current;
+    if (!map || !followAircraft || !aircraft) return;
+    map.getView().animate({
+      center: fromLonLat([aircraft.longitude, aircraft.latitude]),
+      duration: 240
+    });
+  }, [aircraft, followAircraft]);
+
+  useEffect(() => {
+    const map = mapRef.current;
     if (!map) return;
+    if (compact && aircraft) {
+      map.getView().setCenter(fromLonLat([aircraft.longitude, aircraft.latitude]));
+      return;
+    }
     map.getView().fit(routeExtent, { padding: compact ? [48, 48, 48, 48] : [72, 58, 92, 58], duration: 0, maxZoom: 10 });
   }, [routeExtent, compact]);
 

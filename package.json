@@ -1,7 +1,7 @@
 {
-  "name": "cap-clair-dev13-7-12-topo-toggle-restore",
+  "name": "cap-clair-dev13-7-13-gps-follow-hotfix",
   "private": true,
-  "version": "0.13.7-12",
+  "version": "0.13.7-13",
   "type": "module",
   "scripts": {
     "dev": "vite",

@@ -2798,3 +2798,20 @@
     text-align: left;
   }
 }
+
+/* DEV13.7.13 - GPS follow hotfix */
+.gps-signal-card {
+  display: grid;
+  gap: 4px;
+  border-color: rgba(89, 207, 255, 0.32);
+}
+
+.gps-signal-card strong {
+  color: var(--cyan-soft);
+}
+
+.gps-signal-card p {
+  margin: 0;
+  color: var(--text-2);
+  font-size: 0.78rem;
+}
