@@ -4,7 +4,7 @@ import type { NavRoute } from '../domain/navigation.types';
 import type { Trace } from '../domain/trace.types';
 import { distanceNm, totalDistanceNm } from '../services/geo/distance';
 import { toGpsPosition, isPlausibleGpsPosition, isUsableGpsPosition } from '../services/gps/geolocationService';
-import { interpolateSimulationPoint } from '../services/gps/simulationService';
+import { interpolateSimulationPoint, simulationTotalSteps } from '../services/gps/simulationService';
 import { getCrossTrackError, getProgressiveCrossTrackError, type CrossTrackResult } from '../services/geo/crossTrackError';
 
 const TRACE_SAMPLE_INTERVAL_MS = 3000;
@@ -141,10 +141,20 @@ export function useGpsTracking(route: NavRoute, onTraceReady: (trace: Trace) => 
     resetTrackingData();
     startTime.current = Date.now();
     simStep.current = 0;
+
+    const totalSteps = simulationTotalSteps(route.points);
     ingestPosition(interpolateSimulationPoint(route.points, simStep.current), true);
+
     simTimer.current = window.setInterval(() => {
       simStep.current += 1;
-      ingestPosition(interpolateSimulationPoint(route.points, simStep.current));
+      const finalStep = simStep.current >= totalSteps;
+      ingestPosition(interpolateSimulationPoint(route.points, simStep.current), finalStep);
+
+      if (finalStep) {
+        clearSimulation();
+        updateStatus('simulation-complete');
+        setErrorMessage('Simulation terminée. Vous pouvez sauvegarder la trace.');
+      }
     }, 1000);
   };
 

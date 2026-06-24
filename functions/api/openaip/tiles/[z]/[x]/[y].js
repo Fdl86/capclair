@@ -51,12 +51,12 @@ export async function onRequestGet(context) {
   const y = yMatch ? toSafeInteger(yMatch[1], 0, Number.MAX_SAFE_INTEGER) : null;
 
   if (z === null || x === null || y === null) {
-    return imageResponse(PNG_EMPTY_1X1, 400, 60);
+    return imageResponse(PNG_EMPTY_1X1, 200, 60);
   }
 
   const maxTileIndex = 2 ** z - 1;
   if (x > maxTileIndex || y > maxTileIndex) {
-    return imageResponse(PNG_EMPTY_1X1, 400, 60);
+    return imageResponse(PNG_EMPTY_1X1, 200, 60);
   }
 
   const cacheUrl = new URL(request.url);
@@ -67,7 +67,6 @@ export async function onRequestGet(context) {
   if (cached) return cached;
 
   const upstreamUrl = new URL(`https://api.tiles.openaip.net/api/data/openaip/${z}/${x}/${y}.png`);
-  upstreamUrl.searchParams.set('apiKey', apiKey);
 
   const upstream = await fetch(upstreamUrl.toString(), {
     headers: {
@@ -78,7 +77,7 @@ export async function onRequestGet(context) {
 
   if (!upstream.ok) {
     const retrySeconds = upstream.status === 429 ? 3600 : 300;
-    return imageResponse(PNG_EMPTY_1X1, upstream.status, retrySeconds);
+    return imageResponse(PNG_EMPTY_1X1, 200, retrySeconds);
   }
 
   const response = new Response(upstream.body, {

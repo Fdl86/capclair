@@ -303,3 +303,26 @@ GPS live + insertion waypoint :
 - conserve DEV13.7.15 aircraft zoom scale
 - pas de modification carburant / zones / météo / proxy
 - titre d'onglet mis à jour
+
+## DEV13.7.20
+
+Simulation + nettoyage carte :
+- simulation sans rebouclage automatique après l'arrivée
+- simulation limitée à un parcours départ vers arrivée
+- arrivée simulation maintenue sur le dernier point
+- état `SIM terminée` ajouté
+- bouton `Arrêter et sauvegarder` conservé à la fin de simulation
+- aucune sauvegarde automatique forcée
+- proxy tuiles openAIP : placeholder transparent renvoyé en HTTP 200
+- proxy tuiles openAIP : clé openAIP retirée de la query amont
+- clé openAIP conservée uniquement en en-tête proxy
+- MapFallbackNotice câblée sur `tileloaderror` openAIP
+- message de repli carte clarifié
+- suppression du `console.warn` résiduel dans `windAloftClient`
+- conserve DEV13.7.19 GPS live + waypoint hardening
+- conserve DEV13.7.18 trace 3s
+- conserve DEV13.7.17 navlog TSV / TAV
+- conserve DEV13.7.16 GPS hardening
+- conserve DEV13.7.15 aircraft zoom scale
+- pas de modification carburant / zones / log / GPS réel
+- titre d'onglet mis à jour

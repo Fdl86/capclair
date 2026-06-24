@@ -111,9 +111,6 @@ async function requestWindSamples(samples: WindSampleRequest[]): Promise<WindSam
 
   const data = (await response.json()) as WindAloftResponse;
   const fetched = data.samples ?? [];
-  if (!fetched.length && data.errors?.length) {
-    console.warn('CAP CLAIR wind aloft unavailable', data.errors);
-  }
   return fetched;
 }
 

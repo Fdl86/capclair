@@ -33,6 +33,7 @@ function statusLabel(status: string): string {
   switch (status) {
     case 'active': return 'GPS OK';
     case 'simulating': return 'SIM OK';
+    case 'simulation-complete': return 'SIM terminée';
     case 'requesting': return 'Recherche GPS';
     case 'denied': return 'GPS refusé';
     case 'unavailable': return 'GPS perdu';
@@ -76,6 +77,7 @@ export function TrackingScreen({ route, onTraceReady }: TrackingScreenProps) {
   const wakeLockRef = useRef<WakeLockSentinelLike | null>(null);
   const gps = useGpsTracking(route, onTraceReady);
   const isRecording = gps.status === 'active' || gps.status === 'simulating';
+  const canSaveTrace = isRecording || gps.status === 'simulation-complete';
   const traceForMap = gps.positions;
 
   useEffect(() => {
@@ -167,8 +169,8 @@ export function TrackingScreen({ route, onTraceReady }: TrackingScreenProps) {
 
       <aside className="tracking-panel">
         <div className="cockpit-badges">
-          <CockpitBadge label={statusLabel(gps.status)} state={gps.status === 'active' || gps.status === 'simulating' ? 'ok' : gps.status === 'requesting' ? 'warn' : 'off'} />
-          <CockpitBadge label={isRecording ? 'Trace REC' : 'Trace prête'} state={isRecording ? 'rec' : 'off'} />
+          <CockpitBadge label={statusLabel(gps.status)} state={gps.status === 'active' || gps.status === 'simulating' ? 'ok' : gps.status === 'requesting' || gps.status === 'simulation-complete' ? 'warn' : 'off'} />
+          <CockpitBadge label={isRecording ? 'Trace REC' : gps.status === 'simulation-complete' ? 'Trace à sauver' : 'Trace prête'} state={isRecording ? 'rec' : gps.status === 'simulation-complete' ? 'warn' : 'off'} />
           <CockpitBadge label={wakeLockActive ? 'Écran actif' : isRecording ? 'Écran veille?' : 'Écran prêt'} state={wakeLockActive ? 'ok' : isRecording ? 'warn' : 'off'} />
         </div>
 
@@ -212,9 +214,9 @@ export function TrackingScreen({ route, onTraceReady }: TrackingScreenProps) {
 
 
         <div className="tracking-actions">
-          {!isRecording && <Button variant="primary" onClick={gps.startGps}>Démarrer GPS</Button>}
-          {!isRecording && <Button variant="secondary" onClick={gps.startSimulation}>Tester simulation</Button>}
-          {isRecording && <Button variant="danger" onClick={() => setConfirmStop(true)}>Arrêter et sauvegarder</Button>}
+          {!canSaveTrace && <Button variant="primary" onClick={gps.startGps}>Démarrer GPS</Button>}
+          {!canSaveTrace && <Button variant="secondary" onClick={gps.startSimulation}>Tester simulation</Button>}
+          {canSaveTrace && <Button variant="danger" onClick={() => setConfirmStop(true)}>Arrêter et sauvegarder</Button>}
         </div>
       </aside>
 

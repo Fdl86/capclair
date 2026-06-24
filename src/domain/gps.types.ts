@@ -8,4 +8,4 @@ export interface GpsPosition {
   precision: number | null;
 }
 
-export type GpsStatus = 'idle' | 'requesting' | 'active' | 'denied' | 'unavailable' | 'simulating' | 'stopped';
+export type GpsStatus = 'idle' | 'requesting' | 'active' | 'denied' | 'unavailable' | 'simulating' | 'simulation-complete' | 'stopped';

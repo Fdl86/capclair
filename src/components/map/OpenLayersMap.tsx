@@ -78,7 +78,10 @@ export function OpenLayersMap({
     if (!mapElementRef.current || mapRef.current) return;
 
     const baseLayer = createFreeMapLayer();
-    const openAipRasterLayer = createOpenAipRasterLayer();
+    const openAipRasterLayer = createOpenAipRasterLayer(() => {
+      setSourceStatus('fallback');
+      onSourceStatusChangeRef.current?.('fallback');
+    });
     const traceLayer = createActualTraceLayer();
     const aircraftLayer = createAircraftLayer(null, initialMapZoom);
 

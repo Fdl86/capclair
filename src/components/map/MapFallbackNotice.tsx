@@ -1,8 +1,8 @@
 export function MapFallbackNotice() {
   return (
     <div className="map-fallback-notice">
-      <strong>Fond demo</strong>
-      <span>Couche SIA DEV ou OACI-VFR inaccessible.</span>
+      <strong>Couche aéro indisponible</strong>
+      <span>Fond libre affiché, données openAIP non reçues.</span>
     </div>
   );
 }
