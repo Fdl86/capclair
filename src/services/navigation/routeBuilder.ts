@@ -155,6 +155,7 @@ export function buildBranches(points: NavPoint[], options: RouteBuildOptions = {
     const wind = branchWindById[id] ?? null;
     const windCorrection = computeWindCorrection(routeVraie, profile.tasKt, wind);
     const capCorrige = normalizeHeading(windCorrection.capVrai - magneticVariationDeg);
+    const tempsSansVentMin = Math.max(1, Math.round(distance * (60 / profile.tasKt)));
     const tempsBrancheMin = Math.max(1, Math.round((distance / windCorrection.vitesseSol) * 60));
     const estimatedStartIso = addMinutes(profile.departureTimeIso, elapsedMinutes);
     const estimatedMidIso = addMinutes(profile.departureTimeIso, elapsedMinutes + tempsBrancheMin / 2);
@@ -175,6 +176,7 @@ export function buildBranches(points: NavPoint[], options: RouteBuildOptions = {
       capVrai: windCorrection.capVrai,
       capCorrige,
       vitesseSol: windCorrection.vitesseSol,
+      tempsSansVentMin,
       tempsBrancheMin,
       estimatedStartIso,
       estimatedMidIso,

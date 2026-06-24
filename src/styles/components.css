@@ -799,11 +799,11 @@
 }
 
 .navlog-table .branch-row {
-  grid-template-columns: minmax(112px, 1.42fr) 72px 82px 58px 56px 58px 70px 58px 58px 70px 78px 76px minmax(118px, 1.2fr);
+  grid-template-columns: minmax(112px, 1.42fr) 72px 82px 58px 56px 58px 70px 58px 58px 62px 70px 70px 76px minmax(118px, 1.2fr);
   padding: 0;
   gap: 0;
   font-size: 0.78rem;
-  min-width: 980px;
+  min-width: 1080px;
 }
 
 .navlog-table .branch-row span {

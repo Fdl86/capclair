@@ -249,3 +249,18 @@ Hotfix GPS hardening + reprise DEV13.7.15 :
 - conserve auto-follow, Wake Lock, TRK GPS et orientation avion
 - pas de modification carburant / zones / log de nav
 - titre d'onglet mis à jour
+
+## DEV13.7.17
+
+Modification log de navigation :
+- suppression de la colonne `ETA UTC`
+- insertion de la colonne `NM` entre `GS` et les temps
+- ajout de la colonne `TSV` avant `TAV`
+- `TSV` = temps sans vent, calculé par distance x FB, avec FB = 60 / TAS
+- renommage `ETE` en `TAV`
+- `TAV` = temps avec vent, basé sur la vitesse sol corrigée du vent effectif
+- total `NM`, total `TSV` et total `TAV` affichés dans la ligne TOTAL
+- largeur de tableau navlog ajustée
+- pas de modification GPS / avion / carburant / zones
+- reprise de la base DEV13.7.16 avec les corrections GPS hardening et aircraft zoom scale
+- titre d'onglet mis à jour

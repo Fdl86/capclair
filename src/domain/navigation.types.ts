@@ -70,6 +70,7 @@ export interface NavBranch {
   capVrai: number;
   capCorrige: number;
   vitesseSol: number;
+  tempsSansVentMin: number;
   tempsBrancheMin: number;
   estimatedStartIso: string;
   estimatedMidIso: string;

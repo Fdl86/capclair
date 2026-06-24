@@ -19,12 +19,6 @@ function minutesToClock(minutes: number) {
   return `${hours}:${String(mins).padStart(2, '0')}`;
 }
 
-function timeZulu(iso: string) {
-  const date = new Date(iso);
-  if (Number.isNaN(date.getTime())) return '-';
-  return `${String(date.getUTCHours()).padStart(2, '0')}:${String(date.getUTCMinutes()).padStart(2, '0')}Z`;
-}
-
 function windLabel(directionDeg?: number, speedKt?: number) {
   if (typeof directionDeg !== 'number' || typeof speedKt !== 'number') return '-';
   return `${String(directionDeg).padStart(3, '0')}/${speedKt}`;
@@ -39,7 +33,7 @@ function zoneRemark(profile?: BranchZoneProfile) {
 }
 
 export function BranchTable({ route, zoneProfiles = {}, onSetBranchAltitude }: BranchTableProps) {
-  const lastBranch = route.branches[route.branches.length - 1];
+  const totalTsv = route.branches.reduce((sum, branch) => sum + branch.tempsSansVentMin, 0);
 
   return (
     <div className="branch-table navlog-table" role="table" aria-label="Log de navigation">
@@ -53,8 +47,9 @@ export function BranchTable({ route, zoneProfiles = {}, onSetBranchAltitude }: B
         <span>Dérive<br /><small>°</small></span>
         <span>CM<br /><small>°</small></span>
         <span>GS<br /><small>kt</small></span>
-        <span>ETE<br /><small>hh:mm</small></span>
-        <span>ETA<br /><small>UTC</small></span>
+        <span>NM</span>
+        <span>TSV<br /><small>hh:mm</small></span>
+        <span>TAV<br /><small>hh:mm</small></span>
         <span>Fréq<br /><small>MHz</small></span>
         <span>Zone / Contact</span>
       </div>
@@ -84,8 +79,9 @@ export function BranchTable({ route, zoneProfiles = {}, onSetBranchAltitude }: B
             <span>{branch.derive > 0 ? '+' : ''}{branch.derive}</span>
             <span>{String(branch.capCorrige).padStart(3, '0')}</span>
             <span>{branch.vitesseSol}</span>
+            <span>{branch.distanceNm.toFixed(1)}</span>
+            <span>{minutesToClock(branch.tempsSansVentMin)}</span>
             <span>{minutesToClock(branch.tempsBrancheMin)}</span>
-            <span>{timeZulu(branch.estimatedArrivalIso)}</span>
             <span>{profile?.frequencyLabel ?? branch.frequencyMhz ?? 'À confirmer'}</span>
             <span>{zoneRemark(profile)}</span>
           </div>
@@ -101,10 +97,11 @@ export function BranchTable({ route, zoneProfiles = {}, onSetBranchAltitude }: B
         <span>-</span>
         <span>-</span>
         <span>-</span>
+        <span>{route.distanceTotale.toFixed(1)}</span>
+        <span>{minutesToClock(totalTsv)}</span>
         <span>{minutesToClock(route.tempsEstimeMin)}</span>
-        <span>{lastBranch ? timeZulu(lastBranch.estimatedArrivalIso) : '-'}</span>
         <span>-</span>
-        <span>{route.distanceTotale.toFixed(1)} NM</span>
+        <span>-</span>
       </div>
     </div>
   );

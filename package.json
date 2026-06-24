@@ -1,7 +1,7 @@
 {
-  "name": "cap-clair-dev13-7-16-gps-hardening",
+  "name": "cap-clair-dev13-7-17-navlog-tsv-tav",
   "private": true,
-  "version": "0.13.7-16",
+  "version": "0.13.7-17",
   "type": "module",
   "scripts": {
     "dev": "vite",
