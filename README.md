@@ -281,3 +281,25 @@ Optimisation trace GPS :
 - conserve DEV13.7.15 aircraft zoom scale
 - pas de modification log / carburant / zones / carte
 - titre d'onglet mis à jour
+
+## DEV13.7.19
+
+GPS live + insertion waypoint :
+- position live non bloquée par le filtre anti-bruit de trace
+- ajout d'un filtre léger `isPlausibleGpsPosition` pour rejeter uniquement les positions invalides ou trop imprécises
+- trace sauvegardée conservée à 1 point toutes les 3 secondes
+- plafond 4200 points conservé
+- progression de branche renforcée avec `getProgressiveCrossTrackError`
+- pas de retour automatique sur une branche précédente en suivi
+- saut de branche limité pour éviter les retours incohérents près d'un point tournant
+- insertion waypoint sur la branche la plus proche du clic carte
+- projection locale du clic sur chaque segment de route pour trouver le meilleur index
+- `handleAddWaypoint` stabilisé via `useCallback`
+- `trace` vide de planification stabilisée via constante `EMPTY_TRACE`
+- initialisation OpenLayers protégée contre les callbacks instables
+- conserve DEV13.7.18 trace 3s
+- conserve DEV13.7.17 navlog TSV / TAV
+- conserve DEV13.7.16 GPS hardening
+- conserve DEV13.7.15 aircraft zoom scale
+- pas de modification carburant / zones / météo / proxy
+- titre d'onglet mis à jour

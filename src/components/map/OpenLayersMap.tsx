@@ -62,12 +62,17 @@ export function OpenLayersMap({
   const traceLayerRef = useRef<ActualTraceLayer | null>(null);
   const aircraftLayerRef = useRef<AircraftLayer | null>(null);
   const latestAircraftRef = useRef<GpsPosition | null>(null);
+  const onSourceStatusChangeRef = useRef(onSourceStatusChange);
   const [sourceStatus, setSourceStatus] = useState<MapSourceStatus>('free');
 
   const routeExtent = useMemo(() => {
     const coords = route.points.map((point) => fromLonLat([point.longitude, point.latitude]));
     return boundingExtent(coords);
   }, [route.points]);
+
+  useEffect(() => {
+    onSourceStatusChangeRef.current = onSourceStatusChange;
+  }, [onSourceStatusChange]);
 
   useEffect(() => {
     if (!mapElementRef.current || mapRef.current) return;
@@ -98,7 +103,7 @@ export function OpenLayersMap({
 
     mapRef.current = map;
     setSourceStatus('free');
-    onSourceStatusChange?.('free');
+    onSourceStatusChangeRef.current?.('free');
 
     return () => {
       plannedRouteLayerRef.current?.dispose();
@@ -115,7 +120,7 @@ export function OpenLayersMap({
       traceLayerRef.current = null;
       aircraftLayerRef.current = null;
     };
-  }, [onSourceStatusChange]);
+  }, []);
 
   useEffect(() => {
     baseLayerRef.current?.setVisible(showTopo);

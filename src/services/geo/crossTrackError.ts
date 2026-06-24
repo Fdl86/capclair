@@ -16,7 +16,7 @@ export interface CrossTrackResult {
   alongTrackNm: number;
 }
 
-function crossTrackForSegment(position: GpsPosition, start: NavPoint, end: NavPoint, segmentIndex: number): CrossTrackResult {
+export function crossTrackForSegment(position: GpsPosition, start: NavPoint, end: NavPoint, segmentIndex: number): CrossTrackResult {
   const d13 = distanceNm(start, position) / EARTH_RADIUS_NM;
   const theta13 = toRad(bearingDeg(start, position));
   const theta12 = toRad(bearingDeg(start, end));
@@ -47,6 +47,57 @@ function crossTrackForSegment(position: GpsPosition, start: NavPoint, end: NavPo
     alongTrackNm: effectiveAlongTrack
   };
 }
+
+
+function clampSegmentIndex(routePoints: NavPoint[], segmentIndex: number): number {
+  return Math.max(0, Math.min(routePoints.length - 2, segmentIndex));
+}
+
+function segmentLengthNm(routePoints: NavPoint[], segmentIndex: number): number {
+  const index = clampSegmentIndex(routePoints, segmentIndex);
+  return distanceNm(routePoints[index], routePoints[index + 1]);
+}
+
+export function getCrossTrackErrorForSegment(position: GpsPosition | null, routePoints: NavPoint[], segmentIndex: number): CrossTrackResult {
+  if (!position || routePoints.length < 2) {
+    return { distanceNm: 0, side: 'sur_route', segmentIndex: 0, alongTrackNm: 0 };
+  }
+
+  const index = clampSegmentIndex(routePoints, segmentIndex);
+  return crossTrackForSegment(position, routePoints[index], routePoints[index + 1], index);
+}
+
+export function getProgressiveCrossTrackError(position: GpsPosition | null, routePoints: NavPoint[], activeSegmentIndex: number | null): CrossTrackResult {
+  if (!position || routePoints.length < 2) {
+    return { distanceNm: 0, side: 'sur_route', segmentIndex: 0, alongTrackNm: 0 };
+  }
+
+  const nearest = getCrossTrackError(position, routePoints);
+  if (activeSegmentIndex === null) return nearest;
+
+  const currentIndex = clampSegmentIndex(routePoints, activeSegmentIndex);
+  if (nearest.segmentIndex < currentIndex) {
+    return getCrossTrackErrorForSegment(position, routePoints, currentIndex);
+  }
+
+  if (nearest.segmentIndex <= currentIndex + 1) {
+    return nearest;
+  }
+
+  const current = getCrossTrackErrorForSegment(position, routePoints, currentIndex);
+  const next = currentIndex < routePoints.length - 2
+    ? getCrossTrackErrorForSegment(position, routePoints, currentIndex + 1)
+    : null;
+
+  if (!next) return current;
+
+  const currentLength = segmentLengthNm(routePoints, currentIndex);
+  const currentNearlyFinished = current.alongTrackNm >= currentLength * 0.9;
+  if (currentNearlyFinished || next.distanceNm <= current.distanceNm) return next;
+
+  return current;
+}
+
 
 export function getCrossTrackError(position: GpsPosition | null, routePoints: NavPoint[]): CrossTrackResult {
   if (!position || routePoints.length < 2) {

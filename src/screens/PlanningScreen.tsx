@@ -1,5 +1,6 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import type { NavRoute } from '../domain/navigation.types';
+import type { GpsPosition } from '../domain/gps.types';
 import { AERODROMES } from '../data/aerodromeCatalog';
 import { Page } from '../components/layout/Page';
 import { Button } from '../components/ui/Button';
@@ -34,6 +35,7 @@ function formatDuration(minutes: number) {
   return `${hours}:${String(mins).padStart(2, '0')}`;
 }
 
+const EMPTY_TRACE: GpsPosition[] = [];
 
 export function PlanningScreen({
   route,
@@ -79,10 +81,10 @@ export function PlanningScreen({
     if (alternateInput.trim().length >= 4) onSetAlternateCode(alternateInput.trim().toUpperCase());
   };
 
-  const handleAddWaypoint = (longitude: number, latitude: number) => {
+  const handleAddWaypoint = useCallback((longitude: number, latitude: number) => {
     onAddWaypointAt(longitude, latitude);
     setAddWaypointMode(false);
-  };
+  }, [onAddWaypointAt]);
 
   return (
     <Page title="Planification" subtitle="Carte aéro, route, dégagement et points de navigation.">
@@ -91,7 +93,7 @@ export function PlanningScreen({
           <MapLayerToggle showTopo={showTopo} onChange={setShowTopo} />
           <OpenLayersMap
             route={route}
-            trace={[]}
+            trace={EMPTY_TRACE}
             aircraft={null}
             selectedPointId={selectedPointId}
             showTopo={showTopo}

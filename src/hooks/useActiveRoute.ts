@@ -19,6 +19,49 @@ function branchLabel(route: NavRoute, branchId: string): string {
 }
 
 
+
+function clamp(value: number, min: number, max: number): number {
+  return Math.max(min, Math.min(max, value));
+}
+
+function segmentDistanceNm(point: Pick<NavPoint, 'latitude' | 'longitude'>, start: NavPoint, end: NavPoint): number {
+  const averageLatRad = ((start.latitude + end.latitude + point.latitude) / 3) * Math.PI / 180;
+  const x1 = 0;
+  const y1 = 0;
+  const x2 = (end.longitude - start.longitude) * Math.cos(averageLatRad) * 60;
+  const y2 = (end.latitude - start.latitude) * 60;
+  const xp = (point.longitude - start.longitude) * Math.cos(averageLatRad) * 60;
+  const yp = (point.latitude - start.latitude) * 60;
+  const segmentLengthSquared = x2 * x2 + y2 * y2;
+
+  if (segmentLengthSquared <= 0.000001) {
+    return Math.hypot(xp - x1, yp - y1);
+  }
+
+  const projection = clamp(((xp - x1) * x2 + (yp - y1) * y2) / segmentLengthSquared, 0, 1);
+  const projectedX = x1 + projection * x2;
+  const projectedY = y1 + projection * y2;
+  return Math.hypot(xp - projectedX, yp - projectedY);
+}
+
+function nearestRouteSegmentIndex(points: NavPoint[], longitude: number, latitude: number): number {
+  if (points.length < 2) return 0;
+
+  const clickedPoint = { longitude, latitude };
+  let bestIndex = 0;
+  let bestDistance = Number.POSITIVE_INFINITY;
+
+  for (let index = 0; index < points.length - 1; index += 1) {
+    const distance = segmentDistanceNm(clickedPoint, points[index], points[index + 1]);
+    if (distance < bestDistance) {
+      bestDistance = distance;
+      bestIndex = index;
+    }
+  }
+
+  return bestIndex;
+}
+
 function safeRoute(route: NavRoute): NavRoute {
   if (!route.points || route.points.length < 2) return defaultRoute;
   return buildRoute(route.points, {
@@ -77,7 +120,7 @@ export function useActiveRoute() {
   };
 
   const addWaypointAt = (longitude: number, latitude: number) => {
-    const insertIndex = Math.max(1, normalizedRoute.points.length - 1);
+    const insertIndex = nearestRouteSegmentIndex(normalizedRoute.points, longitude, latitude) + 1;
     const nextWaypointNumber = normalizedRoute.points.filter((point) => point.type === 'waypoint' && point.source !== 'aerodrome').length + 1;
     const point = createManualWaypoint(latitude, longitude, nextWaypointNumber);
     const points = [...normalizedRoute.points];

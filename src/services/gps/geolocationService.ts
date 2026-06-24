@@ -12,8 +12,16 @@ export function toGpsPosition(position: GeolocationPosition): GpsPosition {
   };
 }
 
-export function isUsableGpsPosition(position: GpsPosition, previous: GpsPosition | null): boolean {
+export function isPlausibleGpsPosition(position: GpsPosition): boolean {
+  if (!Number.isFinite(position.latitude) || !Number.isFinite(position.longitude)) return false;
+  if (position.latitude < -90 || position.latitude > 90) return false;
+  if (position.longitude < -180 || position.longitude > 180) return false;
   if (position.precision !== null && position.precision > 300) return false;
+  return true;
+}
+
+export function isUsableGpsPosition(position: GpsPosition, previous: GpsPosition | null): boolean {
+  if (!isPlausibleGpsPosition(position)) return false;
   if (!previous) return true;
   const elapsedMs = position.timestamp - previous.timestamp;
   const deltaLat = Math.abs(position.latitude - previous.latitude);

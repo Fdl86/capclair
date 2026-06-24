@@ -3,9 +3,9 @@ import type { GpsPosition, GpsStatus } from '../domain/gps.types';
 import type { NavRoute } from '../domain/navigation.types';
 import type { Trace } from '../domain/trace.types';
 import { distanceNm, totalDistanceNm } from '../services/geo/distance';
-import { toGpsPosition, isUsableGpsPosition } from '../services/gps/geolocationService';
+import { toGpsPosition, isPlausibleGpsPosition, isUsableGpsPosition } from '../services/gps/geolocationService';
 import { interpolateSimulationPoint } from '../services/gps/simulationService';
-import { getCrossTrackError } from '../services/geo/crossTrackError';
+import { getCrossTrackError, getProgressiveCrossTrackError, type CrossTrackResult } from '../services/geo/crossTrackError';
 
 const TRACE_SAMPLE_INTERVAL_MS = 3000;
 const TRACE_MAX_POINTS = 4200;
@@ -14,6 +14,7 @@ export function useGpsTracking(route: NavRoute, onTraceReady: (trace: Trace) => 
   const [status, setStatus] = useState<GpsStatus>('idle');
   const [positions, setPositions] = useState<GpsPosition[]>([]);
   const [currentPosition, setCurrentPosition] = useState<GpsPosition | null>(null);
+  const [crossTrack, setCrossTrack] = useState<CrossTrackResult>(() => getCrossTrackError(null, route.points));
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [lastAccuracy, setLastAccuracy] = useState<number | null>(null);
   const watchId = useRef<number | null>(null);
@@ -24,13 +25,13 @@ export function useGpsTracking(route: NavRoute, onTraceReady: (trace: Trace) => 
   const lastSignalAt = useRef<number | null>(null);
   const lastLivePosition = useRef<GpsPosition | null>(null);
   const lastTraceSampleAt = useRef<number | null>(null);
+  const activeSegmentIndex = useRef<number | null>(null);
 
   const updateStatus = (next: GpsStatus) => {
     statusRef.current = next;
     setStatus(next);
   };
 
-  const crossTrack = useMemo(() => getCrossTrackError(currentPosition, route.points), [currentPosition, route.points]);
   const distanceTravelledNm = useMemo(() => totalDistanceNm(positions), [positions]);
 
   const clearGpsWatch = () => {
@@ -54,6 +55,8 @@ export function useGpsTracking(route: NavRoute, onTraceReady: (trace: Trace) => 
     lastSignalAt.current = null;
     lastLivePosition.current = null;
     lastTraceSampleAt.current = null;
+    activeSegmentIndex.current = null;
+    setCrossTrack(getCrossTrackError(null, route.points));
   };
 
   const appendTraceSample = (position: GpsPosition, force = false) => {
@@ -69,12 +72,19 @@ export function useGpsTracking(route: NavRoute, onTraceReady: (trace: Trace) => 
     setLastAccuracy(position.precision);
     lastSignalAt.current = Date.now();
 
-    const previousLive = lastLivePosition.current;
-    if (!isUsableGpsPosition(position, previousLive)) return;
+    if (!isPlausibleGpsPosition(position)) return;
 
     lastLivePosition.current = position;
     setCurrentPosition(position);
-    appendTraceSample(position, forceTraceSample);
+
+    const nextCrossTrack = getProgressiveCrossTrackError(position, route.points, activeSegmentIndex.current);
+    activeSegmentIndex.current = nextCrossTrack.segmentIndex;
+    setCrossTrack(nextCrossTrack);
+
+    const previousTraceSample = positions.at(-1) ?? null;
+    if (forceTraceSample || isUsableGpsPosition(position, previousTraceSample)) {
+      appendTraceSample(position, forceTraceSample);
+    }
   };
 
   const handleNativePosition = (nativePosition: GeolocationPosition) => {
@@ -158,6 +168,11 @@ export function useGpsTracking(route: NavRoute, onTraceReady: (trace: Trace) => 
     setPositions(finalPositions);
     updateStatus('stopped');
   };
+
+  useEffect(() => {
+    activeSegmentIndex.current = null;
+    setCrossTrack(getCrossTrackError(currentPosition, route.points));
+  }, [route.points]);
 
   useEffect(() => {
     return () => {
