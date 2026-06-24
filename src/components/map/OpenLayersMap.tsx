@@ -8,8 +8,9 @@ import type { EventsKey } from 'ol/events';
 import { unByKey } from 'ol/Observable';
 import { createFreeMapLayer } from '../../mapSources/freeMapSource';
 import { createOpenAipRasterLayer } from '../../mapSources/openAipRasterSource';
+import { createIgnOaciVfrLayer } from '../../mapSources/ignOaciVfrSource';
 import { initialMapCenter, initialMapZoom } from '../../mapEngine/mapViewConfig';
-import type { MapSourceStatus } from '../../mapEngine/mapTypes';
+import type { MapBaseLayer, MapSourceStatus } from '../../mapEngine/mapTypes';
 import { createPlannedRouteLayer } from '../../mapLayers/plannedRouteLayer';
 import { createActualTraceLayer, updateActualTraceLayer, type ActualTraceLayer } from '../../mapLayers/actualTraceLayer';
 import { createWaypointLayer } from '../../mapLayers/waypointLayer';
@@ -25,6 +26,7 @@ interface OpenLayersMapProps {
   aircraft: GpsPosition | null;
   selectedPointId: string | null;
   compact?: boolean;
+  baseLayer?: MapBaseLayer;
   showTopo?: boolean;
   followAircraft?: boolean;
   addWaypointMode?: boolean;
@@ -47,6 +49,7 @@ export function OpenLayersMap({
   aircraft,
   selectedPointId,
   compact = false,
+  baseLayer = 'free',
   showTopo = true,
   followAircraft = false,
   addWaypointMode = false,
@@ -59,6 +62,7 @@ export function OpenLayersMap({
   const plannedRouteLayerRef = useRef<BaseLayer | null>(null);
   const waypointsLayerRef = useRef<BaseLayer | null>(null);
   const openAipRasterLayerRef = useRef<BaseLayer | null>(null);
+  const oaciLayerRef = useRef<BaseLayer | null>(null);
   const traceLayerRef = useRef<ActualTraceLayer | null>(null);
   const aircraftLayerRef = useRef<AircraftLayer | null>(null);
   const latestAircraftRef = useRef<GpsPosition | null>(null);
@@ -82,18 +86,20 @@ export function OpenLayersMap({
       setSourceStatus('fallback');
       onSourceStatusChangeRef.current?.('fallback');
     });
+    const oaciLayer = createIgnOaciVfrLayer();
     const traceLayer = createActualTraceLayer();
     const aircraftLayer = createAircraftLayer(null, initialMapZoom);
 
     baseLayerRef.current = baseLayer;
     openAipRasterLayerRef.current = openAipRasterLayer;
+    oaciLayerRef.current = oaciLayer;
     traceLayerRef.current = traceLayer;
     aircraftLayerRef.current = aircraftLayer;
 
     const map = new Map({
       target: mapElementRef.current,
       controls: [],
-      layers: [baseLayer, openAipRasterLayer, traceLayer, aircraftLayer],
+      layers: [baseLayer, oaciLayer, openAipRasterLayer, traceLayer, aircraftLayer],
       view: new View({
         center: initialMapCenter,
         zoom: initialMapZoom,
@@ -112,6 +118,7 @@ export function OpenLayersMap({
       plannedRouteLayerRef.current?.dispose();
       waypointsLayerRef.current?.dispose();
       openAipRasterLayerRef.current?.dispose();
+      oaciLayerRef.current?.dispose();
       traceLayerRef.current?.dispose();
       aircraftLayerRef.current?.dispose();
       map.setTarget(undefined);
@@ -120,14 +127,22 @@ export function OpenLayersMap({
       plannedRouteLayerRef.current = null;
       waypointsLayerRef.current = null;
       openAipRasterLayerRef.current = null;
+      oaciLayerRef.current = null;
       traceLayerRef.current = null;
       aircraftLayerRef.current = null;
     };
   }, []);
 
   useEffect(() => {
-    baseLayerRef.current?.setVisible(showTopo);
-  }, [showTopo]);
+    const freeMode = baseLayer === 'free';
+    baseLayerRef.current?.setVisible(freeMode && showTopo);
+    openAipRasterLayerRef.current?.setVisible(freeMode);
+    oaciLayerRef.current?.setVisible(baseLayer === 'oaci');
+
+    const status: MapSourceStatus = baseLayer === 'oaci' ? 'oaci' : 'free';
+    setSourceStatus(status);
+    onSourceStatusChangeRef.current?.(status);
+  }, [baseLayer, showTopo]);
 
   useEffect(() => {
     const map = mapRef.current;
@@ -232,7 +247,7 @@ export function OpenLayersMap({
     <div className={`map-shell ${addWaypointMode ? 'is-adding-point' : ''}`}>
       <div ref={mapElementRef} className="ol-map" aria-label="Carte CAP CLAIR" />
       <div className="map-topline">
-        <span>Carte aéro openAIP</span>
+        <span>{baseLayer === 'oaci' ? 'Fond OACI 1/500k' : 'Fond libre + openAIP'}</span>
       </div>
       {addWaypointMode && (
         <div className="map-add-banner">

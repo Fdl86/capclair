@@ -3,6 +3,7 @@ import type { NavPoint, NavRoute } from '../domain/navigation.types';
 import type { Trace } from '../domain/trace.types';
 import { useGpsTracking } from '../hooks/useGpsTracking';
 import { OpenLayersMap } from '../components/map/OpenLayersMap';
+import { MapLayerToggle } from '../components/map/MapLayerToggle';
 import { CockpitBadge } from '../components/cockpit/CockpitBadge';
 import { MetricCard } from '../components/cockpit/MetricCard';
 import { RouteDeviationGauge } from '../components/cockpit/RouteDeviationGauge';
@@ -11,10 +12,13 @@ import { ConfirmDialog } from '../components/ui/ConfirmDialog';
 import { Card } from '../components/ui/Card';
 import { distanceNm } from '../services/geo/distance';
 import type { GpsPosition } from '../domain/gps.types';
+import type { MapBaseLayer } from '../mapEngine/mapTypes';
 
 interface TrackingScreenProps {
   route: NavRoute;
   onTraceReady: (trace: Trace) => void;
+  mapBaseLayer: MapBaseLayer;
+  onMapBaseLayerChange: (value: MapBaseLayer) => void;
 }
 
 type WakeLockSentinelLike = {
@@ -71,7 +75,7 @@ function metricNumber(value: number | null | undefined, suffix: string, digits =
   return `${value.toFixed(digits).replace('.', ',')} ${suffix}`;
 }
 
-export function TrackingScreen({ route, onTraceReady }: TrackingScreenProps) {
+export function TrackingScreen({ route, onTraceReady, mapBaseLayer, onMapBaseLayerChange }: TrackingScreenProps) {
   const [confirmStop, setConfirmStop] = useState(false);
   const [wakeLockActive, setWakeLockActive] = useState(false);
   const wakeLockRef = useRef<WakeLockSentinelLike | null>(null);
@@ -157,12 +161,14 @@ export function TrackingScreen({ route, onTraceReady }: TrackingScreenProps) {
   return (
     <section className="tracking-screen">
       <div className="tracking-map-panel">
+        <MapLayerToggle baseLayer={mapBaseLayer} onChange={onMapBaseLayerChange} />
         <OpenLayersMap
           route={route}
           trace={traceForMap}
           aircraft={gps.currentPosition}
           selectedPointId={gps.nextPoint?.id ?? null}
           compact
+          baseLayer={mapBaseLayer}
           followAircraft={isRecording}
         />
       </div>

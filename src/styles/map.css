@@ -170,6 +170,14 @@
   color: #03111A;
 }
 
+.map-layer-toggle-wide {
+  max-width: calc(100% - 24px);
+}
+
+.map-layer-toggle-wide button {
+  padding: 0 8px;
+}
+
 .map-add-banner {
   position: absolute;
   left: 50%;

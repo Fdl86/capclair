@@ -1,26 +1,30 @@
-import WMTS, { optionsFromCapabilities } from 'ol/source/WMTS';
-import WMTSCapabilities from 'ol/format/WMTSCapabilities';
-import type { WmtsSourceConfig } from './mapSourceConfig';
-import { buildCapabilitiesUrl } from './mapSourceConfig';
+import TileLayer from 'ol/layer/Tile';
+import XYZ from 'ol/source/XYZ';
 
-export async function createIgnOaciVfrSource(config: WmtsSourceConfig): Promise<WMTS> {
-  const response = await fetch(buildCapabilitiesUrl(config), { mode: 'cors' });
-  if (!response.ok) throw new Error(`WMTS capabilities failed: ${response.status}`);
-  const text = await response.text();
-  const parser = new WMTSCapabilities();
-  const capabilities = parser.read(text);
-  const options = optionsFromCapabilities(capabilities, {
-    layer: config.layer,
-    matrixSet: config.tileMatrixSet
-  });
+/*
+  Licence / accès :
+  Les données SCAN-OACI ne sont pas des données libres.
+  La clé publique `ign_scan_ws` est une clé transitoire partagée pouvant être retirée.
+  Le chemin pérenne consiste à utiliser une clé personnelle via cartes.gouv.fr.
+  Usage gratuit cadré professionnel / associatif selon les conditions du service.
+*/
 
-  if (!options) {
-    throw new Error(`WMTS layer not found: ${config.layer}`);
-  }
-
-  return new WMTS({
-    ...options,
-    crossOrigin: 'anonymous',
-    wrapX: false
+export function createIgnOaciVfrLayer() {
+  return new TileLayer({
+    source: new XYZ({
+      url: '/api/ign/oaci/{z}/{x}/{y}.jpg',
+      tileSize: 256,
+      minZoom: 6,
+      maxZoom: 11,
+      crossOrigin: 'anonymous',
+      transition: 0,
+      attributions: '© IGN / SIA - OACI-VFR'
+    }),
+    opacity: 1,
+    preload: 0,
+    visible: false,
+    properties: {
+      name: 'ign-sia-oaci-vfr-500k'
+    }
   });
 }

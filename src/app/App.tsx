@@ -14,6 +14,7 @@ import { useLocalStorageState } from '../hooks/useLocalStorageState';
 import { useAircraftProfiles } from '../hooks/useAircraftProfiles';
 import { useAerodromeWeather } from '../hooks/useAerodromeWeather';
 import { DEFAULT_FUEL_PLAN_CONFIG } from '../domain/aircraft.types';
+import type { MapBaseLayer } from '../mapEngine/mapTypes';
 
 function routeEndpointCode(route: ReturnType<typeof useActiveRoute>['route'], type: 'depart' | 'destination') {
   return route.points.find((point) => point.type === type)?.code ?? '';
@@ -31,6 +32,7 @@ export function App() {
   const aircraftState = useAircraftProfiles();
   const [alternateCode, setAlternateCode] = useLocalStorageState('capclair.alternateCode.v1', 'LFOO');
   const [fuelPlanConfigRaw, setFuelPlanConfig] = useLocalStorageState('capclair.fuelPlan.v1', DEFAULT_FUEL_PLAN_CONFIG);
+  const [mapBaseLayer, setMapBaseLayer] = useLocalStorageState<MapBaseLayer>('capclair.mapBaseLayer.v1', 'free');
   const fuelPlanConfig = { ...DEFAULT_FUEL_PLAN_CONFIG, ...fuelPlanConfigRaw };
 
   const departureCode = routeEndpointCode(routeState.route, 'depart');
@@ -80,6 +82,8 @@ export function App() {
           alternateCode={safeAlternateCode}
           onSetAlternateCode={setAlternate}
           onCalculations={() => setCurrentScreen('calculations')}
+          mapBaseLayer={mapBaseLayer}
+          onMapBaseLayerChange={setMapBaseLayer}
         />
       )}
       {currentScreen === 'calculations' && (
@@ -106,7 +110,7 @@ export function App() {
         />
       )}
       {currentScreen === 'zones' && <ZonesScreen route={routeState.route} />}
-      {currentScreen === 'tracking' && <TrackingScreen route={routeState.route} onTraceReady={traceState.saveTrace} />}
+      {currentScreen === 'tracking' && <TrackingScreen route={routeState.route} onTraceReady={traceState.saveTrace} mapBaseLayer={mapBaseLayer} onMapBaseLayerChange={setMapBaseLayer} />}
       {currentScreen === 'traces' && <TracesScreen traces={traceState.traces} onDeleteTrace={traceState.deleteTrace} />}
       {currentScreen === 'more' && (
         <MoreScreen

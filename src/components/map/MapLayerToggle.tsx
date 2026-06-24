@@ -1,14 +1,19 @@
+import type { MapBaseLayer } from '../../mapEngine/mapTypes';
+
 interface MapLayerToggleProps {
-  showTopo: boolean;
-  onChange: (value: boolean) => void;
+  baseLayer: MapBaseLayer;
+  onChange: (value: MapBaseLayer) => void;
 }
 
-export function MapLayerToggle({ showTopo, onChange }: MapLayerToggleProps) {
+export function MapLayerToggle({ baseLayer, onChange }: MapLayerToggleProps) {
   return (
-    <div className="map-layer-toggle" aria-label="Options carte">
-      <span>Carte aéro</span>
-      <button type="button" role="switch" aria-checked={showTopo} className={showTopo ? 'active' : ''} onClick={() => onChange(!showTopo)}>
-        Fond topo {showTopo ? 'ON' : 'OFF'}
+    <div className="map-layer-toggle map-layer-toggle-wide" aria-label="Fond de carte">
+      <span>Fond carte</span>
+      <button type="button" className={baseLayer === 'free' ? 'active' : ''} onClick={() => onChange('free')}>
+        Libre + openAIP
+      </button>
+      <button type="button" className={baseLayer === 'oaci' ? 'active' : ''} onClick={() => onChange('oaci')}>
+        OACI 1/500k
       </button>
     </div>
   );

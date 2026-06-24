@@ -1,7 +1,7 @@
 {
-  "name": "cap-clair-dev13-7-20-simulation-map-cleanup",
+  "name": "cap-clair-dev13-8-0-oaci-500k-layer",
   "private": true,
-  "version": "0.13.7-20",
+  "version": "0.13.8-0",
   "type": "module",
   "scripts": {
     "dev": "vite",

@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import type { NavRoute } from '../domain/navigation.types';
 import type { GpsPosition } from '../domain/gps.types';
+import type { MapBaseLayer } from '../mapEngine/mapTypes';
 import { AERODROMES } from '../data/aerodromeCatalog';
 import { Page } from '../components/layout/Page';
 import { Button } from '../components/ui/Button';
@@ -23,6 +24,8 @@ interface PlanningScreenProps {
   alternateCode: string;
   onSetAlternateCode: (code: string) => void;
   onCalculations: () => void;
+  mapBaseLayer: MapBaseLayer;
+  onMapBaseLayerChange: (value: MapBaseLayer) => void;
 }
 
 function endpointCode(route: NavRoute, type: 'depart' | 'destination') {
@@ -50,9 +53,10 @@ export function PlanningScreen({
   onResetRoute,
   alternateCode,
   onSetAlternateCode,
-  onCalculations
+  onCalculations,
+  mapBaseLayer,
+  onMapBaseLayerChange
 }: PlanningScreenProps) {
-  const [showTopo, setShowTopo] = useState(true);
   const [addWaypointMode, setAddWaypointMode] = useState(false);
   const [departureInput, setDepartureInput] = useState(endpointCode(route, 'depart'));
   const [destinationInput, setDestinationInput] = useState(endpointCode(route, 'destination'));
@@ -90,13 +94,13 @@ export function PlanningScreen({
     <Page title="Planification" subtitle="Carte aéro, route, dégagement et points de navigation.">
       <div className="planning-layout">
         <div className="map-card tall planning-map-card">
-          <MapLayerToggle showTopo={showTopo} onChange={setShowTopo} />
+          <MapLayerToggle baseLayer={mapBaseLayer} onChange={onMapBaseLayerChange} />
           <OpenLayersMap
             route={route}
             trace={EMPTY_TRACE}
             aircraft={null}
             selectedPointId={selectedPointId}
-            showTopo={showTopo}
+            baseLayer={mapBaseLayer}
             addWaypointMode={addWaypointMode}
             onMapAddWaypoint={handleAddWaypoint}
           />

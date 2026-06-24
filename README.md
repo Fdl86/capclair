@@ -326,3 +326,25 @@ Simulation + nettoyage carte :
 - conserve DEV13.7.15 aircraft zoom scale
 - pas de modification carburant / zones / log / GPS réel
 - titre d'onglet mis à jour
+
+## DEV13.8.0
+
+Fond OACI 1/500k :
+- ajout du fond aéronautique OACI 1/500 000 officiel IGN / SIA via Géoplateforme
+- nouvelle source `src/mapSources/ignOaciVfrSource.ts`
+- couche `GEOGRAPHICALGRIDSYSTEMS.MAPS.SCAN-OACI`
+- WMTS Géoplateforme privé `data.geopf.fr/private/wmts`
+- clé publique transitoire `ign_scan_ws`, sans secret Cloudflare
+- source OpenLayers `XYZ` simple, projection PM / EPSG:3857
+- proxy Cloudflare same-origin `/api/ign/oaci/{z}/{x}/{y}.jpg`
+- cache proxy ajouté pour les tuiles OACI
+- placeholder transparent HTTP 200 en cas de tuile manquante
+- bascule exclusive `Libre + openAIP` / `OACI 1/500k`
+- en mode OACI, le fond libre et l'overlay openAIP sont coupés pour éviter la double symbologie
+- choix de fond partagé entre Planification et Suivi via localStorage
+- attribution `© IGN / SIA - OACI-VFR`
+- note licence ajoutée dans le code : données SCAN-OACI non libres, clé transitoire, voie pérenne via cartes.gouv.fr
+- conserve DEV13.7.20 simulation sans boucle et map cleanup
+- conserve DEV13.7.19 GPS live + waypoint hardening
+- pas de modification GPS réel / log / carburant / zones
+- titre d'onglet mis à jour
