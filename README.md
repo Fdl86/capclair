@@ -264,3 +264,20 @@ Modification log de navigation :
 - pas de modification GPS / avion / carburant / zones
 - reprise de la base DEV13.7.16 avec les corrections GPS hardening et aircraft zoom scale
 - titre d'onglet mis à jour
+
+## DEV13.7.18
+
+Optimisation trace GPS :
+- échantillonnage de la trace sauvegardée à 1 point toutes les 3 secondes
+- position live séparée de la trace sauvegardée
+- avion, TRK GPS, GS, altitude, écart route et auto-follow restent alimentés par la position live
+- première position forcée dans la trace
+- dernière position live ajoutée à la sauvegarde si elle n'était pas déjà échantillonnée
+- plafond trace porté à 4200 points
+- 4200 points à 3 secondes = environ 3 h 30 de navigation enregistrable
+- distance trace calculée sur la trace finale sauvegardée
+- conserve DEV13.7.17 navlog TSV / TAV
+- conserve DEV13.7.16 GPS hardening
+- conserve DEV13.7.15 aircraft zoom scale
+- pas de modification log / carburant / zones / carte
+- titre d'onglet mis à jour

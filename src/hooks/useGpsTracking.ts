@@ -7,9 +7,13 @@ import { toGpsPosition, isUsableGpsPosition } from '../services/gps/geolocationS
 import { interpolateSimulationPoint } from '../services/gps/simulationService';
 import { getCrossTrackError } from '../services/geo/crossTrackError';
 
+const TRACE_SAMPLE_INTERVAL_MS = 3000;
+const TRACE_MAX_POINTS = 4200;
+
 export function useGpsTracking(route: NavRoute, onTraceReady: (trace: Trace) => void) {
   const [status, setStatus] = useState<GpsStatus>('idle');
   const [positions, setPositions] = useState<GpsPosition[]>([]);
+  const [currentPosition, setCurrentPosition] = useState<GpsPosition | null>(null);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [lastAccuracy, setLastAccuracy] = useState<number | null>(null);
   const watchId = useRef<number | null>(null);
@@ -18,13 +22,14 @@ export function useGpsTracking(route: NavRoute, onTraceReady: (trace: Trace) => 
   const startTime = useRef<number | null>(null);
   const statusRef = useRef<GpsStatus>('idle');
   const lastSignalAt = useRef<number | null>(null);
+  const lastLivePosition = useRef<GpsPosition | null>(null);
+  const lastTraceSampleAt = useRef<number | null>(null);
 
   const updateStatus = (next: GpsStatus) => {
     statusRef.current = next;
     setStatus(next);
   };
 
-  const currentPosition = positions.at(-1) ?? null;
   const crossTrack = useMemo(() => getCrossTrackError(currentPosition, route.points), [currentPosition, route.points]);
   const distanceTravelledNm = useMemo(() => totalDistanceNm(positions), [positions]);
 
@@ -42,29 +47,47 @@ export function useGpsTracking(route: NavRoute, onTraceReady: (trace: Trace) => 
     }
   };
 
-  const appendPosition = (position: GpsPosition) => {
+  const resetTrackingData = () => {
+    setPositions([]);
+    setCurrentPosition(null);
+    setLastAccuracy(null);
+    lastSignalAt.current = null;
+    lastLivePosition.current = null;
+    lastTraceSampleAt.current = null;
+  };
+
+  const appendTraceSample = (position: GpsPosition, force = false) => {
+    const previousSampleAt = lastTraceSampleAt.current;
+    const shouldSample = force || previousSampleAt === null || position.timestamp - previousSampleAt >= TRACE_SAMPLE_INTERVAL_MS;
+    if (!shouldSample) return;
+
+    lastTraceSampleAt.current = position.timestamp;
+    setPositions((current) => [...current, position].slice(-TRACE_MAX_POINTS));
+  };
+
+  const ingestPosition = (position: GpsPosition, forceTraceSample = false) => {
     setLastAccuracy(position.precision);
     lastSignalAt.current = Date.now();
-    setPositions((current) => {
-      const previous = current.at(-1) ?? null;
-      if (!isUsableGpsPosition(position, previous)) return current;
-      return [...current, position].slice(-1600);
-    });
+
+    const previousLive = lastLivePosition.current;
+    if (!isUsableGpsPosition(position, previousLive)) return;
+
+    lastLivePosition.current = position;
+    setCurrentPosition(position);
+    appendTraceSample(position, forceTraceSample);
   };
 
   const handleNativePosition = (nativePosition: GeolocationPosition) => {
     updateStatus('active');
     setErrorMessage(null);
-    appendPosition(toGpsPosition(nativePosition));
+    ingestPosition(toGpsPosition(nativePosition));
   };
 
   const startGps = () => {
     clearGpsWatch();
     clearSimulation();
     setErrorMessage(null);
-    setPositions([]);
-    setLastAccuracy(null);
-    lastSignalAt.current = null;
+    resetTrackingData();
     startTime.current = Date.now();
 
     if (!('geolocation' in navigator)) {
@@ -105,32 +128,34 @@ export function useGpsTracking(route: NavRoute, onTraceReady: (trace: Trace) => 
     clearSimulation();
     updateStatus('simulating');
     setErrorMessage(null);
-    setPositions([]);
-    setLastAccuracy(18);
-    lastSignalAt.current = Date.now();
-    simStep.current = 0;
+    resetTrackingData();
     startTime.current = Date.now();
-    appendPosition(interpolateSimulationPoint(route.points, simStep.current));
+    simStep.current = 0;
+    ingestPosition(interpolateSimulationPoint(route.points, simStep.current), true);
     simTimer.current = window.setInterval(() => {
       simStep.current += 1;
-      appendPosition(interpolateSimulationPoint(route.points, simStep.current));
+      ingestPosition(interpolateSimulationPoint(route.points, simStep.current));
     }, 1000);
   };
 
   const stopAndSave = () => {
     clearGpsWatch();
     clearSimulation();
+    const finalPositions = currentPosition && positions.at(-1)?.timestamp !== currentPosition.timestamp
+      ? [...positions, currentPosition].slice(-TRACE_MAX_POINTS)
+      : positions;
     const duration = startTime.current ? Math.round((Date.now() - startTime.current) / 1000) : 0;
     const trace: Trace = {
       id: `trace-${Date.now()}`,
       routeId: route.id,
       routeName: route.nom,
       date: new Date().toISOString(),
-      positions,
+      positions: finalPositions,
       dureeSec: duration,
-      distanceNm: Number(distanceTravelledNm.toFixed(2))
+      distanceNm: Number(totalDistanceNm(finalPositions).toFixed(2))
     };
     onTraceReady(trace);
+    setPositions(finalPositions);
     updateStatus('stopped');
   };
 
@@ -155,6 +180,8 @@ export function useGpsTracking(route: NavRoute, onTraceReady: (trace: Trace) => 
     errorMessage,
     lastAccuracy,
     lastSignalAt: lastSignalAt.current,
+    traceSampleIntervalMs: TRACE_SAMPLE_INTERVAL_MS,
+    traceMaxPoints: TRACE_MAX_POINTS,
     startGps,
     startSimulation,
     stopAndSave

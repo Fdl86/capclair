@@ -1,7 +1,7 @@
 {
-  "name": "cap-clair-dev13-7-17-navlog-tsv-tav",
+  "name": "cap-clair-dev13-7-18-trace-3s",
   "private": true,
-  "version": "0.13.7-17",
+  "version": "0.13.7-18",
   "type": "module",
   "scripts": {
     "dev": "vite",
