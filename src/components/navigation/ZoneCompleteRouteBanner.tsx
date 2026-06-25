@@ -4,11 +4,6 @@ import type { TerrainSample } from '../../services/navigation/terrainService';
 import type { ProfilePoint } from '../../services/navigation/verticalProfileService';
 import { classifyBlock, isRegulatedZone } from '../../services/airspace/zoneRelevance';
 
-// Affichage : on masque les zones non pénétrées par défaut. Les zones réglementées
-// (R/P/D...) restent en fantôme pour la conscience situationnelle. Passer ce flag à true
-// réaffiche toutes les zones frôlées en version atténuée.
-const SHOW_PROXIMITY_GHOST = false;
-
 interface ZoneCompleteRouteBannerProps {
   route: NavRoute;
   profiles: Record<string, BranchZoneProfile>;
@@ -217,8 +212,8 @@ export function ZoneCompleteRouteBanner({ route, profiles, terrain = [], profile
     .map((block) => ({ block, relevance: classifyBlock(block, effectiveProfile, terrain) }))
     .filter(({ block, relevance }) => {
       if (relevance.penetrated) return true;
-      if (isRegulatedZone(block.zoneType)) return true; // R/P/D toujours visibles (sécurité)
-      return SHOW_PROXIMITY_GHOST && relevance.relation === 'near';
+      if (isRegulatedZone(block.zoneType)) return true; // R/P/D : toujours visibles (sécurité)
+      return false; // tout le reste non pénétré est masqué
     })
     .sort((a, b) => a.block.floorFt - b.block.floorFt || b.block.priority - a.block.priority);
 
@@ -279,7 +274,7 @@ export function ZoneCompleteRouteBanner({ route, profiles, terrain = [], profile
           {annotatedBlocks.map(({ block, relevance }, index) => (
             <div
               key={`${block.id}:${index}`}
-              className={`complete-zone-block ${block.zoneType.toLowerCase()} ${block.status} ${relevance.penetrated ? 'penetrated' : 'ghost'}`}
+              className={`complete-zone-block ${block.zoneType.toLowerCase()} ${block.status} ${relevance.penetrated ? 'penetrated' : 'ghost'}${block.ceilingFt > bounds.max ? ' clipped' : ''}`}
               style={blockStyle(block, bounds.min, bounds.max)}
               title={`${blockLabel(block)} - ${block.floorLabel} / ${block.ceilingLabel}`}
             >

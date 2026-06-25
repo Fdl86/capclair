@@ -25,9 +25,10 @@ export const DEFAULT_RELEVANCE_OPTIONS: ZoneRelevanceOptions = {
   samples: 6
 };
 
-// Zones réglementées : toujours pertinentes pour la conscience situationnelle,
-// même non pénétrées (R/P/D + zones à statut particulier).
-const REGULATED_TYPES = new Set(['R', 'P', 'D', 'ZIT', 'ZRT', 'ZDT', 'TSA', 'TRA']);
+// Zones réglementées : toujours visibles pour la sécurité, même non pénétrées.
+// On garde R (réglementée), P (interdite) et D (danger) : masquer une P ou une D
+// qu'on longe serait un piège de sécurité, même si seule la R a été demandée.
+const REGULATED_TYPES = new Set(['R', 'P', 'D']);
 
 export function isRegulatedZone(zoneType: string): boolean {
   return REGULATED_TYPES.has(zoneType.toUpperCase());
