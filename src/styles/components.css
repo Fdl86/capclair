@@ -2786,3 +2786,39 @@
   stroke-linejoin: round;
   vector-effect: non-scaling-stroke;
 }
+
+/* DEV13.9.0 - profil vertical de vol + clip zones hautes */
+.complete-zone-profile {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 9;
+  pointer-events: none;
+  overflow: visible;
+}
+
+.complete-zone-profile polyline {
+  fill: none;
+  stroke: rgba(69, 224, 255, 0.95);
+  stroke-width: 2.4px;
+  stroke-linejoin: round;
+  stroke-linecap: round;
+  vector-effect: non-scaling-stroke;
+  filter: drop-shadow(0 0 6px rgba(69, 224, 255, 0.45));
+}
+
+.complete-zone-clip-up {
+  position: absolute;
+  top: 2px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 0.6rem;
+  font-weight: 900;
+  letter-spacing: 0.02em;
+  color: var(--text-2);
+  background: rgba(5, 11, 18, 0.7);
+  border-radius: 999px;
+  padding: 1px 6px;
+  white-space: nowrap;
+}

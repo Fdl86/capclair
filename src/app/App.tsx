@@ -109,7 +109,7 @@ export function App() {
           onBackPlanning={() => setCurrentScreen('planning')}
         />
       )}
-      {currentScreen === 'zones' && <ZonesScreen route={routeState.route} />}
+      {currentScreen === 'zones' && <ZonesScreen route={routeState.route} aircraft={aircraftState.activeProfile} />}
       {currentScreen === 'tracking' && <TrackingScreen route={routeState.route} onTraceReady={traceState.saveTrace} mapBaseLayer={mapBaseLayer} onMapBaseLayerChange={setMapBaseLayer} />}
       {currentScreen === 'traces' && <TracesScreen traces={traceState.traces} onDeleteTrace={traceState.deleteTrace} />}
       {currentScreen === 'more' && (

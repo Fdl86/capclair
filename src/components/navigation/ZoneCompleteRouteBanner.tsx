@@ -1,11 +1,13 @@
 import type { BranchZoneBlock, BranchZoneProfile } from '../../domain/airspace.types';
 import type { NavRoute } from '../../domain/navigation.types';
 import type { TerrainSample } from '../../services/navigation/terrainService';
+import type { ProfilePoint } from '../../services/navigation/verticalProfileService';
 
 interface ZoneCompleteRouteBannerProps {
   route: NavRoute;
   profiles: Record<string, BranchZoneProfile>;
   terrain?: TerrainSample[];
+  profile?: ProfilePoint[];
 }
 
 interface GlobalZoneBlock extends BranchZoneBlock {
@@ -96,18 +98,29 @@ function buildGlobalBlocks(route: NavRoute, profiles: Record<string, BranchZoneP
     .slice(0, 32);
 }
 
-function scaleBounds(route: NavRoute, blocks: GlobalZoneBlock[], terrain: TerrainSample[]) {
-  const altitude = plannedAltitude(route);
-  const activeOrClose = blocks.filter((block) => block.containsPlannedAltitude || block.altitudeRelation === 'uncertain' || block.floorFt <= altitude + 1500);
-  // Le terrain doit rester visible : on intègre son point culminant (+marge) dans l'échelle.
+function scaleBounds(route: NavRoute, terrain: TerrainSample[], profile: ProfilePoint[]) {
+  // L'échelle suit l'enveloppe du vol (profil + relief), plus une marge.
+  // On ne laisse plus les plafonds de TMA (FL115...) écraser le terrain :
+  // les zones plus hautes que la vue seront coupées en haut avec un repère.
+  const cruiseMax = profile.length
+    ? Math.max(...profile.map((point) => point.altitudeFt))
+    : Math.max(route.profile.defaultAltitudeFt, ...route.branches.map((branch) => branch.altitudeFt));
   const terrainMax = terrain.length ? Math.max(...terrain.map((sample) => sample.elevationFt)) : 0;
-  const maxCeiling = Math.max(
-    altitude + 1200,
-    terrainMax + 600,
-    ...activeOrClose.map((block) => Math.min(block.ceilingFt, 12500)),
-    3000
-  );
-  return { min: 0, max: Math.min(Math.max(maxCeiling + 400, 4500), 12500) };
+  const top = Math.max(cruiseMax, terrainMax);
+  return { min: 0, max: Math.min(Math.max(top + 1500, 4500), 14000) };
+}
+
+// Tracé du profil vertical (ligne ouverte) dans le repère SVG 0..100.
+function profilePolylinePoints(profile: ProfilePoint[], min: number, max: number): string {
+  if (profile.length < 2) return '';
+  const span = max - min || 1;
+  return profile
+    .map((point) => {
+      const x = clamp(point.distanceRatio * 100, 0, 100);
+      const y = clamp(100 - ((point.altitudeFt - min) / span) * 100, 0, 100);
+      return `${x.toFixed(2)},${y.toFixed(2)}`;
+    })
+    .join(' ');
 }
 
 // Polygone fermé pour le profil terrain, dans le repère SVG 0..100 (preserveAspectRatio="none").
@@ -175,13 +188,14 @@ function markerStyle(marker: RouteMarker) {
   return { left: `${clamp(marker.ratio * 100, 0, 100)}%` };
 }
 
-export function ZoneCompleteRouteBanner({ route, profiles, terrain = [] }: ZoneCompleteRouteBannerProps) {
+export function ZoneCompleteRouteBanner({ route, profiles, terrain = [], profile = [] }: ZoneCompleteRouteBannerProps) {
   const blocks = buildGlobalBlocks(route, profiles);
-  const bounds = scaleBounds(route, blocks, terrain);
+  const bounds = scaleBounds(route, terrain, profile);
   const altitude = plannedAltitude(route);
   const markers = buildRouteMarkers(route);
   const contacts = bestActiveBlocks(profiles);
   const terrainPoints = terrainPolygonPoints(terrain, bounds.min, bounds.max);
+  const profilePoints = profilePolylinePoints(profile, bounds.min, bounds.max);
   const visibleBlocks = blocks
     .filter((block) => block.ceilingFt > bounds.min && block.floorFt < bounds.max)
     .sort((a, b) => a.floorFt - b.floorFt || b.priority - a.priority);
@@ -219,7 +233,13 @@ export function ZoneCompleteRouteBanner({ route, profiles, terrain = [] }: ZoneC
               <polygon points={terrainPoints} />
             </svg>
           )}
-          <div className="complete-zone-altitude-line" style={altitudeStyle(altitude, bounds.min, bounds.max)} />
+          {profilePoints ? (
+            <svg className="complete-zone-profile" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
+              <polyline points={profilePoints} />
+            </svg>
+          ) : (
+            <div className="complete-zone-altitude-line" style={altitudeStyle(altitude, bounds.min, bounds.max)} />
+          )}
 
           {visibleBlocks.map((block, index) => (
             <div
@@ -231,6 +251,7 @@ export function ZoneCompleteRouteBanner({ route, profiles, terrain = [] }: ZoneC
               <b>{block.zoneType} {block.zoneName}</b>
               <small>{block.floorLabel} - {block.ceilingLabel}</small>
               <em>{block.contact?.frequency ?? 'À confirmer'}</em>
+              {block.ceilingFt > bounds.max && <span className="complete-zone-clip-up">↑ {block.ceilingLabel}</span>}
             </div>
           ))}
 

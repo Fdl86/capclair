@@ -11,6 +11,7 @@ import { Card } from '../components/ui/Card';
 import { buildZoneProfiles } from '../services/airspace/airspaceEngine';
 import { computeFuelPlan } from '../services/navigation/fuelPlanning';
 import { fetchTerrainProfile, type TerrainSample } from '../services/navigation/terrainService';
+import { buildVerticalProfile } from '../services/navigation/verticalProfileService';
 import { AircraftSelectorPanel } from '../components/flight/AircraftSelectorPanel';
 import { AerodromeWeatherPanel } from '../components/flight/AerodromeWeatherPanel';
 import { FuelPlanningPanel } from '../components/flight/FuelPlanningPanel';
@@ -141,6 +142,7 @@ export function CalculationsScreen({
   }, [route]);
 
   const activeZoneCount = Object.values(zoneProfiles).reduce((sum, profile) => sum + profile.activeBlocks.length, 0);
+  const verticalProfile = useMemo(() => buildVerticalProfile(route, activeAircraft), [route, activeAircraft]);
   const fuel = useMemo(
     () => computeFuelPlan(
       route,
@@ -218,7 +220,7 @@ export function CalculationsScreen({
             <Button variant="secondary" onClick={onBackPlanning}>Modifier route</Button>
           </div>
           {Object.keys(zoneProfiles).length ? (
-            <ZoneCompleteRouteBanner route={route} profiles={zoneProfiles} terrain={terrain} />
+            <ZoneCompleteRouteBanner route={route} profiles={zoneProfiles} terrain={terrain} profile={verticalProfile} />
           ) : (
             <div className="zone-banner-loading">{zoneStatus}</div>
           )}
