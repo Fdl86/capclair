@@ -348,3 +348,15 @@ Fond OACI 1/500k :
 - conserve DEV13.7.19 GPS live + waypoint hardening
 - pas de modification GPS réel / log / carburant / zones
 - titre d'onglet mis à jour
+
+## DEV13.8.1
+
+Hotfix vue carte après ajout waypoint :
+- ajout waypoint sans dézoom automatique
+- la vue carte est conservée quand la route gagne un point
+- le fit route reste actif au chargement initial et lors des modifications non liées à un ajout de point
+- aucune modification du moteur GPS
+- aucune modification du fond OACI
+- aucune modification du log, carburant, météo ou zones
+- conserve DEV13.8.0 OACI 1/500k
+- titre d'onglet mis à jour

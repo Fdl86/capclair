@@ -1,7 +1,7 @@
 {
-  "name": "cap-clair-dev13-8-0-oaci-500k-layer",
+  "name": "cap-clair-dev13-8-1-waypoint-view-hotfix",
   "private": true,
-  "version": "0.13.8-0",
+  "version": "0.13.8-1",
   "type": "module",
   "scripts": {
     "dev": "vite",

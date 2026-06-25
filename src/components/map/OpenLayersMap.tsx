@@ -66,6 +66,7 @@ export function OpenLayersMap({
   const traceLayerRef = useRef<ActualTraceLayer | null>(null);
   const aircraftLayerRef = useRef<AircraftLayer | null>(null);
   const latestAircraftRef = useRef<GpsPosition | null>(null);
+  const lastRoutePointCountRef = useRef<number | null>(null);
   const onSourceStatusChangeRef = useRef(onSourceStatusChange);
   const [sourceStatus, setSourceStatus] = useState<MapSourceStatus>('free');
 
@@ -205,12 +206,21 @@ export function OpenLayersMap({
   useEffect(() => {
     const map = mapRef.current;
     if (!map) return;
+
+    const previousPointCount = lastRoutePointCountRef.current;
+    const currentPointCount = route.points.length;
+    lastRoutePointCountRef.current = currentPointCount;
+
     if (compact && aircraft) {
       map.getView().setCenter(fromLonLat([aircraft.longitude, aircraft.latitude]));
       return;
     }
+
+    const routeWasExtended = previousPointCount !== null && currentPointCount > previousPointCount;
+    if (routeWasExtended) return;
+
     map.getView().fit(routeExtent, { padding: compact ? [48, 48, 48, 48] : [72, 58, 92, 58], duration: 0, maxZoom: 10 });
-  }, [routeExtent, compact]);
+  }, [routeExtent, compact, route.points.length]);
 
   useEffect(() => {
     const map = mapRef.current;
