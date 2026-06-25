@@ -135,7 +135,7 @@
   transform: translateX(-50%);
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: 5px;
   padding: 4px;
   border: 1px solid rgba(30, 49, 69, 0.84);
   border-radius: 13px;

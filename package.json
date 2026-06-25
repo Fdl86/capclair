@@ -1,7 +1,7 @@
 {
-  "name": "cap-clair-dev13-8-3-oaci-cleanup-hardening",
+  "name": "cap-clair-dev13-8-4-route-ui-polish",
   "private": true,
-  "version": "0.13.8-3",
+  "version": "0.13.8-4",
   "type": "module",
   "scripts": {
     "dev": "vite",

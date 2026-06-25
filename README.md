@@ -397,3 +397,20 @@ OACI cleanup hardening :
 - conserve DEV13.7.20 simulation sans boucle
 - pas de modification GPS réel / log / carburant / zones
 - titre d'onglet mis à jour
+
+## DEV13.8.4
+
+Route UI polish :
+- liste des points : `D` pour départ
+- liste des points : `A` pour arrivée
+- liste des points : les points intermédiaires affichent leur code `WP1`, `WP2`, etc.
+- puces de points élargies et compactées pour accepter les libellés `WP`
+- libellés route protégés contre les débordements
+- sélecteur carte légèrement compacté
+- responsive mobile : libellé `Fond carte` masqué sous 520 px pour garder les boutons lisibles
+- aucune modification du moteur OACI
+- aucune modification du GPS réel
+- aucune modification du log, carburant, météo ou zones
+- conserve DEV13.8.3 OACI cleanup hardening
+- conserve DEV13.8.2 ajout / suppression waypoint sans dézoom
+- titre d'onglet mis à jour

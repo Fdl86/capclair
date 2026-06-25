@@ -217,6 +217,7 @@
   gap: 8px;
   min-height: 42px;
   padding: 6px 7px;
+  min-width: 0;
   border: 1px solid rgba(30, 49, 69, 0.78);
   border-radius: 13px;
   background: rgba(7, 17, 28, 0.52);
@@ -234,14 +235,18 @@
 }
 
 .point-chip {
-  width: 24px;
-  height: 24px;
+  min-width: 28px;
+  height: 26px;
+  padding: 0 7px;
   border-radius: 999px;
   display: grid;
   place-items: center;
   background: var(--cyan);
   color: #03111A;
-  font-weight: 900;
+  font-size: 0.68rem;
+  font-weight: 950;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
 }
 
 .metric-grid,
@@ -667,10 +672,17 @@
   font-size: 0.72rem;
 }
 
+.route-point-main {
+  min-width: 0;
+}
+
 .route-point-main strong {
   display: block;
   font-size: 0.88rem;
   letter-spacing: 0.04em;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .route-point-main small {

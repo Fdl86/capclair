@@ -9,9 +9,9 @@ interface RoutePointListProps {
 }
 
 function chipLabel(point: NavPoint, index: number) {
-  if (point.type === 'depart') return 'A';
-  if (point.type === 'destination') return 'D';
-  return String(index);
+  if (point.type === 'depart') return 'D';
+  if (point.type === 'destination') return 'A';
+  return point.code ?? `WP${index}`;
 }
 
 function roleLabel(point: NavPoint) {

@@ -150,6 +150,17 @@
 
   .map-layer-toggle {
     max-width: calc(100% - 20px);
+    gap: 4px;
+  }
+
+  .map-layer-toggle span {
+    display: none;
+  }
+
+  .map-layer-toggle button {
+    min-height: 29px;
+    padding: 0 8px;
+    font-size: 0.68rem;
   }
 
   .map-topline {
