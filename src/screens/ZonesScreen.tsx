@@ -11,6 +11,16 @@ interface ZonesScreenProps {
   route: NavRoute;
 }
 
+function countUniqueActiveZones(profiles: Record<string, BranchZoneProfile>): number {
+  const keys = new Set<string>();
+  Object.values(profiles).forEach((profile) => {
+    profile.activeBlocks.forEach((block) => {
+      keys.add(`${block.zoneId}:${block.floorFt}:${block.ceilingFt}`);
+    });
+  });
+  return keys.size;
+}
+
 export function ZonesScreen({ route }: ZonesScreenProps) {
   const [profiles, setProfiles] = useState<Record<string, BranchZoneProfile>>({});
   const [status, setStatus] = useState('Calcul zones...');
@@ -54,7 +64,7 @@ export function ZonesScreen({ route }: ZonesScreenProps) {
   }, [route]);
 
 
-  const activeZoneCount = Object.values(profiles).reduce((sum, profile) => sum + profile.activeBlocks.length, 0);
+  const activeZoneCount = countUniqueActiveZones(profiles);
 
   return (
     <Page title="Zones" subtitle="Vue verticale des zones traversées selon la route et l'altitude.">

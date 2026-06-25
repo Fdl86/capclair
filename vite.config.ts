@@ -9,9 +9,9 @@ export default defineConfig({
       registerType: 'autoUpdate',
       includeAssets: ['icons/icon-192.png', 'icons/icon-512.png'],
       manifest: {
-        name: 'CAP CLAIR DEV14.0 - Vertical profile terrain',
+        name: 'CAP CLAIR DEV14.0.1 - Vertical profile hotfix',
         short_name: 'CAP CLAIR',
-        description: 'Prototype PWA CAP CLAIR DEV14.0 avec profil vertical zones et terrain IGN.',
+        description: 'Prototype PWA CAP CLAIR DEV14.0.1 avec profil vertical corrigé.',
         theme_color: '#050B12',
         background_color: '#050B12',
         display: 'standalone',

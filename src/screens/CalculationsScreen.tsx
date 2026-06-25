@@ -77,6 +77,16 @@ function SummaryCard({ label, value, detail }: { label: string; value: string; d
   );
 }
 
+function countUniqueActiveZones(profiles: Record<string, BranchZoneProfile>): number {
+  const keys = new Set<string>();
+  Object.values(profiles).forEach((profile) => {
+    profile.activeBlocks.forEach((block) => {
+      keys.add(`${block.zoneId}:${block.floorFt}:${block.ceilingFt}`);
+    });
+  });
+  return keys.size;
+}
+
 export function CalculationsScreen({
   route,
   weatherStatus,
@@ -143,7 +153,7 @@ export function CalculationsScreen({
   }, [route]);
 
 
-  const activeZoneCount = Object.values(zoneProfiles).reduce((sum, profile) => sum + profile.activeBlocks.length, 0);
+  const activeZoneCount = countUniqueActiveZones(zoneProfiles);
   const fuel = useMemo(
     () => computeFuelPlan(
       route,
@@ -155,7 +165,7 @@ export function CalculationsScreen({
   );
 
   return (
-    <Page title="Log de nav" subtitle="Préparation VFR - calculs, vent et frise zones complète.">
+    <Page title="Log de nav" subtitle="Préparation VFR - calculs, vent et profil vertical.">
       <div className="navlog-screen">
         <div className="navlog-summary-grid">
           <SummaryCard label="Départ" value={departure?.code ?? '----'} detail={departure?.nom} />

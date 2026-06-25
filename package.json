@@ -1,7 +1,7 @@
 {
-  "name": "cap-clair-dev14-0-vertical-profile-terrain",
+  "name": "cap-clair-dev14-0-1-vertical-profile-hotfix",
   "private": true,
-  "version": "0.14.0-0",
+  "version": "0.14.0-1",
   "type": "module",
   "scripts": {
     "dev": "vite",

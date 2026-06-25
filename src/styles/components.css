@@ -2386,3 +2386,214 @@
     min-width: 560px;
   }
 }
+
+/* DEV14.0.1 - log prep and vertical profile readability hotfix */
+.navlog-prep-grid {
+  grid-template-columns: minmax(280px, 1fr) minmax(214px, 248px);
+  align-items: end;
+}
+
+.navlog-prep-grid .aircraft-selector-panel {
+  min-width: 0;
+}
+
+.navlog-prep-grid .aircraft-selector-panel label {
+  min-width: 0;
+}
+
+.navlog-prep-grid .aircraft-selector-panel select {
+  min-width: 0;
+  width: 100%;
+}
+
+.cockpit-stepper-grid {
+  display: grid;
+  gap: 8px;
+}
+
+.navlog-stepper-grid {
+  grid-template-columns: 1fr 1fr;
+  align-items: end;
+}
+
+.cockpit-stepper {
+  min-width: 0;
+  min-height: 58px;
+  border: 1px solid rgba(30, 49, 69, 0.72);
+  border-radius: 12px;
+  padding: 8px;
+  background: rgba(5, 11, 18, 0.50);
+  display: grid;
+  gap: 6px;
+  align-content: center;
+}
+
+.cockpit-stepper span {
+  color: var(--text-3);
+  font-size: 0.62rem;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.cockpit-stepper > div {
+  display: grid;
+  grid-template-columns: 28px minmax(48px, 1fr) 28px;
+  align-items: center;
+  gap: 4px;
+}
+
+.cockpit-stepper button {
+  width: 28px;
+  height: 28px;
+  border: 1px solid rgba(89, 207, 255, 0.32);
+  border-radius: 8px;
+  background: rgba(7, 17, 28, 0.82);
+  color: var(--text);
+  font-weight: 950;
+  cursor: pointer;
+}
+
+.cockpit-stepper strong {
+  min-width: 0;
+  text-align: center;
+  color: var(--text);
+  font-size: 0.92rem;
+  font-weight: 950;
+  line-height: 1;
+}
+
+.vertical-profile-banner {
+  gap: 7px;
+}
+
+.vertical-profile-section-body {
+  padding: 10px;
+}
+
+.vertical-profile-body {
+  grid-template-columns: 62px minmax(0, 1fr);
+  min-height: 214px;
+}
+
+.vertical-profile-axis {
+  min-height: 196px;
+  padding-bottom: 34px;
+  font-size: 0.64rem;
+}
+
+.vertical-profile-canvas {
+  min-height: 196px;
+  background:
+    linear-gradient(rgba(89, 207, 255, 0.045) 1px, transparent 1px) 0 0 / 100% 25%,
+    linear-gradient(180deg, rgba(12, 29, 43, 0.92), rgba(5, 11, 18, 0.92));
+}
+
+.vertical-profile-altitude-line span {
+  top: -18px;
+  padding: 2px 6px;
+  font-size: 0.62rem;
+}
+
+.vertical-zone-block {
+  padding: 3px 5px;
+  border-radius: 8px;
+  background: rgba(111, 127, 145, 0.07);
+}
+
+.vertical-zone-block b {
+  font-size: 0.58rem;
+}
+
+.vertical-zone-block small {
+  display: none;
+}
+
+.vertical-zone-block.inside {
+  border-width: 1px;
+  opacity: 0.92;
+}
+
+.vertical-zone-block.below,
+.vertical-zone-block.above {
+  opacity: 0.22;
+}
+
+.vertical-zone-block.type-ctr,
+.vertical-zone-block.type-tma,
+.vertical-zone-block.type-cta {
+  background: rgba(24, 174, 239, 0.085);
+}
+
+.vertical-zone-block.type-siv {
+  background: rgba(255, 184, 77, 0.075);
+}
+
+.vertical-zone-block.type-r,
+.vertical-zone-block.type-d {
+  background: rgba(255, 128, 71, 0.085);
+}
+
+.vertical-zone-block.type-p {
+  background: rgba(255, 92, 92, 0.10);
+}
+
+.vertical-profile-marker.depart {
+  transform: translateX(0);
+  justify-items: start;
+  min-width: 62px;
+}
+
+.vertical-profile-marker.destination {
+  transform: translateX(-100%);
+  justify-items: end;
+  min-width: 62px;
+}
+
+.vertical-profile-marker small {
+  font-size: 0.54rem;
+}
+
+.vertical-profile-route-baseline {
+  bottom: 31px;
+}
+
+.vertical-branch-separator {
+  bottom: 31px;
+}
+
+@media (max-width: 980px) {
+  .navlog-prep-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .navlog-stepper-grid {
+    max-width: 360px;
+  }
+
+  .vertical-profile-body {
+    grid-template-columns: 54px minmax(640px, 1fr);
+  }
+
+  .vertical-profile-canvas {
+    min-width: 640px;
+  }
+}
+
+@media (max-width: 520px) {
+  .navlog-stepper-grid {
+    max-width: none;
+  }
+
+  .cockpit-stepper > div {
+    grid-template-columns: 28px minmax(42px, 1fr) 28px;
+  }
+
+  .vertical-profile-body {
+    grid-template-columns: 50px minmax(560px, 1fr);
+  }
+
+  .vertical-profile-canvas {
+    min-width: 560px;
+  }
+}

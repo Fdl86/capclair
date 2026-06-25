@@ -1,5 +1,5 @@
 import type { CSSProperties, ReactNode } from 'react';
-import type { BranchZoneBlock, BranchZoneProfile, AirspaceType } from '../../domain/airspace.types';
+import type { AirspaceType, BranchZoneBlock, BranchZoneProfile } from '../../domain/airspace.types';
 import type { NavPoint, NavRoute } from '../../domain/navigation.types';
 import type { TerrainSample } from '../../services/navigation/terrainService';
 
@@ -13,6 +13,7 @@ interface GlobalZoneBlock extends BranchZoneBlock {
   globalStart: number;
   globalEnd: number;
   branchId: string;
+  mergedCount: number;
 }
 
 interface RouteMarker {
@@ -38,13 +39,15 @@ const TYPE_ORDER: Record<AirspaceType, number> = {
   CTR: 100,
   TMA: 96,
   CTA: 92,
+  P: 90,
   R: 86,
   D: 82,
-  P: 80,
   RMZ: 72,
   TMZ: 70,
   SIV: 58
 };
+
+const ALERT_TYPES = new Set<AirspaceType>(['R', 'D', 'P']);
 
 function clamp(value: number, min: number, max: number): number {
   return Math.max(min, Math.min(max, value));
@@ -54,15 +57,13 @@ function pointById(route: NavRoute, id: string): NavPoint | null {
   return route.points.find((point) => point.id === id) ?? null;
 }
 
-function pointCode(route: NavRoute, id: string): string {
-  const point = pointById(route, id);
-  return point?.code ?? point?.nom ?? id.toUpperCase();
+function pointLabel(point: NavPoint): string {
+  return point.code ?? point.nom;
 }
 
-function pointLabel(point: NavPoint): string {
-  if (point.type === 'depart') return point.code ?? 'D';
-  if (point.type === 'destination') return point.code ?? 'A';
-  return point.code ?? point.nom;
+function pointCode(route: NavRoute, id: string): string {
+  const point = pointById(route, id);
+  return point ? pointLabel(point) : id.toUpperCase();
 }
 
 function routeMarkers(route: NavRoute): RouteMarker[] {
@@ -76,8 +77,7 @@ function routeMarkers(route: NavRoute): RouteMarker[] {
       return;
     }
 
-    const branch = route.branches[index - 1];
-    cumulativeDistance += branch?.distanceNm ?? 0;
+    cumulativeDistance += route.branches[index - 1]?.distanceNm ?? 0;
     markers.push({
       code: pointLabel(point),
       distanceNm: Number(cumulativeDistance.toFixed(1)),
@@ -89,10 +89,36 @@ function routeMarkers(route: NavRoute): RouteMarker[] {
   return markers;
 }
 
-function buildGlobalBlocks(route: NavRoute, profiles: Record<string, BranchZoneProfile>): GlobalZoneBlock[] {
+function mergeBlock(target: GlobalZoneBlock, source: GlobalZoneBlock): GlobalZoneBlock {
+  const containsPlannedAltitude = target.containsPlannedAltitude || source.containsPlannedAltitude;
+  const altitudeRelation = containsPlannedAltitude
+    ? 'inside'
+    : target.altitudeRelation === 'uncertain' || source.altitudeRelation === 'uncertain'
+      ? 'uncertain'
+      : target.altitudeRelation;
+  const status = containsPlannedAltitude
+    ? 'activeAltitude'
+    : altitudeRelation === 'uncertain'
+      ? 'confirm'
+      : 'crossedOutAltitude';
+
+  return {
+    ...target,
+    globalStart: Math.min(target.globalStart, source.globalStart),
+    globalEnd: Math.max(target.globalEnd, source.globalEnd),
+    containsPlannedAltitude,
+    altitudeRelation,
+    status,
+    priority: Math.max(target.priority, source.priority),
+    contact: target.contact ?? source.contact,
+    mergedCount: target.mergedCount + source.mergedCount
+  };
+}
+
+function buildMergedBlocks(route: NavRoute, profiles: Record<string, BranchZoneProfile>): GlobalZoneBlock[] {
   const total = Math.max(1, route.distanceTotale);
   let cumulativeDistance = 0;
-  const blocks: GlobalZoneBlock[] = [];
+  const merged = new Map<string, GlobalZoneBlock>();
 
   for (const branch of route.branches) {
     const profile = profiles[branch.id];
@@ -104,46 +130,90 @@ function buildGlobalBlocks(route: NavRoute, profiles: Record<string, BranchZoneP
         const globalStart = clamp((branchStart + block.startRatio * branchDistance) / total, 0, 1);
         const globalEnd = clamp((branchStart + block.endRatio * branchDistance) / total, 0, 1);
         if (globalEnd <= globalStart) continue;
-        blocks.push({ ...block, branchId: branch.id, globalStart, globalEnd });
+
+        const next: GlobalZoneBlock = {
+          ...block,
+          branchId: branch.id,
+          globalStart,
+          globalEnd,
+          mergedCount: 1
+        };
+        const key = `${block.zoneId}:${block.zoneType}:${block.classCode}:${block.floorFt}:${block.ceilingFt}`;
+        const current = merged.get(key);
+        merged.set(key, current ? mergeBlock(current, next) : next);
       }
     }
 
     cumulativeDistance += branchDistance;
   }
 
-  return blocks
+  return [...merged.values()];
+}
+
+function maxPlannedAltitude(route: NavRoute): number {
+  return Math.max(route.profile.defaultAltitudeFt, ...route.branches.map((branch) => branch.altitudeFt));
+}
+
+function profileBlockScore(block: GlobalZoneBlock, route: NavRoute): number {
+  if (block.containsPlannedAltitude) return 1000 + (TYPE_ORDER[block.zoneType] ?? 0) + block.priority;
+  if (block.altitudeRelation === 'uncertain') return 700 + (TYPE_ORDER[block.zoneType] ?? 0) + block.priority;
+
+  const planned = maxPlannedAltitude(route);
+  const intersectsSafetyBand = block.floorFt <= planned + 1000 && block.ceilingFt >= planned - 1500;
+  if (ALERT_TYPES.has(block.zoneType) && intersectsSafetyBand) return 540 + (TYPE_ORDER[block.zoneType] ?? 0) + block.priority;
+
+  return -1;
+}
+
+function buildProfileBlocks(route: NavRoute, profiles: Record<string, BranchZoneProfile>): GlobalZoneBlock[] {
+  return buildMergedBlocks(route, profiles)
+    .filter((block) => profileBlockScore(block, route) > 0)
+    .sort((a, b) => {
+      const scoreDiff = profileBlockScore(b, route) - profileBlockScore(a, route);
+      if (scoreDiff !== 0) return scoreDiff;
+      return a.floorFt - b.floorFt || a.globalStart - b.globalStart;
+    })
+    .slice(0, 18)
     .sort((a, b) => {
       const aInside = a.containsPlannedAltitude ? 1 : 0;
       const bInside = b.containsPlannedAltitude ? 1 : 0;
-      return bInside - aInside || (TYPE_ORDER[b.zoneType] ?? 0) - (TYPE_ORDER[a.zoneType] ?? 0) || b.priority - a.priority;
-    })
-    .slice(0, 48);
+      return aInside - bInside || a.floorFt - b.floorFt;
+    });
 }
 
 function plannedAltitudeSegments(route: NavRoute): PlannedAltitudeSegment[] {
   const total = Math.max(1, route.distanceTotale);
   let cumulativeDistance = 0;
+  const segments: PlannedAltitudeSegment[] = [];
 
-  return route.branches.map((branch) => {
-    const start = cumulativeDistance / total;
+  for (const branch of route.branches) {
+    const startRatio = clamp(cumulativeDistance / total, 0, 1);
     cumulativeDistance += branch.distanceNm;
-    const end = cumulativeDistance / total;
-    return {
-      id: branch.id,
-      altitudeFt: branch.altitudeFt,
-      startRatio: clamp(start, 0, 1),
-      endRatio: clamp(end, 0, 1)
-    };
-  });
+    const endRatio = clamp(cumulativeDistance / total, 0, 1);
+    const current = segments[segments.length - 1];
+
+    if (current && current.altitudeFt === branch.altitudeFt) {
+      current.endRatio = endRatio;
+    } else {
+      segments.push({
+        id: branch.id,
+        altitudeFt: branch.altitudeFt,
+        startRatio,
+        endRatio
+      });
+    }
+  }
+
+  return segments;
 }
 
 function scaleBounds(route: NavRoute, blocks: GlobalZoneBlock[], terrainSamples: TerrainSample[] = []): ProfileBounds {
-  const maxBranchAltitude = Math.max(route.profile.defaultAltitudeFt, ...route.branches.map((branch) => branch.altitudeFt));
+  const plannedMax = maxPlannedAltitude(route);
   const usefulCeilings = blocks
-    .filter((block) => block.containsPlannedAltitude || block.altitudeRelation === 'uncertain' || block.floorFt <= maxBranchAltitude + 2000)
+    .filter((block) => block.containsPlannedAltitude || block.altitudeRelation === 'uncertain' || ALERT_TYPES.has(block.zoneType))
     .map((block) => Math.min(block.ceilingFt, 14500));
   const maxTerrain = terrainSamples.length ? Math.max(...terrainSamples.map((sample) => sample.elevationFt)) : 0;
-  const rawMax = Math.max(4500, maxBranchAltitude + 1200, maxTerrain + 1200, ...usefulCeilings);
+  const rawMax = Math.max(4500, plannedMax + 1200, maxTerrain + 1200, ...usefulCeilings);
   const roundedMax = Math.ceil(rawMax / 500) * 500;
   return { min: 0, max: clamp(roundedMax, 4500, 14500) };
 }
@@ -157,6 +227,7 @@ function blockStyle(block: GlobalZoneBlock, bounds: ProfileBounds): CSSPropertie
   const width = Math.max(1.5, (block.globalEnd - block.globalStart) * 100);
   const top = altitudeY(Math.min(block.ceilingFt, bounds.max), bounds);
   const bottom = 100 - altitudeY(Math.max(block.floorFt, bounds.min), bounds);
+
   return {
     left: `${clamp(left, 0, 99)}%`,
     width: `${clamp(width, 1.5, 100 - left)}%`,
@@ -201,7 +272,8 @@ function blockTypeClass(block: BranchZoneBlock): string {
 
 function shouldShowBlockName(block: GlobalZoneBlock): boolean {
   const width = (block.globalEnd - block.globalStart) * 100;
-  return block.containsPlannedAltitude || width >= 8;
+  if (block.containsPlannedAltitude) return width >= 5;
+  return width >= 10;
 }
 
 function axisLevels(bounds: ProfileBounds): number[] {
@@ -225,22 +297,13 @@ function bestActiveBlocks(profiles: Record<string, BranchZoneProfile>): { primar
 }
 
 function legendBlocks(blocks: GlobalZoneBlock[]): GlobalZoneBlock[] {
-  const byZone = new Map<string, GlobalZoneBlock>();
-  for (const block of blocks) {
-    const key = `${block.zoneId}:${block.floorFt}:${block.ceilingFt}`;
-    const current = byZone.get(key);
-    if (!current || (block.containsPlannedAltitude && !current.containsPlannedAltitude) || block.priority > current.priority) {
-      byZone.set(key, block);
-    }
-  }
-
-  return [...byZone.values()]
+  return [...blocks]
     .sort((a, b) => {
       const aInside = a.containsPlannedAltitude ? 1 : 0;
       const bInside = b.containsPlannedAltitude ? 1 : 0;
       return bInside - aInside || (TYPE_ORDER[b.zoneType] ?? 0) - (TYPE_ORDER[a.zoneType] ?? 0) || a.zoneName.localeCompare(b.zoneName);
     })
-    .slice(0, 18);
+    .slice(0, 14);
 }
 
 function terrainPolygonPoints(samples: TerrainSample[], bounds: ProfileBounds): string {
@@ -264,7 +327,7 @@ function Section({ title, meta, defaultOpen = false, children }: { title: string
 }
 
 export function VerticalProfileBanner({ route, profiles, terrainSamples = [] }: VerticalProfileBannerProps) {
-  const blocks = buildGlobalBlocks(route, profiles);
+  const blocks = buildProfileBlocks(route, profiles);
   const bounds = scaleBounds(route, blocks, terrainSamples);
   const markers = routeMarkers(route);
   const altitudeSegments = plannedAltitudeSegments(route);
@@ -313,7 +376,7 @@ export function VerticalProfileBanner({ route, profiles, terrainSamples = [] }: 
                   title={`${blockLabel(block)} - ${block.floorLabel} / ${block.ceilingLabel}`}
                 >
                   {labelVisible && <b>{block.zoneType} {block.zoneName}</b>}
-                  {block.containsPlannedAltitude && <small>{block.floorLabel} - {block.ceilingLabel}</small>}
+                  {block.containsPlannedAltitude && labelVisible && <small>{block.floorLabel} - {block.ceilingLabel}</small>}
                 </div>
               );
             })}
@@ -364,7 +427,7 @@ export function VerticalProfileBanner({ route, profiles, terrainSamples = [] }: 
           </div>
           <div>
             <span>Lecture</span>
-            <p>{blocks.length ? `Profil calculé sur ${route.distanceTotale.toFixed(1)} NM. Terrain affiché si disponible.` : 'Aucune zone principale fiable. Vérifier carte et documentation.'}</p>
+            <p>{blocks.length ? `Profil filtré sur ${route.distanceTotale.toFixed(1)} NM. Terrain affiché si disponible.` : 'Aucune zone principale fiable. Vérifier carte et documentation.'}</p>
           </div>
         </div>
       </Section>

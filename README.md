@@ -438,3 +438,18 @@ Vertical profile terrain :
 - conserve DEV13.8.4 route UI polish
 - conserve DEV13.8.3 OACI cleanup hardening
 - titre d'onglet et manifest PWA mis à jour
+
+## DEV14.0.1
+
+Hotfix profil vertical :
+- correction mise en page TAS / Alt défaut dans le log de nav
+- ajout CSS manquant pour `cockpit-stepper`
+- carte avion et stepper remis en grille compacte
+- profil vertical fortement filtré
+- fusion des zones dupliquées par zone / plancher / plafond
+- une seule ligne altitude quand l'altitude est identique sur toute la route
+- compte des zones actives rendu unique, au lieu du cumul par branche
+- sections Zones présentes et Contacts fermées par défaut
+- marqueurs départ / arrivée non coupés sur les bords
+- labels de zones réduits pour éviter l'écrasement
+- aucune modification GPS, OACI, route builder, carburant ou météo
