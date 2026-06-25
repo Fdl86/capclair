@@ -1,7 +1,7 @@
 {
-  "name": "cap-clair-dev14-0-1-vertical-profile-hotfix",
+  "name": "cap-clair-dev13-8-4-route-ui-polish",
   "private": true,
-  "version": "0.14.0-1",
+  "version": "0.13.8-4",
   "type": "module",
   "scripts": {
     "dev": "vite",

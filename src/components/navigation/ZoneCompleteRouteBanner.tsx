@@ -1,9 +1,11 @@
 import type { BranchZoneBlock, BranchZoneProfile } from '../../domain/airspace.types';
 import type { NavRoute } from '../../domain/navigation.types';
+import type { TerrainSample } from '../../services/navigation/terrainService';
 
 interface ZoneCompleteRouteBannerProps {
   route: NavRoute;
   profiles: Record<string, BranchZoneProfile>;
+  terrain?: TerrainSample[];
 }
 
 interface GlobalZoneBlock extends BranchZoneBlock {
@@ -94,15 +96,30 @@ function buildGlobalBlocks(route: NavRoute, profiles: Record<string, BranchZoneP
     .slice(0, 32);
 }
 
-function scaleBounds(route: NavRoute, blocks: GlobalZoneBlock[]) {
+function scaleBounds(route: NavRoute, blocks: GlobalZoneBlock[], terrain: TerrainSample[]) {
   const altitude = plannedAltitude(route);
   const activeOrClose = blocks.filter((block) => block.containsPlannedAltitude || block.altitudeRelation === 'uncertain' || block.floorFt <= altitude + 1500);
+  // Le terrain doit rester visible : on intègre son point culminant (+marge) dans l'échelle.
+  const terrainMax = terrain.length ? Math.max(...terrain.map((sample) => sample.elevationFt)) : 0;
   const maxCeiling = Math.max(
     altitude + 1200,
+    terrainMax + 600,
     ...activeOrClose.map((block) => Math.min(block.ceilingFt, 12500)),
     3000
   );
   return { min: 0, max: Math.min(Math.max(maxCeiling + 400, 4500), 12500) };
+}
+
+// Polygone fermé pour le profil terrain, dans le repère SVG 0..100 (preserveAspectRatio="none").
+function terrainPolygonPoints(terrain: TerrainSample[], min: number, max: number): string {
+  if (terrain.length < 2) return '';
+  const span = max - min || 1;
+  const points = terrain.map((sample) => {
+    const x = clamp(sample.distanceRatio * 100, 0, 100);
+    const y = clamp(100 - ((sample.elevationFt - min) / span) * 100, 0, 100);
+    return `${x.toFixed(2)},${y.toFixed(2)}`;
+  });
+  return `0,100 ${points.join(' ')} 100,100`;
 }
 
 function blockStyle(block: GlobalZoneBlock, min: number, max: number) {
@@ -158,12 +175,13 @@ function markerStyle(marker: RouteMarker) {
   return { left: `${clamp(marker.ratio * 100, 0, 100)}%` };
 }
 
-export function ZoneCompleteRouteBanner({ route, profiles }: ZoneCompleteRouteBannerProps) {
+export function ZoneCompleteRouteBanner({ route, profiles, terrain = [] }: ZoneCompleteRouteBannerProps) {
   const blocks = buildGlobalBlocks(route, profiles);
-  const bounds = scaleBounds(route, blocks);
+  const bounds = scaleBounds(route, blocks, terrain);
   const altitude = plannedAltitude(route);
   const markers = buildRouteMarkers(route);
   const contacts = bestActiveBlocks(profiles);
+  const terrainPoints = terrainPolygonPoints(terrain, bounds.min, bounds.max);
   const visibleBlocks = blocks
     .filter((block) => block.ceilingFt > bounds.min && block.floorFt < bounds.max)
     .sort((a, b) => a.floorFt - b.floorFt || b.priority - a.priority);
@@ -196,6 +214,11 @@ export function ZoneCompleteRouteBanner({ route, profiles }: ZoneCompleteRouteBa
         </div>
 
         <div className="complete-zone-canvas">
+          {terrainPoints && (
+            <svg className="complete-zone-terrain" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
+              <polygon points={terrainPoints} />
+            </svg>
+          )}
           <div className="complete-zone-altitude-line" style={altitudeStyle(altitude, bounds.min, bounds.max)} />
 
           {visibleBlocks.map((block, index) => (

@@ -318,6 +318,69 @@
   background: rgba(7, 17, 28, 0.72);
 }
 
+.zone-ribbon-block {
+  display: grid;
+  gap: 12px;
+}
+
+.zone-ribbon {
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: minmax(142px, 1fr);
+  gap: 8px;
+  overflow-x: auto;
+  padding-bottom: 4px;
+  scroll-snap-type: x mandatory;
+}
+
+.zone-card {
+  min-height: 142px;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  background: rgba(7, 17, 28, 0.74);
+  color: var(--text);
+  display: grid;
+  gap: 4px;
+  align-content: center;
+  text-align: left;
+  padding: 12px;
+  scroll-snap-align: start;
+  cursor: pointer;
+}
+
+.zone-card small,
+.zone-card span {
+  color: var(--text-3);
+}
+
+.zone-card em {
+  font-style: normal;
+  font-weight: 800;
+  color: var(--text-2);
+}
+
+.zone-card.traversee,
+.zone-detail.traversee { border-color: rgba(24, 174, 239, 0.72); }
+.zone-card.proche,
+.zone-detail.proche { border-color: rgba(255, 154, 61, 0.72); }
+.zone-card.libre,
+.zone-detail.libre { border-color: rgba(111, 125, 141, 0.45); }
+.zone-card.active { background: rgba(24, 174, 239, 0.12); }
+
+.zone-detail {
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 12px;
+  display: grid;
+  gap: 6px;
+  background: rgba(7, 17, 28, 0.65);
+}
+
+.zone-detail span,
+.zone-detail small {
+  color: var(--text-3);
+}
+
 .tracking-screen {
   display: grid;
   gap: 10px;
@@ -1176,6 +1239,736 @@
     grid-column: auto;
   }
 }
+/* DEV13.6 - zone altitude banner */
+.zone-banner-card {
+  padding: 0;
+  overflow: hidden;
+}
+
+.zone-banner-card .panel-title-row {
+  padding: 14px 16px;
+  border-bottom: 1px solid rgba(30, 49, 69, 0.72);
+}
+
+.zone-altitude-banner-list {
+  display: grid;
+  gap: 12px;
+  padding: 14px;
+}
+
+.zone-altitude-banner-card {
+  border: 1px solid rgba(30, 49, 69, 0.72);
+  border-radius: 14px;
+  background: rgba(7, 17, 28, 0.52);
+  overflow: hidden;
+}
+
+.zone-altitude-banner-head,
+.zone-altitude-banner-foot {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  padding: 10px 12px;
+  border-bottom: 1px solid rgba(30, 49, 69, 0.58);
+}
+
+.zone-altitude-banner-foot {
+  grid-template-columns: 1fr;
+  border-top: 1px solid rgba(30, 49, 69, 0.58);
+  border-bottom: 0;
+  color: var(--text-2);
+  font-size: 0.78rem;
+}
+
+.zone-altitude-banner-head span {
+  display: block;
+  color: var(--text-3);
+  font-size: 0.6rem;
+  font-weight: 900;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.zone-altitude-banner-head strong {
+  color: var(--text);
+  font-size: 0.86rem;
+}
+
+.zone-altitude-banner-body {
+  display: grid;
+  grid-template-columns: 54px 1fr;
+  min-height: 164px;
+}
+
+.zone-altitude-axis {
+  display: grid;
+  align-content: space-between;
+  padding: 12px 8px;
+  border-right: 1px solid rgba(30, 49, 69, 0.58);
+  color: var(--text-3);
+  font-size: 0.64rem;
+  text-align: right;
+}
+
+.zone-altitude-canvas {
+  position: relative;
+  min-height: 164px;
+  background:
+    linear-gradient(to bottom, rgba(255,255,255,0.04) 1px, transparent 1px) 0 0 / 100% 33.333%,
+    linear-gradient(180deg, rgba(8, 25, 39, 0.85), rgba(5, 11, 18, 0.72));
+  overflow: hidden;
+}
+
+.zone-altitude-line {
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: rgba(89, 207, 255, 0.96);
+  box-shadow: 0 0 12px rgba(89, 207, 255, 0.34);
+  z-index: 8;
+}
+
+.zone-altitude-line span {
+  position: absolute;
+  right: 8px;
+  top: -18px;
+  border: 1px solid rgba(89, 207, 255, 0.55);
+  border-radius: 999px;
+  background: rgba(5, 11, 18, 0.9);
+  color: var(--cyan-soft);
+  padding: 2px 7px;
+  font-size: 0.64rem;
+  font-weight: 900;
+}
+
+.zone-altitude-block {
+  position: absolute;
+  min-height: 24px;
+  border: 1px solid rgba(89, 207, 255, 0.42);
+  border-radius: 10px;
+  padding: 5px 7px;
+  overflow: hidden;
+  color: var(--text);
+  background: rgba(24, 174, 239, 0.2);
+  z-index: 4;
+}
+
+.zone-altitude-block b,
+.zone-altitude-block small {
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.zone-altitude-block b {
+  font-size: 0.68rem;
+  line-height: 1.05;
+}
+
+.zone-altitude-block small {
+  margin-top: 2px;
+  color: var(--text-2);
+  font-size: 0.58rem;
+}
+
+.zone-altitude-block.activeAltitude {
+  border-color: rgba(89, 207, 255, 0.9);
+  background: rgba(24, 174, 239, 0.32);
+}
+
+.zone-altitude-block.crossedOutAltitude {
+  opacity: 0.42;
+  background: rgba(111, 127, 145, 0.16);
+  border-color: rgba(111, 127, 145, 0.32);
+}
+
+.zone-altitude-block.confirm {
+  border-color: rgba(255, 154, 61, 0.78);
+  background: rgba(255, 154, 61, 0.18);
+}
+
+.zone-altitude-block.siv {
+  border-color: rgba(61, 220, 132, 0.55);
+  background: rgba(61, 220, 132, 0.12);
+}
+
+.zone-altitude-block.ctr,
+.zone-altitude-block.tma,
+.zone-altitude-block.cta {
+  border-color: rgba(89, 207, 255, 0.72);
+}
+
+.zone-altitude-block.r,
+.zone-altitude-block.d,
+.zone-altitude-block.p {
+  border-color: rgba(255, 154, 61, 0.72);
+  background: rgba(255, 154, 61, 0.16);
+}
+
+.zone-altitude-progress-labels {
+  position: absolute;
+  left: 8px;
+  right: 8px;
+  bottom: 6px;
+  display: flex;
+  justify-content: space-between;
+  color: var(--text-3);
+  font-size: 0.62rem;
+  font-weight: 900;
+  pointer-events: none;
+  z-index: 9;
+}
+
+.zone-rule-list {
+  display: grid;
+  gap: 8px;
+}
+
+.zone-rule-list span {
+  border: 1px solid rgba(30, 49, 69, 0.68);
+  border-radius: 10px;
+  padding: 9px 10px;
+  color: var(--text-2);
+  background: rgba(7, 17, 28, 0.58);
+  font-size: 0.82rem;
+}
+
+.zone-rule-list b {
+  color: var(--cyan-soft);
+  margin-right: 6px;
+}
+
+@media (max-width: 720px) {
+  .zone-altitude-banner-head {
+    grid-template-columns: 1fr;
+  }
+
+  .zone-altitude-banner-body {
+    grid-template-columns: 46px 1fr;
+  }
+
+  .zone-altitude-block b {
+    font-size: 0.62rem;
+  }
+
+  .zone-altitude-block small {
+    display: none;
+  }
+}
+.zone-banner-loading {
+  padding: 18px;
+  color: var(--text-2);
+  font-weight: 800;
+}
+
+/* DEV13.6.1 - global zone frieze */
+.complete-zone-frieze {
+  display: grid;
+  gap: 14px;
+  padding: 16px;
+}
+
+.complete-zone-frieze-head {
+  display: grid;
+  grid-template-columns: 1fr auto auto;
+  gap: 12px;
+  align-items: center;
+}
+
+.complete-zone-frieze-head div {
+  border: 1px solid rgba(30, 49, 69, 0.72);
+  border-radius: 13px;
+  background: rgba(7, 17, 28, 0.58);
+  padding: 10px 12px;
+  min-width: 128px;
+}
+
+.complete-zone-frieze-head span,
+.complete-zone-contact-row span {
+  display: block;
+  color: var(--text-3);
+  font-size: 0.62rem;
+  font-weight: 900;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.complete-zone-frieze-head strong {
+  display: block;
+  color: var(--text);
+  font-size: 1rem;
+  margin-top: 3px;
+}
+
+.complete-zone-frieze-body {
+  display: grid;
+  grid-template-columns: 68px minmax(0, 1fr);
+  min-height: 360px;
+}
+
+.complete-zone-axis {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 4px 10px 58px 0;
+  color: var(--text-2);
+  font-size: 0.76rem;
+  text-align: right;
+}
+
+.complete-zone-canvas {
+  position: relative;
+  min-height: 350px;
+  border: 1px solid rgba(30, 49, 69, 0.82);
+  border-radius: 15px;
+  overflow: hidden;
+  background:
+    linear-gradient(rgba(89, 207, 255, 0.08) 1px, transparent 1px) 0 0 / 100% 20%,
+    linear-gradient(90deg, rgba(89, 207, 255, 0.06) 1px, transparent 1px) 0 0 / 8.33% 100%,
+    rgba(5, 11, 18, 0.55);
+}
+
+.complete-zone-altitude-line {
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: rgba(69, 224, 255, 0.95);
+  box-shadow: 0 0 16px rgba(69, 224, 255, 0.32);
+  z-index: 8;
+}
+
+.complete-zone-altitude-line span {
+  position: absolute;
+  right: 8px;
+  top: -25px;
+  color: var(--cyan-soft);
+  font-weight: 950;
+  font-size: 0.78rem;
+  background: rgba(5, 11, 18, 0.88);
+  border: 1px solid rgba(69, 224, 255, 0.36);
+  border-radius: 999px;
+  padding: 4px 9px;
+}
+
+.complete-zone-block {
+  position: absolute;
+  border: 1px solid rgba(69, 224, 255, 0.36);
+  border-radius: 10px;
+  padding: 10px 12px;
+  overflow: hidden;
+  display: grid;
+  place-content: center;
+  text-align: center;
+  color: var(--text);
+  background: rgba(16, 67, 83, 0.42);
+  z-index: 4;
+}
+
+.complete-zone-block b {
+  font-size: 0.78rem;
+  line-height: 1.15;
+}
+
+.complete-zone-block small,
+.complete-zone-block em {
+  color: var(--text-2);
+  font-size: 0.7rem;
+  font-style: normal;
+}
+
+.complete-zone-block.tma,
+.complete-zone-block.cta {
+  border-color: rgba(180, 93, 255, 0.74);
+  background: rgba(110, 51, 190, 0.35);
+}
+
+.complete-zone-block.ctr {
+  border-color: rgba(255, 198, 61, 0.78);
+  background: rgba(156, 103, 9, 0.28);
+  color: #ffe4a3;
+}
+
+.complete-zone-block.r,
+.complete-zone-block.d,
+.complete-zone-block.p {
+  border-color: rgba(255, 128, 71, 0.78);
+  background: rgba(145, 57, 27, 0.32);
+}
+
+.complete-zone-block.crossedOutAltitude {
+  opacity: 0.42;
+  background-image: repeating-linear-gradient(135deg, rgba(255,255,255,0.06) 0 6px, transparent 6px 12px);
+}
+
+.complete-zone-block.confirm {
+  border-style: dashed;
+  border-color: rgba(255, 154, 61, 0.95);
+}
+
+.complete-zone-route-line {
+  position: absolute;
+  left: 2%;
+  right: 2%;
+  bottom: 43px;
+  height: 2px;
+  background: rgba(226, 239, 255, 0.72);
+  z-index: 10;
+}
+
+.complete-zone-marker {
+  position: absolute;
+  bottom: 10px;
+  transform: translateX(-50%);
+  display: grid;
+  justify-items: center;
+  gap: 3px;
+  min-width: 62px;
+  z-index: 12;
+}
+
+.complete-zone-marker i {
+  width: 12px;
+  height: 12px;
+  border-radius: 999px;
+  background: rgba(226, 239, 255, 0.96);
+  border: 2px solid rgba(69, 224, 255, 0.86);
+  box-shadow: 0 0 12px rgba(69, 224, 255, 0.45);
+}
+
+.complete-zone-marker b {
+  color: var(--text);
+  font-size: 0.76rem;
+}
+
+.complete-zone-marker small {
+  color: var(--text-3);
+  font-size: 0.66rem;
+}
+
+.complete-zone-contact-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1.45fr;
+  border: 1px solid rgba(30, 49, 69, 0.72);
+  border-radius: 14px;
+  overflow: hidden;
+}
+
+.complete-zone-contact-row div {
+  padding: 12px 14px;
+  border-right: 1px solid rgba(30, 49, 69, 0.72);
+  background: rgba(7, 17, 28, 0.52);
+}
+
+.complete-zone-contact-row div:last-child {
+  border-right: 0;
+}
+
+.complete-zone-contact-row strong {
+  display: block;
+  margin-top: 4px;
+  color: var(--cyan-soft);
+  font-size: 0.95rem;
+}
+
+.complete-zone-contact-row small,
+.complete-zone-contact-row p {
+  color: var(--text-2);
+  margin: 4px 0 0;
+}
+
+.complete-zone-legend {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.complete-zone-legend span {
+  min-height: 36px;
+  display: flex;
+  align-items: center;
+  border: 1px solid rgba(30, 49, 69, 0.72);
+  border-radius: 11px;
+  padding: 0 10px;
+  color: var(--text-2);
+  font-size: 0.76rem;
+  background: rgba(7, 17, 28, 0.58);
+}
+
+.complete-zone-legend .inside { border-color: rgba(180, 93, 255, 0.58); }
+.complete-zone-legend .below { border-color: rgba(69, 224, 255, 0.4); }
+.complete-zone-legend .above { border-style: dashed; }
+.complete-zone-legend .confirm { border-color: rgba(255, 154, 61, 0.72); }
+
+@media (max-width: 980px) {
+  .complete-zone-frieze-head {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .complete-zone-frieze-body {
+    grid-template-columns: 48px minmax(620px, 1fr);
+    overflow-x: auto;
+  }
+
+  .complete-zone-canvas {
+    min-width: 620px;
+  }
+
+  .complete-zone-contact-row {
+    grid-template-columns: 1fr;
+  }
+
+  .complete-zone-contact-row div {
+    border-right: 0;
+    border-bottom: 1px solid rgba(30, 49, 69, 0.72);
+  }
+
+  .complete-zone-contact-row div:last-child {
+    border-bottom: 0;
+  }
+
+  .complete-zone-legend {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+@media (max-width: 520px) {
+  .complete-zone-frieze {
+    padding: 12px;
+  }
+
+  .complete-zone-frieze-head {
+    grid-template-columns: 1fr;
+  }
+
+  .complete-zone-legend {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* DEV13.6.2 - planning controls and lighter global zone frieze */
+.cockpit-stepper-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+
+.cockpit-stepper {
+  display: grid;
+  gap: 4px;
+}
+
+.cockpit-stepper > span {
+  color: var(--text-3);
+  font-size: 0.64rem;
+  font-weight: 850;
+  text-transform: uppercase;
+}
+
+.cockpit-stepper > div {
+  height: 40px;
+  border: 1px solid rgba(30, 49, 69, 0.9);
+  border-radius: 12px;
+  background: rgba(5, 11, 18, 0.82);
+  display: grid;
+  grid-template-columns: 34px 1fr 34px;
+  align-items: center;
+  overflow: hidden;
+}
+
+.cockpit-stepper button {
+  height: 100%;
+  border: 0;
+  background: rgba(17, 28, 42, 0.72);
+  color: var(--cyan-soft);
+  font-size: 1.05rem;
+  font-weight: 950;
+  cursor: pointer;
+}
+
+.cockpit-stepper button:active {
+  background: rgba(24, 174, 239, 0.18);
+}
+
+.cockpit-stepper strong {
+  text-align: center;
+  color: var(--text);
+  font-size: 0.98rem;
+  font-weight: 950;
+  letter-spacing: 0.02em;
+}
+
+.route-actions-row-single {
+  grid-template-columns: 1fr;
+}
+
+.route-actions-row-single .btn {
+  width: 100%;
+}
+
+.complete-zone-frieze {
+  gap: 12px;
+  padding: 14px;
+}
+
+.complete-zone-frieze-head {
+  grid-template-columns: 1fr auto;
+}
+
+.complete-zone-frieze-head div {
+  min-width: 112px;
+}
+
+.complete-zone-frieze-body {
+  min-height: 304px;
+}
+
+.complete-zone-axis {
+  font-weight: 800;
+  padding-bottom: 50px;
+}
+
+.complete-zone-canvas {
+  min-height: 296px;
+}
+
+.complete-zone-altitude-line span {
+  left: 8px;
+  right: auto;
+  top: -25px;
+  color: var(--cyan-soft);
+  font-weight: 950;
+  font-size: 0.86rem;
+  background: rgba(5, 11, 18, 0.92);
+  border: 1px solid rgba(69, 224, 255, 0.48);
+  border-radius: 999px;
+  padding: 4px 10px;
+}
+
+.complete-zone-block {
+  padding: 7px 9px;
+  border-radius: 9px;
+}
+
+.complete-zone-block b {
+  font-size: 0.7rem;
+  line-height: 1.1;
+}
+
+.complete-zone-block small,
+.complete-zone-block em {
+  font-size: 0.62rem;
+  line-height: 1.15;
+}
+
+.complete-zone-block.activeAltitude {
+  z-index: 6;
+  opacity: 0.92;
+}
+
+.complete-zone-block.crossedOutAltitude {
+  opacity: 0.24;
+  z-index: 2;
+}
+
+.complete-zone-block.confirm {
+  z-index: 7;
+}
+
+.complete-zone-route-line {
+  bottom: 38px;
+}
+
+.complete-zone-marker {
+  bottom: 7px;
+}
+
+.complete-zone-contact-row {
+  grid-template-columns: 1fr 1fr 1.25fr;
+}
+
+@media (max-width: 980px) {
+  .complete-zone-frieze-head {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+@media (max-width: 520px) {
+  .cockpit-stepper-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .cockpit-stepper > div {
+    grid-template-columns: 32px 1fr 32px;
+  }
+
+  .complete-zone-frieze-head {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* DEV13.6.3 - frieze axis alignment */
+.complete-zone-frieze-body {
+  grid-template-columns: 82px minmax(0, 1fr);
+  align-items: stretch;
+}
+
+.complete-zone-axis {
+  position: relative;
+  display: block;
+  min-height: 296px;
+  padding: 0 12px 0 0;
+  text-align: right;
+  color: var(--text-2);
+  font-size: 0.76rem;
+}
+
+.complete-zone-axis .axis-label {
+  position: absolute;
+  right: 12px;
+  transform: translateY(-50%);
+  white-space: nowrap;
+  font-weight: 850;
+  line-height: 1;
+}
+
+.complete-zone-axis .planned-axis-label {
+  color: var(--cyan-soft);
+  font-weight: 1000;
+  font-size: 0.88rem;
+  background: rgba(5, 11, 18, 0.92);
+  border: 1px solid rgba(69, 224, 255, 0.48);
+  border-radius: 999px;
+  padding: 4px 8px;
+  box-shadow: 0 0 14px rgba(69, 224, 255, 0.18);
+}
+
+.complete-zone-altitude-line span {
+  display: none;
+}
+
+@media (max-width: 980px) {
+  .complete-zone-frieze-body {
+    grid-template-columns: 72px minmax(620px, 1fr);
+  }
+
+  .complete-zone-axis {
+    min-width: 72px;
+  }
+
+  .complete-zone-axis .axis-label {
+    right: 8px;
+    font-size: 0.7rem;
+  }
+
+  .complete-zone-axis .planned-axis-label {
+    font-size: 0.78rem;
+    padding: 4px 7px;
+  }
+}
+
 /* DEV13.7.1 - aircraft config, raw METAR/TAF and cleaner planning */
 .route-builder {
   grid-template-columns: 1fr 1fr 1fr auto;
@@ -1805,8 +2598,30 @@
   grid-template-columns: 1fr;
 }
 
+.complete-zone-block.activeAltitude {
+  opacity: 0.96;
+  z-index: 7;
+  border-color: rgba(180, 93, 255, 0.95) !important;
+  background: rgba(110, 51, 190, 0.58) !important;
+  box-shadow: inset 0 0 0 1px rgba(226, 207, 255, 0.12), 0 0 16px rgba(110, 51, 190, 0.16);
+}
 
+.complete-zone-block.confirm {
+  opacity: 0.92;
+  z-index: 8;
+  border-style: dashed;
+  border-color: rgba(255, 154, 61, 0.96) !important;
+  background: rgba(155, 87, 28, 0.44) !important;
+  box-shadow: inset 0 0 0 1px rgba(255, 214, 171, 0.08);
+}
 
+.complete-zone-block.crossedOutAltitude {
+  opacity: 0.20;
+  z-index: 2;
+  border-color: rgba(111, 127, 145, 0.36) !important;
+  background: rgba(40, 54, 70, 0.22) !important;
+  background-image: repeating-linear-gradient(135deg, rgba(255,255,255,0.055) 0 6px, transparent 6px 12px);
+}
 
 .fuel-table-compact .fuel-row.strong + .fuel-row:not(.strong) {
   border-top: 1px solid rgba(89, 207, 255, 0.26);
@@ -1954,646 +2769,20 @@
   box-shadow: 0 10px 24px rgba(24, 174, 239, 0.18);
 }
 
-
-/* DEV14.0 - unified vertical profile with IGN terrain */
-.zone-banner-card {
-  padding: 0;
-  overflow: hidden;
-}
-
-.zone-banner-card .panel-title-row {
-  padding: 14px 16px;
-  border-bottom: 1px solid rgba(30, 49, 69, 0.72);
-}
-
-.zone-banner-loading {
-  padding: 18px;
-  color: var(--text-2);
-  font-weight: 800;
-}
-
-.vertical-profile-banner {
-  display: grid;
-  gap: 8px;
-  padding: 12px;
-}
-
-.vertical-profile-section {
-  border: 1px solid rgba(30, 49, 69, 0.72);
-  border-radius: 14px;
-  background: rgba(7, 17, 28, 0.48);
-  overflow: hidden;
-}
-
-.vertical-profile-section summary {
-  min-height: 40px;
-  display: grid;
-  grid-template-columns: 1fr auto;
-  align-items: center;
-  gap: 10px;
-  padding: 0 12px;
-  cursor: pointer;
-  list-style: none;
-  color: var(--text);
-  font-weight: 900;
-}
-
-.vertical-profile-section summary::-webkit-details-marker {
-  display: none;
-}
-
-.vertical-profile-section summary::before {
-  content: '+';
-  width: 22px;
-  height: 22px;
-  border: 1px solid rgba(30, 49, 69, 0.9);
-  border-radius: 8px;
-  display: grid;
-  place-items: center;
-  color: var(--cyan-soft);
-  background: rgba(5, 11, 18, 0.82);
-  font-size: 0.88rem;
-  grid-column: 2;
-  grid-row: 1;
-}
-
-.vertical-profile-section[open] summary::before {
-  content: '-';
-}
-
-.vertical-profile-section summary span {
-  color: var(--text);
-  font-size: 0.82rem;
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
-}
-
-.vertical-profile-section summary strong {
-  padding-right: 30px;
-  color: var(--text-2);
-  font-size: 0.74rem;
-  white-space: nowrap;
-}
-
-.vertical-profile-section-body {
-  border-top: 1px solid rgba(30, 49, 69, 0.62);
-  padding: 12px;
-}
-
-.vertical-profile-body {
-  display: grid;
-  grid-template-columns: 66px minmax(0, 1fr);
-  min-height: 248px;
-}
-
-.vertical-profile-axis {
-  position: relative;
-  min-height: 220px;
-  padding: 0 10px 30px 0;
-  color: var(--text-3);
-  font-size: 0.68rem;
-  font-weight: 850;
-  text-align: right;
-}
-
-.vertical-profile-axis span {
-  position: absolute;
-  right: 10px;
-  transform: translateY(-50%);
-  white-space: nowrap;
-}
-
-.vertical-profile-canvas {
-  position: relative;
-  min-height: 220px;
-  border: 1px solid rgba(30, 49, 69, 0.86);
-  border-radius: 14px;
-  overflow: hidden;
-  background:
-    linear-gradient(rgba(89, 207, 255, 0.055) 1px, transparent 1px) 0 0 / 100% 25%,
-    linear-gradient(180deg, rgba(14, 34, 50, 0.88), rgba(5, 11, 18, 0.88));
-}
-
-.vertical-terrain-svg {
+/* DEV13.9.0 - coupe terrain (profil altimétrique RGE ALTI IGN) */
+.complete-zone-terrain {
   position: absolute;
   inset: 0;
-  z-index: 1;
-  pointer-events: none;
-}
-
-.vertical-terrain-svg polygon {
-  fill: rgba(69, 83, 68, 0.72);
-  stroke: rgba(154, 164, 139, 0.42);
-  stroke-width: 0.45;
-  vector-effect: non-scaling-stroke;
-}
-
-.vertical-profile-gridline {
-  position: absolute;
-  left: 0;
-  right: 0;
-  height: 1px;
-  background: rgba(226, 239, 255, 0.055);
-  z-index: 2;
-}
-
-.vertical-profile-altitude-line {
-  position: absolute;
-  height: 0;
-  border-top: 2px dashed rgba(69, 224, 255, 0.96);
-  z-index: 9;
-  filter: drop-shadow(0 0 8px rgba(69, 224, 255, 0.25));
-}
-
-.vertical-profile-altitude-line span {
-  position: absolute;
-  left: 4px;
-  top: -26px;
-  border: 1px solid rgba(69, 224, 255, 0.42);
-  border-radius: 999px;
-  background: rgba(5, 11, 18, 0.92);
-  color: var(--cyan-soft);
-  padding: 3px 7px;
-  font-size: 0.66rem;
-  font-weight: 950;
-  white-space: nowrap;
-}
-
-.vertical-zone-block {
-  position: absolute;
-  z-index: 5;
-  min-height: 18px;
-  border: 1px solid rgba(111, 127, 145, 0.42);
-  border-radius: 9px;
-  background: rgba(111, 127, 145, 0.10);
-  color: var(--text);
-  overflow: hidden;
-  display: grid;
-  align-content: center;
-  padding: 4px 6px;
-  box-shadow: inset 0 0 0 1px rgba(255,255,255,0.025);
-}
-
-.vertical-zone-block b,
-.vertical-zone-block small {
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.vertical-zone-block b {
-  font-size: 0.62rem;
-  line-height: 1.05;
-}
-
-.vertical-zone-block small {
-  color: var(--text-2);
-  font-size: 0.56rem;
-  margin-top: 2px;
-}
-
-.vertical-zone-block.inside {
-  z-index: 7;
-  border-width: 2px;
-  box-shadow: inset 0 0 0 1px rgba(226, 239, 255, 0.06), 0 0 14px rgba(24, 174, 239, 0.13);
-}
-
-.vertical-zone-block.below,
-.vertical-zone-block.above {
-  opacity: 0.48;
-}
-
-.vertical-zone-block.uncertain {
-  border-style: dashed;
-  opacity: 0.72;
-}
-
-.vertical-zone-block.type-ctr,
-.vertical-zone-block.type-tma,
-.vertical-zone-block.type-cta {
-  border-color: rgba(24, 174, 239, 0.72);
-  background: rgba(24, 174, 239, 0.12);
-}
-
-.vertical-zone-block.type-siv {
-  border-color: rgba(255, 184, 77, 0.62);
-  background: rgba(255, 184, 77, 0.10);
-}
-
-.vertical-zone-block.type-r,
-.vertical-zone-block.type-d {
-  border-color: rgba(255, 128, 71, 0.68);
-  background: rgba(255, 128, 71, 0.11);
-}
-
-.vertical-zone-block.type-p {
-  border-color: rgba(255, 92, 92, 0.82);
-  background: rgba(255, 92, 92, 0.13);
-}
-
-.vertical-zone-block.type-rmz,
-.vertical-zone-block.type-tmz {
-  border-color: rgba(154, 164, 178, 0.58);
-  background: rgba(154, 164, 178, 0.10);
-}
-
-.vertical-branch-separator {
-  position: absolute;
-  top: 0;
-  bottom: 32px;
-  border-left: 1px dotted rgba(226, 239, 255, 0.28);
-  z-index: 8;
-}
-
-.vertical-profile-route-baseline {
-  position: absolute;
-  left: 0;
-  right: 0;
-  bottom: 30px;
-  height: 1px;
-  background: rgba(226, 239, 255, 0.34);
-  z-index: 8;
-}
-
-.vertical-profile-marker {
-  position: absolute;
-  bottom: 4px;
-  transform: translateX(-50%);
-  min-width: 58px;
-  display: grid;
-  justify-items: center;
-  gap: 2px;
-  z-index: 10;
-  pointer-events: none;
-}
-
-.vertical-profile-marker i {
-  width: 1px;
-  height: 24px;
-  background: rgba(226, 239, 255, 0.5);
-}
-
-.vertical-profile-marker b {
-  color: var(--text);
-  font-size: 0.66rem;
-  font-weight: 950;
-  line-height: 1;
-}
-
-.vertical-profile-marker small {
-  color: var(--text-3);
-  font-size: 0.58rem;
-  line-height: 1;
-}
-
-.vertical-profile-marker.depart b,
-.vertical-profile-marker.destination b {
-  color: var(--cyan-soft);
-}
-
-.vertical-profile-legend {
-  display: flex;
-  gap: 8px;
-  overflow-x: auto;
-  padding-bottom: 2px;
-}
-
-.vertical-profile-legend span {
-  flex: 0 0 auto;
-  min-height: 34px;
-  border: 1px solid rgba(30, 49, 69, 0.72);
-  border-radius: 999px;
-  padding: 0 10px;
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  background: rgba(5, 11, 18, 0.55);
-  color: var(--text-2);
-  font-size: 0.72rem;
-  white-space: nowrap;
-}
-
-.vertical-profile-legend span i {
-  width: 8px;
-  height: 8px;
-  border-radius: 999px;
-  background: rgba(111, 127, 145, 0.72);
-}
-
-.vertical-profile-legend span.type-ctr i,
-.vertical-profile-legend span.type-tma i,
-.vertical-profile-legend span.type-cta i { background: rgba(24, 174, 239, 0.95); }
-
-.vertical-profile-legend span.type-siv i { background: rgba(255, 184, 77, 0.95); }
-.vertical-profile-legend span.type-r i,
-.vertical-profile-legend span.type-d i { background: rgba(255, 128, 71, 0.95); }
-.vertical-profile-legend span.type-p i { background: rgba(255, 92, 92, 0.96); }
-
-.vertical-profile-legend span.inside {
-  border-color: rgba(89, 207, 255, 0.62);
-  color: var(--text);
-}
-
-.vertical-profile-legend b {
-  color: var(--text);
-  font-style: normal;
-}
-
-.vertical-profile-legend em {
-  font-style: normal;
-  max-width: 180px;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.vertical-profile-contact-row {
-  display: grid;
-  grid-template-columns: 1fr 1fr 1.35fr;
-  gap: 8px;
-}
-
-.vertical-profile-contact-row div {
-  border: 1px solid rgba(30, 49, 69, 0.72);
-  border-radius: 12px;
-  padding: 10px 12px;
-  background: rgba(5, 11, 18, 0.48);
-}
-
-.vertical-profile-contact-row span {
-  display: block;
-  color: var(--text-3);
-  font-size: 0.62rem;
-  font-weight: 900;
-  text-transform: uppercase;
-}
-
-.vertical-profile-contact-row strong {
-  display: block;
-  margin-top: 3px;
-  color: var(--cyan-soft);
-  font-size: 0.86rem;
-}
-
-.vertical-profile-contact-row small,
-.vertical-profile-contact-row p,
-.vertical-profile-muted {
-  color: var(--text-2);
-  font-size: 0.76rem;
-  margin: 4px 0 0;
-}
-
-@media (max-width: 980px) {
-  .vertical-profile-body {
-    grid-template-columns: 58px minmax(640px, 1fr);
-    overflow-x: auto;
-  }
-
-  .vertical-profile-canvas {
-    min-width: 640px;
-  }
-
-  .vertical-profile-contact-row {
-    grid-template-columns: 1fr;
-  }
-}
-
-@media (max-width: 520px) {
-  .vertical-profile-banner {
-    padding: 10px;
-  }
-
-  .vertical-profile-section summary {
-    grid-template-columns: 1fr;
-    gap: 2px;
-    padding: 7px 10px;
-  }
-
-  .vertical-profile-section summary::before {
-    position: absolute;
-    right: 9px;
-  }
-
-  .vertical-profile-section summary strong {
-    padding-right: 30px;
-    font-size: 0.68rem;
-  }
-
-  .vertical-profile-body {
-    grid-template-columns: 52px minmax(560px, 1fr);
-  }
-
-  .vertical-profile-canvas {
-    min-width: 560px;
-  }
-}
-
-/* DEV14.0.1 - log prep and vertical profile readability hotfix */
-.navlog-prep-grid {
-  grid-template-columns: minmax(280px, 1fr) minmax(214px, 248px);
-  align-items: end;
-}
-
-.navlog-prep-grid .aircraft-selector-panel {
-  min-width: 0;
-}
-
-.navlog-prep-grid .aircraft-selector-panel label {
-  min-width: 0;
-}
-
-.navlog-prep-grid .aircraft-selector-panel select {
-  min-width: 0;
   width: 100%;
+  height: 100%;
+  z-index: 2;
+  pointer-events: none;
 }
 
-.cockpit-stepper-grid {
-  display: grid;
-  gap: 8px;
-}
-
-.navlog-stepper-grid {
-  grid-template-columns: 1fr 1fr;
-  align-items: end;
-}
-
-.cockpit-stepper {
-  min-width: 0;
-  min-height: 58px;
-  border: 1px solid rgba(30, 49, 69, 0.72);
-  border-radius: 12px;
-  padding: 8px;
-  background: rgba(5, 11, 18, 0.50);
-  display: grid;
-  gap: 6px;
-  align-content: center;
-}
-
-.cockpit-stepper span {
-  color: var(--text-3);
-  font-size: 0.62rem;
-  font-weight: 900;
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
-}
-
-.cockpit-stepper > div {
-  display: grid;
-  grid-template-columns: 28px minmax(48px, 1fr) 28px;
-  align-items: center;
-  gap: 4px;
-}
-
-.cockpit-stepper button {
-  width: 28px;
-  height: 28px;
-  border: 1px solid rgba(89, 207, 255, 0.32);
-  border-radius: 8px;
-  background: rgba(7, 17, 28, 0.82);
-  color: var(--text);
-  font-weight: 950;
-  cursor: pointer;
-}
-
-.cockpit-stepper strong {
-  min-width: 0;
-  text-align: center;
-  color: var(--text);
-  font-size: 0.92rem;
-  font-weight: 950;
-  line-height: 1;
-}
-
-.vertical-profile-banner {
-  gap: 7px;
-}
-
-.vertical-profile-section-body {
-  padding: 10px;
-}
-
-.vertical-profile-body {
-  grid-template-columns: 62px minmax(0, 1fr);
-  min-height: 214px;
-}
-
-.vertical-profile-axis {
-  min-height: 196px;
-  padding-bottom: 34px;
-  font-size: 0.64rem;
-}
-
-.vertical-profile-canvas {
-  min-height: 196px;
-  background:
-    linear-gradient(rgba(89, 207, 255, 0.045) 1px, transparent 1px) 0 0 / 100% 25%,
-    linear-gradient(180deg, rgba(12, 29, 43, 0.92), rgba(5, 11, 18, 0.92));
-}
-
-.vertical-profile-altitude-line span {
-  top: -18px;
-  padding: 2px 6px;
-  font-size: 0.62rem;
-}
-
-.vertical-zone-block {
-  padding: 3px 5px;
-  border-radius: 8px;
-  background: rgba(111, 127, 145, 0.07);
-}
-
-.vertical-zone-block b {
-  font-size: 0.58rem;
-}
-
-.vertical-zone-block small {
-  display: none;
-}
-
-.vertical-zone-block.inside {
-  border-width: 1px;
-  opacity: 0.92;
-}
-
-.vertical-zone-block.below,
-.vertical-zone-block.above {
-  opacity: 0.22;
-}
-
-.vertical-zone-block.type-ctr,
-.vertical-zone-block.type-tma,
-.vertical-zone-block.type-cta {
-  background: rgba(24, 174, 239, 0.085);
-}
-
-.vertical-zone-block.type-siv {
-  background: rgba(255, 184, 77, 0.075);
-}
-
-.vertical-zone-block.type-r,
-.vertical-zone-block.type-d {
-  background: rgba(255, 128, 71, 0.085);
-}
-
-.vertical-zone-block.type-p {
-  background: rgba(255, 92, 92, 0.10);
-}
-
-.vertical-profile-marker.depart {
-  transform: translateX(0);
-  justify-items: start;
-  min-width: 62px;
-}
-
-.vertical-profile-marker.destination {
-  transform: translateX(-100%);
-  justify-items: end;
-  min-width: 62px;
-}
-
-.vertical-profile-marker small {
-  font-size: 0.54rem;
-}
-
-.vertical-profile-route-baseline {
-  bottom: 31px;
-}
-
-.vertical-branch-separator {
-  bottom: 31px;
-}
-
-@media (max-width: 980px) {
-  .navlog-prep-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .navlog-stepper-grid {
-    max-width: 360px;
-  }
-
-  .vertical-profile-body {
-    grid-template-columns: 54px minmax(640px, 1fr);
-  }
-
-  .vertical-profile-canvas {
-    min-width: 640px;
-  }
-}
-
-@media (max-width: 520px) {
-  .navlog-stepper-grid {
-    max-width: none;
-  }
-
-  .cockpit-stepper > div {
-    grid-template-columns: 28px minmax(42px, 1fr) 28px;
-  }
-
-  .vertical-profile-body {
-    grid-template-columns: 50px minmax(560px, 1fr);
-  }
-
-  .vertical-profile-canvas {
-    min-width: 560px;
-  }
+.complete-zone-terrain polygon {
+  fill: rgba(96, 116, 92, 0.42);
+  stroke: rgba(176, 214, 168, 0.72);
+  stroke-width: 1.4px;
+  stroke-linejoin: round;
+  vector-effect: non-scaling-stroke;
 }

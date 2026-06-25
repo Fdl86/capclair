@@ -1,118 +1,59 @@
-import type { NavPoint, NavRoute } from '../../domain/navigation.types';
-import { distanceNm } from '../geo/distance';
+import type { NavRoute } from '../../domain/navigation.types';
 
 export interface TerrainSample {
-  distanceRatio: number;
+  distanceRatio: number; // 0 -> 1 le long de la route
   elevationFt: number;
 }
 
-interface TerrainApiResponse {
-  elevations?: number[];
-}
-
-interface GeoPoint {
-  latitude: number;
-  longitude: number;
-  distanceRatio: number;
-}
-
-const TERRAIN_SAMPLE_COUNT = 60;
 const METERS_TO_FEET = 3.28084;
-const terrainCache = new Map<string, TerrainSample[]>();
+const SENTINEL_METERS = -500; // l'API IGN renvoie des valeurs aberrantes (ex. -33509) près des côtes/mer
+const DEFAULT_SAMPLING = 80;
 
-function routeKey(route: NavRoute): string {
-  const pointsKey = route.points
-    .map((point) => `${point.id}:${point.latitude.toFixed(4)}:${point.longitude.toFixed(4)}`)
-    .join('|');
-  return `${pointsKey}:${route.distanceTotale.toFixed(2)}`;
+const cache = new Map<string, TerrainSample[]>();
+
+function routeSignature(route: NavRoute, sampling: number): string {
+  return (
+    route.points
+      .map((point) => `${point.id}:${point.latitude.toFixed(4)},${point.longitude.toFixed(4)}`)
+      .join('>') + `#${sampling}`
+  );
 }
 
-function interpolatePoint(from: NavPoint, to: NavPoint, ratio: number): Pick<NavPoint, 'latitude' | 'longitude'> {
-  return {
-    latitude: from.latitude + (to.latitude - from.latitude) * ratio,
-    longitude: from.longitude + (to.longitude - from.longitude) * ratio
-  };
+// Valeur "pas de donnée" -> ramenée au niveau mer pour conserver un pas régulier.
+function normalizeElevationMeters(meters: number): number {
+  if (!Number.isFinite(meters) || meters <= SENTINEL_METERS) return 0;
+  return meters;
 }
 
-function buildRouteSamples(route: NavRoute): GeoPoint[] {
-  if (route.points.length < 2 || route.distanceTotale <= 0) return [];
+export async function fetchTerrainProfile(route: NavRoute, sampling: number = DEFAULT_SAMPLING): Promise<TerrainSample[]> {
+  if (route.points.length < 2) return [];
 
-  const segmentDistances = route.points.slice(0, -1).map((point, index) => distanceNm(point, route.points[index + 1]));
-  const totalDistance = segmentDistances.reduce((sum, distance) => sum + distance, 0);
-  if (!Number.isFinite(totalDistance) || totalDistance <= 0) return [];
-
-  const sampleCount = Math.max(2, TERRAIN_SAMPLE_COUNT);
-  const samples: GeoPoint[] = [];
-
-  for (let sampleIndex = 0; sampleIndex < sampleCount; sampleIndex += 1) {
-    const distanceRatio = sampleIndex / (sampleCount - 1);
-    const targetDistance = totalDistance * distanceRatio;
-    let segmentStartDistance = 0;
-
-    for (let segmentIndex = 0; segmentIndex < segmentDistances.length; segmentIndex += 1) {
-      const segmentDistance = segmentDistances[segmentIndex];
-      const segmentEndDistance = segmentStartDistance + segmentDistance;
-      const isLastSegment = segmentIndex === segmentDistances.length - 1;
-
-      if (targetDistance <= segmentEndDistance || isLastSegment) {
-        const localRatio = segmentDistance > 0 ? Math.min(1, Math.max(0, (targetDistance - segmentStartDistance) / segmentDistance)) : 0;
-        const point = interpolatePoint(route.points[segmentIndex], route.points[segmentIndex + 1], localRatio);
-        samples.push({ ...point, distanceRatio });
-        break;
-      }
-
-      segmentStartDistance = segmentEndDistance;
-    }
-  }
-
-  return samples;
-}
-
-function parseTerrainResponse(payload: TerrainApiResponse, samples: GeoPoint[]): TerrainSample[] {
-  const elevations = Array.isArray(payload.elevations) ? payload.elevations : [];
-  if (elevations.length !== samples.length) return [];
-
-  return elevations
-    .map((meters, index): TerrainSample | null => {
-      if (!Number.isFinite(meters) || meters <= -9000) return null;
-      const elevationFt = Math.max(0, Math.round(meters * METERS_TO_FEET));
-      return {
-        distanceRatio: samples[index].distanceRatio,
-        elevationFt
-      };
-    })
-    .filter((sample): sample is TerrainSample => sample !== null);
-}
-
-export async function fetchTerrainProfile(route: NavRoute): Promise<TerrainSample[]> {
-  const key = routeKey(route);
-  const cached = terrainCache.get(key);
+  const signature = routeSignature(route, sampling);
+  const cached = cache.get(signature);
   if (cached) return cached;
 
+  // On envoie uniquement les waypoints : c'est le paramètre sampling de l'API qui densifie le profil.
+  const lon = route.points.map((point) => point.longitude).join('|');
+  const lat = route.points.map((point) => point.latitude).join('|');
+  const query = new URLSearchParams({ lon, lat, sampling: String(sampling) });
+
   try {
-    const samples = buildRouteSamples(route);
-    if (!samples.length) {
-      terrainCache.set(key, []);
-      return [];
-    }
+    const response = await fetch(`/api/ign/elevation?${query.toString()}`);
+    if (!response.ok) return [];
 
-    const lon = samples.map((sample) => sample.longitude.toFixed(6)).join('|');
-    const lat = samples.map((sample) => sample.latitude.toFixed(6)).join('|');
-    const response = await fetch(`/api/ign/elevation?lon=${encodeURIComponent(lon)}&lat=${encodeURIComponent(lat)}`, {
-      headers: { Accept: 'application/json' }
-    });
+    const data: unknown = await response.json();
+    const elevations = (data as { elevations?: unknown }).elevations;
+    if (!Array.isArray(elevations) || elevations.length < 2) return [];
 
-    if (!response.ok) {
-      terrainCache.set(key, []);
-      return [];
-    }
+    const denominator = elevations.length - 1;
+    const samples: TerrainSample[] = elevations.map((value, index) => ({
+      distanceRatio: index / denominator,
+      elevationFt: normalizeElevationMeters(typeof value === 'number' ? value : Number(value)) * METERS_TO_FEET
+    }));
 
-    const payload = (await response.json()) as TerrainApiResponse;
-    const profile = parseTerrainResponse(payload, samples);
-    terrainCache.set(key, profile);
-    return profile;
-  } catch {
-    terrainCache.set(key, []);
+    cache.set(signature, samples);
+    return samples;
+  } catch (error) {
     return [];
   }
 }

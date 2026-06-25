@@ -5,17 +5,17 @@ import type { AerodromeWeather } from '../domain/weather.types';
 import type { NavPoint, NavRoute } from '../domain/navigation.types';
 import { Page } from '../components/layout/Page';
 import { BranchTable } from '../components/navigation/BranchTable';
-import { VerticalProfileBanner } from '../components/navigation/VerticalProfileBanner';
+import { ZoneCompleteRouteBanner } from '../components/navigation/ZoneCompleteRouteBanner';
 import { Button } from '../components/ui/Button';
 import { Card } from '../components/ui/Card';
 import { buildZoneProfiles } from '../services/airspace/airspaceEngine';
 import { computeFuelPlan } from '../services/navigation/fuelPlanning';
+import { fetchTerrainProfile, type TerrainSample } from '../services/navigation/terrainService';
 import { AircraftSelectorPanel } from '../components/flight/AircraftSelectorPanel';
 import { AerodromeWeatherPanel } from '../components/flight/AerodromeWeatherPanel';
 import { FuelPlanningPanel } from '../components/flight/FuelPlanningPanel';
 import { findAerodrome } from '../data/aerodromeCatalog';
 import { distanceNm } from '../services/geo/distance';
-import { fetchTerrainProfile, type TerrainSample } from '../services/navigation/terrainService';
 
 interface CalculationsScreenProps {
   route: NavRoute;
@@ -77,16 +77,6 @@ function SummaryCard({ label, value, detail }: { label: string; value: string; d
   );
 }
 
-function countUniqueActiveZones(profiles: Record<string, BranchZoneProfile>): number {
-  const keys = new Set<string>();
-  Object.values(profiles).forEach((profile) => {
-    profile.activeBlocks.forEach((block) => {
-      keys.add(`${block.zoneId}:${block.floorFt}:${block.ceilingFt}`);
-    });
-  });
-  return keys.size;
-}
-
 export function CalculationsScreen({
   route,
   weatherStatus,
@@ -113,7 +103,22 @@ export function CalculationsScreen({
   const windModelTime = route.branches.find((branch) => branch.wind?.sourceTimeIso)?.wind?.sourceTimeIso;
   const [zoneProfiles, setZoneProfiles] = useState<Record<string, BranchZoneProfile>>({});
   const [zoneStatus, setZoneStatus] = useState('Calcul zones...');
-  const [terrainSamples, setTerrainSamples] = useState<TerrainSample[]>([]);
+  const [terrain, setTerrain] = useState<TerrainSample[]>([]);
+
+  useEffect(() => {
+    let cancelled = false;
+    fetchTerrainProfile(route)
+      .then((samples) => {
+        if (!cancelled) setTerrain(samples);
+      })
+      .catch(() => {
+        if (!cancelled) setTerrain([]);
+      });
+
+    return () => {
+      cancelled = true;
+    };
+  }, [route]);
 
   useEffect(() => {
     let cancelled = false;
@@ -135,25 +140,7 @@ export function CalculationsScreen({
     };
   }, [route]);
 
-  useEffect(() => {
-    let cancelled = false;
-    setTerrainSamples([]);
-
-    fetchTerrainProfile(route)
-      .then((samples) => {
-        if (!cancelled) setTerrainSamples(samples);
-      })
-      .catch(() => {
-        if (!cancelled) setTerrainSamples([]);
-      });
-
-    return () => {
-      cancelled = true;
-    };
-  }, [route]);
-
-
-  const activeZoneCount = countUniqueActiveZones(zoneProfiles);
+  const activeZoneCount = Object.values(zoneProfiles).reduce((sum, profile) => sum + profile.activeBlocks.length, 0);
   const fuel = useMemo(
     () => computeFuelPlan(
       route,
@@ -165,7 +152,7 @@ export function CalculationsScreen({
   );
 
   return (
-    <Page title="Log de nav" subtitle="Préparation VFR - calculs, vent et profil vertical.">
+    <Page title="Log de nav" subtitle="Préparation VFR - calculs, vent et frise zones complète.">
       <div className="navlog-screen">
         <div className="navlog-summary-grid">
           <SummaryCard label="Départ" value={departure?.code ?? '----'} detail={departure?.nom} />
@@ -225,12 +212,16 @@ export function CalculationsScreen({
         <Card className="zone-banner-card">
           <div className="panel-title-row">
             <div>
-              <span>Profil vertical</span>
+              <span>Frise zones</span>
               <strong>{activeZoneCount ? `${activeZoneCount} zones actives sur la nav` : zoneStatus}</strong>
             </div>
             <Button variant="secondary" onClick={onBackPlanning}>Modifier route</Button>
           </div>
-          <VerticalProfileBanner route={route} profiles={zoneProfiles} terrainSamples={terrainSamples} />
+          {Object.keys(zoneProfiles).length ? (
+            <ZoneCompleteRouteBanner route={route} profiles={zoneProfiles} terrain={terrain} />
+          ) : (
+            <div className="zone-banner-loading">{zoneStatus}</div>
+          )}
         </Card>
 
         <div className="navlog-bottom-grid navlog-bottom-grid-wide">
@@ -259,8 +250,8 @@ export function CalculationsScreen({
         </div>
 
         <Card className="safety-card">
-          <strong>Info profil vertical</strong>
-          <p>Les zones sont calculées par position et altitude de branche. Le terrain IGN est affiché quand l'altimétrie est disponible ; l'absence de terrain ne bloque jamais le log.</p>
+          <strong>Info frise</strong>
+          <p>Les zones sont calculées par position et altitude de branche. Les fréquences sont affichées seulement lorsqu'une fréquence exploitable est liée à la zone ; sinon le log indique à confirmer.</p>
         </Card>
       </div>
     </Page>
