@@ -2,6 +2,12 @@ import type { BranchZoneBlock, BranchZoneProfile } from '../../domain/airspace.t
 import type { NavRoute } from '../../domain/navigation.types';
 import type { TerrainSample } from '../../services/navigation/terrainService';
 import type { ProfilePoint } from '../../services/navigation/verticalProfileService';
+import { classifyBlock, isRegulatedZone } from '../../services/airspace/zoneRelevance';
+
+// Affichage : on masque les zones non pénétrées par défaut. Les zones réglementées
+// (R/P/D...) restent en fantôme pour la conscience situationnelle. Passer ce flag à true
+// réaffiche toutes les zones frôlées en version atténuée.
+const SHOW_PROXIMITY_GHOST = false;
 
 interface ZoneCompleteRouteBannerProps {
   route: NavRoute;
@@ -196,9 +202,38 @@ export function ZoneCompleteRouteBanner({ route, profiles, terrain = [], profile
   const contacts = bestActiveBlocks(profiles);
   const terrainPoints = terrainPolygonPoints(terrain, bounds.min, bounds.max);
   const profilePoints = profilePolylinePoints(profile, bounds.min, bounds.max);
-  const visibleBlocks = blocks
+
+  // Profil effectif pour la classification (repli plat si pas de perf avion).
+  const effectiveProfile: ProfilePoint[] =
+    profile.length >= 2
+      ? profile
+      : [
+          { distanceRatio: 0, altitudeFt: altitude },
+          { distanceRatio: 1, altitudeFt: altitude }
+        ];
+
+  const annotatedBlocks = blocks
     .filter((block) => block.ceilingFt > bounds.min && block.floorFt < bounds.max)
-    .sort((a, b) => a.floorFt - b.floorFt || b.priority - a.priority);
+    .map((block) => ({ block, relevance: classifyBlock(block, effectiveProfile, terrain) }))
+    .filter(({ block, relevance }) => {
+      if (relevance.penetrated) return true;
+      if (isRegulatedZone(block.zoneType)) return true; // R/P/D toujours visibles (sécurité)
+      return SHOW_PROXIMITY_GHOST && relevance.relation === 'near';
+    })
+    .sort((a, b) => a.block.floorFt - b.block.floorFt || b.block.priority - a.block.priority);
+
+  const profileLineY = (alt: number) => clamp(100 - ((alt - bounds.min) / (bounds.max - bounds.min || 1)) * 100, 0, 100);
+  const entryMarkers = annotatedBlocks
+    .filter(({ relevance }) => relevance.penetrated)
+    .map(({ block }) => {
+      const ratio = clamp(Math.min(block.globalStart, block.globalEnd), 0, 1);
+      const alt = effectiveProfile.length
+        ? effectiveProfile.reduce((closest, point) =>
+            Math.abs(point.distanceRatio - ratio) < Math.abs(closest.distanceRatio - ratio) ? point : closest
+          ).altitudeFt
+        : altitude;
+      return { id: block.id, x: ratio * 100, y: profileLineY(alt) };
+    });
 
   return (
     <div className="complete-zone-frieze">
@@ -241,10 +276,10 @@ export function ZoneCompleteRouteBanner({ route, profiles, terrain = [], profile
             <div className="complete-zone-altitude-line" style={altitudeStyle(altitude, bounds.min, bounds.max)} />
           )}
 
-          {visibleBlocks.map((block, index) => (
+          {annotatedBlocks.map(({ block, relevance }, index) => (
             <div
               key={`${block.id}:${index}`}
-              className={`complete-zone-block ${block.zoneType.toLowerCase()} ${block.status}`}
+              className={`complete-zone-block ${block.zoneType.toLowerCase()} ${block.status} ${relevance.penetrated ? 'penetrated' : 'ghost'}`}
               style={blockStyle(block, bounds.min, bounds.max)}
               title={`${blockLabel(block)} - ${block.floorLabel} / ${block.ceilingLabel}`}
             >
@@ -255,7 +290,14 @@ export function ZoneCompleteRouteBanner({ route, profiles, terrain = [], profile
             </div>
           ))}
 
-          <div className="complete-zone-route-line" />
+          {entryMarkers.map((marker) => (
+            <div
+              key={marker.id}
+              className="complete-zone-entry"
+              style={{ left: `${marker.x}%`, top: `${marker.y}%` }}
+            />
+          ))}
+
           {markers.map((marker, index) => (
             <div key={`${marker.code}:${index}`} className="complete-zone-marker" style={markerStyle(marker)}>
               <i />
