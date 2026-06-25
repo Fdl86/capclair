@@ -360,3 +360,18 @@ Hotfix vue carte après ajout waypoint :
 - aucune modification du log, carburant, météo ou zones
 - conserve DEV13.8.0 OACI 1/500k
 - titre d'onglet mis à jour
+
+## DEV13.8.2
+
+Hotfix vue carte après suppression waypoint :
+- suppression waypoint sans dézoom automatique
+- ajout waypoint sans dézoom conservé
+- la vue carte est conservée quand le nombre de waypoints change mais que le départ et l'arrivée restent identiques
+- le fit global reste actif au chargement initial
+- le fit global reste actif quand le départ ou l'arrivée changent
+- aucune modification du fond OACI
+- aucune modification du moteur GPS
+- aucune modification du log, carburant, météo ou zones
+- conserve DEV13.8.1 waypoint view hotfix
+- conserve DEV13.8.0 OACI 1/500k
+- titre d'onglet mis à jour

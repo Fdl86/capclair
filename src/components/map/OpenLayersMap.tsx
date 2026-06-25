@@ -67,6 +67,7 @@ export function OpenLayersMap({
   const aircraftLayerRef = useRef<AircraftLayer | null>(null);
   const latestAircraftRef = useRef<GpsPosition | null>(null);
   const lastRoutePointCountRef = useRef<number | null>(null);
+  const lastRouteEndpointsKeyRef = useRef<string | null>(null);
   const onSourceStatusChangeRef = useRef(onSourceStatusChange);
   const [sourceStatus, setSourceStatus] = useState<MapSourceStatus>('free');
 
@@ -208,19 +209,27 @@ export function OpenLayersMap({
     if (!map) return;
 
     const previousPointCount = lastRoutePointCountRef.current;
+    const previousEndpointsKey = lastRouteEndpointsKeyRef.current;
     const currentPointCount = route.points.length;
+    const firstPointId = route.points[0]?.id ?? 'none';
+    const lastPointId = route.points.at(-1)?.id ?? 'none';
+    const currentEndpointsKey = `${firstPointId}:${lastPointId}`;
+
     lastRoutePointCountRef.current = currentPointCount;
+    lastRouteEndpointsKeyRef.current = currentEndpointsKey;
 
     if (compact && aircraft) {
       map.getView().setCenter(fromLonLat([aircraft.longitude, aircraft.latitude]));
       return;
     }
 
-    const routeWasExtended = previousPointCount !== null && currentPointCount > previousPointCount;
-    if (routeWasExtended) return;
+    const waypointCountChanged = previousPointCount !== null
+      && previousPointCount !== currentPointCount
+      && previousEndpointsKey === currentEndpointsKey;
+    if (waypointCountChanged) return;
 
     map.getView().fit(routeExtent, { padding: compact ? [48, 48, 48, 48] : [72, 58, 92, 58], duration: 0, maxZoom: 10 });
-  }, [routeExtent, compact, route.points.length]);
+  }, [routeExtent, compact, route.points]);
 
   useEffect(() => {
     const map = mapRef.current;
