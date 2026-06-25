@@ -9,9 +9,9 @@ export default defineConfig({
       registerType: 'autoUpdate',
       includeAssets: ['icons/icon-192.png', 'icons/icon-512.png'],
       manifest: {
-        name: 'CAP CLAIR DEV09 - Free Map openAIP Proxy',
+        name: 'CAP CLAIR DEV13.8.3 - OACI cleanup hardening',
         short_name: 'CAP CLAIR',
-        description: 'Prototype PWA CAP CLAIR DEV09 avec fond libre et proxy openAIP Cloudflare.',
+        description: 'Prototype PWA CAP CLAIR DEV13.8.3 avec fonds openAIP et OACI 1/500k.',
         theme_color: '#050B12',
         background_color: '#050B12',
         display: 'standalone',

@@ -9,9 +9,8 @@ import XYZ from 'ol/source/XYZ';
   Usage gratuit cadré professionnel / associatif selon les conditions du service.
 */
 
-export function createIgnOaciVfrLayer() {
-  return new TileLayer({
-    source: new XYZ({
+export function createIgnOaciVfrLayer(onTileError?: () => void) {
+  const source = new XYZ({
       url: '/api/ign/oaci/{z}/{x}/{y}.jpg',
       tileSize: 256,
       minZoom: 6,
@@ -19,7 +18,14 @@ export function createIgnOaciVfrLayer() {
       crossOrigin: 'anonymous',
       transition: 0,
       attributions: '© IGN / SIA - OACI-VFR'
-    }),
+    });
+
+  if (onTileError) {
+    source.on('tileloaderror', onTileError);
+  }
+
+  return new TileLayer({
+    source,
     opacity: 1,
     preload: 0,
     visible: false,

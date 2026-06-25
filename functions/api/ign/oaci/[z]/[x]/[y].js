@@ -6,9 +6,9 @@ const PNG_EMPTY_1X1 = Uint8Array.from([
   68, 174, 66, 96, 130
 ]);
 
-function imageResponse(body, contentType = 'image/png', cacheSeconds = 300) {
+function imageResponse(body, contentType = 'image/png', cacheSeconds = 300, status = 200) {
   return new Response(body, {
-    status: 200,
+    status,
     headers: {
       'Content-Type': contentType,
       'Cache-Control': `public, max-age=${cacheSeconds}, s-maxage=${cacheSeconds}`,
@@ -39,7 +39,7 @@ export async function onRequestGet(context) {
   }
 
   const maxTileIndex = 2 ** z - 1;
-  if (x > maxTileIndex || y > maxTileIndex || z < 6 || z > 14) {
+  if (x > maxTileIndex || y > maxTileIndex || z < 6 || z > 11) {
     return imageResponse(PNG_EMPTY_1X1, 'image/png', 300);
   }
 
@@ -70,10 +70,14 @@ export async function onRequestGet(context) {
   });
 
   if (!upstream.ok) {
+    if (upstream.status === 400 || upstream.status === 404) {
+      const missingTile = imageResponse(PNG_EMPTY_1X1, 'image/png', 300);
+      context.waitUntil(cache.put(cacheKey, missingTile.clone()));
+      return missingTile;
+    }
+
     const retrySeconds = upstream.status === 429 ? 3600 : 300;
-    const fallback = imageResponse(PNG_EMPTY_1X1, 'image/png', retrySeconds);
-    context.waitUntil(cache.put(cacheKey, fallback.clone()));
-    return fallback;
+    return imageResponse(PNG_EMPTY_1X1, 'image/png', retrySeconds, 503);
   }
 
   const contentType = upstream.headers.get('Content-Type') || 'image/jpeg';

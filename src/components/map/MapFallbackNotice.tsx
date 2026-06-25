@@ -1,8 +1,14 @@
-export function MapFallbackNotice() {
+interface MapFallbackNoticeProps {
+  mode: 'openaip' | 'oaci';
+}
+
+export function MapFallbackNotice({ mode }: MapFallbackNoticeProps) {
+  const isOaci = mode === 'oaci';
+
   return (
     <div className="map-fallback-notice">
-      <strong>Couche aéro indisponible</strong>
-      <span>Fond libre affiché, données openAIP non reçues.</span>
+      <strong>{isOaci ? 'Fond OACI indisponible' : 'Couche openAIP indisponible'}</strong>
+      <span>{isOaci ? 'Tuiles IGN / SIA non reçues.' : 'Fond carte affiché, données openAIP non reçues.'}</span>
     </div>
   );
 }

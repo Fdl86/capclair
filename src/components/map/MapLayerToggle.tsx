@@ -10,7 +10,7 @@ export function MapLayerToggle({ baseLayer, onChange }: MapLayerToggleProps) {
     <div className="map-layer-toggle map-layer-toggle-wide" aria-label="Fond de carte">
       <span>Fond carte</span>
       <button type="button" className={baseLayer === 'free' ? 'active' : ''} onClick={() => onChange('free')}>
-        Libre + openAIP
+        openAIP
       </button>
       <button type="button" className={baseLayer === 'oaci' ? 'active' : ''} onClick={() => onChange('oaci')}>
         OACI 1/500k

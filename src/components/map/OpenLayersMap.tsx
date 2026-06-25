@@ -27,7 +27,6 @@ interface OpenLayersMapProps {
   selectedPointId: string | null;
   compact?: boolean;
   baseLayer?: MapBaseLayer;
-  showTopo?: boolean;
   followAircraft?: boolean;
   addWaypointMode?: boolean;
   onMapAddWaypoint?: (longitude: number, latitude: number) => void;
@@ -50,7 +49,6 @@ export function OpenLayersMap({
   selectedPointId,
   compact = false,
   baseLayer = 'free',
-  showTopo = true,
   followAircraft = false,
   addWaypointMode = false,
   onMapAddWaypoint,
@@ -66,6 +64,7 @@ export function OpenLayersMap({
   const traceLayerRef = useRef<ActualTraceLayer | null>(null);
   const aircraftLayerRef = useRef<AircraftLayer | null>(null);
   const latestAircraftRef = useRef<GpsPosition | null>(null);
+  const currentBaseLayerModeRef = useRef<MapBaseLayer>(baseLayer);
   const lastRoutePointCountRef = useRef<number | null>(null);
   const lastRouteEndpointsKeyRef = useRef<string | null>(null);
   const onSourceStatusChangeRef = useRef(onSourceStatusChange);
@@ -77,22 +76,31 @@ export function OpenLayersMap({
   }, [route.points]);
 
   useEffect(() => {
+    currentBaseLayerModeRef.current = baseLayer;
+  }, [baseLayer]);
+
+  useEffect(() => {
     onSourceStatusChangeRef.current = onSourceStatusChange;
   }, [onSourceStatusChange]);
 
   useEffect(() => {
     if (!mapElementRef.current || mapRef.current) return;
 
-    const baseLayer = createFreeMapLayer();
+    const freeMapLayer = createFreeMapLayer();
     const openAipRasterLayer = createOpenAipRasterLayer(() => {
+      if (currentBaseLayerModeRef.current !== 'free') return;
       setSourceStatus('fallback');
       onSourceStatusChangeRef.current?.('fallback');
     });
-    const oaciLayer = createIgnOaciVfrLayer();
+    const oaciLayer = createIgnOaciVfrLayer(() => {
+      if (currentBaseLayerModeRef.current !== 'oaci') return;
+      setSourceStatus('error');
+      onSourceStatusChangeRef.current?.('error');
+    });
     const traceLayer = createActualTraceLayer();
     const aircraftLayer = createAircraftLayer(null, initialMapZoom);
 
-    baseLayerRef.current = baseLayer;
+    baseLayerRef.current = freeMapLayer;
     openAipRasterLayerRef.current = openAipRasterLayer;
     oaciLayerRef.current = oaciLayer;
     traceLayerRef.current = traceLayer;
@@ -101,7 +109,7 @@ export function OpenLayersMap({
     const map = new Map({
       target: mapElementRef.current,
       controls: [],
-      layers: [baseLayer, oaciLayer, openAipRasterLayer, traceLayer, aircraftLayer],
+      layers: [freeMapLayer, oaciLayer, openAipRasterLayer, traceLayer, aircraftLayer],
       view: new View({
         center: initialMapCenter,
         zoom: initialMapZoom,
@@ -137,14 +145,14 @@ export function OpenLayersMap({
 
   useEffect(() => {
     const freeMode = baseLayer === 'free';
-    baseLayerRef.current?.setVisible(freeMode && showTopo);
+    baseLayerRef.current?.setVisible(freeMode);
     openAipRasterLayerRef.current?.setVisible(freeMode);
     oaciLayerRef.current?.setVisible(baseLayer === 'oaci');
 
     const status: MapSourceStatus = baseLayer === 'oaci' ? 'oaci' : 'free';
     setSourceStatus(status);
     onSourceStatusChangeRef.current?.(status);
-  }, [baseLayer, showTopo]);
+  }, [baseLayer]);
 
   useEffect(() => {
     const map = mapRef.current;
@@ -266,7 +274,7 @@ export function OpenLayersMap({
     <div className={`map-shell ${addWaypointMode ? 'is-adding-point' : ''}`}>
       <div ref={mapElementRef} className="ol-map" aria-label="Carte CAP CLAIR" />
       <div className="map-topline">
-        <span>{baseLayer === 'oaci' ? 'Fond OACI 1/500k' : 'Fond libre + openAIP'}</span>
+        <span>{baseLayer === 'oaci' ? 'Fond OACI 1/500k' : 'Fond openAIP'}</span>
       </div>
       {addWaypointMode && (
         <div className="map-add-banner">
@@ -274,7 +282,7 @@ export function OpenLayersMap({
         </div>
       )}
       <MapControls onZoomIn={() => zoom(1)} onZoomOut={() => zoom(-1)} onRecenter={recenter} />
-      {sourceStatus === 'fallback' && <MapFallbackNotice />}
+      {(sourceStatus === 'fallback' || sourceStatus === 'error') && <MapFallbackNotice mode={sourceStatus === 'error' ? 'oaci' : 'openaip'} />}
     </div>
   );
 }

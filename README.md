@@ -375,3 +375,25 @@ Hotfix vue carte après suppression waypoint :
 - conserve DEV13.8.1 waypoint view hotfix
 - conserve DEV13.8.0 OACI 1/500k
 - titre d'onglet mis à jour
+
+## DEV13.8.3
+
+OACI cleanup hardening :
+- libellé de sélection `Libre + openAIP` remplacé par `openAIP`
+- libellé carte `Fond libre + openAIP` remplacé par `Fond openAIP`
+- `OpenLayersMap` : suppression du shadowing `baseLayer` interne, remplacé par `freeMapLayer`
+- `OpenLayersMap` : suppression de la prop morte `showTopo`
+- proxy IGN OACI aligné sur la source : blocage z > 11
+- proxy IGN OACI : tuiles 400 / 404 silencieuses en placeholder transparent
+- proxy IGN OACI : erreurs amont réelles renvoyées en 503 pour permettre un `tileloaderror`
+- couche OACI : ajout d'un handler `tileloaderror`
+- MapFallbackNotice différencie maintenant openAIP et OACI
+- suppression de `mapSourceConfig.ts`, ancien code mort Géoplateforme
+- suppression de `sia500kDevSource.ts`, ancien code mort PDF / tuiles maison
+- manifest PWA mis à jour
+- `.env.example` actualisé
+- conserve DEV13.8.2 suppression waypoint sans dézoom
+- conserve DEV13.8.0 OACI 1/500k
+- conserve DEV13.7.20 simulation sans boucle
+- pas de modification GPS réel / log / carburant / zones
+- titre d'onglet mis à jour

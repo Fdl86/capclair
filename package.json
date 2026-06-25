@@ -1,7 +1,7 @@
 {
-  "name": "cap-clair-dev13-8-2-waypoint-delete-view-hotfix",
+  "name": "cap-clair-dev13-8-3-oaci-cleanup-hardening",
   "private": true,
-  "version": "0.13.8-2",
+  "version": "0.13.8-3",
   "type": "module",
   "scripts": {
     "dev": "vite",
