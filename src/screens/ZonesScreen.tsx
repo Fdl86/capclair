@@ -3,8 +3,9 @@ import type { BranchZoneProfile } from '../domain/airspace.types';
 import type { NavRoute } from '../domain/navigation.types';
 import { Page } from '../components/layout/Page';
 import { Card } from '../components/ui/Card';
-import { ZoneAltitudeBanner } from '../components/navigation/ZoneAltitudeBanner';
+import { VerticalProfileBanner } from '../components/navigation/VerticalProfileBanner';
 import { buildZoneProfiles } from '../services/airspace/airspaceEngine';
+import { fetchTerrainProfile, type TerrainSample } from '../services/navigation/terrainService';
 
 interface ZonesScreenProps {
   route: NavRoute;
@@ -13,6 +14,7 @@ interface ZonesScreenProps {
 export function ZonesScreen({ route }: ZonesScreenProps) {
   const [profiles, setProfiles] = useState<Record<string, BranchZoneProfile>>({});
   const [status, setStatus] = useState('Calcul zones...');
+  const [terrainSamples, setTerrainSamples] = useState<TerrainSample[]>([]);
 
   useEffect(() => {
     let cancelled = false;
@@ -34,6 +36,24 @@ export function ZonesScreen({ route }: ZonesScreenProps) {
     };
   }, [route]);
 
+  useEffect(() => {
+    let cancelled = false;
+    setTerrainSamples([]);
+
+    fetchTerrainProfile(route)
+      .then((samples) => {
+        if (!cancelled) setTerrainSamples(samples);
+      })
+      .catch(() => {
+        if (!cancelled) setTerrainSamples([]);
+      });
+
+    return () => {
+      cancelled = true;
+    };
+  }, [route]);
+
+
   const activeZoneCount = Object.values(profiles).reduce((sum, profile) => sum + profile.activeBlocks.length, 0);
 
   return (
@@ -42,15 +62,15 @@ export function ZonesScreen({ route }: ZonesScreenProps) {
         <Card className="zone-banner-card">
           <div className="panel-title-row">
             <div>
-              <span>Bannière zones</span>
+              <span>Profil vertical</span>
               <strong>{activeZoneCount ? `${activeZoneCount} zones actives à l'altitude prévue` : status}</strong>
             </div>
           </div>
-          {Object.keys(profiles).length ? <ZoneAltitudeBanner route={route} profiles={profiles} /> : <div className="zone-banner-loading">{status}</div>}
+          <VerticalProfileBanner route={route} profiles={profiles} terrainSamples={terrainSamples} />
         </Card>
         <Card className="safety-card">
           <strong>Préparation</strong>
-          <p>Les blocs représentent les espaces rencontrés par la route. La ligne cyan représente l'altitude prévue de la branche.</p>
+          <p>Les blocs représentent les espaces rencontrés par la route. La ligne cyan représente l'altitude prévue ; le relief IGN apparaît en bas quand disponible.</p>
         </Card>
       </div>
     </Page>

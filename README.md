@@ -414,3 +414,27 @@ Route UI polish :
 - conserve DEV13.8.3 OACI cleanup hardening
 - conserve DEV13.8.2 ajout / suppression waypoint sans dézoom
 - titre d'onglet mis à jour
+
+## DEV14.0
+
+Vertical profile terrain :
+- ajout du proxy Cloudflare `functions/api/ign/elevation.js`
+- proxy altimétrie IGN Géoplateforme public, sans clé personnelle
+- cache proxy terrain 7 jours pour les réponses valides
+- dégradé silencieux terrain : erreur API ou données absentes = profil sans terrain
+- ajout du service `fetchTerrainProfile(route)`
+- échantillonnage terrain optimisé à 60 points le long de la route
+- cache module navigateur par clé route simplifiée
+- création du composant unique `VerticalProfileBanner`
+- fusion de la frise globale et de la frise par branche dans un seul profil vertical
+- affichage zones + altitude prévue + séparateurs branches + marqueurs waypoints + coupe terrain
+- sections dépliables : Profil vertical, Zones présentes, Contacts
+- remplacement de `ZoneCompleteRouteBanner` dans Log de nav
+- remplacement de `ZoneAltitudeBanner` dans Zones
+- suppression de `ZoneCompleteRouteBanner.tsx`, `ZoneAltitudeBanner.tsx`, `ZoneRibbon.tsx`
+- suppression du vieux mock zones et du détail associé devenu mort
+- nettoyage CSS des anciennes frises `complete-zone`, `zone-altitude`, `zone-ribbon`
+- aucun changement GPS réel / suivi / carburant / moteur OACI / log de navigation
+- conserve DEV13.8.4 route UI polish
+- conserve DEV13.8.3 OACI cleanup hardening
+- titre d'onglet et manifest PWA mis à jour
