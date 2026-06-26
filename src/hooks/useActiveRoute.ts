@@ -157,7 +157,9 @@ export function useActiveRoute() {
 
   const setDefaultAltitudeFt = (defaultAltitudeFt: number) => {
     const profile = { ...normalizedRoute.profile, defaultAltitudeFt };
-    rebuild(normalizedRoute.points, profile, {}, {}, `Altitude défaut ${Math.round(defaultAltitudeFt)} ft`);
+    // On préserve les altitudes réglées par branche ; seules les branches sans override
+    // suivent la nouvelle altitude par défaut. Le vent est réinitialisé (dépend de l'altitude).
+    rebuild(normalizedRoute.points, profile, normalizedRoute.branchAltitudeById, {}, `Altitude défaut ${Math.round(defaultAltitudeFt)} ft`);
     setWeatherStatus('Vent à rafraîchir');
   };
 

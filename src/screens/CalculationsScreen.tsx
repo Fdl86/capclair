@@ -8,6 +8,7 @@ import { BranchTable } from '../components/navigation/BranchTable';
 import { ZoneCompleteRouteBanner } from '../components/navigation/ZoneCompleteRouteBanner';
 import { Button } from '../components/ui/Button';
 import { Card } from '../components/ui/Card';
+import { Accordion } from '../components/ui/Accordion';
 import { buildZoneProfiles } from '../services/airspace/airspaceEngine';
 import { computeFuelPlan } from '../services/navigation/fuelPlanning';
 import { fetchTerrainProfile, type TerrainSample } from '../services/navigation/terrainService';
@@ -105,6 +106,7 @@ export function CalculationsScreen({
   const [zoneProfiles, setZoneProfiles] = useState<Record<string, BranchZoneProfile>>({});
   const [zoneStatus, setZoneStatus] = useState('Calcul zones...');
   const [terrain, setTerrain] = useState<TerrainSample[]>([]);
+  const [shownZoneCount, setShownZoneCount] = useState(0);
 
   useEffect(() => {
     let cancelled = false;
@@ -141,7 +143,6 @@ export function CalculationsScreen({
     };
   }, [route]);
 
-  const activeZoneCount = Object.values(zoneProfiles).reduce((sum, profile) => sum + profile.activeBlocks.length, 0);
   const verticalProfile = useMemo(() => buildVerticalProfile(route, activeAircraft), [route, activeAircraft]);
   const fuel = useMemo(
     () => computeFuelPlan(
@@ -196,38 +197,42 @@ export function CalculationsScreen({
           </div>
         </Card>
 
-        <Card className="fuel-card">
+        <Accordion title="Devis carburant" className="fuel-card" defaultOpen>
           <FuelPlanningPanel fuel={fuel} config={fuelPlanConfig} onChangeConfig={onSetFuelPlanConfig} />
-        </Card>
+        </Accordion>
 
-        <Card className="navlog-card">
-          <div className="panel-title-row">
-            <div>
-              <span>Tableau de navigation</span>
-              <strong>{route.nom}</strong>
-            </div>
-            <Button variant="secondary" onClick={onRefreshWinds}>Maj vent</Button>
-          </div>
+        <Accordion
+          title="Tableau de navigation"
+          subtitle={route.nom}
+          className="navlog-card"
+          action={<Button variant="secondary" onClick={onRefreshWinds}>Maj vent</Button>}
+          defaultOpen
+        >
           <BranchTable route={route} zoneProfiles={zoneProfiles} onSetBranchAltitude={onSetBranchAltitude} />
-        </Card>
+        </Accordion>
 
-        <Card className="zone-banner-card">
-          <div className="panel-title-row">
-            <div>
-              <span>Frise zones</span>
-              <strong>{activeZoneCount ? `${activeZoneCount} zones actives sur la nav` : zoneStatus}</strong>
-            </div>
-            <Button variant="secondary" onClick={onBackPlanning}>Modifier route</Button>
-          </div>
+        <Accordion
+          title="Frise zones"
+          subtitle={shownZoneCount ? `${shownZoneCount} zones sur la nav` : zoneStatus}
+          className="zone-banner-card"
+          action={<Button variant="secondary" onClick={onBackPlanning}>Modifier route</Button>}
+          defaultOpen
+        >
           {Object.keys(zoneProfiles).length ? (
-            <ZoneCompleteRouteBanner route={route} profiles={zoneProfiles} terrain={terrain} profile={verticalProfile} />
+            <ZoneCompleteRouteBanner
+              route={route}
+              profiles={zoneProfiles}
+              terrain={terrain}
+              profile={verticalProfile}
+              onVisibleCountChange={setShownZoneCount}
+            />
           ) : (
             <div className="zone-banner-loading">{zoneStatus}</div>
           )}
-        </Card>
+        </Accordion>
 
         <div className="navlog-bottom-grid navlog-bottom-grid-wide">
-<Card className="navlog-weather-card">
+          <Accordion title="Météo terrains" className="navlog-weather-card" defaultOpen>
             <AerodromeWeatherPanel
               items={[
                 { role: 'Départ', code: departure?.code ?? '', name: aerodromeName(departure?.code ?? '') },
@@ -239,7 +244,7 @@ export function CalculationsScreen({
               updatedAtIso={aerodromeWeatherUpdatedAt}
               onRefresh={onRefreshAerodromeWeather}
             />
-          </Card>
+          </Accordion>
         </div>
 
         <div className="navlog-actions">

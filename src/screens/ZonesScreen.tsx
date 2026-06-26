@@ -55,7 +55,7 @@ export function ZonesScreen({ route, aircraft }: ZonesScreenProps) {
   }, [route]);
 
   const verticalProfile = useMemo(() => buildVerticalProfile(route, aircraft), [route, aircraft]);
-  const activeZoneCount = Object.values(profiles).reduce((sum, profile) => sum + profile.activeBlocks.length, 0);
+  const [shownZoneCount, setShownZoneCount] = useState(0);
 
   return (
     <Page title="Zones" subtitle="Vue verticale des zones traversées, du profil de vol et du relief.">
@@ -64,11 +64,11 @@ export function ZonesScreen({ route, aircraft }: ZonesScreenProps) {
           <div className="panel-title-row">
             <div>
               <span>Bannière zones</span>
-              <strong>{activeZoneCount ? `${activeZoneCount} zones actives à l'altitude prévue` : status}</strong>
+              <strong>{shownZoneCount ? `${shownZoneCount} zones sur la nav` : status}</strong>
             </div>
           </div>
           {Object.keys(profiles).length ? (
-            <ZoneCompleteRouteBanner route={route} profiles={profiles} terrain={terrain} profile={verticalProfile} />
+            <ZoneCompleteRouteBanner route={route} profiles={profiles} terrain={terrain} profile={verticalProfile} onVisibleCountChange={setShownZoneCount} />
           ) : (
             <div className="zone-banner-loading">{status}</div>
           )}

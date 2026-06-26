@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import type { BranchZoneBlock, BranchZoneProfile } from '../../domain/airspace.types';
 import type { NavRoute } from '../../domain/navigation.types';
 import type { TerrainSample } from '../../services/navigation/terrainService';
@@ -9,6 +10,7 @@ interface ZoneCompleteRouteBannerProps {
   profiles: Record<string, BranchZoneProfile>;
   terrain?: TerrainSample[];
   profile?: ProfilePoint[];
+  onVisibleCountChange?: (count: number) => void;
 }
 
 interface GlobalZoneBlock extends BranchZoneBlock {
@@ -189,7 +191,7 @@ function markerStyle(marker: RouteMarker) {
   return { left: `${clamp(marker.ratio * 100, 0, 100)}%` };
 }
 
-export function ZoneCompleteRouteBanner({ route, profiles, terrain = [], profile = [] }: ZoneCompleteRouteBannerProps) {
+export function ZoneCompleteRouteBanner({ route, profiles, terrain = [], profile = [], onVisibleCountChange }: ZoneCompleteRouteBannerProps) {
   const blocks = buildGlobalBlocks(route, profiles);
   const bounds = scaleBounds(route, terrain, profile);
   const altitude = plannedAltitude(route);
@@ -216,6 +218,11 @@ export function ZoneCompleteRouteBanner({ route, profiles, terrain = [], profile
       return false; // tout le reste non pénétré est masqué
     })
     .sort((a, b) => a.block.floorFt - b.block.floorFt || b.block.priority - a.block.priority);
+
+  const visibleCount = annotatedBlocks.length;
+  useEffect(() => {
+    onVisibleCountChange?.(visibleCount);
+  }, [onVisibleCountChange, visibleCount]);
 
   const profileLineY = (alt: number) => clamp(100 - ((alt - bounds.min) / (bounds.max - bounds.min || 1)) * 100, 0, 100);
   const entryMarkers = annotatedBlocks
