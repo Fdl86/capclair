@@ -17,8 +17,9 @@ export function traceToGpx(trace: Trace): string {
   const points = trace.positions.map((position) => {
     const elevation = position.altitude !== null ? `<ele>${Math.round(position.altitude)}</ele>` : '';
     const precision = position.precision !== null ? `<capclair:precision>${position.precision.toFixed(1)}</capclair:precision>` : '';
+    const altitudeAccuracy = position.altitudeAccuracy !== null ? `<capclair:altitudeAccuracy>${position.altitudeAccuracy.toFixed(1)}</capclair:altitudeAccuracy>` : '';
     const vitesse = position.vitesse !== null ? `<capclair:vitesse>${position.vitesse.toFixed(1)}</capclair:vitesse>` : '';
-    const extensions = precision || vitesse ? `<extensions>${precision}${vitesse}</extensions>` : '';
+    const extensions = precision || altitudeAccuracy || vitesse ? `<extensions>${precision}${altitudeAccuracy}${vitesse}</extensions>` : '';
     return `      <trkpt lat="${position.latitude.toFixed(7)}" lon="${position.longitude.toFixed(7)}">${elevation}<time>${new Date(position.timestamp).toISOString()}</time>${extensions}</trkpt>`;
   }).join('\n');
 

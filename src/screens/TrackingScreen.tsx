@@ -185,7 +185,7 @@ export function TrackingScreen({ route, onTraceReady, mapBaseLayer, onMapBaseLay
             <strong>{gps.status === 'requesting' ? 'Recherche position GPS...' : 'Position GPS reçue'}</strong>
             <p>
               {gps.lastAccuracy !== null
-                ? `Précision ${Math.round(gps.lastAccuracy)} m`
+                ? `Précision ${Math.round(gps.lastAccuracy)} m${gps.lastAltitudeAccuracy !== null ? ` · verticale ${Math.round(gps.lastAltitudeAccuracy)} m` : ' · verticale inconnue'}`
                 : 'Acquisition haute précision en cours. Le premier fix peut prendre quelques secondes.'}
             </p>
             {isRecording && (

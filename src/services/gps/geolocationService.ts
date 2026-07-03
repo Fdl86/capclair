@@ -16,6 +16,7 @@ export function toGpsPosition(position: GeolocationPosition): GpsPosition {
     latitude: position.coords.latitude,
     longitude: position.coords.longitude,
     altitude: position.coords.altitude,
+    altitudeAccuracy: position.coords.altitudeAccuracy,
     vitesse: position.coords.speed === null ? null : position.coords.speed * 1.94384,
     track: position.coords.heading,
     timestamp: position.timestamp,

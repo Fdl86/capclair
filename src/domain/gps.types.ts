@@ -2,6 +2,7 @@ export interface GpsPosition {
   latitude: number;
   longitude: number;
   altitude: number | null;
+  altitudeAccuracy: number | null;
   vitesse: number | null;
   track: number | null;
   timestamp: number;

@@ -24,6 +24,7 @@ export function interpolateSimulationPoint(routePoints: NavPoint[], step: number
     latitude: start.latitude + (end.latitude - start.latitude) * localT + offset,
     longitude: start.longitude + (end.longitude - start.longitude) * localT - offset * 0.5,
     altitude: 1050 + Math.sin(safeStep / 4) * 40,
+    altitudeAccuracy: 10,
     vitesse: finalPoint ? 0 : 102 + Math.sin(safeStep / 6) * 3,
     track: bearingDeg(start, end),
     timestamp: Date.now(),

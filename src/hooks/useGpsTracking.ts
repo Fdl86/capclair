@@ -48,6 +48,7 @@ export function useGpsTracking(route: NavRoute, onTraceReady: (trace: Trace) => 
   const [crossTrack, setCrossTrack] = useState<CrossTrackResult>(() => getCrossTrackError(null, route.points));
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [lastAccuracy, setLastAccuracy] = useState<number | null>(null);
+  const [lastAltitudeAccuracy, setLastAltitudeAccuracy] = useState<number | null>(null);
   const watchId = useRef<number | null>(null);
   const simTimer = useRef<number | null>(null);
   const simStep = useRef(0);
@@ -59,6 +60,7 @@ export function useGpsTracking(route: NavRoute, onTraceReady: (trace: Trace) => 
   const activeSegmentIndex = useRef<number | null>(null);
   const traceRejectionStreak = useRef(0);
   const groundAnchor = useRef<GpsPosition | null>(null);
+  const lastTraceSample = useRef<GpsPosition | null>(null);
   const [diagnostics, setDiagnostics] = useState<GpsTraceDiagnostics>(emptyDiagnostics);
   const diagnosticsRef = useRef<GpsTraceDiagnostics>(emptyDiagnostics());
 
@@ -92,12 +94,14 @@ export function useGpsTracking(route: NavRoute, onTraceReady: (trace: Trace) => 
     setPositions([]);
     setCurrentPosition(null);
     setLastAccuracy(null);
+    setLastAltitudeAccuracy(null);
     lastSignalAt.current = null;
     lastLivePosition.current = null;
     lastTraceSampleAt.current = null;
     activeSegmentIndex.current = null;
     traceRejectionStreak.current = 0;
     groundAnchor.current = null;
+    lastTraceSample.current = null;
     diagnosticsRef.current = emptyDiagnostics();
     setDiagnostics(diagnosticsRef.current);
     setCrossTrack(getCrossTrackError(null, route.points));
@@ -109,11 +113,13 @@ export function useGpsTracking(route: NavRoute, onTraceReady: (trace: Trace) => 
     if (!shouldSample) return;
 
     lastTraceSampleAt.current = position.timestamp;
+    lastTraceSample.current = position;
     setPositions((current) => [...current, position].slice(-TRACE_MAX_POINTS));
   };
 
   const ingestPosition = (position: GpsPosition, forceTraceSample = false) => {
     setLastAccuracy(position.precision);
+    setLastAltitudeAccuracy(position.altitudeAccuracy);
     lastSignalAt.current = Date.now();
     bumpDiagnostics('rawReceived');
 
@@ -129,7 +135,16 @@ export function useGpsTracking(route: NavRoute, onTraceReady: (trace: Trace) => 
     activeSegmentIndex.current = nextCrossTrack.segmentIndex;
     setCrossTrack(nextCrossTrack);
 
-    const previousTraceSample = positions.at(-1) ?? null;
+    // IMPORTANT : on lit `lastTraceSample.current` (une ref), pas `positions`
+    // (le state React). `ingestPosition` est appelée depuis le callback passé
+    // une seule fois à `navigator.geolocation.watchPosition` — ce callback
+    // garde tout le vol la valeur de `positions` telle qu'elle était à l'appel
+    // de `startGps()` (closure figée). Résultat : `positions.at(-1)` valait
+    // toujours `null`/le tout premier point, et TOUT le filtrage par
+    // vitesse/redondance ci-dessous ne s'exécutait jamais réellement — seul
+    // le throttle 3s de `appendTraceSample` agissait. La ref, elle, est
+    // toujours à jour quel que soit l'âge de la closure qui la lit.
+    const previousTraceSample = lastTraceSample.current;
     const reason = forceTraceSample ? null : classifyGpsPosition(position, previousTraceSample);
 
     if (forceTraceSample) {
@@ -299,6 +314,7 @@ export function useGpsTracking(route: NavRoute, onTraceReady: (trace: Trace) => 
     nextPointDistance,
     errorMessage,
     lastAccuracy,
+    lastAltitudeAccuracy,
     lastSignalAt: lastSignalAt.current,
     diagnostics,
     traceSampleIntervalMs: TRACE_SAMPLE_INTERVAL_MS,
