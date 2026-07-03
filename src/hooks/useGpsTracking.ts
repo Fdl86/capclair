@@ -26,9 +26,20 @@ const emptyDiagnostics = (): GpsTraceDiagnostics => ({
   rejectedPrecision: 0,
   rejectedRedundant: 0,
   rejectedSpeed: 0,
+  rejectedDrift: 0,
   forcedResync: 0,
   tracePoints: 0
 });
+
+// Sous ce seuil de vitesse sol *annoncée par le GPS* (Doppler, indépendante
+// du bruit de position), on considère l'appareil essentiellement immobile
+// (parqué, point d'attente). Un déplacement de position malgré une vitesse
+// quasi nulle est alors un rebond multitrajet (hangars, avions parqués),
+// pas un vrai mouvement.
+const STATIONARY_SPEED_KT_THRESHOLD = 5;
+// Rayon en dessous duquel, en régime "immobile", on ignore le déplacement
+// de position comme du bruit plutôt que de l'ajouter à la trace.
+const STATIONARY_DRIFT_RADIUS_M = 60;
 
 export function useGpsTracking(route: NavRoute, onTraceReady: (trace: Trace) => void) {
   const [status, setStatus] = useState<GpsStatus>('idle');
@@ -47,6 +58,7 @@ export function useGpsTracking(route: NavRoute, onTraceReady: (trace: Trace) => 
   const lastTraceSampleAt = useRef<number | null>(null);
   const activeSegmentIndex = useRef<number | null>(null);
   const traceRejectionStreak = useRef(0);
+  const groundAnchor = useRef<GpsPosition | null>(null);
   const [diagnostics, setDiagnostics] = useState<GpsTraceDiagnostics>(emptyDiagnostics);
   const diagnosticsRef = useRef<GpsTraceDiagnostics>(emptyDiagnostics());
 
@@ -85,6 +97,7 @@ export function useGpsTracking(route: NavRoute, onTraceReady: (trace: Trace) => 
     lastTraceSampleAt.current = null;
     activeSegmentIndex.current = null;
     traceRejectionStreak.current = 0;
+    groundAnchor.current = null;
     diagnosticsRef.current = emptyDiagnostics();
     setDiagnostics(diagnosticsRef.current);
     setCrossTrack(getCrossTrackError(null, route.points));
@@ -119,9 +132,31 @@ export function useGpsTracking(route: NavRoute, onTraceReady: (trace: Trace) => 
     const previousTraceSample = positions.at(-1) ?? null;
     const reason = forceTraceSample ? null : classifyGpsPosition(position, previousTraceSample);
 
-    if (forceTraceSample || reason === null) {
+    if (forceTraceSample) {
       traceRejectionStreak.current = 0;
-      appendTraceSample(position, forceTraceSample);
+      groundAnchor.current = null;
+      appendTraceSample(position, true);
+      bumpDiagnostics('tracePoints');
+    } else if (reason === null) {
+      const reportedSpeedKt = position.vitesse;
+      const isLowReportedSpeed = reportedSpeedKt !== null && reportedSpeedKt < STATIONARY_SPEED_KT_THRESHOLD;
+
+      if (isLowReportedSpeed && groundAnchor.current) {
+        const driftM = distanceNm(groundAnchor.current, position) * 1852;
+        if (driftM <= STATIONARY_DRIFT_RADIUS_M) {
+          // Vitesse Doppler quasi nulle mais position qui bouge de plusieurs
+          // dizaines de mètres : rebond multitrajet typique près des hangars
+          // ou d'avions parqués, pas un vrai déplacement. On n'ajoute pas ce
+          // point à la trace ; la position live, elle, continue de se
+          // rafraîchir normalement.
+          bumpDiagnostics('rejectedDrift');
+          return;
+        }
+      }
+
+      traceRejectionStreak.current = 0;
+      groundAnchor.current = isLowReportedSpeed ? position : null;
+      appendTraceSample(position);
       bumpDiagnostics('tracePoints');
     } else if (reason === 'redundant') {
       // Point normal mais trop rapproché : rien à faire, ce n'est pas un rejet
@@ -137,6 +172,7 @@ export function useGpsTracking(route: NavRoute, onTraceReady: (trace: Trace) => 
         traceRejectionStreak.current += 1;
         if (traceRejectionStreak.current >= MAX_CONSECUTIVE_TRACE_REJECTIONS) {
           traceRejectionStreak.current = 0;
+          groundAnchor.current = null;
           appendTraceSample(position, true);
           bumpDiagnostics('forcedResync');
           bumpDiagnostics('tracePoints');

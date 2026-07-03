@@ -190,7 +190,7 @@ export function TrackingScreen({ route, onTraceReady, mapBaseLayer, onMapBaseLay
             </p>
             {isRecording && (
               <p className="gps-diagnostics">
-                Reçus {gps.diagnostics.rawReceived} · trace {gps.diagnostics.tracePoints} · rejetés précision {gps.diagnostics.rejectedPrecision} · rejetés saut {gps.diagnostics.rejectedSpeed}
+                Reçus {gps.diagnostics.rawReceived} · trace {gps.diagnostics.tracePoints} · précision {gps.diagnostics.rejectedPrecision} · saut {gps.diagnostics.rejectedSpeed} · rebond sol {gps.diagnostics.rejectedDrift}
               </p>
             )}
           </Card>

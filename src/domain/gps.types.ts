@@ -18,6 +18,7 @@ export interface GpsTraceDiagnostics {
   rejectedPrecision: number;
   rejectedRedundant: number;
   rejectedSpeed: number;
+  rejectedDrift: number;
   forcedResync: number;
   tracePoints: number;
 }
