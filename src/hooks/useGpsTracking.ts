@@ -1,13 +1,12 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
-import type { GpsPosition, GpsStatus } from '../domain/gps.types';
+import type { GpsPosition, GpsStatus, GpsTraceDiagnostics } from '../domain/gps.types';
 import type { NavRoute } from '../domain/navigation.types';
 import type { Trace } from '../domain/trace.types';
 import { distanceNm, totalDistanceNm } from '../services/geo/distance';
 import {
   toGpsPosition,
   isPlausibleGpsPosition,
-  isUsableGpsPosition,
-  isRedundantTracePoint
+  classifyGpsPosition
 } from '../services/gps/geolocationService';
 import { interpolateSimulationPoint, simulationTotalSteps } from '../services/gps/simulationService';
 import { getCrossTrackError, getProgressiveCrossTrackError, type CrossTrackResult } from '../services/geo/crossTrackError';
@@ -21,6 +20,15 @@ const TRACE_MAX_POINTS = 4200;
 // longue coupure signal), on ne reste pas bloqué indéfiniment à comparer
 // tout nouveau point à ce point obsolète.
 const MAX_CONSECUTIVE_TRACE_REJECTIONS = 5;
+
+const emptyDiagnostics = (): GpsTraceDiagnostics => ({
+  rawReceived: 0,
+  rejectedPrecision: 0,
+  rejectedRedundant: 0,
+  rejectedSpeed: 0,
+  forcedResync: 0,
+  tracePoints: 0
+});
 
 export function useGpsTracking(route: NavRoute, onTraceReady: (trace: Trace) => void) {
   const [status, setStatus] = useState<GpsStatus>('idle');
@@ -39,6 +47,13 @@ export function useGpsTracking(route: NavRoute, onTraceReady: (trace: Trace) => 
   const lastTraceSampleAt = useRef<number | null>(null);
   const activeSegmentIndex = useRef<number | null>(null);
   const traceRejectionStreak = useRef(0);
+  const [diagnostics, setDiagnostics] = useState<GpsTraceDiagnostics>(emptyDiagnostics);
+  const diagnosticsRef = useRef<GpsTraceDiagnostics>(emptyDiagnostics());
+
+  const bumpDiagnostics = (key: keyof GpsTraceDiagnostics) => {
+    diagnosticsRef.current = { ...diagnosticsRef.current, [key]: diagnosticsRef.current[key] + 1 };
+    setDiagnostics(diagnosticsRef.current);
+  };
 
   const updateStatus = (next: GpsStatus) => {
     statusRef.current = next;
@@ -70,6 +85,8 @@ export function useGpsTracking(route: NavRoute, onTraceReady: (trace: Trace) => 
     lastTraceSampleAt.current = null;
     activeSegmentIndex.current = null;
     traceRejectionStreak.current = 0;
+    diagnosticsRef.current = emptyDiagnostics();
+    setDiagnostics(diagnosticsRef.current);
     setCrossTrack(getCrossTrackError(null, route.points));
   };
 
@@ -85,8 +102,12 @@ export function useGpsTracking(route: NavRoute, onTraceReady: (trace: Trace) => 
   const ingestPosition = (position: GpsPosition, forceTraceSample = false) => {
     setLastAccuracy(position.precision);
     lastSignalAt.current = Date.now();
+    bumpDiagnostics('rawReceived');
 
-    if (!isPlausibleGpsPosition(position)) return;
+    if (!isPlausibleGpsPosition(position)) {
+      bumpDiagnostics('rejectedPrecision');
+      return;
+    }
 
     lastLivePosition.current = position;
     setCurrentPosition(position);
@@ -96,25 +117,30 @@ export function useGpsTracking(route: NavRoute, onTraceReady: (trace: Trace) => 
     setCrossTrack(nextCrossTrack);
 
     const previousTraceSample = positions.at(-1) ?? null;
+    const reason = forceTraceSample ? null : classifyGpsPosition(position, previousTraceSample);
 
-    if (forceTraceSample) {
+    if (forceTraceSample || reason === null) {
       traceRejectionStreak.current = 0;
-      appendTraceSample(position, true);
-    } else if (isRedundantTracePoint(position, previousTraceSample)) {
+      appendTraceSample(position, forceTraceSample);
+      bumpDiagnostics('tracePoints');
+    } else if (reason === 'redundant') {
       // Point normal mais trop rapproché : rien à faire, ce n'est pas un rejet
       // "GPS louche", donc ça ne compte pas dans le compteur de resync.
-    } else if (isUsableGpsPosition(position, previousTraceSample)) {
-      traceRejectionStreak.current = 0;
-      appendTraceSample(position);
-    } else if (previousTraceSample) {
+      bumpDiagnostics('rejectedRedundant');
+    } else if (reason === 'speed') {
       // Saut de vitesse implausible : on ignore ce point pour ne pas polluer
       // la trace, sauf si ça se répète trop souvent — signe que la référence
       // elle-même est périmée (ex. après une coupure GPS prolongée), auquel
       // cas on force le resync plutôt que de rester bloqué.
-      traceRejectionStreak.current += 1;
-      if (traceRejectionStreak.current >= MAX_CONSECUTIVE_TRACE_REJECTIONS) {
-        traceRejectionStreak.current = 0;
-        appendTraceSample(position, true);
+      bumpDiagnostics('rejectedSpeed');
+      if (previousTraceSample) {
+        traceRejectionStreak.current += 1;
+        if (traceRejectionStreak.current >= MAX_CONSECUTIVE_TRACE_REJECTIONS) {
+          traceRejectionStreak.current = 0;
+          appendTraceSample(position, true);
+          bumpDiagnostics('forcedResync');
+          bumpDiagnostics('tracePoints');
+        }
       }
     }
   };
@@ -204,7 +230,8 @@ export function useGpsTracking(route: NavRoute, onTraceReady: (trace: Trace) => 
       date: new Date().toISOString(),
       positions: finalPositions,
       dureeSec: duration,
-      distanceNm: Number(totalDistanceNm(finalPositions).toFixed(2))
+      distanceNm: Number(totalDistanceNm(finalPositions).toFixed(2)),
+      diagnostics: diagnosticsRef.current
     };
     onTraceReady(trace);
     setPositions(finalPositions);
@@ -237,6 +264,7 @@ export function useGpsTracking(route: NavRoute, onTraceReady: (trace: Trace) => 
     errorMessage,
     lastAccuracy,
     lastSignalAt: lastSignalAt.current,
+    diagnostics,
     traceSampleIntervalMs: TRACE_SAMPLE_INTERVAL_MS,
     traceMaxPoints: TRACE_MAX_POINTS,
     startGps,

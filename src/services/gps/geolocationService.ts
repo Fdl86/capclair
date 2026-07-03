@@ -60,9 +60,24 @@ export function isSpeedPlausible(
   return speedKt === null || speedKt <= maxSpeedKt;
 }
 
+export type GpsRejectionReason = 'precision' | 'redundant' | 'speed';
+
+// Classe une position candidate pour la trace : renvoie `null` si elle est
+// utilisable, sinon la raison du rejet. Sert à la fois au filtrage
+// (isUsableGpsPosition) et à l'instrumentation live (compteurs affichés
+// pendant le vol) pour identifier la vraie cause des trous de trace plutôt
+// que de la supposer.
+export function classifyGpsPosition(
+  position: GpsPosition,
+  previous: GpsPosition | null,
+  maxSpeedKt: number = MAX_TRACE_SPEED_KT
+): GpsRejectionReason | null {
+  if (!isPlausibleGpsPosition(position)) return 'precision';
+  if (isRedundantTracePoint(position, previous)) return 'redundant';
+  if (!isSpeedPlausible(position, previous, maxSpeedKt)) return 'speed';
+  return null;
+}
+
 export function isUsableGpsPosition(position: GpsPosition, previous: GpsPosition | null): boolean {
-  if (!isPlausibleGpsPosition(position)) return false;
-  if (isRedundantTracePoint(position, previous)) return false;
-  if (!isSpeedPlausible(position, previous)) return false;
-  return true;
+  return classifyGpsPosition(position, previous) === null;
 }

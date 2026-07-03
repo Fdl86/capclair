@@ -188,6 +188,11 @@ export function TrackingScreen({ route, onTraceReady, mapBaseLayer, onMapBaseLay
                 ? `Précision ${Math.round(gps.lastAccuracy)} m`
                 : 'Acquisition haute précision en cours. Le premier fix peut prendre quelques secondes.'}
             </p>
+            {isRecording && (
+              <p className="gps-diagnostics">
+                Reçus {gps.diagnostics.rawReceived} · trace {gps.diagnostics.tracePoints} · rejetés précision {gps.diagnostics.rejectedPrecision} · rejetés saut {gps.diagnostics.rejectedSpeed}
+              </p>
+            )}
           </Card>
         )}
 

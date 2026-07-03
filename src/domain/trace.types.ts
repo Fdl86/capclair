@@ -1,4 +1,4 @@
-import type { GpsPosition } from './gps.types';
+import type { GpsPosition, GpsTraceDiagnostics } from './gps.types';
 
 export interface Trace {
   id: string;
@@ -8,4 +8,5 @@ export interface Trace {
   positions: GpsPosition[];
   dureeSec: number;
   distanceNm: number;
+  diagnostics?: GpsTraceDiagnostics;
 }
