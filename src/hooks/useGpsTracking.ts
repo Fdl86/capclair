@@ -3,12 +3,24 @@ import type { GpsPosition, GpsStatus } from '../domain/gps.types';
 import type { NavRoute } from '../domain/navigation.types';
 import type { Trace } from '../domain/trace.types';
 import { distanceNm, totalDistanceNm } from '../services/geo/distance';
-import { toGpsPosition, isPlausibleGpsPosition, isUsableGpsPosition } from '../services/gps/geolocationService';
+import {
+  toGpsPosition,
+  isPlausibleGpsPosition,
+  isUsableGpsPosition,
+  isRedundantTracePoint
+} from '../services/gps/geolocationService';
 import { interpolateSimulationPoint, simulationTotalSteps } from '../services/gps/simulationService';
 import { getCrossTrackError, getProgressiveCrossTrackError, type CrossTrackResult } from '../services/geo/crossTrackError';
 
 const TRACE_SAMPLE_INTERVAL_MS = 3000;
 const TRACE_MAX_POINTS = 4200;
+
+// Nombre de points consécutifs rejetés pour vitesse implausible avant de
+// forcer leur ajout à la trace. Un vrai saut GPS isolé est ainsi filtré,
+// mais si la position "de référence" est en fait périmée (ex. après une
+// longue coupure signal), on ne reste pas bloqué indéfiniment à comparer
+// tout nouveau point à ce point obsolète.
+const MAX_CONSECUTIVE_TRACE_REJECTIONS = 5;
 
 export function useGpsTracking(route: NavRoute, onTraceReady: (trace: Trace) => void) {
   const [status, setStatus] = useState<GpsStatus>('idle');
@@ -26,6 +38,7 @@ export function useGpsTracking(route: NavRoute, onTraceReady: (trace: Trace) => 
   const lastLivePosition = useRef<GpsPosition | null>(null);
   const lastTraceSampleAt = useRef<number | null>(null);
   const activeSegmentIndex = useRef<number | null>(null);
+  const traceRejectionStreak = useRef(0);
 
   const updateStatus = (next: GpsStatus) => {
     statusRef.current = next;
@@ -56,6 +69,7 @@ export function useGpsTracking(route: NavRoute, onTraceReady: (trace: Trace) => 
     lastLivePosition.current = null;
     lastTraceSampleAt.current = null;
     activeSegmentIndex.current = null;
+    traceRejectionStreak.current = 0;
     setCrossTrack(getCrossTrackError(null, route.points));
   };
 
@@ -82,8 +96,26 @@ export function useGpsTracking(route: NavRoute, onTraceReady: (trace: Trace) => 
     setCrossTrack(nextCrossTrack);
 
     const previousTraceSample = positions.at(-1) ?? null;
-    if (forceTraceSample || isUsableGpsPosition(position, previousTraceSample)) {
-      appendTraceSample(position, forceTraceSample);
+
+    if (forceTraceSample) {
+      traceRejectionStreak.current = 0;
+      appendTraceSample(position, true);
+    } else if (isRedundantTracePoint(position, previousTraceSample)) {
+      // Point normal mais trop rapproché : rien à faire, ce n'est pas un rejet
+      // "GPS louche", donc ça ne compte pas dans le compteur de resync.
+    } else if (isUsableGpsPosition(position, previousTraceSample)) {
+      traceRejectionStreak.current = 0;
+      appendTraceSample(position);
+    } else if (previousTraceSample) {
+      // Saut de vitesse implausible : on ignore ce point pour ne pas polluer
+      // la trace, sauf si ça se répète trop souvent — signe que la référence
+      // elle-même est périmée (ex. après une coupure GPS prolongée), auquel
+      // cas on force le resync plutôt que de rester bloqué.
+      traceRejectionStreak.current += 1;
+      if (traceRejectionStreak.current >= MAX_CONSECUTIVE_TRACE_REJECTIONS) {
+        traceRejectionStreak.current = 0;
+        appendTraceSample(position, true);
+      }
     }
   };
 
