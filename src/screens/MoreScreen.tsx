@@ -3,6 +3,7 @@ import type { AircraftProfile } from '../domain/aircraft.types';
 import { Page } from '../components/layout/Page';
 import { Button } from '../components/ui/Button';
 import { Card } from '../components/ui/Card';
+import { Accordion } from '../components/ui/Accordion';
 import { AircraftProfilePanel } from '../components/flight/AircraftProfilePanel';
 
 interface MoreScreenProps {
@@ -18,7 +19,13 @@ export function MoreScreen({ onNavigate, aircraftProfiles, activeAircraft, onSel
   return (
     <Page title="Plus" subtitle="Accès rapide aux outils de préparation.">
       <div className="more-grid">
-        <Card>
+        <Accordion
+          title="Avion"
+          subtitle={activeAircraft.label}
+          className="more-aircraft-accordion"
+          defaultOpen={false}
+          storageKey="capclair.accordion.more.aircraft.v1"
+        >
           <AircraftProfilePanel
             profiles={aircraftProfiles}
             activeProfile={activeAircraft}
@@ -26,7 +33,7 @@ export function MoreScreen({ onNavigate, aircraftProfiles, activeAircraft, onSel
             onUpdateProfile={onUpdateAircraft}
             onCreateProfile={onCreateAircraft}
           />
-        </Card>
+        </Accordion>
         <Card>
           <h2>Log de nav</h2>
           <p>Tableau complet avec altitude, vent, route vraie, variation, route magnétique, cap et vitesse sol.</p>

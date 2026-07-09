@@ -200,3 +200,8 @@
 .map-shell.is-adding-point .ol-layer canvas {
   cursor: crosshair;
 }
+
+/* DEV15.0.3 - selected base is already shown by the segmented control */
+.map-topline {
+  display: none;
+}

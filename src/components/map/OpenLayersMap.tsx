@@ -70,10 +70,8 @@ export function OpenLayersMap({
   const onSourceStatusChangeRef = useRef(onSourceStatusChange);
   const [sourceStatus, setSourceStatus] = useState<MapSourceStatus>('free');
 
-  const routeExtent = useMemo(() => {
-    const coords = route.points.map((point) => fromLonLat([point.longitude, point.latitude]));
-    return boundingExtent(coords);
-  }, [route.points]);
+  const routeCoordinates = useMemo(() => route.points.map((point) => fromLonLat([point.longitude, point.latitude])), [route.points]);
+  const routeExtent = useMemo(() => routeCoordinates.length > 0 ? boundingExtent(routeCoordinates) : null, [routeCoordinates]);
 
   useEffect(() => {
     currentBaseLayerModeRef.current = baseLayer;
@@ -236,8 +234,20 @@ export function OpenLayersMap({
       && previousEndpointsKey === currentEndpointsKey;
     if (waypointCountChanged) return;
 
+    if (routeCoordinates.length === 0 || !routeExtent) {
+      map.getView().setCenter(initialMapCenter);
+      map.getView().setZoom(initialMapZoom);
+      return;
+    }
+
+    if (routeCoordinates.length === 1) {
+      map.getView().setCenter(routeCoordinates[0]);
+      map.getView().setZoom(10);
+      return;
+    }
+
     map.getView().fit(routeExtent, { padding: compact ? [48, 48, 48, 48] : [72, 58, 92, 58], duration: 0, maxZoom: 10 });
-  }, [routeExtent, compact, route.points]);
+  }, [routeExtent, routeCoordinates, compact, route.points]);
 
   useEffect(() => {
     const map = mapRef.current;
@@ -267,15 +277,22 @@ export function OpenLayersMap({
       map.getView().animate({ center: fromLonLat([aircraft.longitude, aircraft.latitude]), duration: 120 });
       return;
     }
+    if (routeCoordinates.length === 0 || !routeExtent) {
+      map.getView().animate({ center: initialMapCenter, zoom: initialMapZoom, duration: 120 });
+      return;
+    }
+
+    if (routeCoordinates.length === 1) {
+      map.getView().animate({ center: routeCoordinates[0], zoom: 10, duration: 120 });
+      return;
+    }
+
     map.getView().fit(routeExtent, { padding: [72, 58, 92, 58], duration: 0, maxZoom: 10 });
   };
 
   return (
     <div className={`map-shell ${addWaypointMode ? 'is-adding-point' : ''}`}>
       <div ref={mapElementRef} className="ol-map" aria-label="Carte CAP CLAIR" />
-      <div className="map-topline">
-        <span>{baseLayer === 'oaci' ? 'Fond OACI 1/500k' : 'Fond openAIP'}</span>
-      </div>
       {addWaypointMode && (
         <div className="map-add-banner">
           Cliquez sur la carte pour placer le point

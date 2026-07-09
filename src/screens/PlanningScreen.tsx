@@ -26,6 +26,7 @@ interface PlanningScreenProps {
   onCalculations: () => void;
   mapBaseLayer: MapBaseLayer;
   onMapBaseLayerChange: (value: MapBaseLayer) => void;
+  aircraftPosition?: GpsPosition | null;
 }
 
 function endpointCode(route: NavRoute, type: 'depart' | 'destination') {
@@ -39,6 +40,16 @@ function formatDuration(minutes: number) {
 }
 
 const EMPTY_TRACE: GpsPosition[] = [];
+type AerodromeField = 'departure' | 'destination' | 'alternate';
+
+function aerodromeSuggestions(query: string) {
+  const normalized = query.trim().toUpperCase();
+  if (normalized.length < 2) return [];
+  return AERODROMES.filter((aerodrome) => (
+    aerodrome.code.includes(normalized)
+    || aerodrome.cartoName.toUpperCase().includes(normalized)
+  )).slice(0, 5);
+}
 
 export function PlanningScreen({
   route,
@@ -55,12 +66,14 @@ export function PlanningScreen({
   onSetAlternateCode,
   onCalculations,
   mapBaseLayer,
-  onMapBaseLayerChange
+  onMapBaseLayerChange,
+  aircraftPosition = null
 }: PlanningScreenProps) {
   const [addWaypointMode, setAddWaypointMode] = useState(false);
   const [departureInput, setDepartureInput] = useState(endpointCode(route, 'depart'));
   const [destinationInput, setDestinationInput] = useState(endpointCode(route, 'destination'));
   const [alternateInput, setAlternateInput] = useState(alternateCode);
+  const [activeAerodromeField, setActiveAerodromeField] = useState<AerodromeField | null>(null);
 
   useEffect(() => {
     setDepartureInput(endpointCode(route, 'depart'));
@@ -71,7 +84,14 @@ export function PlanningScreen({
     setAlternateInput(alternateCode);
   }, [alternateCode]);
 
-  const datalistId = useMemo(() => 'cap-clair-aerodromes', []);
+  const activeAerodromeInput = activeAerodromeField === 'departure'
+    ? departureInput
+    : activeAerodromeField === 'destination'
+      ? destinationInput
+      : activeAerodromeField === 'alternate'
+        ? alternateInput
+        : '';
+  const suggestions = useMemo(() => aerodromeSuggestions(activeAerodromeInput), [activeAerodromeInput]);
 
   const applyDeparture = () => {
     if (departureInput.trim().length >= 4) onSetDepartureCode(departureInput);
@@ -82,7 +102,31 @@ export function PlanningScreen({
   };
 
   const applyAlternate = () => {
-    if (alternateInput.trim().length >= 4) onSetAlternateCode(alternateInput.trim().toUpperCase());
+    const normalized = alternateInput.trim().toUpperCase();
+    if (!normalized) {
+      onSetAlternateCode('');
+      return;
+    }
+    if (normalized.length >= 4) onSetAlternateCode(normalized);
+  };
+
+  const chooseAerodrome = (field: AerodromeField, code: string) => {
+    if (field === 'departure') {
+      setDepartureInput(code);
+      onSetDepartureCode(code);
+    }
+    if (field === 'destination') {
+      setDestinationInput(code);
+      onSetDestinationCode(code);
+    }
+    if (field === 'alternate') {
+      setAlternateInput(code);
+      onSetAlternateCode(code);
+    }
+    setActiveAerodromeField(null);
+    if (typeof document !== 'undefined') {
+      (document.activeElement as HTMLElement | null)?.blur?.();
+    }
   };
 
   const handleAddWaypoint = useCallback((longitude: number, latitude: number) => {
@@ -98,7 +142,7 @@ export function PlanningScreen({
           <OpenLayersMap
             route={route}
             trace={EMPTY_TRACE}
-            aircraft={null}
+            aircraft={aircraftPosition}
             selectedPointId={selectedPointId}
             baseLayer={mapBaseLayer}
             addWaypointMode={addWaypointMode}
@@ -124,7 +168,9 @@ export function PlanningScreen({
                 onBlur={applyDeparture}
                 onKeyDown={(event) => { if (event.key === 'Enter') applyDeparture(); }}
                 maxLength={4}
-                list={datalistId}
+                onFocus={() => setActiveAerodromeField('departure')}
+                inputMode="text"
+                autoComplete="off"
                 autoCapitalize="characters"
                 spellCheck={false}
               />
@@ -137,7 +183,9 @@ export function PlanningScreen({
                 onBlur={applyDestination}
                 onKeyDown={(event) => { if (event.key === 'Enter') applyDestination(); }}
                 maxLength={4}
-                list={datalistId}
+                onFocus={() => setActiveAerodromeField('destination')}
+                inputMode="text"
+                autoComplete="off"
                 autoCapitalize="characters"
                 spellCheck={false}
               />
@@ -150,18 +198,33 @@ export function PlanningScreen({
                 onBlur={applyAlternate}
                 onKeyDown={(event) => { if (event.key === 'Enter') applyAlternate(); }}
                 maxLength={4}
-                list={datalistId}
+                onFocus={() => setActiveAerodromeField('alternate')}
+                inputMode="text"
+                autoComplete="off"
                 autoCapitalize="characters"
                 spellCheck={false}
               />
             </label>
             <Button variant="ghost" className="route-builder-reverse" onClick={onReverseRoute}>Inverser</Button>
-            <datalist id={datalistId}>
-              {AERODROMES.map((aerodrome) => (
-                <option key={aerodrome.code} value={aerodrome.code}>{aerodrome.cartoName}</option>
-              ))}
-            </datalist>
           </div>
+
+          {activeAerodromeField && suggestions.length > 0 && (
+            <div className="aerodrome-suggestions" role="listbox" aria-label="Suggestions aérodromes">
+              {suggestions.map((aerodrome) => (
+                <button
+                  key={`${activeAerodromeField}-${aerodrome.code}`}
+                  type="button"
+                  onPointerDown={(event) => {
+                    event.preventDefault();
+                    chooseAerodrome(activeAerodromeField, aerodrome.code);
+                  }}
+                >
+                  <strong>{aerodrome.code}</strong>
+                  <span>{aerodrome.cartoName}</span>
+                </button>
+              ))}
+            </div>
+          )}
 
           <div className="route-summary-line">
             <strong>{route.distanceTotale.toFixed(1).replace('.', ',')} NM</strong>

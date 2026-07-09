@@ -220,6 +220,14 @@
   gap: 5px;
 }
 
+.route-point-list.empty {
+  padding: 12px;
+  border: 1px dashed rgba(89, 207, 255, 0.28);
+  border-radius: 13px;
+  color: var(--text-2);
+  background: rgba(7, 17, 28, 0.38);
+}
+
 .route-point {
   display: grid;
   grid-template-columns: auto 1fr auto;
@@ -2681,4 +2689,159 @@
 
 .accordion.is-closed {
   background: rgba(11, 21, 33, 0.92);
+}
+
+/* GPS state card */
+.gps-provider-line {
+  color: var(--text-3) !important;
+  font-size: 0.68rem !important;
+  letter-spacing: 0.02em;
+}
+
+/* Mobile visual compactness */
+.more-aircraft-accordion .accordion-body {
+  padding: 0 12px 12px;
+}
+
+.more-aircraft-accordion .aircraft-profile-panel {
+  border: 0;
+  background: transparent;
+  padding: 0;
+  box-shadow: none;
+}
+
+.more-grid .card {
+  display: grid;
+  gap: 10px;
+  align-content: start;
+}
+
+@media (max-width: 520px) {
+  .app-main {
+    padding-left: 12px;
+    padding-right: 12px;
+  }
+
+  .page {
+    gap: 12px;
+  }
+
+  .map-card {
+    min-height: min(72dvh, 520px);
+  }
+
+  .planning-map-card {
+    min-height: min(64dvh, 500px);
+  }
+
+  .tracking-map-panel {
+    min-height: min(58dvh, 460px);
+  }
+
+  .cockpit-badges {
+    gap: 7px;
+  }
+
+  .accordion-head {
+    padding: 11px 12px;
+  }
+
+  .accordion-body {
+    padding: 0 12px 12px;
+  }
+
+  .navlog-summary-grid {
+    gap: 8px;
+  }
+
+  .navlog-summary-card {
+    min-height: 86px;
+    padding: 12px 13px;
+  }
+
+  .navlog-prep-card,
+  .card {
+    padding: 12px;
+  }
+
+  .aircraft-profile-panel,
+  .aerodrome-weather-panel {
+    padding: 10px;
+  }
+}
+
+/* Mobile cockpit and planning refinements */
+.aerodrome-suggestions {
+  max-height: min(224px, 34vh);
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  border: 1px solid rgba(89, 207, 255, 0.28);
+  border-radius: 14px;
+  background: rgba(5, 11, 18, 0.94);
+  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.32);
+  display: grid;
+  padding: 5px;
+  gap: 3px;
+}
+
+.aerodrome-suggestions button {
+  min-height: 46px;
+  border: 0;
+  border-radius: 10px;
+  background: rgba(17, 28, 42, 0.82);
+  color: var(--text);
+  display: grid;
+  grid-template-columns: 64px minmax(0, 1fr);
+  align-items: center;
+  gap: 10px;
+  padding: 0 12px;
+  text-align: left;
+}
+
+.aerodrome-suggestions button:active {
+  background: rgba(24, 174, 239, 0.18);
+}
+
+.aerodrome-suggestions strong {
+  color: var(--cyan-soft);
+  font-size: 0.9rem;
+  letter-spacing: 0.06em;
+}
+
+.aerodrome-suggestions span {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: var(--text-2);
+  font-size: 0.78rem;
+  font-weight: 760;
+}
+
+.navlog-table-scroll {
+  width: 100%;
+  overflow-x: auto;
+  overflow-y: hidden;
+  -webkit-overflow-scrolling: touch;
+}
+
+.navlog-table-scroll .navlog-table {
+  min-width: 1080px;
+}
+
+@media (max-width: 520px) {
+  .aerodrome-suggestions {
+    max-height: min(188px, 28vh);
+  }
+
+  .aerodrome-suggestions button {
+    min-height: 42px;
+    grid-template-columns: 58px minmax(0, 1fr);
+    padding: 0 10px;
+  }
+}
+.trace-export-status {
+  color: var(--text-2);
+  margin: 8px 0 0;
+  font-size: 0.76rem;
 }

@@ -11,6 +11,12 @@ const MAX_PLAUSIBLE_PRECISION_M = 150;
 // ligne droite ne correspondant à rien de réel, au sol comme en vol.
 export const MAX_TRACE_SPEED_KT = 220;
 
+// Altitude GPS considérée fiable seulement si le navigateur fournit une
+// précision verticale exploitable. L'altitude brute peut rester dans les
+// extensions d'export, mais elle ne doit pas devenir une élévation GPX
+// officielle si la précision verticale est inconnue ou trop large.
+const MAX_RELIABLE_ALTITUDE_ACCURACY_M = 100;
+
 export function toGpsPosition(position: GeolocationPosition): GpsPosition {
   return {
     latitude: position.coords.latitude,
@@ -30,6 +36,13 @@ export function isPlausibleGpsPosition(position: GpsPosition): boolean {
   if (position.longitude < -180 || position.longitude > 180) return false;
   if (position.precision !== null && position.precision > MAX_PLAUSIBLE_PRECISION_M) return false;
   return true;
+}
+
+export function isReliableGpsAltitude(position: GpsPosition): boolean {
+  return position.altitude !== null
+    && position.altitudeAccuracy !== null
+    && Number.isFinite(position.altitudeAccuracy)
+    && position.altitudeAccuracy <= MAX_RELIABLE_ALTITUDE_ACCURACY_M;
 }
 
 // Point quasi identique au précédent échantillon de trace, trop rapproché

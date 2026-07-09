@@ -1,6 +1,7 @@
+import { useState } from 'react';
 import type { Trace } from '../../domain/trace.types';
 import { Button } from '../ui/Button';
-import { downloadGpx } from '../../services/export/gpxExport';
+import { exportGpx, exportJson } from '../../services/export/gpxExport';
 
 interface TraceListItemProps {
   trace: Trace;
@@ -14,6 +15,24 @@ function formatDuration(seconds: number): string {
 }
 
 export function TraceListItem({ trace, onDelete }: TraceListItemProps) {
+  const [exportStatus, setExportStatus] = useState<string | null>(null);
+  const [isExporting, setIsExporting] = useState(false);
+
+  const runExport = async (format: 'gpx' | 'json') => {
+    if (isExporting) return;
+    setIsExporting(true);
+    setExportStatus(format === 'gpx' ? 'Préparation GPX...' : 'Préparation JSON...');
+    try {
+      const result = format === 'gpx' ? await exportGpx(trace) : await exportJson(trace);
+      setExportStatus(`${result.fileName} - ${result.message}`);
+    } catch (error) {
+      const message = error instanceof Error ? error.message : String(error || 'Erreur inconnue');
+      setExportStatus(`Export impossible : ${message}`);
+    } finally {
+      setIsExporting(false);
+    }
+  };
+
   return (
     <article className="trace-item">
       <div>
@@ -26,9 +45,11 @@ export function TraceListItem({ trace, onDelete }: TraceListItemProps) {
         <div><dt>Points</dt><dd>{trace.positions.length}</dd></div>
       </dl>
       <div className="trace-actions">
-        <Button variant="secondary" onClick={() => downloadGpx(trace)}>Exporter GPX</Button>
-        <Button variant="ghost" onClick={() => onDelete(trace.id)}>Supprimer</Button>
+        <Button variant="secondary" disabled={isExporting} onClick={() => runExport('gpx')}>Exporter GPX</Button>
+        <Button variant="ghost" disabled={isExporting} onClick={() => runExport('json')}>JSON secours</Button>
+        <Button variant="ghost" disabled={isExporting} onClick={() => onDelete(trace.id)}>Supprimer</Button>
       </div>
+      {exportStatus && <p className="trace-export-status">{exportStatus}</p>}
     </article>
   );
 }

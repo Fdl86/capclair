@@ -22,4 +22,9 @@ export interface GpsTraceDiagnostics {
   rejectedDrift: number;
   forcedResync: number;
   tracePoints: number;
+  gpsGaps: number;
+  gpsResumptions: number;
+  missingAltitude: number;
+  unreliableAltitude: number;
+  maxTraceSpeedKt: number;
 }

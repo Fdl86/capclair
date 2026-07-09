@@ -20,8 +20,9 @@ function routeEndpointCode(route: ReturnType<typeof useActiveRoute>['route'], ty
   return route.points.find((point) => point.type === type)?.code ?? '';
 }
 
-function safeAerodromeCode(code: string, fallback: string) {
+function safeAerodromeCode(code: string, fallback = '') {
   const normalized = code.trim().toUpperCase();
+  if (!normalized) return '';
   return findAerodrome(normalized) ? normalized : fallback;
 }
 
@@ -30,15 +31,15 @@ export function App() {
   const routeState = useActiveRoute();
   const traceState = useTraces();
   const aircraftState = useAircraftProfiles();
-  const [alternateCode, setAlternateCode] = useLocalStorageState('capclair.alternateCode.v1', 'LFOO');
+  const [alternateCode, setAlternateCode] = useLocalStorageState('capclair.alternateCode.v2.web', '');
   const [fuelPlanConfigRaw, setFuelPlanConfig] = useLocalStorageState('capclair.fuelPlan.v1', DEFAULT_FUEL_PLAN_CONFIG);
   const [mapBaseLayer, setMapBaseLayer] = useLocalStorageState<MapBaseLayer>('capclair.mapBaseLayer.v1', 'free');
   const fuelPlanConfig = { ...DEFAULT_FUEL_PLAN_CONFIG, ...fuelPlanConfigRaw };
 
   const departureCode = routeEndpointCode(routeState.route, 'depart');
   const destinationCode = routeEndpointCode(routeState.route, 'destination');
-  const safeAlternateCode = safeAerodromeCode(alternateCode, 'LFOO');
-  const aerodromeWeatherState = useAerodromeWeather([departureCode, destinationCode, safeAlternateCode]);
+  const safeAlternateCode = safeAerodromeCode(alternateCode, '');
+  const aerodromeWeatherState = useAerodromeWeather([departureCode, destinationCode, safeAlternateCode].filter(Boolean));
 
   const setAlternate = (code: string) => {
     setAlternateCode(safeAerodromeCode(code, safeAlternateCode));

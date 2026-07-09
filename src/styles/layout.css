@@ -90,7 +90,7 @@
   bottom: 0;
   z-index: 70;
   display: grid;
-  grid-template-columns: repeat(5, 1fr);
+  grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: 2px;
   padding: 8px 10px calc(8px + var(--safe-bottom));
   background: rgba(5, 11, 18, 0.94);

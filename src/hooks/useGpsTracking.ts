@@ -28,7 +28,12 @@ const emptyDiagnostics = (): GpsTraceDiagnostics => ({
   rejectedSpeed: 0,
   rejectedDrift: 0,
   forcedResync: 0,
-  tracePoints: 0
+  tracePoints: 0,
+  gpsGaps: 0,
+  gpsResumptions: 0,
+  missingAltitude: 0,
+  unreliableAltitude: 0,
+  maxTraceSpeedKt: 220
 });
 
 // Sous ce seuil de vitesse sol *annoncée par le GPS* (Doppler, indépendante

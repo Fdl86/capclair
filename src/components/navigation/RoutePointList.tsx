@@ -21,6 +21,10 @@ function roleLabel(point: NavPoint) {
 }
 
 export function RoutePointList({ points, selectedPointId, onSelect, onRemove }: RoutePointListProps) {
+  if (points.length === 0) {
+    return <div className="route-point-list empty">Saisir un départ et une arrivée pour créer la navigation.</div>;
+  }
+
   return (
     <div className="route-point-list">
       {points.map((point, index) => (

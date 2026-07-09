@@ -197,7 +197,7 @@ export function CalculationsScreen({
           </div>
         </Card>
 
-        <Accordion title="Devis carburant" className="fuel-card" defaultOpen>
+        <Accordion title="Devis carburant" className="fuel-card" defaultOpen storageKey="capclair.accordion.navlog.fuel.v1">
           <FuelPlanningPanel fuel={fuel} config={fuelPlanConfig} onChangeConfig={onSetFuelPlanConfig} />
         </Accordion>
 
@@ -207,8 +207,11 @@ export function CalculationsScreen({
           className="navlog-card"
           action={<Button variant="secondary" onClick={onRefreshWinds}>Maj vent</Button>}
           defaultOpen
+          storageKey="capclair.accordion.navlog.table.v1"
         >
-          <BranchTable route={route} zoneProfiles={zoneProfiles} onSetBranchAltitude={onSetBranchAltitude} />
+          <div className="navlog-table-scroll">
+            <BranchTable route={route} zoneProfiles={zoneProfiles} onSetBranchAltitude={onSetBranchAltitude} />
+          </div>
         </Accordion>
 
         <Accordion
@@ -217,6 +220,7 @@ export function CalculationsScreen({
           className="zone-banner-card"
           action={<Button variant="secondary" onClick={onBackPlanning}>Modifier route</Button>}
           defaultOpen
+          storageKey="capclair.accordion.navlog.zones.v1"
         >
           {Object.keys(zoneProfiles).length ? (
             <ZoneCompleteRouteBanner
@@ -232,12 +236,12 @@ export function CalculationsScreen({
         </Accordion>
 
         <div className="navlog-bottom-grid navlog-bottom-grid-wide">
-          <Accordion title="Météo terrains" className="navlog-weather-card" defaultOpen>
+          <Accordion title="Météo terrains" className="navlog-weather-card" defaultOpen storageKey="capclair.accordion.navlog.weather.v1">
             <AerodromeWeatherPanel
               items={[
-                { role: 'Départ', code: departure?.code ?? '', name: aerodromeName(departure?.code ?? '') },
-                { role: 'Arrivée', code: destination?.code ?? '', name: aerodromeName(destination?.code ?? '') },
-                { role: 'Dégagement', code: alternateCode, name: aerodromeName(alternateCode) }
+                ...(departure?.code ? [{ role: 'Départ', code: departure.code, name: aerodromeName(departure.code) }] : []),
+                ...(destination?.code ? [{ role: 'Arrivée', code: destination.code, name: aerodromeName(destination.code) }] : []),
+                ...(alternateCode ? [{ role: 'Dégagement', code: alternateCode, name: aerodromeName(alternateCode) }] : [])
               ]}
               reports={aerodromeWeatherReports}
               status={aerodromeWeatherStatus}
