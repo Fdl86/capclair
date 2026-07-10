@@ -167,3 +167,9 @@
     top: 54px;
   }
 }
+
+@media (min-width: 760px) {
+  .header-version-mobile {
+    display: none;
+  }
+}

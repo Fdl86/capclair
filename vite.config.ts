@@ -34,7 +34,18 @@ export default defineConfig({
       },
       workbox: {
         cleanupOutdatedCaches: true,
-        globPatterns: ['**/*.{js,css,html,ico,png,svg,webmanifest}']
+        globPatterns: ['**/*.{js,css,html,ico,png,svg,webmanifest}'],
+        globIgnores: ['**/airspaceCatalog-*.js'],
+        runtimeCaching: [
+          {
+            urlPattern: /\/assets\/airspaceCatalog-.*\.js$/,
+            handler: 'CacheFirst',
+            options: {
+              cacheName: 'capclair-airspace-catalog',
+              expiration: { maxEntries: 3, maxAgeSeconds: 30 * 24 * 60 * 60 }
+            }
+          }
+        ]
       }
     })
   ],

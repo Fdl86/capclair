@@ -1,4 +1,4 @@
-import { APP_SUBTITLE, APP_TITLE, APP_VERSION } from '../../app/version';
+import { APP_SUBTITLE, APP_TITLE, APP_VERSION, APP_VERSION_SHORT } from '../../app/version';
 
 export function HeaderBar() {
   return (
@@ -10,6 +10,7 @@ export function HeaderBar() {
           <span>{APP_SUBTITLE}</span>
         </div>
       </div>
+      <div className="header-version-mobile" title={APP_VERSION}>{APP_VERSION_SHORT}</div>
       <div className="header-status">
         <span>App ouverte</span>
         <span>Carte aéro</span>

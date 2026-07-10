@@ -3,6 +3,7 @@ import { findAerodrome } from '../../data/aerodromeCatalog';
 import { bearingDeg } from '../geo/bearing';
 import { distanceNm } from '../geo/distance';
 import { estimatedMagneticVariationDeg } from '../geo/magneticVariation';
+import { clampAircraftTasKt } from '../aircraft/aircraftValidation';
 
 const DEFAULT_TAS_KT = 105;
 const DEFAULT_ALTITUDE_FT = 2500;
@@ -63,7 +64,7 @@ function branchId(from: NavPoint, to: NavPoint): string {
 }
 
 function sanitizeProfile(profile?: Partial<FlightProfile>): FlightProfile {
-  const tasKt = clamp(Math.round(profile?.tasKt ?? DEFAULT_TAS_KT), 45, 220);
+  const tasKt = clampAircraftTasKt(profile?.tasKt ?? DEFAULT_TAS_KT);
   const defaultAltitudeFt = clamp(Math.round((profile?.defaultAltitudeFt ?? DEFAULT_ALTITUDE_FT) / 100) * 100, 500, 12500);
   const departureTimeIso = profile?.departureTimeIso && !Number.isNaN(new Date(profile.departureTimeIso).getTime())
     ? profile.departureTimeIso
@@ -125,27 +126,32 @@ export function createManualWaypoint(latitude: number, longitude: number, index:
 }
 
 export function relabelRoutePoints(points: NavPoint[]): NavPoint[] {
-  if (points.length === 0) return [];
-
-  if (points.length === 1) {
-    const point = points[0];
-    const type: NavPointType = point.type === 'destination' ? 'destination' : 'depart';
-    return [{ ...point, type, nom: point.code ?? point.nom }];
-  }
+  const departure = points.find((point) => point.type === 'depart');
+  const destination = points.find((point) => point.type === 'destination');
+  const endpointIds = new Set([departure?.id, destination?.id].filter(Boolean));
+  const intermediate = points.filter((point) => !endpointIds.has(point.id));
+  const ordered = [
+    ...(departure ? [{ ...departure, type: 'depart' as const }] : []),
+    ...intermediate.map((point) => ({ ...point, type: 'waypoint' as const })),
+    ...(destination ? [{ ...destination, type: 'destination' as const }] : [])
+  ];
 
   let waypointIndex = 0;
-  return points.map((point, index) => {
-    const type: NavPointType = index === 0 ? 'depart' : index === points.length - 1 ? 'destination' : 'waypoint';
-    if (type === 'waypoint' && point.source !== 'aerodrome') {
+  return ordered.map((point) => {
+    if (point.type === 'waypoint' && point.source !== 'aerodrome') {
       waypointIndex += 1;
       const code = `WP${waypointIndex}`;
-      return { ...point, type, code, nom: code };
+      return { ...point, code, nom: code };
     }
-    return { ...point, type, nom: point.code ?? point.nom };
+    return { ...point, nom: point.code ?? point.nom };
   });
 }
 
 export function buildBranches(points: NavPoint[], options: RouteBuildOptions = {}): NavBranch[] {
+  const hasDeparture = points[0]?.type === 'depart';
+  const hasDestination = points.at(-1)?.type === 'destination';
+  if (!hasDeparture || !hasDestination || points.length < 2) return [];
+
   const profile = sanitizeProfile(options.profile);
   const branchAltitudeById = options.branchAltitudeById ?? {};
   const branchWindById = options.branchWindById ?? {};

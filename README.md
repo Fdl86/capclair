@@ -37,14 +37,22 @@ Prototype non réglementaire. Ne pas utiliser comme source unique pour une navig
 
 ## Version courante
 
-WEB13.18.1 - Nav reset & profil avion
+WEB13.19.0 - Stabilité & optimisation
 
-- Nouvelle navigation réellement vide : départ, arrivée et dégagement remis à zéro.
-- Première utilisation sans aérodromes préremplis.
-- TAS du log synchronisée avec le profil avion actif.
-- Champ carburant renommé en Capacité totale réservoirs.
-- Carburant utilisable calculé comme capacité totale moins carburant inutilisable.
-- Titre d'onglet et chip de version mis à jour.
+- Champs départ, arrivée et dégagement toujours cohérents avec la route réellement calculée.
+- Log de navigation et suivi bloqués tant que la route est incomplète.
+- Validation centralisée du profil avion et TAS bornée de façon identique dans toute l'application.
+- Réserve par défaut du profil avion connectée au devis carburant.
+- Alerte explicite si l'emport requis dépasse la capacité utilisable.
+- Traces sauvegardées dans IndexedDB avec secours local et retour succès/échec réel.
+- Avertissement avant de quitter un suivi actif sans sauvegarde.
+- États GPS dégradé et figé, diagnostics altitude et trous de signal réellement alimentés.
+- Altitude cockpit affichée seulement quand la précision verticale est exploitable.
+- Recalculs terrain et zones limités aux changements géométriques utiles.
+- Catalogue des espaces retiré du précache initial et mis en cache à la première utilisation.
+- Bouton Exporter PDF conservé pour la prochaine étape, sans redirection trompeuse.
+- Version visible sur mobile dans la PWA installée.
+- Titre d'onglet, chip, package et documentation mis à jour.
 
 Historique de base :
 

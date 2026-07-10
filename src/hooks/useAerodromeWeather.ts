@@ -32,6 +32,13 @@ export function useAerodromeWeather(codes: string[]) {
   };
 
   useEffect(() => {
+    if (!items.length) {
+      requestId.current += 1;
+      setReports({});
+      setUpdatedAtIso(null);
+      setStatus('METAR/TAF non chargé');
+      return;
+    }
     void refresh(false);
   }, [itemsKey]);
 

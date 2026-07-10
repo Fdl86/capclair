@@ -1,6 +1,6 @@
 import type { NavPoint } from '../../domain/navigation.types';
 import { createRouteBbox, formatBboxKey } from './routeBbox';
-import type { OpenAipAirport, OpenAipAirportResponse } from './openAipTypes';
+import type { OpenAipAirportResponse } from './openAipTypes';
 
 const CACHE_PREFIX = 'capclair.openaip.airports.';
 const CACHE_TTL_MS = 12 * 60 * 60 * 1000;

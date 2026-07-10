@@ -2845,3 +2845,82 @@
   margin: 8px 0 0;
   font-size: 0.76rem;
 }
+
+/* WEB13.19.0 - stability and optimization */
+.route-builder label.has-error input {
+  border-color: rgba(255, 102, 102, 0.75);
+  box-shadow: 0 0 0 2px rgba(255, 102, 102, 0.1);
+}
+
+.route-builder label.has-error small {
+  color: #ffaaaa;
+  font-size: 0.66rem;
+  font-weight: 750;
+}
+
+.route-hint-warning {
+  color: #ffd08a;
+}
+
+.panel-title-row button:disabled,
+.cockpit-stepper button:disabled {
+  opacity: 0.42;
+  cursor: not-allowed;
+}
+
+.navlog-empty-state {
+  display: grid;
+  gap: 12px;
+  justify-items: center;
+}
+
+.fuel-capacity-alert {
+  border: 1px solid rgba(255, 184, 77, 0.45);
+  border-radius: 12px;
+  padding: 10px 12px;
+  background: rgba(94, 58, 10, 0.34);
+  color: #ffe0a6;
+  font-size: 0.8rem;
+  font-weight: 800;
+}
+
+.fuel-capacity-alert.danger {
+  border-color: rgba(255, 100, 100, 0.52);
+  background: rgba(91, 21, 21, 0.34);
+  color: #ffc0c0;
+}
+
+.fuel-kpi-strip .fuel-kpi-danger {
+  border-color: rgba(255, 100, 100, 0.55);
+  background: rgba(91, 21, 21, 0.28);
+}
+
+.fuel-kpi-strip .fuel-kpi-danger strong {
+  color: #ffaaaa;
+}
+
+.aircraft-note-error {
+  color: #ffaaaa;
+}
+
+.pdf-export-status,
+.trace-storage-status {
+  margin: 0;
+  border: 1px solid rgba(89, 207, 255, 0.24);
+  border-radius: 10px;
+  padding: 8px 10px;
+  background: rgba(17, 28, 42, 0.72);
+  color: var(--text-2);
+  font-size: 0.76rem;
+}
+
+.trace-storage-status.warning {
+  border-color: rgba(255, 184, 77, 0.42);
+  color: #ffd08a;
+}
+
+.gps-altitude-warning {
+  color: #ffd08a;
+  font-size: 0.74rem;
+  font-weight: 750;
+}

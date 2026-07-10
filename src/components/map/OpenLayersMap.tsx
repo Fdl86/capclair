@@ -68,6 +68,7 @@ export function OpenLayersMap({
   const lastRoutePointCountRef = useRef<number | null>(null);
   const lastRouteEndpointsKeyRef = useRef<string | null>(null);
   const onSourceStatusChangeRef = useRef(onSourceStatusChange);
+  const lastFollowUpdateAtRef = useRef(0);
   const [sourceStatus, setSourceStatus] = useState<MapSourceStatus>('free');
 
   const routeCoordinates = useMemo(() => route.points.map((point) => fromLonLat([point.longitude, point.latitude])), [route.points]);
@@ -204,10 +205,10 @@ export function OpenLayersMap({
   useEffect(() => {
     const map = mapRef.current;
     if (!map || !followAircraft || !aircraft) return;
-    map.getView().animate({
-      center: fromLonLat([aircraft.longitude, aircraft.latitude]),
-      duration: 240
-    });
+    const now = performance.now();
+    if (now - lastFollowUpdateAtRef.current < 500) return;
+    lastFollowUpdateAtRef.current = now;
+    map.getView().setCenter(fromLonLat([aircraft.longitude, aircraft.latitude]));
   }, [aircraft, followAircraft]);
 
   useEffect(() => {

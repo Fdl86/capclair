@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import type { NavRoute } from '../domain/navigation.types';
 import type { GpsPosition } from '../domain/gps.types';
 import type { MapBaseLayer } from '../mapEngine/mapTypes';
@@ -9,6 +9,7 @@ import { Card } from '../components/ui/Card';
 import { OpenLayersMap } from '../components/map/OpenLayersMap';
 import { MapLayerToggle } from '../components/map/MapLayerToggle';
 import { RoutePointList } from '../components/navigation/RoutePointList';
+import { isRouteReady, routeMissingMessage } from '../services/navigation/routeValidation';
 
 interface PlanningScreenProps {
   route: NavRoute;
@@ -22,7 +23,7 @@ interface PlanningScreenProps {
   onReverseRoute: () => void;
   onResetRoute: () => void;
   alternateCode: string;
-  onSetAlternateCode: (code: string) => void;
+  onSetAlternateCode: (code: string) => boolean;
   onCalculations: () => void;
   mapBaseLayer: MapBaseLayer;
   onMapBaseLayerChange: (value: MapBaseLayer) => void;
@@ -41,6 +42,8 @@ function formatDuration(minutes: number) {
 
 const EMPTY_TRACE: GpsPosition[] = [];
 type AerodromeField = 'departure' | 'destination' | 'alternate';
+
+type FieldErrors = Partial<Record<AerodromeField, string>>;
 
 function aerodromeSuggestions(query: string) {
   const normalized = query.trim().toUpperCase();
@@ -74,6 +77,9 @@ export function PlanningScreen({
   const [destinationInput, setDestinationInput] = useState(endpointCode(route, 'destination'));
   const [alternateInput, setAlternateInput] = useState(alternateCode);
   const [activeAerodromeField, setActiveAerodromeField] = useState<AerodromeField | null>(null);
+  const [fieldErrors, setFieldErrors] = useState<FieldErrors>({});
+  const skipNextBlurRef = useRef<AerodromeField | null>(null);
+  const ready = isRouteReady(route);
 
   useEffect(() => {
     setDepartureInput(endpointCode(route, 'depart'));
@@ -84,6 +90,10 @@ export function PlanningScreen({
     setAlternateInput(alternateCode);
   }, [alternateCode]);
 
+  useEffect(() => {
+    if (!ready) setAddWaypointMode(false);
+  }, [ready]);
+
   const activeAerodromeInput = activeAerodromeField === 'departure'
     ? departureInput
     : activeAerodromeField === 'destination'
@@ -93,36 +103,71 @@ export function PlanningScreen({
         : '';
   const suggestions = useMemo(() => aerodromeSuggestions(activeAerodromeInput), [activeAerodromeInput]);
 
+  const clearFieldError = (field: AerodromeField) => {
+    setFieldErrors((current) => ({ ...current, [field]: undefined }));
+  };
+
   const applyDeparture = () => {
-    if (departureInput.trim().length >= 4) onSetDepartureCode(departureInput);
+    if (skipNextBlurRef.current === 'departure') {
+      skipNextBlurRef.current = null;
+      return;
+    }
+    const normalized = departureInput.trim().toUpperCase();
+    const accepted = onSetDepartureCode(normalized);
+    if (accepted) {
+      setDepartureInput(normalized);
+      clearFieldError('departure');
+      return;
+    }
+    setDepartureInput(endpointCode(route, 'depart'));
+    setFieldErrors((current) => ({ ...current, departure: `Code inconnu : ${normalized}` }));
   };
 
   const applyDestination = () => {
-    if (destinationInput.trim().length >= 4) onSetDestinationCode(destinationInput);
+    if (skipNextBlurRef.current === 'destination') {
+      skipNextBlurRef.current = null;
+      return;
+    }
+    const normalized = destinationInput.trim().toUpperCase();
+    const accepted = onSetDestinationCode(normalized);
+    if (accepted) {
+      setDestinationInput(normalized);
+      clearFieldError('destination');
+      return;
+    }
+    setDestinationInput(endpointCode(route, 'destination'));
+    setFieldErrors((current) => ({ ...current, destination: `Code inconnu : ${normalized}` }));
   };
 
   const applyAlternate = () => {
-    const normalized = alternateInput.trim().toUpperCase();
-    if (!normalized) {
-      onSetAlternateCode('');
+    if (skipNextBlurRef.current === 'alternate') {
+      skipNextBlurRef.current = null;
       return;
     }
-    if (normalized.length >= 4) onSetAlternateCode(normalized);
+    const normalized = alternateInput.trim().toUpperCase();
+    const accepted = onSetAlternateCode(normalized);
+    if (accepted) {
+      setAlternateInput(normalized);
+      clearFieldError('alternate');
+      return;
+    }
+    setAlternateInput(alternateCode);
+    setFieldErrors((current) => ({ ...current, alternate: `Code inconnu : ${normalized}` }));
   };
 
   const chooseAerodrome = (field: AerodromeField, code: string) => {
+    skipNextBlurRef.current = field;
     if (field === 'departure') {
       setDepartureInput(code);
       onSetDepartureCode(code);
-    }
-    if (field === 'destination') {
+    } else if (field === 'destination') {
       setDestinationInput(code);
       onSetDestinationCode(code);
-    }
-    if (field === 'alternate') {
+    } else {
       setAlternateInput(code);
       onSetAlternateCode(code);
     }
+    clearFieldError(field);
     setActiveAerodromeField(null);
     if (typeof document !== 'undefined') {
       (document.activeElement as HTMLElement | null)?.blur?.();
@@ -133,6 +178,13 @@ export function PlanningScreen({
     onAddWaypointAt(longitude, latitude);
     setAddWaypointMode(false);
   }, [onAddWaypointAt]);
+
+  const resetNavigation = () => {
+    setAddWaypointMode(false);
+    setFieldErrors({});
+    setActiveAerodromeField(null);
+    onResetRoute();
+  };
 
   return (
     <Page title="Planification" subtitle="Carte aéro, route, dégagement et points de navigation.">
@@ -156,15 +208,18 @@ export function PlanningScreen({
               <span>Route active</span>
               <strong>{route.nom}</strong>
             </div>
-            <button type="button" onClick={onCalculations}>Log de nav</button>
+            <button type="button" onClick={onCalculations} disabled={!ready}>Log de nav</button>
           </div>
 
           <div className="route-builder">
-            <label>
+            <label className={fieldErrors.departure ? 'has-error' : ''}>
               <span>Départ</span>
               <input
                 value={departureInput}
-                onChange={(event) => setDepartureInput(event.target.value.toUpperCase())}
+                onChange={(event) => {
+                  setDepartureInput(event.target.value.toUpperCase());
+                  clearFieldError('departure');
+                }}
                 onBlur={applyDeparture}
                 onKeyDown={(event) => { if (event.key === 'Enter') applyDeparture(); }}
                 maxLength={4}
@@ -173,13 +228,18 @@ export function PlanningScreen({
                 autoComplete="off"
                 autoCapitalize="characters"
                 spellCheck={false}
+                aria-invalid={Boolean(fieldErrors.departure)}
               />
+              {fieldErrors.departure && <small>{fieldErrors.departure}</small>}
             </label>
-            <label>
+            <label className={fieldErrors.destination ? 'has-error' : ''}>
               <span>Arrivée</span>
               <input
                 value={destinationInput}
-                onChange={(event) => setDestinationInput(event.target.value.toUpperCase())}
+                onChange={(event) => {
+                  setDestinationInput(event.target.value.toUpperCase());
+                  clearFieldError('destination');
+                }}
                 onBlur={applyDestination}
                 onKeyDown={(event) => { if (event.key === 'Enter') applyDestination(); }}
                 maxLength={4}
@@ -188,13 +248,18 @@ export function PlanningScreen({
                 autoComplete="off"
                 autoCapitalize="characters"
                 spellCheck={false}
+                aria-invalid={Boolean(fieldErrors.destination)}
               />
+              {fieldErrors.destination && <small>{fieldErrors.destination}</small>}
             </label>
-            <label>
+            <label className={fieldErrors.alternate ? 'has-error' : ''}>
               <span>Dégagement</span>
               <input
                 value={alternateInput}
-                onChange={(event) => setAlternateInput(event.target.value.toUpperCase())}
+                onChange={(event) => {
+                  setAlternateInput(event.target.value.toUpperCase());
+                  clearFieldError('alternate');
+                }}
                 onBlur={applyAlternate}
                 onKeyDown={(event) => { if (event.key === 'Enter') applyAlternate(); }}
                 maxLength={4}
@@ -203,9 +268,11 @@ export function PlanningScreen({
                 autoComplete="off"
                 autoCapitalize="characters"
                 spellCheck={false}
+                aria-invalid={Boolean(fieldErrors.alternate)}
               />
+              {fieldErrors.alternate && <small>{fieldErrors.alternate}</small>}
             </label>
-            <Button variant="ghost" className="route-builder-reverse" onClick={onReverseRoute}>Inverser</Button>
+            <Button variant="ghost" className="route-builder-reverse" onClick={onReverseRoute} disabled={!ready}>Inverser</Button>
           </div>
 
           {activeAerodromeField && suggestions.length > 0 && (
@@ -234,13 +301,17 @@ export function PlanningScreen({
 
           <RoutePointList points={route.points} selectedPointId={selectedPointId} onSelect={onSelectPoint} onRemove={onRemovePoint} />
 
-          <div className="route-hint">{routeMessage}</div>
+          <div className={`route-hint ${ready ? '' : 'route-hint-warning'}`}>{ready ? routeMessage : routeMissingMessage(route)}</div>
 
           <div className="route-actions-row route-actions-row-two">
-            <Button variant={addWaypointMode ? 'danger' : 'primary'} onClick={() => setAddWaypointMode((value) => !value)}>
+            <Button
+              variant={addWaypointMode ? 'danger' : 'primary'}
+              onClick={() => setAddWaypointMode((value) => !value)}
+              disabled={!ready}
+            >
               {addWaypointMode ? 'Annuler' : '+ Point'}
             </Button>
-            <Button variant="secondary" onClick={onResetRoute}>Nouvelle nav</Button>
+            <Button variant="secondary" onClick={resetNavigation}>Nouvelle nav</Button>
           </div>
         </Card>
       </div>

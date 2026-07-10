@@ -3,6 +3,7 @@ import type { BranchWind, FlightProfile, NavPoint, NavRoute } from '../domain/na
 import { useLocalStorageState } from './useLocalStorageState';
 import { buildRoute, createAerodromePoint, createDefaultRoute, createManualWaypoint, relabelRoutePoints } from '../services/navigation/routeBuilder';
 import { fetchWindAloftForRoute } from '../services/weather/windAloftClient';
+import { isRouteReady, routeMissingMessage } from '../services/navigation/routeValidation';
 
 const STORAGE_KEY = 'capclair.activeRoute.dev13_4.weatherAudit';
 const defaultRoute = createDefaultRoute();
@@ -18,30 +19,22 @@ function branchLabel(route: NavRoute, branchId: string): string {
   return `${pointCode(route, branch.from)}-${pointCode(route, branch.to)}`;
 }
 
-
-
 function clamp(value: number, min: number, max: number): number {
   return Math.max(min, Math.min(max, value));
 }
 
 function segmentDistanceNm(point: Pick<NavPoint, 'latitude' | 'longitude'>, start: NavPoint, end: NavPoint): number {
   const averageLatRad = ((start.latitude + end.latitude + point.latitude) / 3) * Math.PI / 180;
-  const x1 = 0;
-  const y1 = 0;
   const x2 = (end.longitude - start.longitude) * Math.cos(averageLatRad) * 60;
   const y2 = (end.latitude - start.latitude) * 60;
   const xp = (point.longitude - start.longitude) * Math.cos(averageLatRad) * 60;
   const yp = (point.latitude - start.latitude) * 60;
   const segmentLengthSquared = x2 * x2 + y2 * y2;
 
-  if (segmentLengthSquared <= 0.000001) {
-    return Math.hypot(xp - x1, yp - y1);
-  }
+  if (segmentLengthSquared <= 0.000001) return Math.hypot(xp, yp);
 
-  const projection = clamp(((xp - x1) * x2 + (yp - y1) * y2) / segmentLengthSquared, 0, 1);
-  const projectedX = x1 + projection * x2;
-  const projectedY = y1 + projection * y2;
-  return Math.hypot(xp - projectedX, yp - projectedY);
+  const projection = clamp((xp * x2 + yp * y2) / segmentLengthSquared, 0, 1);
+  return Math.hypot(xp - projection * x2, yp - projection * y2);
 }
 
 function nearestRouteSegmentIndex(points: NavPoint[], longitude: number, latitude: number): number {
@@ -78,7 +71,10 @@ export function useActiveRoute() {
   const [weatherStatus, setWeatherStatus] = useState('Vent non chargé');
 
   const normalizedRoute = useMemo(() => safeRoute(route), [route]);
-  const selectedPoint = useMemo(() => normalizedRoute.points.find((point) => point.id === selectedPointId) ?? null, [normalizedRoute.points, selectedPointId]);
+  const selectedPoint = useMemo(
+    () => normalizedRoute.points.find((point) => point.id === selectedPointId) ?? null,
+    [normalizedRoute.points, selectedPointId]
+  );
 
   const rebuild = (
     points: NavPoint[] = normalizedRoute.points,
@@ -94,11 +90,21 @@ export function useActiveRoute() {
   };
 
   const setDepartureCode = (code: string): boolean => {
-    const point = createAerodromePoint(code, 'depart');
+    const normalized = code.trim().toUpperCase();
+    if (!normalized) {
+      const nextPoints = normalizedRoute.points.filter((item) => item.type !== 'depart');
+      rebuild(nextPoints, normalizedRoute.profile, {}, {}, 'Départ effacé');
+      setWeatherStatus('Vent non chargé');
+      setSelectedPointId(nextPoints[0]?.id ?? null);
+      return true;
+    }
+
+    const point = createAerodromePoint(normalized, 'depart');
     if (!point) {
-      setRouteMessage(`Code départ inconnu : ${code.trim().toUpperCase()}`);
+      setRouteMessage(`Code départ inconnu : ${normalized}`);
       return false;
     }
+
     const nextPoints = [point, ...normalizedRoute.points.filter((item) => item.type !== 'depart')];
     rebuild(nextPoints, normalizedRoute.profile, normalizedRoute.branchAltitudeById, {}, `Départ ${point.code}`);
     setWeatherStatus('Vent à rafraîchir');
@@ -107,11 +113,21 @@ export function useActiveRoute() {
   };
 
   const setDestinationCode = (code: string): boolean => {
-    const point = createAerodromePoint(code, 'destination');
+    const normalized = code.trim().toUpperCase();
+    if (!normalized) {
+      const nextPoints = normalizedRoute.points.filter((item) => item.type !== 'destination');
+      rebuild(nextPoints, normalizedRoute.profile, {}, {}, 'Arrivée effacée');
+      setWeatherStatus('Vent non chargé');
+      setSelectedPointId(nextPoints.at(-1)?.id ?? null);
+      return true;
+    }
+
+    const point = createAerodromePoint(normalized, 'destination');
     if (!point) {
-      setRouteMessage(`Code arrivée inconnu : ${code.trim().toUpperCase()}`);
+      setRouteMessage(`Code arrivée inconnu : ${normalized}`);
       return false;
     }
+
     const nextPoints = [...normalizedRoute.points.filter((item) => item.type !== 'destination'), point];
     rebuild(nextPoints, normalizedRoute.profile, normalizedRoute.branchAltitudeById, {}, `Arrivée ${point.code}`);
     setWeatherStatus('Vent à rafraîchir');
@@ -120,10 +136,11 @@ export function useActiveRoute() {
   };
 
   const addWaypointAt = (longitude: number, latitude: number) => {
-    if (normalizedRoute.points.length < 2) {
+    if (!isRouteReady(normalizedRoute)) {
       setRouteMessage('Définir un départ et une arrivée avant d’ajouter un point');
       return;
     }
+
     const insertIndex = nearestRouteSegmentIndex(normalizedRoute.points, longitude, latitude) + 1;
     const nextWaypointNumber = normalizedRoute.points.filter((point) => point.type === 'waypoint' && point.source !== 'aerodrome').length + 1;
     const point = createManualWaypoint(latitude, longitude, nextWaypointNumber);
@@ -144,11 +161,13 @@ export function useActiveRoute() {
   };
 
   const reverseRoute = () => {
-    if (normalizedRoute.points.length < 2) {
+    if (!isRouteReady(normalizedRoute)) {
       setRouteMessage('Définir un départ et une arrivée avant d’inverser la route');
       return;
     }
-    const points = normalizedRoute.points.slice().reverse().map((point, index, array) => ({
+
+    const reversed = normalizedRoute.points.slice().reverse();
+    const points = reversed.map((point, index, array) => ({
       ...point,
       type: index === 0 ? 'depart' as const : index === array.length - 1 ? 'destination' as const : 'waypoint' as const,
       id: `${index === 0 ? 'depart' : index === array.length - 1 ? 'destination' : 'waypoint'}-${point.code?.toLowerCase() ?? point.id}`
@@ -159,21 +178,34 @@ export function useActiveRoute() {
   };
 
   const setTasKt = (tasKt: number) => {
-    const profile = { ...normalizedRoute.profile, tasKt };
-    rebuild(normalizedRoute.points, profile, normalizedRoute.branchAltitudeById, normalizedRoute.branchWindById, `TAS ${Math.round(tasKt)} kt`);
+    rebuild(
+      normalizedRoute.points,
+      { ...normalizedRoute.profile, tasKt },
+      normalizedRoute.branchAltitudeById,
+      normalizedRoute.branchWindById,
+      `TAS ${Math.round(tasKt)} kt`
+    );
   };
 
   const setDefaultAltitudeFt = (defaultAltitudeFt: number) => {
-    const profile = { ...normalizedRoute.profile, defaultAltitudeFt };
-    // On préserve les altitudes réglées par branche ; seules les branches sans override
-    // suivent la nouvelle altitude par défaut. Le vent est réinitialisé (dépend de l'altitude).
-    rebuild(normalizedRoute.points, profile, normalizedRoute.branchAltitudeById, {}, `Altitude défaut ${Math.round(defaultAltitudeFt)} ft`);
+    rebuild(
+      normalizedRoute.points,
+      { ...normalizedRoute.profile, defaultAltitudeFt },
+      normalizedRoute.branchAltitudeById,
+      {},
+      `Altitude défaut ${Math.round(defaultAltitudeFt)} ft`
+    );
     setWeatherStatus('Vent à rafraîchir');
   };
 
   const setDepartureTimeIso = (departureTimeIso: string) => {
-    const profile = { ...normalizedRoute.profile, departureTimeIso };
-    rebuild(normalizedRoute.points, profile, normalizedRoute.branchAltitudeById, {}, 'Heure de départ mise à jour');
+    rebuild(
+      normalizedRoute.points,
+      { ...normalizedRoute.profile, departureTimeIso },
+      normalizedRoute.branchAltitudeById,
+      {},
+      'Heure de départ mise à jour'
+    );
     setWeatherStatus('Vent à rafraîchir');
   };
 
@@ -186,6 +218,12 @@ export function useActiveRoute() {
   };
 
   const refreshWinds = async () => {
+    if (!isRouteReady(normalizedRoute)) {
+      setWeatherStatus('Départ et arrivée requis');
+      setRouteMessage(routeMissingMessage(normalizedRoute));
+      return;
+    }
+
     setWeatherStatus('Météo-France en cours...');
     const analysisTimeIso = new Date().toISOString();
 
@@ -245,6 +283,7 @@ export function useActiveRoute() {
     setDepartureTimeIso,
     setBranchAltitudeFt,
     refreshWinds,
-    resetRoute
+    resetRoute,
+    setRouteMessage
   };
 }

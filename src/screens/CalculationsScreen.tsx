@@ -9,6 +9,7 @@ import { ZoneCompleteRouteBanner } from '../components/navigation/ZoneCompleteRo
 import { Button } from '../components/ui/Button';
 import { Card } from '../components/ui/Card';
 import { Accordion } from '../components/ui/Accordion';
+import { EmptyState } from '../components/ui/EmptyState';
 import { buildZoneProfiles } from '../services/airspace/airspaceEngine';
 import { computeFuelPlan } from '../services/navigation/fuelPlanning';
 import { fetchTerrainProfile, type TerrainSample } from '../services/navigation/terrainService';
@@ -18,6 +19,8 @@ import { AerodromeWeatherPanel } from '../components/flight/AerodromeWeatherPane
 import { FuelPlanningPanel } from '../components/flight/FuelPlanningPanel';
 import { findAerodrome } from '../data/aerodromeCatalog';
 import { distanceNm } from '../services/geo/distance';
+import { isRouteReady, routeMissingMessage } from '../services/navigation/routeValidation';
+import { AIRCRAFT_LIMITS } from '../services/aircraft/aircraftValidation';
 
 interface CalculationsScreenProps {
   route: NavRoute;
@@ -37,7 +40,6 @@ interface CalculationsScreenProps {
   aerodromeWeatherUpdatedAt: string | null;
   onRefreshAerodromeWeather: () => void;
   onValidate: () => void;
-  onExport: () => void;
   onBackPlanning: () => void;
 }
 
@@ -69,6 +71,18 @@ function diversionMinutes(destinationCode: string | undefined, alternateCode: st
   return Math.round((distanceNm(destination, alternate) / tasKt) * 60);
 }
 
+function geometrySignature(route: NavRoute) {
+  return route.points
+    .map((point) => `${point.id}:${point.latitude.toFixed(5)},${point.longitude.toFixed(5)}`)
+    .join('>');
+}
+
+function airspaceSignature(route: NavRoute) {
+  return route.branches
+    .map((branch) => `${branch.id}:${branch.altitudeFt}`)
+    .join('|');
+}
+
 function SummaryCard({ label, value, detail }: { label: string; value: string; detail?: string }) {
   return (
     <div className="navlog-summary-card">
@@ -97,18 +111,26 @@ export function CalculationsScreen({
   aerodromeWeatherUpdatedAt,
   onRefreshAerodromeWeather,
   onValidate,
-  onExport,
   onBackPlanning
 }: CalculationsScreenProps) {
   const departure = pointByType(route, 'depart');
   const destination = pointByType(route, 'destination');
+  const ready = isRouteReady(route);
   const windModelTime = route.branches.find((branch) => branch.wind?.sourceTimeIso)?.wind?.sourceTimeIso;
   const [zoneProfiles, setZoneProfiles] = useState<Record<string, BranchZoneProfile>>({});
   const [zoneStatus, setZoneStatus] = useState('Calcul zones...');
   const [terrain, setTerrain] = useState<TerrainSample[]>([]);
   const [shownZoneCount, setShownZoneCount] = useState(0);
+  const [pdfStatus, setPdfStatus] = useState<string | null>(null);
+  const routeGeometryKey = useMemo(() => geometrySignature(route), [route.points]);
+  const routeAirspaceKey = useMemo(() => airspaceSignature(route), [route.branches]);
 
   useEffect(() => {
+    if (!ready) {
+      setTerrain([]);
+      return undefined;
+    }
+
     let cancelled = false;
     fetchTerrainProfile(route)
       .then((samples) => {
@@ -121,9 +143,16 @@ export function CalculationsScreen({
     return () => {
       cancelled = true;
     };
-  }, [route]);
+  }, [ready, routeGeometryKey]);
 
   useEffect(() => {
+    if (!ready) {
+      setZoneProfiles({});
+      setZoneStatus('Route incomplète');
+      setShownZoneCount(0);
+      return undefined;
+    }
+
     let cancelled = false;
     setZoneStatus('Calcul zones...');
     buildZoneProfiles(route)
@@ -141,9 +170,12 @@ export function CalculationsScreen({
     return () => {
       cancelled = true;
     };
-  }, [route]);
+  }, [ready, routeGeometryKey, routeAirspaceKey]);
 
-  const verticalProfile = useMemo(() => buildVerticalProfile(route, activeAircraft), [route, activeAircraft]);
+  const verticalProfile = useMemo(
+    () => ready ? buildVerticalProfile(route, activeAircraft) : [],
+    [ready, routeGeometryKey, routeAirspaceKey, activeAircraft.climbRateFpm, activeAircraft.climbSpeedKt, activeAircraft.descentRateFpm, activeAircraft.descentSpeedKt]
+  );
   const fuel = useMemo(
     () => computeFuelPlan(
       route,
@@ -153,6 +185,17 @@ export function CalculationsScreen({
     ),
     [route, activeAircraft, fuelPlanConfig, destination?.code, alternateCode]
   );
+
+  if (!ready) {
+    return (
+      <Page title="Log de nav" subtitle="Préparation VFR - calculs, vent et frise zones complète.">
+        <div className="navlog-empty-state">
+          <EmptyState title="Navigation incomplète" text={routeMissingMessage(route)} />
+          <Button variant="primary" onClick={onBackPlanning}>Retour à la planification</Button>
+        </div>
+      </Page>
+    );
+  }
 
   return (
     <Page title="Log de nav" subtitle="Préparation VFR - calculs, vent et frise zones complète.">
@@ -180,17 +223,27 @@ export function CalculationsScreen({
               <div className="cockpit-stepper">
                 <span>TAS</span>
                 <div>
-                  <button type="button" onClick={() => onSetTasKt(route.profile.tasKt - 1)} aria-label="Réduire la TAS">-</button>
+                  <button
+                    type="button"
+                    disabled={route.profile.tasKt <= AIRCRAFT_LIMITS.cruiseTasKt.min}
+                    onClick={() => onSetTasKt(route.profile.tasKt - 1)}
+                    aria-label="Réduire la TAS"
+                  >-</button>
                   <strong>{route.profile.tasKt}</strong>
-                  <button type="button" onClick={() => onSetTasKt(route.profile.tasKt + 1)} aria-label="Augmenter la TAS">+</button>
+                  <button
+                    type="button"
+                    disabled={route.profile.tasKt >= AIRCRAFT_LIMITS.cruiseTasKt.max}
+                    onClick={() => onSetTasKt(route.profile.tasKt + 1)}
+                    aria-label="Augmenter la TAS"
+                  >+</button>
                 </div>
               </div>
               <div className="cockpit-stepper">
                 <span>Alt défaut</span>
                 <div>
-                  <button type="button" onClick={() => onSetDefaultAltitudeFt(route.profile.defaultAltitudeFt - 500)} aria-label="Réduire l'altitude">-</button>
+                  <button type="button" disabled={route.profile.defaultAltitudeFt <= 500} onClick={() => onSetDefaultAltitudeFt(route.profile.defaultAltitudeFt - 500)} aria-label="Réduire l'altitude">-</button>
                   <strong>{route.profile.defaultAltitudeFt}</strong>
-                  <button type="button" onClick={() => onSetDefaultAltitudeFt(route.profile.defaultAltitudeFt + 500)} aria-label="Augmenter l'altitude">+</button>
+                  <button type="button" disabled={route.profile.defaultAltitudeFt >= 12500} onClick={() => onSetDefaultAltitudeFt(route.profile.defaultAltitudeFt + 500)} aria-label="Augmenter l'altitude">+</button>
                 </div>
               </div>
             </div>
@@ -254,11 +307,15 @@ export function CalculationsScreen({
         <div className="navlog-actions">
           <Button variant="secondary" onClick={onBackPlanning}>Retour planification</Button>
           <div>
-            <Button variant="secondary" onClick={onExport}>Exporter PDF</Button>
+            <Button
+              variant="secondary"
+              onClick={() => setPdfStatus('Export PDF conservé pour la prochaine étape. Utilisez Imprimer en attendant.')}
+            >Exporter PDF</Button>
             <Button variant="secondary" onClick={() => window.print()}>Imprimer</Button>
-            <Button variant="primary" onClick={onValidate}>Enregistrer le log</Button>
+            <Button variant="primary" onClick={onValidate}>Passer au suivi</Button>
           </div>
         </div>
+        {pdfStatus && <p className="pdf-export-status" role="status">{pdfStatus}</p>}
 
         <Card className="safety-card">
           <strong>Info frise</strong>

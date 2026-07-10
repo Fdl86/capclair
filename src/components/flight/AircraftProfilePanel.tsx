@@ -1,4 +1,6 @@
+import { useEffect, useState } from 'react';
 import type { AircraftProfile } from '../../domain/aircraft.types';
+import { AIRCRAFT_LIMITS, clampNumber } from '../../services/aircraft/aircraftValidation';
 import { Button } from '../ui/Button';
 
 interface AircraftProfilePanelProps {
@@ -9,23 +11,46 @@ interface AircraftProfilePanelProps {
   onCreateProfile: () => void;
 }
 
-function numberValue(value: string, fallback: number) {
-  const parsed = Number(value);
-  return Number.isFinite(parsed) ? parsed : fallback;
-}
-
-function Field({ label, value, unit, onChange, step = 1 }: {
+function NumericField({ label, value, unit, onCommit, step = 1, min, max }: {
   label: string;
   value: number;
   unit?: string;
   step?: number;
-  onChange: (value: number) => void;
+  min: number;
+  max: number;
+  onCommit: (value: number) => void;
 }) {
+  const [draft, setDraft] = useState(String(value));
+
+  useEffect(() => {
+    setDraft(String(value));
+  }, [value]);
+
+  const commit = () => {
+    const parsed = Number(draft.replace(',', '.'));
+    const next = Number.isFinite(parsed) ? clampNumber(parsed, min, max) : value;
+    setDraft(String(next));
+    onCommit(next);
+  };
+
   return (
     <label className="aircraft-field">
       <span>{label}</span>
       <div>
-        <input type="number" step={step} value={value} onChange={(event) => onChange(numberValue(event.target.value, value))} />
+        <input
+          type="number"
+          step={step}
+          min={min}
+          max={max}
+          value={draft}
+          onChange={(event) => setDraft(event.target.value)}
+          onBlur={commit}
+          onKeyDown={(event) => {
+            if (event.key === 'Enter') {
+              event.currentTarget.blur();
+            }
+          }}
+        />
         {unit && <small>{unit}</small>}
       </div>
     </label>
@@ -39,6 +64,11 @@ export function AircraftProfilePanel({
   onUpdateProfile,
   onCreateProfile
 }: AircraftProfilePanelProps) {
+  const totalCapacityL = activeProfile.usableFuelL;
+  const unusableFuelL = activeProfile.unusableFuelL ?? 0;
+  const usableFuelL = Math.max(0, totalCapacityL - unusableFuelL);
+  const capacityError = unusableFuelL > totalCapacityL;
+
   return (
     <div className="aircraft-profile-panel">
       <div className="subpanel-title-row">
@@ -67,19 +97,89 @@ export function AircraftProfilePanel({
       </div>
 
       <div className="aircraft-field-grid">
-        <Field label="TAS croisière" value={activeProfile.cruiseTasKt} unit="kt" onChange={(value) => onUpdateProfile(activeProfile.id, { cruiseTasKt: value })} />
-        <Field label="Conso" value={activeProfile.fuelBurnLh} unit="L/h" onChange={(value) => onUpdateProfile(activeProfile.id, { fuelBurnLh: value })} />
-        <Field label="Capacité totale réservoirs" value={activeProfile.usableFuelL} unit="L" onChange={(value) => onUpdateProfile(activeProfile.id, { usableFuelL: value })} />
-        <Field label="Carburant inutilisable" value={activeProfile.unusableFuelL ?? 0} unit="L" onChange={(value) => onUpdateProfile(activeProfile.id, { unusableFuelL: value })} />
-        <Field label="Réserve défaut" value={activeProfile.reserveMinutes} unit="min" onChange={(value) => onUpdateProfile(activeProfile.id, { reserveMinutes: value })} />
-        <Field label="Vitesse montée" value={activeProfile.climbSpeedKt} unit="kt" onChange={(value) => onUpdateProfile(activeProfile.id, { climbSpeedKt: value })} />
-        <Field label="Taux montée" value={activeProfile.climbRateFpm} unit="ft/min" step={50} onChange={(value) => onUpdateProfile(activeProfile.id, { climbRateFpm: value })} />
-        <Field label="Vitesse descente" value={activeProfile.descentSpeedKt} unit="kt" onChange={(value) => onUpdateProfile(activeProfile.id, { descentSpeedKt: value })} />
-        <Field label="Taux descente" value={activeProfile.descentRateFpm} unit="ft/min" step={50} onChange={(value) => onUpdateProfile(activeProfile.id, { descentRateFpm: value })} />
+        <NumericField
+          label="TAS croisière"
+          value={activeProfile.cruiseTasKt}
+          unit="kt"
+          min={AIRCRAFT_LIMITS.cruiseTasKt.min}
+          max={AIRCRAFT_LIMITS.cruiseTasKt.max}
+          onCommit={(value) => onUpdateProfile(activeProfile.id, { cruiseTasKt: value })}
+        />
+        <NumericField
+          label="Conso"
+          value={activeProfile.fuelBurnLh}
+          unit="L/h"
+          step={0.5}
+          min={AIRCRAFT_LIMITS.fuelBurnLh.min}
+          max={AIRCRAFT_LIMITS.fuelBurnLh.max}
+          onCommit={(value) => onUpdateProfile(activeProfile.id, { fuelBurnLh: value })}
+        />
+        <NumericField
+          label="Capacité totale réservoirs"
+          value={totalCapacityL}
+          unit="L"
+          step={0.5}
+          min={AIRCRAFT_LIMITS.totalFuelCapacityL.min}
+          max={AIRCRAFT_LIMITS.totalFuelCapacityL.max}
+          onCommit={(value) => onUpdateProfile(activeProfile.id, { usableFuelL: value })}
+        />
+        <NumericField
+          label="Carburant inutilisable"
+          value={unusableFuelL}
+          unit="L"
+          step={0.5}
+          min={AIRCRAFT_LIMITS.unusableFuelL.min}
+          max={totalCapacityL}
+          onCommit={(value) => onUpdateProfile(activeProfile.id, { unusableFuelL: value })}
+        />
+        <NumericField
+          label="Réserve défaut"
+          value={activeProfile.reserveMinutes}
+          unit="min"
+          min={AIRCRAFT_LIMITS.reserveMinutes.min}
+          max={AIRCRAFT_LIMITS.reserveMinutes.max}
+          onCommit={(value) => onUpdateProfile(activeProfile.id, { reserveMinutes: value })}
+        />
+        <NumericField
+          label="Vitesse montée"
+          value={activeProfile.climbSpeedKt}
+          unit="kt"
+          min={AIRCRAFT_LIMITS.speedKt.min}
+          max={AIRCRAFT_LIMITS.speedKt.max}
+          onCommit={(value) => onUpdateProfile(activeProfile.id, { climbSpeedKt: value })}
+        />
+        <NumericField
+          label="Taux montée"
+          value={activeProfile.climbRateFpm}
+          unit="ft/min"
+          step={50}
+          min={AIRCRAFT_LIMITS.verticalRateFpm.min}
+          max={AIRCRAFT_LIMITS.verticalRateFpm.max}
+          onCommit={(value) => onUpdateProfile(activeProfile.id, { climbRateFpm: value })}
+        />
+        <NumericField
+          label="Vitesse descente"
+          value={activeProfile.descentSpeedKt}
+          unit="kt"
+          min={AIRCRAFT_LIMITS.speedKt.min}
+          max={AIRCRAFT_LIMITS.speedKt.max}
+          onCommit={(value) => onUpdateProfile(activeProfile.id, { descentSpeedKt: value })}
+        />
+        <NumericField
+          label="Taux descente"
+          value={activeProfile.descentRateFpm}
+          unit="ft/min"
+          step={50}
+          min={AIRCRAFT_LIMITS.verticalRateFpm.min}
+          max={AIRCRAFT_LIMITS.verticalRateFpm.max}
+          onCommit={(value) => onUpdateProfile(activeProfile.id, { descentRateFpm: value })}
+        />
       </div>
 
-      <p className="aircraft-note">
-        Carburant utilisable calculé : {Math.max(0, activeProfile.usableFuelL - (activeProfile.unusableFuelL ?? 0)).toFixed(1).replace('.', ',')} L. Valeurs à vérifier avec le manuel de vol et les données club.
+      <p className={`aircraft-note ${capacityError ? 'aircraft-note-error' : ''}`}>
+        {capacityError
+          ? 'Le carburant inutilisable ne peut pas dépasser la capacité totale.'
+          : `Carburant utilisable calculé : ${usableFuelL.toFixed(1).replace('.', ',')} L. Valeurs à vérifier avec le manuel de vol et les données club.`}
       </p>
     </div>
   );

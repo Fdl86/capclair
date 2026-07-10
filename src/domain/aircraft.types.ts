@@ -55,13 +55,9 @@ export interface FuelPlanSummary {
   fuelRequiredL: number;
   enduranceMinutes: number;
   remainingUsableFuelL: number;
-}
-
-export interface FuelSummary {
-  routeFuelL: number;
-  reserveFuelL: number;
-  totalFuelL: number;
-  enduranceMinutes: number;
+  fuelDeficitL: number;
+  isCapacitySufficient: boolean;
+  isFuelDataValid: boolean;
 }
 
 export const DEFAULT_FUEL_PLAN_CONFIG: FuelPlanConfig = {

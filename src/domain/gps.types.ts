@@ -9,11 +9,21 @@ export interface GpsPosition {
   precision: number | null;
 }
 
-export type GpsStatus = 'idle' | 'requesting' | 'active' | 'denied' | 'unavailable' | 'simulating' | 'simulation-complete' | 'stopped';
+export type GpsStatus =
+  | 'idle'
+  | 'requesting'
+  | 'active'
+  | 'degraded'
+  | 'frozen'
+  | 'denied'
+  | 'unavailable'
+  | 'simulating'
+  | 'simulation-complete'
+  | 'saving'
+  | 'saved'
+  | 'save-error'
+  | 'stopped';
 
-// Compteurs live pour diagnostiquer les trous de trace : combien de fixes
-// bruts sont réellement reçus du navigateur, et pour quelle raison certains
-// n'atterrissent jamais dans la trace enregistrée.
 export interface GpsTraceDiagnostics {
   rawReceived: number;
   rejectedPrecision: number;
@@ -26,5 +36,7 @@ export interface GpsTraceDiagnostics {
   gpsResumptions: number;
   missingAltitude: number;
   unreliableAltitude: number;
-  maxTraceSpeedKt: number;
+  maxObservedSpeedKt: number;
+  /** Ancien champ conservé pour lire les traces WEB13.18.1. */
+  maxTraceSpeedKt?: number;
 }

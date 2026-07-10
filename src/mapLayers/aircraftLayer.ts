@@ -10,6 +10,7 @@ export type AircraftLayer = VectorLayer<VectorSource<Feature<Point>>>;
 
 const AIRCRAFT_FEATURE_ID = 'aircraft-marker';
 const LAST_HEADING_PROPERTY = 'lastReliableTrackDeg';
+const LAST_STYLE_KEY_PROPERTY = 'lastAircraftStyleKey';
 
 const AIRCRAFT_SVG = encodeURIComponent(`
 <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 64 64">
@@ -20,15 +21,23 @@ const AIRCRAFT_SVG = encodeURIComponent(`
 </svg>
 `);
 const AIRCRAFT_ICON_SRC = `data:image/svg+xml;charset=UTF-8,${AIRCRAFT_SVG}`;
+const styleCache = new Map<string, Style>();
 
-function clamp(value: number, min: number, max: number): number { return Math.max(min, Math.min(max, value)); }
-function normalizeHeading(value: number): number { return ((Math.round(value) % 360) + 360) % 360; }
+function clamp(value: number, min: number, max: number): number {
+  return Math.max(min, Math.min(max, value));
+}
+
+function normalizeHeading(value: number): number {
+  return ((Math.round(value) % 360) + 360) % 360;
+}
+
 function scaleForZoom(zoom?: number): number {
   if (typeof zoom !== 'number' || !Number.isFinite(zoom)) return 0.62;
   const safeZoom = clamp(zoom, 6, 14);
   const normalized = (safeZoom - 6) / 8;
   return Number((0.52 + normalized * 0.28).toFixed(3));
 }
+
 function headingForPosition(layer: AircraftLayer, position: GpsPosition | null): number {
   if (!position) return Number(layer.get(LAST_HEADING_PROPERTY) ?? 0);
   const hasTrack = typeof position.track === 'number' && Number.isFinite(position.track);
@@ -40,8 +49,17 @@ function headingForPosition(layer: AircraftLayer, position: GpsPosition | null):
   }
   return Number(layer.get(LAST_HEADING_PROPERTY) ?? 0);
 }
+
+function styleKey(headingDeg: number, zoom?: number): string {
+  return `${normalizeHeading(headingDeg)}:${scaleForZoom(zoom)}`;
+}
+
 function createAircraftStyle(headingDeg: number, zoom?: number): Style {
-  return new Style({
+  const key = styleKey(headingDeg, zoom);
+  const cached = styleCache.get(key);
+  if (cached) return cached;
+
+  const style = new Style({
     image: new Icon({
       src: AIRCRAFT_ICON_SRC,
       anchor: [0.5, 0.5],
@@ -52,19 +70,50 @@ function createAircraftStyle(headingDeg: number, zoom?: number): Style {
       scale: scaleForZoom(zoom)
     })
   });
+  styleCache.set(key, style);
+  return style;
 }
+
 export function createAircraftLayer(position: GpsPosition | null = null, zoom?: number): AircraftLayer {
   const source = new VectorSource<Feature<Point>>();
-  const layer = new VectorLayer({ source, style: createAircraftStyle(0, zoom), properties: { name: 'aircraft', [LAST_HEADING_PROPERTY]: 0 }, renderBuffer: 96, zIndex: 80 });
+  const initialKey = styleKey(0, zoom);
+  const layer = new VectorLayer({
+    source,
+    style: createAircraftStyle(0, zoom),
+    properties: {
+      name: 'aircraft',
+      [LAST_HEADING_PROPERTY]: 0,
+      [LAST_STYLE_KEY_PROPERTY]: initialKey
+    },
+    renderBuffer: 96,
+    zIndex: 80
+  });
   updateAircraftLayer(layer, position, zoom);
   return layer;
 }
+
 export function updateAircraftLayer(layer: AircraftLayer, position: GpsPosition | null, zoom?: number): void {
-  const source = layer.getSource(); if (!source) return;
+  const source = layer.getSource();
+  if (!source) return;
   const previousFeature = source.getFeatureById(AIRCRAFT_FEATURE_ID) as Feature<Point> | null;
-  if (!position) { if (previousFeature) source.removeFeature(previousFeature); return; }
+  if (!position) {
+    if (previousFeature) source.removeFeature(previousFeature);
+    return;
+  }
+
   const heading = headingForPosition(layer, position);
   const coordinate = fromLonLat([position.longitude, position.latitude]);
-  if (previousFeature) previousFeature.getGeometry()?.setCoordinates(coordinate); else { const feature = new Feature(new Point(coordinate)); feature.setId(AIRCRAFT_FEATURE_ID); source.addFeature(feature); }
-  layer.setStyle(createAircraftStyle(heading, zoom));
+  if (previousFeature) {
+    previousFeature.getGeometry()?.setCoordinates(coordinate);
+  } else {
+    const feature = new Feature(new Point(coordinate));
+    feature.setId(AIRCRAFT_FEATURE_ID);
+    source.addFeature(feature);
+  }
+
+  const nextStyleKey = styleKey(heading, zoom);
+  if (layer.get(LAST_STYLE_KEY_PROPERTY) !== nextStyleKey) {
+    layer.setStyle(createAircraftStyle(heading, zoom));
+    layer.set(LAST_STYLE_KEY_PROPERTY, nextStyleKey);
+  }
 }

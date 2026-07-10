@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import type { NavPoint, NavRoute } from '../domain/navigation.types';
 import type { Trace } from '../domain/trace.types';
+import type { TraceSaveResult } from '../services/storage/traceStorage';
 import { useGpsTracking } from '../hooks/useGpsTracking';
 import { OpenLayersMap } from '../components/map/OpenLayersMap';
 import { MapLayerToggle } from '../components/map/MapLayerToggle';
@@ -11,14 +12,16 @@ import { Button } from '../components/ui/Button';
 import { ConfirmDialog } from '../components/ui/ConfirmDialog';
 import { Card } from '../components/ui/Card';
 import { distanceNm } from '../services/geo/distance';
-import type { GpsPosition } from '../domain/gps.types';
+import { isReliableGpsAltitude } from '../services/gps/geolocationService';
+import type { GpsPosition, GpsStatus } from '../domain/gps.types';
 import type { MapBaseLayer } from '../mapEngine/mapTypes';
 
 interface TrackingScreenProps {
   route: NavRoute;
-  onTraceReady: (trace: Trace) => void;
+  onTraceReady: (trace: Trace) => Promise<TraceSaveResult>;
   mapBaseLayer: MapBaseLayer;
   onMapBaseLayerChange: (value: MapBaseLayer) => void;
+  onRecordingStateChange?: (active: boolean) => void;
 }
 
 type WakeLockSentinelLike = {
@@ -33,17 +36,32 @@ type NavigatorWithWakeLock = Navigator & {
   };
 };
 
-function statusLabel(status: string): string {
+function isRecordingStatus(status: GpsStatus): boolean {
+  return ['requesting', 'active', 'degraded', 'frozen', 'simulating'].includes(status);
+}
+
+function statusLabel(status: GpsStatus): string {
   switch (status) {
     case 'active': return 'GPS OK';
+    case 'degraded': return 'GPS dégradé';
+    case 'frozen': return 'GPS figé';
     case 'simulating': return 'SIM OK';
     case 'simulation-complete': return 'SIM terminée';
     case 'requesting': return 'Recherche GPS';
     case 'denied': return 'GPS refusé';
     case 'unavailable': return 'GPS perdu';
-    case 'stopped': return 'Sauvé';
+    case 'saving': return 'Sauvegarde...';
+    case 'saved': return 'Trace sauvée';
+    case 'save-error': return 'Échec sauvegarde';
+    case 'stopped': return 'Arrêté';
     default: return 'GPS prêt';
   }
+}
+
+function statusBadgeState(status: GpsStatus): 'ok' | 'rec' | 'warn' | 'off' {
+  if (status === 'active' || status === 'simulating' || status === 'saved') return 'ok';
+  if (status === 'requesting' || status === 'degraded' || status === 'frozen' || status === 'simulation-complete' || status === 'saving' || status === 'save-error') return 'warn';
+  return 'off';
 }
 
 function formatClock(date = new Date()): string {
@@ -75,14 +93,26 @@ function metricNumber(value: number | null | undefined, suffix: string, digits =
   return `${value.toFixed(digits).replace('.', ',')} ${suffix}`;
 }
 
-export function TrackingScreen({ route, onTraceReady, mapBaseLayer, onMapBaseLayerChange }: TrackingScreenProps) {
+export function TrackingScreen({
+  route,
+  onTraceReady,
+  mapBaseLayer,
+  onMapBaseLayerChange,
+  onRecordingStateChange
+}: TrackingScreenProps) {
   const [confirmStop, setConfirmStop] = useState(false);
   const [wakeLockActive, setWakeLockActive] = useState(false);
   const wakeLockRef = useRef<WakeLockSentinelLike | null>(null);
   const gps = useGpsTracking(route, onTraceReady);
-  const isRecording = gps.status === 'active' || gps.status === 'simulating';
-  const canSaveTrace = isRecording || gps.status === 'simulation-complete';
+  const isRecording = isRecordingStatus(gps.status);
+  const isSaving = gps.status === 'saving';
+  const canSaveTrace = isRecording || gps.status === 'simulation-complete' || gps.status === 'save-error';
   const traceForMap = gps.positions;
+
+  useEffect(() => {
+    onRecordingStateChange?.(isRecording);
+    return () => onRecordingStateChange?.(false);
+  }, [isRecording, onRecordingStateChange]);
 
   useEffect(() => {
     let cancelled = false;
@@ -95,7 +125,7 @@ export function TrackingScreen({ route, onTraceReady, mapBaseLayer, onMapBaseLay
         try {
           await sentinel.release();
         } catch {
-          // Wake Lock release can fail silently on some mobile browsers.
+          // Certains navigateurs mobiles refusent silencieusement la libération.
         }
       }
     };
@@ -126,11 +156,8 @@ export function TrackingScreen({ route, onTraceReady, mapBaseLayer, onMapBaseLay
       }
     };
 
-    if (isRecording) {
-      void requestWakeLock();
-    } else {
-      void releaseWakeLock();
-    }
+    if (isRecording) void requestWakeLock();
+    else void releaseWakeLock();
 
     const handleVisibilityChange = () => {
       if (document.visibilityState === 'visible' && isRecording && !wakeLockRef.current) {
@@ -148,9 +175,9 @@ export function TrackingScreen({ route, onTraceReady, mapBaseLayer, onMapBaseLay
 
   const currentBranch = route.branches[gps.crossTrack.segmentIndex] ?? route.branches[0] ?? null;
   const magneticHeading = currentBranch ? Math.round(currentBranch.capCorrige) : null;
-
   const groundSpeed = gps.currentPosition?.vitesse ?? null;
-  const altitude = gps.currentPosition?.altitude ?? null;
+  const altitudeReliable = gps.currentPosition ? isReliableGpsAltitude(gps.currentPosition) : false;
+  const altitude = altitudeReliable ? gps.currentPosition?.altitude ?? null : null;
   const currentTrack = gps.currentPosition?.track ?? null;
   const remainingDistanceNm = routePointDistanceRemainingNm(route, gps.currentPosition, gps.nextPoint, gps.crossTrack.segmentIndex);
   const eteMinutes = groundSpeed && groundSpeed > 5 && remainingDistanceNm !== null
@@ -175,8 +202,8 @@ export function TrackingScreen({ route, onTraceReady, mapBaseLayer, onMapBaseLay
 
       <aside className="tracking-panel">
         <div className="cockpit-badges">
-          <CockpitBadge label={statusLabel(gps.status)} state={gps.status === 'active' || gps.status === 'simulating' ? 'ok' : gps.status === 'requesting' || gps.status === 'simulation-complete' ? 'warn' : 'off'} />
-          <CockpitBadge label={isRecording ? 'Trace REC' : gps.status === 'simulation-complete' ? 'Trace à sauver' : 'Trace prête'} state={isRecording ? 'rec' : gps.status === 'simulation-complete' ? 'warn' : 'off'} />
+          <CockpitBadge label={statusLabel(gps.status)} state={statusBadgeState(gps.status)} />
+          <CockpitBadge label={isRecording ? 'Trace REC' : gps.status === 'simulation-complete' || gps.status === 'save-error' ? 'Trace à sauver' : gps.status === 'saved' ? 'Trace sauvée' : 'Trace prête'} state={isRecording ? 'rec' : gps.status === 'simulation-complete' || gps.status === 'save-error' ? 'warn' : gps.status === 'saved' ? 'ok' : 'off'} />
           <CockpitBadge label={wakeLockActive ? 'Écran actif' : isRecording ? 'Écran veille?' : 'Écran prêt'} state={wakeLockActive ? 'ok' : isRecording ? 'warn' : 'off'} />
         </div>
 
@@ -185,12 +212,15 @@ export function TrackingScreen({ route, onTraceReady, mapBaseLayer, onMapBaseLay
             <strong>{gps.status === 'requesting' ? 'Recherche position GPS...' : 'Position GPS reçue'}</strong>
             <p>
               {gps.lastAccuracy !== null
-                ? `Précision ${Math.round(gps.lastAccuracy)} m${gps.lastAltitudeAccuracy !== null ? ` · verticale ${Math.round(gps.lastAltitudeAccuracy)} m` : ' · verticale inconnue'}`
+                ? `Précision ${Math.round(gps.lastAccuracy)} m${gps.lastAltitudeAccuracy !== null ? ` · verticale ${Math.round(gps.lastAltitudeAccuracy)} m` : ' · verticale inconnue'}${gps.lastSignalAgeSec !== null ? ` · âge ${gps.lastSignalAgeSec} s` : ''}`
                 : 'Acquisition haute précision en cours. Le premier fix peut prendre quelques secondes.'}
             </p>
+            {gps.currentPosition?.altitude !== null && !altitudeReliable && (
+              <p className="gps-altitude-warning">Altitude GPS masquée : précision verticale insuffisante ou inconnue.</p>
+            )}
             {isRecording && (
               <p className="gps-diagnostics">
-                Reçus {gps.diagnostics.rawReceived} · trace {gps.diagnostics.tracePoints} · précision {gps.diagnostics.rejectedPrecision} · saut {gps.diagnostics.rejectedSpeed} · rebond sol {gps.diagnostics.rejectedDrift}
+                Reçus {gps.diagnostics.rawReceived} · trace {gps.diagnostics.tracePoints} · précision {gps.diagnostics.rejectedPrecision} · saut {gps.diagnostics.rejectedSpeed} · trous {gps.diagnostics.gpsGaps} · reprise {gps.diagnostics.gpsResumptions}
               </p>
             )}
           </Card>
@@ -218,16 +248,17 @@ export function TrackingScreen({ route, onTraceReady, mapBaseLayer, onMapBaseLay
 
         <div className="cockpit-value-grid">
           <MetricCard label="GS" value={metricNumber(groundSpeed, 'kt')} />
-          <MetricCard label="ALT" value={altitude !== null ? `${Math.round(altitude * 3.28084).toLocaleString('fr-FR')} ft` : '--'} />
+          <MetricCard label="ALT fiable" value={altitude !== null ? `${Math.round(altitude * 3.28084).toLocaleString('fr-FR')} ft` : '--'} />
           <MetricCard label="TRK GPS" value={currentTrack !== null ? `${Math.round(currentTrack)}°` : '--'} />
+          <MetricCard label="Distance trace" value={`${gps.distanceTravelledNm.toFixed(1).replace('.', ',')} NM`} />
           <MetricCard label="ETE dest" value={eteMinutes !== null ? formatDuration(eteMinutes) : '--'} />
         </div>
 
-
         <div className="tracking-actions">
-          {!canSaveTrace && <Button variant="primary" onClick={gps.startGps}>Démarrer GPS</Button>}
-          {!canSaveTrace && <Button variant="secondary" onClick={gps.startSimulation}>Tester simulation</Button>}
-          {canSaveTrace && <Button variant="danger" onClick={() => setConfirmStop(true)}>Arrêter et sauvegarder</Button>}
+          {!canSaveTrace && gps.status !== 'saved' && <Button variant="primary" onClick={gps.startGps}>Démarrer GPS</Button>}
+          {!canSaveTrace && gps.status !== 'saved' && <Button variant="secondary" onClick={gps.startSimulation}>Tester simulation</Button>}
+          {canSaveTrace && <Button variant="danger" disabled={isSaving} onClick={() => setConfirmStop(true)}>{isSaving ? 'Sauvegarde...' : 'Arrêter et sauvegarder'}</Button>}
+          {gps.status === 'saved' && <Button variant="secondary" onClick={gps.startGps}>Nouvelle trace GPS</Button>}
         </div>
       </aside>
 
@@ -239,7 +270,7 @@ export function TrackingScreen({ route, onTraceReady, mapBaseLayer, onMapBaseLay
         onCancel={() => setConfirmStop(false)}
         onConfirm={() => {
           setConfirmStop(false);
-          gps.stopAndSave();
+          void gps.stopAndSave();
         }}
       />
     </section>

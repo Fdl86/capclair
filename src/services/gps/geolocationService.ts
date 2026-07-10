@@ -2,8 +2,8 @@ import type { GpsPosition } from '../../domain/gps.types';
 import { distanceNm } from '../geo/distance';
 
 // Au-delà de cette incertitude (mètres), un fix est trop dégradé pour être
-// fiable — souvent une localisation par cellulaire/Wi-Fi plutôt qu'un vrai
-// point GPS — et ne doit alimenter ni les instruments live, ni la trace.
+// fiable - souvent une localisation par cellulaire/Wi-Fi plutôt qu'un vrai
+// point GPS - et ne doit alimenter ni les instruments live, ni la trace.
 const MAX_PLAUSIBLE_PRECISION_M = 150;
 
 // Vitesse sol max plausible pour filtrer les sauts GPS (positions

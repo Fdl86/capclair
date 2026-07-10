@@ -1,3 +1,4 @@
+import { useEffect, useState } from 'react';
 import type { FuelLine, FuelPlanConfig, FuelPlanSummary } from '../../domain/aircraft.types';
 
 interface FuelPlanningPanelProps {
@@ -18,30 +19,44 @@ function formatMinutes(value: number | null) {
   return value === null ? '-' : `${Math.round(value)} min`;
 }
 
-function numberValue(value: string, fallback: number) {
-  const parsed = Number(value);
-  return Number.isFinite(parsed) ? parsed : fallback;
-}
+function EditableNumber({ label, value, unit, step, max, onChange }: {
+  label: string;
+  value: number;
+  unit: string;
+  step: number;
+  max: number;
+  onChange: (value: number) => void;
+}) {
+  const [draft, setDraft] = useState(String(value));
 
-function EditableMinute({ label, value, onChange }: { label: string; value: number; onChange: (value: number) => void }) {
+  useEffect(() => {
+    setDraft(String(value));
+  }, [value]);
+
+  const commit = () => {
+    const parsed = Number(draft.replace(',', '.'));
+    const next = Number.isFinite(parsed) ? Math.max(0, Math.min(max, parsed)) : value;
+    setDraft(String(next));
+    onChange(next);
+  };
+
   return (
     <label className="fuel-input fuel-input-compact">
       <span>{label}</span>
       <div>
-        <input type="number" min={0} step={1} value={value} onChange={(event) => onChange(numberValue(event.target.value, value))} />
-        <small>min</small>
-      </div>
-    </label>
-  );
-}
-
-function EditableLiter({ label, value, onChange }: { label: string; value: number; onChange: (value: number) => void }) {
-  return (
-    <label className="fuel-input fuel-input-compact">
-      <span>{label}</span>
-      <div>
-        <input type="number" min={0} step={0.5} value={value} onChange={(event) => onChange(numberValue(event.target.value, value))} />
-        <small>L</small>
+        <input
+          type="number"
+          min={0}
+          max={max}
+          step={step}
+          value={draft}
+          onChange={(event) => setDraft(event.target.value)}
+          onBlur={commit}
+          onKeyDown={(event) => {
+            if (event.key === 'Enter') event.currentTarget.blur();
+          }}
+        />
+        <small>{unit}</small>
       </div>
     </label>
   );
@@ -69,9 +84,21 @@ export function FuelPlanningPanel({ fuel, config, onChangeConfig }: FuelPlanning
       </div>
 
       <div className="fuel-input-grid fuel-input-grid-compact fuel-input-grid-minimal">
-        <EditableMinute label="Réserve finale" value={config.finalReserveMin} onChange={(value) => onChangeConfig({ finalReserveMin: value })} />
-        <EditableLiter label="Marge" value={config.marginLiters ?? 0} onChange={(value) => onChangeConfig({ marginLiters: value })} />
+        <EditableNumber label="Réserve finale" value={config.finalReserveMin} unit="min" step={1} max={180} onChange={(value) => onChangeConfig({ finalReserveMin: value })} />
+        <EditableNumber label="Marge" value={config.marginLiters ?? 0} unit="L" step={0.5} max={500} onChange={(value) => onChangeConfig({ marginLiters: value })} />
       </div>
+
+      {!fuel.isFuelDataValid && (
+        <div className="fuel-capacity-alert danger">
+          Données carburant invalides. Vérifiez la consommation, la capacité totale et le carburant inutilisable dans le profil avion.
+        </div>
+      )}
+
+      {fuel.isFuelDataValid && !fuel.isCapacitySufficient && (
+        <div className="fuel-capacity-alert danger">
+          Capacité insuffisante : il manque {formatLiters(fuel.fuelDeficitL)} pour ce devis.
+        </div>
+      )}
 
       <div className="fuel-table fuel-table-compact">
         <FuelRow line={fuel.lines.route} />
@@ -91,12 +118,12 @@ export function FuelPlanningPanel({ fuel, config, onChangeConfig }: FuelPlanning
           <strong>{formatLitersCompact(fuel.lines.fuelRequired.liters)}</strong>
         </div>
         <div>
-          <span>Autonomie actuelle</span>
-          <strong>{formatMinutes(fuel.lines.timeLimit.minutes)}</strong>
+          <span>Autonomie capacité utile</span>
+          <strong>{formatMinutes(fuel.enduranceMinutes)}</strong>
         </div>
-        <div>
-          <span>Reste capacité utile</span>
-          <strong>{formatLitersCompact(fuel.remainingUsableFuelL)}</strong>
+        <div className={!fuel.isCapacitySufficient ? 'fuel-kpi-danger' : ''}>
+          <span>{fuel.isCapacitySufficient ? 'Reste capacité utile' : 'Déficit capacité'}</span>
+          <strong>{formatLitersCompact(fuel.isCapacitySufficient ? fuel.remainingUsableFuelL : fuel.fuelDeficitL)}</strong>
         </div>
       </div>
     </div>

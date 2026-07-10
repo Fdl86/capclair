@@ -43,7 +43,7 @@ function traceDiagnosticsExtensions(trace: Trace): string {
     extension('gpsResumptions', diagnostics.gpsResumptions),
     extension('missingAltitude', diagnostics.missingAltitude),
     extension('unreliableAltitude', diagnostics.unreliableAltitude),
-    extension('maxTraceSpeedKt', diagnostics.maxTraceSpeedKt)
+    extension('maxObservedSpeedKt', diagnostics.maxObservedSpeedKt ?? diagnostics.maxTraceSpeedKt ?? 0)
   ].join('');
 }
 

@@ -53,17 +53,8 @@ function clamp(value: number, min: number, max: number): number {
   return Math.max(min, Math.min(max, value));
 }
 
-function pointById(route: NavRoute, id: string): NavPoint | null {
-  return route.points.find((point) => point.id === id) ?? null;
-}
-
 function pointLabel(point: NavPoint): string {
   return point.code ?? point.nom;
-}
-
-function pointCode(route: NavRoute, id: string): string {
-  const point = pointById(route, id);
-  return point ? pointLabel(point) : id.toUpperCase();
 }
 
 function routeMarkers(route: NavRoute): RouteMarker[] {

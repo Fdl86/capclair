@@ -1,25 +1,27 @@
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import type { GpsPosition, GpsStatus, GpsTraceDiagnostics } from '../domain/gps.types';
 import type { NavRoute } from '../domain/navigation.types';
 import type { Trace } from '../domain/trace.types';
+import type { TraceSaveResult } from '../services/storage/traceStorage';
 import { distanceNm, totalDistanceNm } from '../services/geo/distance';
 import {
   toGpsPosition,
   isPlausibleGpsPosition,
+  isReliableGpsAltitude,
   classifyGpsPosition
 } from '../services/gps/geolocationService';
 import { interpolateSimulationPoint, simulationTotalSteps } from '../services/gps/simulationService';
 import { getCrossTrackError, getProgressiveCrossTrackError, type CrossTrackResult } from '../services/geo/crossTrackError';
+import { isRouteReady } from '../services/navigation/routeValidation';
 
 const TRACE_SAMPLE_INTERVAL_MS = 3000;
 const TRACE_MAX_POINTS = 4200;
-
-// Nombre de points consécutifs rejetés pour vitesse implausible avant de
-// forcer leur ajout à la trace. Un vrai saut GPS isolé est ainsi filtré,
-// mais si la position "de référence" est en fait périmée (ex. après une
-// longue coupure signal), on ne reste pas bloqué indéfiniment à comparer
-// tout nouveau point à ce point obsolète.
+const TRACE_GAP_BREAK_MS = 15000;
+const GPS_DEGRADED_AFTER_MS = 10000;
+const GPS_FROZEN_AFTER_MS = 30000;
 const MAX_CONSECUTIVE_TRACE_REJECTIONS = 5;
+const STATIONARY_SPEED_KT_THRESHOLD = 5;
+const STATIONARY_DRIFT_RADIUS_M = 60;
 
 const emptyDiagnostics = (): GpsTraceDiagnostics => ({
   rawReceived: 0,
@@ -33,20 +35,17 @@ const emptyDiagnostics = (): GpsTraceDiagnostics => ({
   gpsResumptions: 0,
   missingAltitude: 0,
   unreliableAltitude: 0,
-  maxTraceSpeedKt: 220
+  maxObservedSpeedKt: 0
 });
 
-// Sous ce seuil de vitesse sol *annoncée par le GPS* (Doppler, indépendante
-// du bruit de position), on considère l'appareil essentiellement immobile
-// (parqué, point d'attente). Un déplacement de position malgré une vitesse
-// quasi nulle est alors un rebond multitrajet (hangars, avions parqués),
-// pas un vrai mouvement.
-const STATIONARY_SPEED_KT_THRESHOLD = 5;
-// Rayon en dessous duquel, en régime "immobile", on ignore le déplacement
-// de position comme du bruit plutôt que de l'ajouter à la trace.
-const STATIONARY_DRIFT_RADIUS_M = 60;
+function impliedSpeedKt(previous: GpsPosition | null, current: GpsPosition): number | null {
+  if (!previous) return null;
+  const elapsedHours = (current.timestamp - previous.timestamp) / 3_600_000;
+  if (elapsedHours <= 0) return null;
+  return distanceNm(previous, current) / elapsedHours;
+}
 
-export function useGpsTracking(route: NavRoute, onTraceReady: (trace: Trace) => void) {
+export function useGpsTracking(route: NavRoute, onTraceReady: (trace: Trace) => Promise<TraceSaveResult>) {
   const [status, setStatus] = useState<GpsStatus>('idle');
   const [positions, setPositions] = useState<GpsPosition[]>([]);
   const [currentPosition, setCurrentPosition] = useState<GpsPosition | null>(null);
@@ -54,32 +53,48 @@ export function useGpsTracking(route: NavRoute, onTraceReady: (trace: Trace) => 
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [lastAccuracy, setLastAccuracy] = useState<number | null>(null);
   const [lastAltitudeAccuracy, setLastAltitudeAccuracy] = useState<number | null>(null);
+  const [lastSignalAgeSec, setLastSignalAgeSec] = useState<number | null>(null);
+  const [distanceTravelledNm, setDistanceTravelledNm] = useState(0);
+  const [diagnostics, setDiagnostics] = useState<GpsTraceDiagnostics>(emptyDiagnostics);
   const watchId = useRef<number | null>(null);
   const simTimer = useRef<number | null>(null);
   const simStep = useRef(0);
   const startTime = useRef<number | null>(null);
   const statusRef = useRef<GpsStatus>('idle');
   const lastSignalAt = useRef<number | null>(null);
+  const gapOpen = useRef(false);
   const lastLivePosition = useRef<GpsPosition | null>(null);
   const lastTraceSampleAt = useRef<number | null>(null);
   const activeSegmentIndex = useRef<number | null>(null);
   const traceRejectionStreak = useRef(0);
   const groundAnchor = useRef<GpsPosition | null>(null);
   const lastTraceSample = useRef<GpsPosition | null>(null);
-  const [diagnostics, setDiagnostics] = useState<GpsTraceDiagnostics>(emptyDiagnostics);
+  const distanceTravelledRef = useRef(0);
   const diagnosticsRef = useRef<GpsTraceDiagnostics>(emptyDiagnostics());
 
+  const commitDiagnostics = (next: GpsTraceDiagnostics) => {
+    diagnosticsRef.current = next;
+    setDiagnostics(next);
+  };
+
   const bumpDiagnostics = (key: keyof GpsTraceDiagnostics) => {
-    diagnosticsRef.current = { ...diagnosticsRef.current, [key]: diagnosticsRef.current[key] + 1 };
-    setDiagnostics(diagnosticsRef.current);
+    const current = diagnosticsRef.current[key];
+    const numericCurrent = typeof current === 'number' ? current : 0;
+    commitDiagnostics({ ...diagnosticsRef.current, [key]: numericCurrent + 1 });
+  };
+
+  const updateObservedSpeed = (position: GpsPosition, previous: GpsPosition | null) => {
+    const observed = Math.max(position.vitesse ?? 0, impliedSpeedKt(previous, position) ?? 0);
+    if (observed > diagnosticsRef.current.maxObservedSpeedKt) {
+      commitDiagnostics({ ...diagnosticsRef.current, maxObservedSpeedKt: Number(observed.toFixed(1)) });
+    }
   };
 
   const updateStatus = (next: GpsStatus) => {
+    if (statusRef.current === next) return;
     statusRef.current = next;
     setStatus(next);
   };
-
-  const distanceTravelledNm = useMemo(() => totalDistanceNm(positions), [positions]);
 
   const clearGpsWatch = () => {
     if (watchId.current !== null && 'geolocation' in navigator) {
@@ -100,39 +115,65 @@ export function useGpsTracking(route: NavRoute, onTraceReady: (trace: Trace) => 
     setCurrentPosition(null);
     setLastAccuracy(null);
     setLastAltitudeAccuracy(null);
+    setLastSignalAgeSec(null);
+    setDistanceTravelledNm(0);
     lastSignalAt.current = null;
+    gapOpen.current = false;
     lastLivePosition.current = null;
     lastTraceSampleAt.current = null;
     activeSegmentIndex.current = null;
     traceRejectionStreak.current = 0;
     groundAnchor.current = null;
     lastTraceSample.current = null;
-    diagnosticsRef.current = emptyDiagnostics();
-    setDiagnostics(diagnosticsRef.current);
+    distanceTravelledRef.current = 0;
+    commitDiagnostics(emptyDiagnostics());
     setCrossTrack(getCrossTrackError(null, route.points));
   };
 
-  const appendTraceSample = (position: GpsPosition, force = false) => {
+  const appendTraceSample = (position: GpsPosition, force = false): boolean => {
     const previousSampleAt = lastTraceSampleAt.current;
     const shouldSample = force || previousSampleAt === null || position.timestamp - previousSampleAt >= TRACE_SAMPLE_INTERVAL_MS;
-    if (!shouldSample) return;
+    if (!shouldSample) return false;
+
+    const previous = lastTraceSample.current;
+    if (previous && position.timestamp - previous.timestamp <= TRACE_GAP_BREAK_MS) {
+      distanceTravelledRef.current += distanceNm(previous, position);
+      setDistanceTravelledNm(distanceTravelledRef.current);
+    }
 
     lastTraceSampleAt.current = position.timestamp;
     lastTraceSample.current = position;
     setPositions((current) => [...current, position].slice(-TRACE_MAX_POINTS));
+    bumpDiagnostics('tracePoints');
+    return true;
   };
 
   const ingestPosition = (position: GpsPosition, forceTraceSample = false) => {
+    const receivedAt = Date.now();
+    if (gapOpen.current) {
+      gapOpen.current = false;
+      bumpDiagnostics('gpsResumptions');
+    }
+
     setLastAccuracy(position.precision);
     setLastAltitudeAccuracy(position.altitudeAccuracy);
-    lastSignalAt.current = Date.now();
+    setLastSignalAgeSec(0);
+    lastSignalAt.current = receivedAt;
     bumpDiagnostics('rawReceived');
+
+    if (position.altitude === null) {
+      bumpDiagnostics('missingAltitude');
+    } else if (!isReliableGpsAltitude(position)) {
+      bumpDiagnostics('unreliableAltitude');
+    }
 
     if (!isPlausibleGpsPosition(position)) {
       bumpDiagnostics('rejectedPrecision');
       return;
     }
 
+    const previousLive = lastLivePosition.current;
+    updateObservedSpeed(position, previousLive);
     lastLivePosition.current = position;
     setCurrentPosition(position);
 
@@ -140,15 +181,6 @@ export function useGpsTracking(route: NavRoute, onTraceReady: (trace: Trace) => 
     activeSegmentIndex.current = nextCrossTrack.segmentIndex;
     setCrossTrack(nextCrossTrack);
 
-    // IMPORTANT : on lit `lastTraceSample.current` (une ref), pas `positions`
-    // (le state React). `ingestPosition` est appelée depuis le callback passé
-    // une seule fois à `navigator.geolocation.watchPosition` — ce callback
-    // garde tout le vol la valeur de `positions` telle qu'elle était à l'appel
-    // de `startGps()` (closure figée). Résultat : `positions.at(-1)` valait
-    // toujours `null`/le tout premier point, et TOUT le filtrage par
-    // vitesse/redondance ci-dessous ne s'exécutait jamais réellement — seul
-    // le throttle 3s de `appendTraceSample` agissait. La ref, elle, est
-    // toujours à jour quel que soit l'âge de la closure qui la lit.
     const previousTraceSample = lastTraceSample.current;
     const reason = forceTraceSample ? null : classifyGpsPosition(position, previousTraceSample);
 
@@ -156,19 +188,15 @@ export function useGpsTracking(route: NavRoute, onTraceReady: (trace: Trace) => 
       traceRejectionStreak.current = 0;
       groundAnchor.current = null;
       appendTraceSample(position, true);
-      bumpDiagnostics('tracePoints');
-    } else if (reason === null) {
-      const reportedSpeedKt = position.vitesse;
-      const isLowReportedSpeed = reportedSpeedKt !== null && reportedSpeedKt < STATIONARY_SPEED_KT_THRESHOLD;
+      return;
+    }
+
+    if (reason === null) {
+      const isLowReportedSpeed = position.vitesse !== null && position.vitesse < STATIONARY_SPEED_KT_THRESHOLD;
 
       if (isLowReportedSpeed && groundAnchor.current) {
         const driftM = distanceNm(groundAnchor.current, position) * 1852;
         if (driftM <= STATIONARY_DRIFT_RADIUS_M) {
-          // Vitesse Doppler quasi nulle mais position qui bouge de plusieurs
-          // dizaines de mètres : rebond multitrajet typique près des hangars
-          // ou d'avions parqués, pas un vrai déplacement. On n'ajoute pas ce
-          // point à la trace ; la position live, elle, continue de se
-          // rafraîchir normalement.
           bumpDiagnostics('rejectedDrift');
           return;
         }
@@ -177,16 +205,15 @@ export function useGpsTracking(route: NavRoute, onTraceReady: (trace: Trace) => 
       traceRejectionStreak.current = 0;
       groundAnchor.current = isLowReportedSpeed ? position : null;
       appendTraceSample(position);
-      bumpDiagnostics('tracePoints');
-    } else if (reason === 'redundant') {
-      // Point normal mais trop rapproché : rien à faire, ce n'est pas un rejet
-      // "GPS louche", donc ça ne compte pas dans le compteur de resync.
+      return;
+    }
+
+    if (reason === 'redundant') {
       bumpDiagnostics('rejectedRedundant');
-    } else if (reason === 'speed') {
-      // Saut de vitesse implausible : on ignore ce point pour ne pas polluer
-      // la trace, sauf si ça se répète trop souvent — signe que la référence
-      // elle-même est périmée (ex. après une coupure GPS prolongée), auquel
-      // cas on force le resync plutôt que de rester bloqué.
+      return;
+    }
+
+    if (reason === 'speed') {
       bumpDiagnostics('rejectedSpeed');
       if (previousTraceSample) {
         traceRejectionStreak.current += 1;
@@ -195,7 +222,6 @@ export function useGpsTracking(route: NavRoute, onTraceReady: (trace: Trace) => 
           groundAnchor.current = null;
           appendTraceSample(position, true);
           bumpDiagnostics('forcedResync');
-          bumpDiagnostics('tracePoints');
         }
       }
     }
@@ -208,6 +234,12 @@ export function useGpsTracking(route: NavRoute, onTraceReady: (trace: Trace) => 
   };
 
   const startGps = () => {
+    if (!isRouteReady(route)) {
+      updateStatus('idle');
+      setErrorMessage('Définissez un départ et une arrivée avant de démarrer le suivi.');
+      return;
+    }
+
     clearGpsWatch();
     clearSimulation();
     setErrorMessage(null);
@@ -221,7 +253,6 @@ export function useGpsTracking(route: NavRoute, onTraceReady: (trace: Trace) => 
     }
 
     updateStatus('requesting');
-
     watchId.current = navigator.geolocation.watchPosition(
       handleNativePosition,
       (error) => {
@@ -233,11 +264,12 @@ export function useGpsTracking(route: NavRoute, onTraceReady: (trace: Trace) => 
           return;
         }
 
-        setErrorMessage(
-          statusRef.current === 'active'
-            ? 'Signal GPS momentanément faible. Le suivi continue dès la prochaine position.'
-            : 'Recherche GPS en cours. Placez le téléphone près d’une fenêtre ou en extérieur si le signal tarde.'
-        );
+        if (lastSignalAt.current !== null) {
+          updateStatus('degraded');
+          setErrorMessage('Signal GPS momentanément faible. Le suivi reprendra au prochain fix.');
+        } else {
+          setErrorMessage('Recherche GPS en cours. Placez le téléphone près d’une fenêtre ou en extérieur si le signal tarde.');
+        }
       },
       {
         enableHighAccuracy: true,
@@ -248,7 +280,7 @@ export function useGpsTracking(route: NavRoute, onTraceReady: (trace: Trace) => 
   };
 
   const startSimulation = () => {
-    if (route.points.length < 2) {
+    if (!isRouteReady(route)) {
       updateStatus('idle');
       setErrorMessage('Définissez un départ et une arrivée avant de lancer la simulation.');
       return;
@@ -277,13 +309,31 @@ export function useGpsTracking(route: NavRoute, onTraceReady: (trace: Trace) => 
     }, 1000);
   };
 
-  const stopAndSave = () => {
-    clearGpsWatch();
-    clearSimulation();
+  const stopAndSave = async (): Promise<TraceSaveResult> => {
     const finalPositions = currentPosition && positions.at(-1)?.timestamp !== currentPosition.timestamp
       ? [...positions, currentPosition].slice(-TRACE_MAX_POINTS)
       : positions;
+
+    if (finalPositions.length < 2) {
+      const result: TraceSaveResult = {
+        ok: false,
+        mode: 'indexeddb',
+        message: 'Trace trop courte : attendez au moins un deuxième point GPS avant de sauvegarder.'
+      };
+      setErrorMessage(result.message);
+      if (!['active', 'degraded', 'frozen', 'requesting', 'simulating'].includes(statusRef.current)) {
+        updateStatus('save-error');
+      }
+      return result;
+    }
+
+    clearGpsWatch();
+    clearSimulation();
+    updateStatus('saving');
+
     const duration = startTime.current ? Math.round((Date.now() - startTime.current) / 1000) : 0;
+    const finalDiagnostics = { ...diagnosticsRef.current, tracePoints: finalPositions.length };
+    commitDiagnostics(finalDiagnostics);
     const trace: Trace = {
       id: `trace-${Date.now()}`,
       routeId: route.id,
@@ -292,17 +342,62 @@ export function useGpsTracking(route: NavRoute, onTraceReady: (trace: Trace) => 
       positions: finalPositions,
       dureeSec: duration,
       distanceNm: Number(totalDistanceNm(finalPositions).toFixed(2)),
-      diagnostics: diagnosticsRef.current
+      diagnostics: finalDiagnostics
     };
-    onTraceReady(trace);
+
+    const result = await onTraceReady(trace);
     setPositions(finalPositions);
-    updateStatus('stopped');
+    if (result.ok) {
+      updateStatus('saved');
+      setErrorMessage(result.message);
+      startTime.current = null;
+    } else {
+      updateStatus('save-error');
+      setErrorMessage(result.message);
+    }
+    return result;
   };
+
+  useEffect(() => {
+    if (watchId.current === null) return undefined;
+
+    const timer = window.setInterval(() => {
+      const signalAt = lastSignalAt.current;
+      if (signalAt === null) return;
+      const ageMs = Date.now() - signalAt;
+      setLastSignalAgeSec(Math.max(0, Math.floor(ageMs / 1000)));
+
+      if (ageMs >= TRACE_GAP_BREAK_MS && !gapOpen.current) {
+        gapOpen.current = true;
+        bumpDiagnostics('gpsGaps');
+      }
+
+      if (ageMs >= GPS_FROZEN_AFTER_MS) {
+        updateStatus('frozen');
+        setErrorMessage('Position GPS figée depuis plus de 30 secondes. La trace reste ouverte mais aucun nouveau fix fiable n’est reçu.');
+      } else if (ageMs >= GPS_DEGRADED_AFTER_MS) {
+        updateStatus('degraded');
+        setErrorMessage('Signal GPS dégradé. Dernier fix reçu il y a plus de 10 secondes.');
+      }
+    }, 1000);
+
+    return () => window.clearInterval(timer);
+  }, [status]);
 
   useEffect(() => {
     activeSegmentIndex.current = null;
     setCrossTrack(getCrossTrackError(currentPosition, route.points));
   }, [route.points]);
+
+  useEffect(() => {
+    const handleBeforeUnload = (event: BeforeUnloadEvent) => {
+      if (!['active', 'degraded', 'frozen', 'simulating'].includes(statusRef.current)) return;
+      event.preventDefault();
+      event.returnValue = '';
+    };
+    window.addEventListener('beforeunload', handleBeforeUnload);
+    return () => window.removeEventListener('beforeunload', handleBeforeUnload);
+  }, []);
 
   useEffect(() => {
     return () => {
@@ -325,6 +420,7 @@ export function useGpsTracking(route: NavRoute, onTraceReady: (trace: Trace) => 
     errorMessage,
     lastAccuracy,
     lastAltitudeAccuracy,
+    lastSignalAgeSec,
     lastSignalAt: lastSignalAt.current,
     diagnostics,
     traceSampleIntervalMs: TRACE_SAMPLE_INTERVAL_MS,
