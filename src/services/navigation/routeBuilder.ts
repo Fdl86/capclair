@@ -125,6 +125,14 @@ export function createManualWaypoint(latitude: number, longitude: number, index:
 }
 
 export function relabelRoutePoints(points: NavPoint[]): NavPoint[] {
+  if (points.length === 0) return [];
+
+  if (points.length === 1) {
+    const point = points[0];
+    const type: NavPointType = point.type === 'destination' ? 'destination' : 'depart';
+    return [{ ...point, type, nom: point.code ?? point.nom }];
+  }
+
   let waypointIndex = 0;
   return points.map((point, index) => {
     const type: NavPointType = index === 0 ? 'depart' : index === points.length - 1 ? 'destination' : 'waypoint';
@@ -193,12 +201,15 @@ export function buildRoute(points: NavPoint[], options: RouteBuildOptions = {}):
   const branchAltitudeById = options.branchAltitudeById ?? {};
   const branchWindById = options.branchWindById ?? {};
   const branches = buildBranches(normalizedPoints, { profile, branchAltitudeById, branchWindById });
-  const departure = normalizedPoints[0];
-  const destination = normalizedPoints[normalizedPoints.length - 1];
+  const departure = normalizedPoints.find((point) => point.type === 'depart');
+  const destination = normalizedPoints.find((point) => point.type === 'destination');
+  const routeName = departure || destination
+    ? `${departure ? pointLabel(departure) : '----'} - ${destination ? pointLabel(destination) : '----'}`
+    : 'Nouvelle navigation';
 
   return {
     id: 'active-route',
-    nom: `${pointLabel(departure)} - ${pointLabel(destination)}`,
+    nom: routeName,
     points: normalizedPoints,
     branches,
     distanceTotale: Number(branches.reduce((sum, branch) => sum + branch.distanceNm, 0).toFixed(1)),
@@ -211,13 +222,6 @@ export function buildRoute(points: NavPoint[], options: RouteBuildOptions = {}):
   };
 }
 
-export function createDefaultRoute(): NavRoute {
-  const departure = createAerodromePoint('LFBI', 'depart');
-  const destination = createAerodromePoint('LFEY', 'destination');
-
-  if (!departure || !destination) {
-    throw new Error('Default aerodromes missing from catalogue');
-  }
-
-  return buildRoute([departure, destination]);
+export function createDefaultRoute(profile: Partial<FlightProfile> = {}): NavRoute {
+  return buildRoute([], { profile });
 }

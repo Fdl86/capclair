@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import type { ScreenId } from './routes';
 import { findAerodrome } from '../data/aerodromeCatalog';
 import { AppShell } from '../components/layout/AppShell';
@@ -41,6 +41,14 @@ export function App() {
   const safeAlternateCode = safeAerodromeCode(alternateCode, '');
   const aerodromeWeatherState = useAerodromeWeather([departureCode, destinationCode, safeAlternateCode].filter(Boolean));
 
+
+  useEffect(() => {
+    const profileTasKt = Math.round(aircraftState.activeProfile.cruiseTasKt);
+    if (routeState.route.profile.tasKt !== profileTasKt) {
+      routeState.setTasKt(profileTasKt);
+    }
+  }, [aircraftState.activeProfile.id, aircraftState.activeProfile.cruiseTasKt, routeState.route.profile.tasKt]);
+
   const setAlternate = (code: string) => {
     setAlternateCode(safeAerodromeCode(code, safeAlternateCode));
   };
@@ -62,6 +70,12 @@ export function App() {
     routeState.setTasKt(profile.cruiseTasKt);
   };
 
+
+  const resetNavigation = () => {
+    routeState.resetRoute(aircraftState.activeProfile.cruiseTasKt);
+    setAlternateCode('');
+  };
+
   const updateFuelPlanConfig = (patch: Partial<typeof DEFAULT_FUEL_PLAN_CONFIG>) => {
     setFuelPlanConfig((current) => ({ ...current, ...patch }));
   };
@@ -79,7 +93,7 @@ export function App() {
           onAddWaypointAt={routeState.addWaypointAt}
           onRemovePoint={routeState.removePoint}
           onReverseRoute={routeState.reverseRoute}
-          onResetRoute={routeState.resetRoute}
+          onResetRoute={resetNavigation}
           alternateCode={safeAlternateCode}
           onSetAlternateCode={setAlternate}
           onCalculations={() => setCurrentScreen('calculations')}
@@ -93,7 +107,7 @@ export function App() {
           weatherStatus={routeState.weatherStatus}
           onSetBranchAltitude={routeState.setBranchAltitudeFt}
           onRefreshWinds={routeState.refreshWinds}
-          onSetTasKt={routeState.setTasKt}
+          onSetTasKt={(tasKt) => updateAircraft(aircraftState.activeProfile.id, { cruiseTasKt: tasKt })}
           onSetDefaultAltitudeFt={routeState.setDefaultAltitudeFt}
           aircraftProfiles={aircraftState.profiles}
           activeAircraft={aircraftState.activeProfile}

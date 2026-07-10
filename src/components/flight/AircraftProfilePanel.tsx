@@ -69,7 +69,7 @@ export function AircraftProfilePanel({
       <div className="aircraft-field-grid">
         <Field label="TAS croisière" value={activeProfile.cruiseTasKt} unit="kt" onChange={(value) => onUpdateProfile(activeProfile.id, { cruiseTasKt: value })} />
         <Field label="Conso" value={activeProfile.fuelBurnLh} unit="L/h" onChange={(value) => onUpdateProfile(activeProfile.id, { fuelBurnLh: value })} />
-        <Field label="Carburant utile" value={activeProfile.usableFuelL} unit="L" onChange={(value) => onUpdateProfile(activeProfile.id, { usableFuelL: value })} />
+        <Field label="Capacité totale réservoirs" value={activeProfile.usableFuelL} unit="L" onChange={(value) => onUpdateProfile(activeProfile.id, { usableFuelL: value })} />
         <Field label="Carburant inutilisable" value={activeProfile.unusableFuelL ?? 0} unit="L" onChange={(value) => onUpdateProfile(activeProfile.id, { unusableFuelL: value })} />
         <Field label="Réserve défaut" value={activeProfile.reserveMinutes} unit="min" onChange={(value) => onUpdateProfile(activeProfile.id, { reserveMinutes: value })} />
         <Field label="Vitesse montée" value={activeProfile.climbSpeedKt} unit="kt" onChange={(value) => onUpdateProfile(activeProfile.id, { climbSpeedKt: value })} />
@@ -78,7 +78,9 @@ export function AircraftProfilePanel({
         <Field label="Taux descente" value={activeProfile.descentRateFpm} unit="ft/min" step={50} onChange={(value) => onUpdateProfile(activeProfile.id, { descentRateFpm: value })} />
       </div>
 
-      <p className="aircraft-note">Valeurs à vérifier avec le manuel de vol et les données club.</p>
+      <p className="aircraft-note">
+        Carburant utilisable calculé : {Math.max(0, activeProfile.usableFuelL - (activeProfile.unusableFuelL ?? 0)).toFixed(1).replace('.', ',')} L. Valeurs à vérifier avec le manuel de vol et les données club.
+      </p>
     </div>
   );
 }

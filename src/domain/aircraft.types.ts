@@ -5,6 +5,7 @@ export interface AircraftProfile {
   model: string;
   cruiseTasKt: number;
   fuelBurnLh: number;
+  /** Capacité physique totale des réservoirs. Nom conservé pour compatibilité avec les profils déjà enregistrés. */
   usableFuelL: number;
   unusableFuelL?: number;
   reserveMinutes: number;

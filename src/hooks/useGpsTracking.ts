@@ -248,6 +248,11 @@ export function useGpsTracking(route: NavRoute, onTraceReady: (trace: Trace) => 
   };
 
   const startSimulation = () => {
+    if (route.points.length < 2) {
+      updateStatus('idle');
+      setErrorMessage('Définissez un départ et une arrivée avant de lancer la simulation.');
+      return;
+    }
     clearGpsWatch();
     clearSimulation();
     updateStatus('simulating');

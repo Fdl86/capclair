@@ -37,6 +37,17 @@ Prototype non réglementaire. Ne pas utiliser comme source unique pour une navig
 
 ## Version courante
 
+WEB13.18.1 - Nav reset & profil avion
+
+- Nouvelle navigation réellement vide : départ, arrivée et dégagement remis à zéro.
+- Première utilisation sans aérodromes préremplis.
+- TAS du log synchronisée avec le profil avion actif.
+- Champ carburant renommé en Capacité totale réservoirs.
+- Carburant utilisable calculé comme capacité totale moins carburant inutilisable.
+- Titre d'onglet et chip de version mis à jour.
+
+Historique de base :
+
 DEV13.6.2 - Frise UX optimized
 
 - Bouton Zones retiré de Planification.

@@ -24,6 +24,12 @@ function makeLine(label: string, minutes: number, fuelPerMinuteL: number, editab
   };
 }
 
+function usableFuelCapacityL(aircraft: AircraftProfile) {
+  const totalCapacityL = safeLiter(aircraft.usableFuelL);
+  const unusableFuelL = safeLiter(aircraft.unusableFuelL ?? 0);
+  return safeLiter(totalCapacityL - unusableFuelL);
+}
+
 function makeLiterLine(label: string, liters: number, editable = false): FuelLine {
   return {
     label,
@@ -37,7 +43,8 @@ export function computeFuelSummary(route: NavRoute, aircraft: AircraftProfile): 
   const routeFuelL = (route.tempsEstimeMin / 60) * aircraft.fuelBurnLh;
   const reserveFuelL = (aircraft.reserveMinutes / 60) * aircraft.fuelBurnLh;
   const totalFuelL = routeFuelL + reserveFuelL;
-  const enduranceMinutes = aircraft.fuelBurnLh > 0 ? Math.floor((aircraft.usableFuelL / aircraft.fuelBurnLh) * 60) : 0;
+  const usableFuelL = usableFuelCapacityL(aircraft);
+  const enduranceMinutes = aircraft.fuelBurnLh > 0 ? Math.floor((usableFuelL / aircraft.fuelBurnLh) * 60) : 0;
 
   return {
     routeFuelL: Number(routeFuelL.toFixed(1)),
@@ -106,16 +113,19 @@ export function computeFuelPlan(
     liters: emportLiters
   };
 
+  const unusableFuelL = safeLiter(aircraft.unusableFuelL ?? 0);
+  const usableFuelL = usableFuelCapacityL(aircraft);
+
   return {
     fuelPerHourL,
     fuelPerMinuteL,
-    unusableFuelL: safeLiter(aircraft.unusableFuelL ?? 0),
-    usableFuelL: safeLiter(aircraft.usableFuelL),
+    unusableFuelL,
+    usableFuelL,
     routeMinutes,
     diversionMinutes: diversionMin,
     fuelRequiredL: emportLiters,
     enduranceMinutes: emportMinutes,
-    remainingUsableFuelL: safeLiter(aircraft.usableFuelL - emportLiters),
+    remainingUsableFuelL: safeLiter(usableFuelL - emportLiters),
     lines: {
       route: routeLine,
       taxiDeparture: taxiDepartureLine,
