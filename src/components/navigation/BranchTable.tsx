@@ -1,3 +1,4 @@
+import { useEffect, useState } from 'react';
 import type { BranchZoneProfile } from '../../domain/airspace.types';
 import type { NavRoute } from '../../domain/navigation.types';
 import { formatMagneticVariation } from '../../services/geo/magneticVariation';
@@ -32,6 +33,55 @@ function zoneRemark(profile?: BranchZoneProfile) {
   return `${primary.zoneType} ${primary.zoneName}${classLabel}${secondary}`;
 }
 
+function BranchAltitudeInput({
+  branchId,
+  value,
+  label,
+  onCommit
+}: {
+  branchId: string;
+  value: number;
+  label: string;
+  onCommit: (branchId: string, altitudeFt: number) => void;
+}) {
+  const [draft, setDraft] = useState(String(value));
+
+  useEffect(() => {
+    setDraft(String(value));
+  }, [value]);
+
+  const commit = () => {
+    const parsed = Number(draft);
+    if (!Number.isFinite(parsed) || parsed < 500 || parsed > 12500) {
+      setDraft(String(value));
+      return;
+    }
+    const normalized = Math.round(parsed / 100) * 100;
+    setDraft(String(normalized));
+    onCommit(branchId, normalized);
+  };
+
+  return (
+    <input
+      className="branch-alt-input"
+      type="number"
+      inputMode="numeric"
+      min={500}
+      max={12500}
+      step={100}
+      value={draft}
+      onChange={(event) => setDraft(event.target.value)}
+      onBlur={commit}
+      onKeyDown={(event) => {
+        if (event.key === 'Enter') {
+          event.currentTarget.blur();
+        }
+      }}
+      aria-label={label}
+    />
+  );
+}
+
 export function BranchTable({ route, zoneProfiles = {}, onSetBranchAltitude }: BranchTableProps) {
   const totalTsv = route.branches.reduce((sum, branch) => sum + branch.tempsSansVentMin, 0);
 
@@ -55,20 +105,17 @@ export function BranchTable({ route, zoneProfiles = {}, onSetBranchAltitude }: B
       </div>
       {route.branches.map((branch) => {
         const profile = zoneProfiles[branch.id];
+        const label = `Altitude ${pointName(route, branch.from)} vers ${pointName(route, branch.to)}`;
         return (
           <div key={branch.id} className="branch-row" role="row">
             <span>{pointName(route, branch.from)} - {pointName(route, branch.to)}</span>
             <span>
               {onSetBranchAltitude ? (
-                <input
-                  className="branch-alt-input"
-                  type="number"
-                  min={500}
-                  max={12500}
-                  step={500}
+                <BranchAltitudeInput
+                  branchId={branch.id}
                   value={branch.altitudeFt}
-                  onChange={(event) => onSetBranchAltitude(branch.id, Number(event.target.value))}
-                  aria-label={`Altitude ${pointName(route, branch.from)} vers ${pointName(route, branch.to)}`}
+                  label={label}
+                  onCommit={onSetBranchAltitude}
                 />
               ) : branch.altitudeFt}
             </span>
@@ -89,19 +136,11 @@ export function BranchTable({ route, zoneProfiles = {}, onSetBranchAltitude }: B
       })}
       <div className="branch-row total" role="row">
         <span>TOTAL</span>
-        <span>-</span>
-        <span>-</span>
-        <span>-</span>
-        <span>-</span>
-        <span>-</span>
-        <span>-</span>
-        <span>-</span>
-        <span>-</span>
+        <span>-</span><span>-</span><span>-</span><span>-</span><span>-</span><span>-</span><span>-</span><span>-</span>
         <span>{route.distanceTotale.toFixed(1)}</span>
         <span>{minutesToClock(totalTsv)}</span>
         <span>{minutesToClock(route.tempsEstimeMin)}</span>
-        <span>-</span>
-        <span>-</span>
+        <span>-</span><span>-</span>
       </div>
     </div>
   );

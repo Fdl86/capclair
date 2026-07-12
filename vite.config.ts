@@ -11,7 +11,7 @@ export default defineConfig({
       manifest: {
         name: 'CAP CLAIR - Navigation VFR',
         short_name: 'CAP CLAIR',
-        description: 'PWA de navigation VFR : fonds openAIP et OACI 1/500k, frise zones, profil vertical et relief.',
+        description: 'PWA de navigation VFR : planification, suivi GPS navigateur, traces locales, import GPX et Replay synchronisé.',
         theme_color: '#050B12',
         background_color: '#050B12',
         display: 'standalone',

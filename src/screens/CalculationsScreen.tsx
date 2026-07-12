@@ -241,9 +241,9 @@ export function CalculationsScreen({
               <div className="cockpit-stepper">
                 <span>Alt défaut</span>
                 <div>
-                  <button type="button" disabled={route.profile.defaultAltitudeFt <= 500} onClick={() => onSetDefaultAltitudeFt(route.profile.defaultAltitudeFt - 500)} aria-label="Réduire l'altitude">-</button>
+                  <button type="button" disabled={route.profile.defaultAltitudeFt <= 500} onClick={() => onSetDefaultAltitudeFt(route.profile.defaultAltitudeFt - 100)} aria-label="Réduire l'altitude">-</button>
                   <strong>{route.profile.defaultAltitudeFt}</strong>
-                  <button type="button" disabled={route.profile.defaultAltitudeFt >= 12500} onClick={() => onSetDefaultAltitudeFt(route.profile.defaultAltitudeFt + 500)} aria-label="Augmenter l'altitude">+</button>
+                  <button type="button" disabled={route.profile.defaultAltitudeFt >= 12500} onClick={() => onSetDefaultAltitudeFt(route.profile.defaultAltitudeFt + 100)} aria-label="Augmenter l'altitude">+</button>
                 </div>
               </div>
             </div>
@@ -309,9 +309,8 @@ export function CalculationsScreen({
           <div>
             <Button
               variant="secondary"
-              onClick={() => setPdfStatus('Export PDF conservé pour la prochaine étape. Utilisez Imprimer en attendant.')}
+              onClick={() => setPdfStatus('Export PDF conservé pour la prochaine étape. Le module dédié sera ajouté ensuite.')}
             >Exporter PDF</Button>
-            <Button variant="secondary" onClick={() => window.print()}>Imprimer</Button>
             <Button variant="primary" onClick={onValidate}>Passer au suivi</Button>
           </div>
         </div>

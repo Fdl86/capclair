@@ -58,37 +58,92 @@ function safeSlug(value: string): string {
 }
 
 function traceDateSlug(trace: Trace): string {
-  const date = new Date(trace.date);
+  const date = new Date(trace.startedAt ?? trace.date);
   if (Number.isNaN(date.getTime())) return new Date().toISOString().slice(0, 10);
   return date.toISOString().replace(/[:.]/g, '-').slice(0, 19);
 }
 
-function traceFileName(trace: Trace, extension: 'gpx' | 'json'): string {
-  return `cap-clair-${safeSlug(trace.routeName)}-${traceDateSlug(trace)}.${extension}`;
+function traceFileName(trace: Trace, fileExtension: 'gpx' | 'json'): string {
+  return `cap-clair-${safeSlug(trace.routeName)}-${traceDateSlug(trace)}.${fileExtension}`;
+}
+
+export function splitTraceSegments(trace: Trace, gapMs = 12_000): Trace['positions'][] {
+  const explicitStarts = new Set((trace.segmentStartIndices ?? []).filter((index) => Number.isInteger(index) && index > 0));
+  const segments: Trace['positions'][] = [];
+  let current: Trace['positions'] = [];
+
+  trace.positions.forEach((position, index) => {
+    const previous = current.at(-1);
+    const shouldBreak = explicitStarts.has(index)
+      || Boolean(previous && (position.timestamp <= previous.timestamp || position.timestamp - previous.timestamp > gapMs));
+    if (shouldBreak && current.length) {
+      segments.push(current);
+      current = [];
+    }
+    current.push(position);
+  });
+
+  if (current.length) segments.push(current);
+  return segments;
+}
+
+function finiteValue(value: unknown): number | null {
+  return typeof value === 'number' && Number.isFinite(value) ? value : null;
+}
+
+function positionToGpxPoint(position: Trace['positions'][number], includeTime: boolean): string {
+  const altitude = finiteValue(position.altitude);
+  const precisionValue = finiteValue(position.precision);
+  const altitudeAccuracyValue = finiteValue(position.altitudeAccuracy);
+  const speedValue = finiteValue(position.vitesse);
+  const trackValue = finiteValue(position.track);
+  const normalizedPosition = {
+    ...position,
+    altitude,
+    altitudeAccuracy: altitudeAccuracyValue,
+    precision: precisionValue,
+    vitesse: speedValue,
+    track: trackValue
+  };
+  const hasReliableAltitude = isReliableGpsAltitude(normalizedPosition);
+  const elevation = hasReliableAltitude ? `<ele>${altitude!.toFixed(1)}</ele>` : '';
+  const precision = precisionValue !== null ? extension('precision', precisionValue.toFixed(1)) : '';
+  const altitudeAccuracy = altitudeAccuracyValue !== null ? extension('altitudeAccuracy', altitudeAccuracyValue.toFixed(1)) : '';
+  const altitudeReliable = altitude !== null ? extension('altitudeReliable', hasReliableAltitude ? 'true' : 'false') : '';
+  const rawAltitude = altitude !== null ? extension('rawAltitudeM', altitude.toFixed(1)) : '';
+  const vitesse = speedValue !== null ? extension('vitesseKt', speedValue.toFixed(1)) : '';
+  const track = trackValue !== null ? extension('trackDeg', trackValue.toFixed(1)) : '';
+  const extensions = precision || altitudeAccuracy || altitudeReliable || rawAltitude || vitesse || track
+    ? `<extensions>${precision}${altitudeAccuracy}${altitudeReliable}${rawAltitude}${vitesse}${track}</extensions>`
+    : '';
+  const time = includeTime ? `<time>${new Date(position.timestamp).toISOString()}</time>` : '';
+  return `      <trkpt lat="${position.latitude.toFixed(7)}" lon="${position.longitude.toFixed(7)}">${elevation}${time}${extensions}</trkpt>`;
 }
 
 export function traceToGpx(trace: Trace): string {
+  const segments = splitTraceSegments(trace);
   const metadataExtensions = [
     extension('appVersion', APP_VERSION),
+    extension('schemaVersion', trace.schemaVersion ?? 1),
+    extension('source', trace.source ?? 'legacy'),
+    extension('timingMode', trace.timingMode ?? 'recorded'),
+    extension('importFileName', trace.importMetadata?.fileName),
+    extension('importKind', trace.importMetadata?.kind),
+    extension('importedAt', trace.importMetadata?.importedAt),
+    extension('originalPointCount', trace.importMetadata?.originalPointCount),
+    extension('startedAt', trace.startedAt),
+    extension('endedAt', trace.endedAt),
+    extension('segmentCount', segments.length),
     traceDiagnosticsExtensions(trace)
   ].join('');
 
-  const points = trace.positions.map((position) => {
-    const hasReliableAltitude = isReliableGpsAltitude(position);
-    const elevation = hasReliableAltitude ? `<ele>${Math.round(position.altitude as number)}</ele>` : '';
-    const precision = position.precision !== null ? extension('precision', position.precision.toFixed(1)) : '';
-    const altitudeAccuracy = position.altitudeAccuracy !== null ? extension('altitudeAccuracy', position.altitudeAccuracy.toFixed(1)) : '';
-    const altitudeReliable = position.altitude !== null ? extension('altitudeReliable', hasReliableAltitude ? 'true' : 'false') : '';
-    const rawAltitude = position.altitude !== null ? extension('rawAltitudeM', position.altitude.toFixed(1)) : '';
-    const vitesse = position.vitesse !== null ? extension('vitesse', position.vitesse.toFixed(1)) : '';
-    const track = position.track !== null ? extension('track', position.track.toFixed(1)) : '';
-    const extensions = precision || altitudeAccuracy || altitudeReliable || rawAltitude || vitesse || track
-      ? `<extensions>${precision}${altitudeAccuracy}${altitudeReliable}${rawAltitude}${vitesse}${track}</extensions>`
-      : '';
-    return `      <trkpt lat="${position.latitude.toFixed(7)}" lon="${position.longitude.toFixed(7)}">${elevation}<time>${new Date(position.timestamp).toISOString()}</time>${extensions}</trkpt>`;
+  const includeTime = trace.timingMode !== 'unavailable';
+  const segmentXml = segments.map((segment) => {
+    const points = segment.map((position) => positionToGpxPoint(position, includeTime)).join('\n');
+    return `    <trkseg>\n${points}\n    </trkseg>`;
   }).join('\n');
 
-  return `<?xml version="1.0" encoding="UTF-8"?>\n<gpx version="1.1" creator="${escapeXml(APP_VERSION)}" xmlns="http://www.topografix.com/GPX/1/1" xmlns:capclair="https://cap-clair.app/gpx/1">\n  <metadata>\n    <name>${escapeXml(trace.routeName)}</name>\n    <desc>${escapeXml(APP_VERSION)}</desc>\n    <extensions>${metadataExtensions}</extensions>\n  </metadata>\n  <trk>\n    <name>${escapeXml(trace.routeName)}</name>\n    <trkseg>\n${points}\n    </trkseg>\n  </trk>\n</gpx>`;
+  return `<?xml version="1.0" encoding="UTF-8"?>\n<gpx version="1.1" creator="${escapeXml(APP_VERSION)}" xmlns="http://www.topografix.com/GPX/1/1" xmlns:capclair="https://cap-clair.app/gpx/2">\n  <metadata>\n    <name>${escapeXml(trace.routeName)}</name>\n    <desc>${escapeXml(APP_VERSION)}</desc>\n    <time>${escapeXml(trace.endedAt ?? trace.importMetadata?.importedAt ?? trace.date)}</time>\n    <extensions>${metadataExtensions}</extensions>\n  </metadata>\n  <trk>\n    <name>${escapeXml(trace.routeName)}</name>\n${segmentXml}\n  </trk>\n</gpx>`;
 }
 
 export function traceToJson(trace: Trace): string {

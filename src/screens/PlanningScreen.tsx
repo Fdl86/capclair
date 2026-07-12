@@ -28,6 +28,9 @@ interface PlanningScreenProps {
   mapBaseLayer: MapBaseLayer;
   onMapBaseLayerChange: (value: MapBaseLayer) => void;
   aircraftPosition?: GpsPosition | null;
+  onRequestPosition?: () => Promise<GpsPosition | null>;
+  locating?: boolean;
+  locationError?: string | null;
 }
 
 function endpointCode(route: NavRoute, type: 'depart' | 'destination') {
@@ -70,7 +73,10 @@ export function PlanningScreen({
   onCalculations,
   mapBaseLayer,
   onMapBaseLayerChange,
-  aircraftPosition = null
+  aircraftPosition = null,
+  onRequestPosition,
+  locating = false,
+  locationError = null
 }: PlanningScreenProps) {
   const [addWaypointMode, setAddWaypointMode] = useState(false);
   const [departureInput, setDepartureInput] = useState(endpointCode(route, 'depart'));
@@ -176,7 +182,6 @@ export function PlanningScreen({
 
   const handleAddWaypoint = useCallback((longitude: number, latitude: number) => {
     onAddWaypointAt(longitude, latitude);
-    setAddWaypointMode(false);
   }, [onAddWaypointAt]);
 
   const resetNavigation = () => {
@@ -199,7 +204,21 @@ export function PlanningScreen({
             baseLayer={mapBaseLayer}
             addWaypointMode={addWaypointMode}
             onMapAddWaypoint={handleAddWaypoint}
+            allowUserRotation={false}
+            onRequestPosition={onRequestPosition}
+            locating={locating}
+            locationError={locationError}
           />
+          <button
+            type="button"
+            className={`planning-map-add-button ${addWaypointMode ? 'active' : ''}`}
+            onClick={() => setAddWaypointMode((value) => !value)}
+            disabled={!ready}
+            aria-pressed={addWaypointMode}
+            title={ready ? (addWaypointMode ? 'Terminer l’ajout de points' : 'Ajouter des points sur la carte') : 'Définissez d’abord le départ et l’arrivée'}
+          >
+            {addWaypointMode ? 'Terminer' : '+ Point'}
+          </button>
         </div>
 
         <Card className="route-panel compact-route-panel">
@@ -303,14 +322,7 @@ export function PlanningScreen({
 
           <div className={`route-hint ${ready ? '' : 'route-hint-warning'}`}>{ready ? routeMessage : routeMissingMessage(route)}</div>
 
-          <div className="route-actions-row route-actions-row-two">
-            <Button
-              variant={addWaypointMode ? 'danger' : 'primary'}
-              onClick={() => setAddWaypointMode((value) => !value)}
-              disabled={!ready}
-            >
-              {addWaypointMode ? 'Annuler' : '+ Point'}
-            </Button>
+          <div className="route-actions-row route-actions-row-single">
             <Button variant="secondary" onClick={resetNavigation}>Nouvelle nav</Button>
           </div>
         </Card>

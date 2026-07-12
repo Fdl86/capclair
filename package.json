@@ -1,7 +1,7 @@
 {
-  "name": "cap-clair-web13-19-0-stability-optimization",
+  "name": "cap-clair-web13-21-0-gpx-import",
   "private": true,
-  "version": "0.13.19-0",
+  "version": "0.13.21-0",
   "type": "module",
   "scripts": {
     "dev": "vite",

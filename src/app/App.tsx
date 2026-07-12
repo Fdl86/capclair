@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { lazy, Suspense, useEffect, useState } from 'react';
 import type { ScreenId } from './routes';
 import { findAerodrome } from '../data/aerodromeCatalog';
 import { AppShell } from '../components/layout/AppShell';
@@ -8,6 +8,7 @@ import { CalculationsScreen } from '../screens/CalculationsScreen';
 import { TrackingScreen } from '../screens/TrackingScreen';
 import { TracesScreen } from '../screens/TracesScreen';
 import { MoreScreen } from '../screens/MoreScreen';
+import { Button } from '../components/ui/Button';
 import { useActiveRoute } from '../hooks/useActiveRoute';
 import { useTraces } from '../hooks/useTraces';
 import { useLocalStorageState } from '../hooks/useLocalStorageState';
@@ -16,6 +17,11 @@ import { useAerodromeWeather } from '../hooks/useAerodromeWeather';
 import { DEFAULT_FUEL_PLAN_CONFIG } from '../domain/aircraft.types';
 import type { MapBaseLayer } from '../mapEngine/mapTypes';
 import { isRouteReady, routeMissingMessage } from '../services/navigation/routeValidation';
+import { useOneShotPosition } from '../hooks/useOneShotPosition';
+import { importGpxFile } from '../services/import/gpxImport';
+import type { TraceSaveResult } from '../services/storage/traceStorage';
+
+const TraceReplayScreen = lazy(() => import('../screens/TraceReplayScreen').then((module) => ({ default: module.TraceReplayScreen })));
 
 function routeEndpointCode(route: ReturnType<typeof useActiveRoute>['route'], type: 'depart' | 'destination') {
   return route.points.find((point) => point.type === type)?.code ?? '';
@@ -37,14 +43,17 @@ export function App() {
   const [appNotice, setAppNotice] = useState<string | null>(null);
   const [trackingRecording, setTrackingRecording] = useState(false);
   const [pendingScreen, setPendingScreen] = useState<ScreenId | null>(null);
+  const [replayTraceId, setReplayTraceId] = useState<string | null>(null);
   const routeState = useActiveRoute();
   const traceState = useTraces();
   const aircraftState = useAircraftProfiles();
+  const oneShotPosition = useOneShotPosition();
   const [alternateCode, setAlternateCode] = useLocalStorageState('capclair.alternateCode.v2.web', '');
   const [fuelPlanConfigRaw, setFuelPlanConfig] = useLocalStorageState('capclair.fuelPlan.v1', DEFAULT_FUEL_PLAN_CONFIG);
   const [mapBaseLayer, setMapBaseLayer] = useLocalStorageState<MapBaseLayer>('capclair.mapBaseLayer.v1', 'free');
   const fuelPlanConfig = { ...DEFAULT_FUEL_PLAN_CONFIG, ...fuelPlanConfigRaw };
   const ready = isRouteReady(routeState.route);
+  const replayTrace = replayTraceId ? traceState.traces.find((trace) => trace.id === replayTraceId) ?? null : null;
 
   const departureCode = routeEndpointCode(routeState.route, 'depart');
   const destinationCode = routeEndpointCode(routeState.route, 'destination');
@@ -131,8 +140,21 @@ export function App() {
     }));
   };
 
+  const handleImportGpx = async (file: File): Promise<TraceSaveResult> => {
+    const imported = await importGpxFile(file);
+    const saved = await traceState.saveTrace(imported.trace);
+    if (!saved.ok) return saved;
+    setReplayTraceId(imported.trace.id);
+    setCurrentScreen('replay');
+    return {
+      ...saved,
+      message: `${imported.message} ${saved.message}`
+    };
+  };
+
   return (
-    <AppShell currentScreen={currentScreen} onNavigate={navigate}>
+    <AppShell currentScreen={currentScreen} onNavigate={navigate} immersive={currentScreen === 'replay'}>
+      <Suspense fallback={<div className="screen-loading">Chargement de l’écran...</div>}>
       {appNotice && (
         <div className="app-notice" role="status">
           <span>{appNotice}</span>
@@ -157,6 +179,10 @@ export function App() {
           onCalculations={() => navigate('calculations')}
           mapBaseLayer={mapBaseLayer}
           onMapBaseLayerChange={setMapBaseLayer}
+          aircraftPosition={oneShotPosition.position}
+          onRequestPosition={oneShotPosition.requestPosition}
+          locating={oneShotPosition.locating}
+          locationError={oneShotPosition.locationError}
         />
       )}
       {currentScreen === 'calculations' && (
@@ -194,10 +220,33 @@ export function App() {
         <TracesScreen
           traces={traceState.traces}
           onDeleteTrace={traceState.deleteTrace}
+          onImportGpx={handleImportGpx}
+          onOpenReplay={(traceId) => {
+            setReplayTraceId(traceId);
+            setCurrentScreen('replay');
+          }}
+          replayDisabled={trackingRecording}
           isLoading={traceState.isLoading}
           storageMode={traceState.storageMode}
           storageMessage={traceState.storageMessage}
         />
+      )}
+      {currentScreen === 'replay' && replayTrace && (
+        <TraceReplayScreen
+          trace={replayTrace}
+          mapBaseLayer={mapBaseLayer}
+          onMapBaseLayerChange={setMapBaseLayer}
+          onBack={() => {
+            setReplayTraceId(null);
+            setCurrentScreen('traces');
+          }}
+        />
+      )}
+      {currentScreen === 'replay' && !replayTrace && (
+        <div className="replay-missing-trace">
+          <strong>Trace introuvable</strong>
+          <Button variant="secondary" onClick={() => { setReplayTraceId(null); setCurrentScreen('traces'); }}>Retour aux traces</Button>
+        </div>
       )}
       {currentScreen === 'more' && (
         <MoreScreen
@@ -209,6 +258,8 @@ export function App() {
           onCreateAircraft={createAircraft}
         />
       )}
+
+      </Suspense>
 
       <ConfirmDialog
         open={pendingScreen !== null}

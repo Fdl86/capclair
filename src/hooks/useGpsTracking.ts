@@ -13,6 +13,7 @@ import {
 import { interpolateSimulationPoint, simulationTotalSteps } from '../services/gps/simulationService';
 import { getCrossTrackError, getProgressiveCrossTrackError, type CrossTrackResult } from '../services/geo/crossTrackError';
 import { isRouteReady } from '../services/navigation/routeValidation';
+import { createPlannedRouteSnapshot } from '../services/traces/plannedRouteSnapshot';
 
 const TRACE_SAMPLE_INTERVAL_MS = 3000;
 const TRACE_MAX_POINTS = 4200;
@@ -327,6 +328,7 @@ export function useGpsTracking(route: NavRoute, onTraceReady: (trace: Trace) => 
       return result;
     }
 
+    const recordingStatus = statusRef.current;
     clearGpsWatch();
     clearSimulation();
     updateStatus('saving');
@@ -334,12 +336,19 @@ export function useGpsTracking(route: NavRoute, onTraceReady: (trace: Trace) => 
     const duration = startTime.current ? Math.round((Date.now() - startTime.current) / 1000) : 0;
     const finalDiagnostics = { ...diagnosticsRef.current, tracePoints: finalPositions.length };
     commitDiagnostics(finalDiagnostics);
+    const endedAt = new Date().toISOString();
+    const startedAt = new Date(startTime.current ?? finalPositions[0]?.timestamp ?? Date.now()).toISOString();
     const trace: Trace = {
+      schemaVersion: 2,
       id: `trace-${Date.now()}`,
       routeId: route.id,
       routeName: route.nom,
-      date: new Date().toISOString(),
+      date: endedAt,
+      startedAt,
+      endedAt,
+      source: recordingStatus === 'simulating' || recordingStatus === 'simulation-complete' ? 'simulation' : 'web',
       positions: finalPositions,
+      plannedRoute: createPlannedRouteSnapshot(route, new Date(startedAt)),
       dureeSec: duration,
       distanceNm: Number(totalDistanceNm(finalPositions).toFixed(2)),
       diagnostics: finalDiagnostics
