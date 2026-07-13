@@ -57,6 +57,8 @@ export function useGpsTracking(route: NavRoute, onTraceReady: (trace: Trace) => 
   const [lastSignalAgeSec, setLastSignalAgeSec] = useState<number | null>(null);
   const [distanceTravelledNm, setDistanceTravelledNm] = useState(0);
   const [diagnostics, setDiagnostics] = useState<GpsTraceDiagnostics>(emptyDiagnostics);
+  const [recordingStartedAt, setRecordingStartedAt] = useState<number | null>(null);
+  const [recordingElapsedSec, setRecordingElapsedSec] = useState(0);
   const watchId = useRef<number | null>(null);
   const simTimer = useRef<number | null>(null);
   const simStep = useRef(0);
@@ -118,6 +120,7 @@ export function useGpsTracking(route: NavRoute, onTraceReady: (trace: Trace) => 
     setLastAltitudeAccuracy(null);
     setLastSignalAgeSec(null);
     setDistanceTravelledNm(0);
+    setRecordingElapsedSec(0);
     lastSignalAt.current = null;
     gapOpen.current = false;
     lastLivePosition.current = null;
@@ -246,6 +249,8 @@ export function useGpsTracking(route: NavRoute, onTraceReady: (trace: Trace) => 
     setErrorMessage(null);
     resetTrackingData();
     startTime.current = Date.now();
+    setRecordingStartedAt(startTime.current);
+    setRecordingElapsedSec(0);
 
     if (!('geolocation' in navigator)) {
       updateStatus('unavailable');
@@ -292,6 +297,8 @@ export function useGpsTracking(route: NavRoute, onTraceReady: (trace: Trace) => 
     setErrorMessage(null);
     resetTrackingData();
     startTime.current = Date.now();
+    setRecordingStartedAt(startTime.current);
+    setRecordingElapsedSec(0);
     simStep.current = 0;
 
     const totalSteps = simulationTotalSteps(route.points);
@@ -316,15 +323,17 @@ export function useGpsTracking(route: NavRoute, onTraceReady: (trace: Trace) => 
       : positions;
 
     if (finalPositions.length < 2) {
+      clearGpsWatch();
+      clearSimulation();
+      startTime.current = null;
+      setRecordingStartedAt(null);
+      updateStatus('stopped');
       const result: TraceSaveResult = {
         ok: false,
         mode: 'indexeddb',
-        message: 'Trace trop courte : attendez au moins un deuxième point GPS avant de sauvegarder.'
+        message: 'Enregistrement arrêté. Trace trop courte pour être sauvegardée.'
       };
       setErrorMessage(result.message);
-      if (!['active', 'degraded', 'frozen', 'requesting', 'simulating'].includes(statusRef.current)) {
-        updateStatus('save-error');
-      }
       return result;
     }
 
@@ -360,12 +369,32 @@ export function useGpsTracking(route: NavRoute, onTraceReady: (trace: Trace) => 
       updateStatus('saved');
       setErrorMessage(result.message);
       startTime.current = null;
+      setRecordingStartedAt(null);
     } else {
       updateStatus('save-error');
       setErrorMessage(result.message);
     }
     return result;
   };
+
+
+  useEffect(() => {
+    const recordingStatus = status === 'requesting'
+      || status === 'active'
+      || status === 'degraded'
+      || status === 'frozen'
+      || status === 'simulating';
+
+    if (!recordingStatus || recordingStartedAt === null) return undefined;
+
+    const updateElapsed = () => {
+      setRecordingElapsedSec(Math.max(0, Math.floor((Date.now() - recordingStartedAt) / 1000)));
+    };
+
+    updateElapsed();
+    const timer = window.setInterval(updateElapsed, 1000);
+    return () => window.clearInterval(timer);
+  }, [recordingStartedAt, status]);
 
   useEffect(() => {
     if (watchId.current === null) return undefined;
@@ -434,6 +463,8 @@ export function useGpsTracking(route: NavRoute, onTraceReady: (trace: Trace) => 
     diagnostics,
     traceSampleIntervalMs: TRACE_SAMPLE_INTERVAL_MS,
     traceMaxPoints: TRACE_MAX_POINTS,
+    recordingStartedAt,
+    recordingElapsedSec,
     startGps,
     startSimulation,
     stopAndSave

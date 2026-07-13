@@ -7,11 +7,11 @@ export default defineConfig({
     react(),
     VitePWA({
       registerType: 'autoUpdate',
-      includeAssets: ['icons/icon-192.png', 'icons/icon-512.png'],
+      includeAssets: ['icons/icon-192.png', 'icons/icon-512.png', 'templates/fiche-nav-a4-paysage-v5.pdf'],
       manifest: {
         name: 'CAP CLAIR - Navigation VFR',
         short_name: 'CAP CLAIR',
-        description: 'PWA de navigation VFR : planification, suivi GPS navigateur, traces locales, import GPX et Replay synchronisé.',
+        description: 'PWA de navigation VFR : planification, log de nav PDF, suivi GPS navigateur, traces locales, import GPX et Replay synchronisé.',
         theme_color: '#050B12',
         background_color: '#050B12',
         display: 'standalone',
@@ -34,7 +34,7 @@ export default defineConfig({
       },
       workbox: {
         cleanupOutdatedCaches: true,
-        globPatterns: ['**/*.{js,css,html,ico,png,svg,webmanifest}'],
+        globPatterns: ['**/*.{js,css,html,ico,png,svg,pdf,webmanifest}'],
         globIgnores: ['**/airspaceCatalog-*.js'],
         runtimeCaching: [
           {

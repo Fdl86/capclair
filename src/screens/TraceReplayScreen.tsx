@@ -46,6 +46,8 @@ export function TraceReplayScreen({ trace, mapBaseLayer, onMapBaseLayerChange, o
   const crossTrack = replay.sample && hasPlannedRoute ? getCrossTrackError(replay.sample.position, plannedPoints) : null;
   const referenceDate = trace.startedAt ?? trace.importMetadata?.importedAt ?? trace.date;
   const traceDate = new Date(referenceDate);
+  const replayDistanceNm = replay.sample?.cumulativeDistanceNm
+    ?? (replay.activeTimeMs >= model.totalActiveTimeMs ? model.totalDistanceNm : null);
   const dateLabel = Number.isNaN(traceDate.getTime())
     ? ''
     : traceDate.toLocaleDateString('fr-FR', { day: '2-digit', month: 'short', year: 'numeric' }).toUpperCase();
@@ -93,7 +95,7 @@ export function TraceReplayScreen({ trace, mapBaseLayer, onMapBaseLayerChange, o
         </div>
         <div><span>Vitesse sol</span><strong>{metric(replay.sample?.speedKt, 'kt')}</strong></div>
         <div><span>Altitude GPS</span><strong>{metric(replay.sample?.altitudeFt, 'ft')}</strong></div>
-        <div><span>Distance</span><strong>{metric(replay.sample?.cumulativeDistanceNm, 'NM', 1)}</strong><small>sur {model.totalDistanceNm.toFixed(1).replace('.', ',')} NM</small></div>
+        <div><span>Distance</span><strong>{metric(replayDistanceNm, 'NM', 1)}</strong><small>sur {model.totalDistanceNm.toFixed(1).replace('.', ',')} NM</small></div>
       </div>
 
       <div className="replay-map-panel">

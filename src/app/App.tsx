@@ -20,6 +20,7 @@ import { isRouteReady, routeMissingMessage } from '../services/navigation/routeV
 import { useOneShotPosition } from '../hooks/useOneShotPosition';
 import { importGpxFile } from '../services/import/gpxImport';
 import type { TraceSaveResult } from '../services/storage/traceStorage';
+import { exportNavLogPdf } from '../services/export/navLogExport';
 
 const TraceReplayScreen = lazy(() => import('../screens/TraceReplayScreen').then((module) => ({ default: module.TraceReplayScreen })));
 
@@ -204,6 +205,12 @@ export function App() {
           aerodromeWeatherUpdatedAt={aerodromeWeatherState.updatedAtIso}
           onRefreshAerodromeWeather={aerodromeWeatherState.refresh}
           onValidate={() => navigate('tracking')}
+          onExport={() => exportNavLogPdf({
+            route: routeState.route,
+            aircraft: aircraftState.activeProfile,
+            fuelPlanConfig,
+            alternateCode: safeAlternateCode
+          })}
           onBackPlanning={() => navigate('planning')}
         />
       )}

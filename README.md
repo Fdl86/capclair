@@ -1,80 +1,80 @@
-# CAP CLAIR WEB13.21.0 - IMPORT GPX
+# CAP CLAIR WEB13.22.0 - PDF LOG NAV + SUIVI UX
 
 CAP CLAIR est une application VFR mobile-first en Vite, React, TypeScript et OpenLayers, déployée comme PWA sur Cloudflare Pages.
 
-Cette version ajoute l’import local de fichiers GPX à la base WEB13.20.0 Replay UX, sans importer de service Android, Capacitor, plugin natif, signature APK ou workflow Android.
+Cette livraison reprend la base WEB13.21.0 avec import GPX et intègre les évolutions web-compatibles de DEV15.2.4. Elle ne contient aucun service Android natif, Capacitor, plugin natif, signature APK ou workflow Android.
+
+## Export PDF du log de navigation
+
+- le bouton `Exporter PDF` génère un véritable fichier PDF local ;
+- aucun envoi serveur ;
+- gabarit A4 paysage validé V5 ;
+- téléchargement direct dans le navigateur ;
+- le moteur `pdf-lib` est chargé uniquement lors de la génération ;
+- nom de fichier construit avec le départ, l'arrivée et la date ;
+- distances arrondies au NM entier le plus proche ;
+- colonnes HE, HR et Conso laissées vides pour le pilote ;
+- radios, QNH, Zmini, ETA et réservoirs laissés vides ;
+- arrivée déroutement fixée à 12 minutes ;
+- totaux distance, TSV et TAV centrés ;
+- bordures REPERE, TAV et TOTAL renforcées ;
+- première version limitée à 8 branches avec avertissement au-delà ;
+- gabarit PDF inclus dans le cache PWA.
+
+## Suivi GPS web et enregistrement
+
+- état de position GPS séparé de l'état d'enregistrement ;
+- statut GPS visible directement sur la carte ;
+- bouton renommé `Démarrer l'enregistrement` ;
+- chronomètre REC en plein écran ;
+- bouton d'enregistrement dans la colonne des contrôles plein écran ;
+- arrêt possible pendant l'acquisition sans créer de fausse trace ;
+- résumé principal plus compact : vitesse sol, altitude GPS, route et précision ;
+- prochaine étape regroupée avec distance, cap magnétique et ETA ;
+- détails GPS et diagnostics repliés dans un panneau dédié ;
+- Wake Lock navigateur conservé pendant l'enregistrement lorsque disponible ;
+- le GPS web reste un fallback navigateur et ne remplace pas le GPS natif Android.
+
+## Replay
+
+- mise en page paysage densifiée ;
+- carte pleine hauteur en paysage avec profil dans la colonne latérale ;
+- distance finale affichée correctement à la fin du Replay ;
+- trace réelle rose avec contour sombre pour rester visible sur les fonds openAIP et 500k ;
+- lecture, pause, x1, x5, x10 et x20 ;
+- profil d'altitude synchronisé ;
+- comparaison avec la route prévue lorsqu'elle est enregistrée ;
+- fonctionnement conservé pour les GPX importés avec ou sans chronologie complète.
 
 ## Import GPX
 
 - bouton `Importer GPX` dans `Mes traces` ;
 - lecture locale avec les API XML natives du navigateur ;
-- aucun envoi serveur ;
-- prise en charge des traces `trk/trkseg/trkpt` ;
-- prise en charge de secours des routes `rte/rtept` ;
-- conservation des segments, coordonnées, altitudes, timestamps, vitesses et caps lorsqu’ils existent ;
-- calcul automatique de la distance et de la durée active ;
-- stockage dans le même IndexedDB que les traces CAP CLAIR ;
-- ouverture automatique dans Replay après import réussi ;
-- source clairement indiquée par `GPX importé` ;
-- nom repris depuis les métadonnées GPX, la trace, la route ou le nom du fichier ;
-- limite de fichier fixée à 20 Mo ;
-- erreurs explicites pour XML invalide, GPX vide ou coordonnées insuffisantes.
+- prise en charge de `trk`, `trkseg`, `trkpt`, `rte` et `rtept` ;
+- conservation des segments, coordonnées, altitudes et timestamps disponibles ;
+- stockage IndexedDB avec repli localStorage ;
+- ouverture automatique dans Replay ;
+- aucun horaire ou vitesse artificielle pour les GPX non horodatés.
 
-## GPX sans horodatage complet
+## Navigation et carburant
 
-- la carte reste consultable ;
-- le profil d’altitude reste consultable et déplaçable ;
-- la lecture temporelle, l’heure et les vitesses de replay sont désactivées lorsqu’elles ne peuvent pas être établies honnêtement ;
-- aucun horaire artificiel n’est affiché ;
-- un GPX réexporté sans chronologie conserve des points sans balise `time`.
-
-## Replay des traces
-
-- lecture, pause et retour au début pour les traces horodatées ;
-- vitesses x1, x5, x10 et x20 ;
-- animation de l’avion sur la trace ;
-- heure, vitesse sol, altitude GPS et distance synchronisées ;
-- profil d’altitude déplaçable au doigt ou à la souris ;
-- coupures GPS séparées et ignorées dans la durée active ;
-- route prévue en cyan pour les traces CAP CLAIR compatibles ;
-- trace réelle en ambre ;
-- carte Replay verrouillée nord en haut ;
-- suivi avion activé par défaut, avec vue globale disponible ;
-- affichage adapté au portrait, au paysage et au bureau.
-
-## Planification et cartes
-
-- écran Planifier verrouillé nord en haut ;
-- bouton flottant `+ Point` sur la carte ;
-- ajout continu de plusieurs points jusqu’au bouton `Terminer` ;
-- suppression des points conservée dans la liste ;
-- localisation ponctuelle avec le bouton Centrer, sans créer de trace ;
-- icône avion légère réaliste vue de dessus ;
-- altitude par défaut réglable par pas de 100 ft ;
-- altitude de branche saisissable par pas de 100 ft.
-
-## Suivi
-
-- modes NORD UP et TRK UP persistants ;
-- rotation tactile autorisée en NORD UP ;
-- rotation tactile bloquée en TRK UP ;
-- carte plein écran avec bandeau cockpit ;
-- localisation ponctuelle disponible lorsque le suivi n’est pas démarré ;
-- GPS web conservé comme fallback navigateur, sans promesse d’équivalence avec le GPS natif Android.
+- départ, arrivée et dégagement vides à la première utilisation ;
+- `Nouvelle nav` vide réellement la navigation ;
+- cohérence entre les champs aérodromes et la route calculée ;
+- TAS du log synchronisée avec le profil avion ;
+- capacité totale réservoirs séparée du carburant inutilisable ;
+- alerte en cas de capacité carburant insuffisante ;
+- calculs bloqués lorsque la route est incomplète ;
+- recalculs terrain et espaces aériens limités aux changements utiles.
 
 ## Traces et exports
 
-- stockage principal IndexedDB avec repli localStorage ;
+- stockage principal IndexedDB ;
 - sauvegarde et suppression vérifiées ;
 - export GPX et JSON ;
-- export GPX découpé en segments lors des coupures supérieures à 12 secondes ;
-- métadonnées de version, source, import et diagnostics conservées ;
-- route prévue enregistrée avec les nouvelles traces CAP CLAIR pour la comparaison dans Replay.
-
-## Log de navigation
-
-- bouton `Exporter PDF` conservé pour le prochain module dédié ;
-- garde-fous navigation, carburant et profil avion de WEB13.19.0 conservés.
+- segments GPX séparés lors des coupures ;
+- route prévue enregistrée avec les nouvelles traces ;
+- trace réelle plus visible dans Suivi et Replay.
 
 ## Compatibilité web
 
@@ -82,19 +82,21 @@ Cette version ajoute l’import local de fichiers GPX à la base WEB13.20.0 Repl
 - aucune dépendance Capacitor ;
 - aucun plugin NativeGps ou NativeTraceExport ;
 - fonctions Cloudflare Pages conservées ;
-- build attendu avec `npm run build` ;
-- PWA utilisable dans Chrome, Firefox et Safari selon les capacités du navigateur.
+- PWA compatible Chrome, Firefox et Safari selon les capacités du navigateur ;
+- build avec `npm run build` ;
+- tests avec `npm test`.
 
-## Installation dans le repo avec GitHub Desktop
+## Installation avec GitHub Desktop
 
 1. Sélectionner la branche web/PWA concernée.
 2. Vider le dossier local en conservant uniquement `.git`.
-3. Copier le contenu complet de ce ZIP dans le dossier.
-4. Vérifier la version `WEB13.21.0` dans la chip et le titre `CAP CLAIR WEB13.21.0 - IMPORT GPX` dans l’onglet.
-5. Commit et push via GitHub Desktop.
+3. Copier le contenu complet du ZIP dans le dossier.
+4. Vérifier `WEB13.22.0` dans la chip.
+5. Vérifier `CAP CLAIR WEB13.22.0 - PDF LOG NAV + SUIVI UX` dans le titre de l'onglet.
+6. Commit et push via GitHub Desktop.
 
 Commit recommandé :
 
 ```text
-main: add local GPX import and replay integration
+main: port DEV15.2.4 PDF and tracking UX to web PWA
 ```
