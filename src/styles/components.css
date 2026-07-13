@@ -502,8 +502,18 @@
 }
 
 .trace-actions {
-  display: flex;
+  min-width: 0;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: 8px;
+}
+
+.trace-actions .btn {
+  min-width: 0;
+  width: 100%;
+  padding-inline: 10px;
+  white-space: normal;
+  overflow-wrap: anywhere;
 }
 
 .empty-state {
@@ -3184,6 +3194,36 @@
   }
 }
 
+/* WEB13.22.2 - mobile traces navigation and overflow hardening */
+
+.traces-screen-nav {
+  min-width: 0;
+  display: flex;
+  align-items: center;
+}
+
+.traces-back-button {
+  min-height: 40px;
+  max-width: 100%;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding-inline: 11px;
+}
+
+.traces-back-button span {
+  color: inherit;
+  font-size: 1.55rem;
+  line-height: 0.8;
+}
+
+.traces-list,
+.trace-item,
+.trace-import-toolbar {
+  min-width: 0;
+  max-width: 100%;
+}
+
 /* WEB13.21.0 - import GPX */
 .trace-import-toolbar {
   display: flex;
@@ -3287,6 +3327,21 @@
 
   .trace-item dl > div:last-child {
     grid-column: 1 / -1;
+  }
+
+  .trace-actions {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .trace-actions .btn {
+    min-height: 44px;
+    font-size: 0.82rem;
+  }
+}
+
+@media (max-width: 340px) {
+  .trace-actions {
+    grid-template-columns: 1fr;
   }
 }
 

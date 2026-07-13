@@ -472,9 +472,6 @@
   min-height: 60vh;
 }
 
-.trace-actions {
-  flex-wrap: wrap;
-}
 
 @media (max-width: 430px) {
   .replay-screen {
@@ -944,5 +941,132 @@
 
   .replay-speed-grid button {
     min-height: 0;
+  }
+}
+
+
+/* WEB13.22.2 - Replay header and mobile landscape hotfix */
+@media (min-width: 900px) and (min-height: 600px) {
+  .replay-screen {
+    grid-template-rows: minmax(58px, auto) minmax(320px, 1fr) clamp(145px, 18vh, 190px);
+  }
+
+  .replay-header {
+    min-height: 58px;
+    padding-top: 6px;
+    padding-bottom: 6px;
+    overflow: visible;
+  }
+
+  .replay-title {
+    align-content: center;
+  }
+
+  .replay-source-line {
+    min-height: 14px;
+  }
+}
+
+@media (orientation: landscape) and (max-height: 599px) {
+  .app-shell.is-immersive {
+    height: auto;
+    min-height: 100dvh;
+    overflow-x: hidden;
+    overflow-y: auto;
+  }
+
+  .app-shell.is-immersive .app-main {
+    height: auto;
+    min-height: 100dvh;
+    overflow: visible;
+  }
+
+  .replay-screen {
+    height: auto;
+    min-height: 100dvh;
+    overflow: visible;
+    grid-template-columns: minmax(0, 1fr) minmax(260px, 34vw);
+    grid-template-areas:
+      "header header"
+      "map metrics"
+      "map profile"
+      "map controls";
+    grid-template-rows: minmax(50px, auto) auto 118px auto;
+    align-content: start;
+    padding: calc(4px + var(--safe-top)) calc(4px + var(--safe-right)) calc(6px + var(--safe-bottom)) calc(4px + var(--safe-left));
+    gap: 4px;
+  }
+
+  .replay-header {
+    min-height: 50px;
+    padding: 5px 8px;
+    overflow: visible;
+  }
+
+  .replay-title {
+    align-content: center;
+  }
+
+  .replay-title strong {
+    font-size: 0.92rem;
+  }
+
+  .replay-source-line {
+    min-height: 12px;
+  }
+
+  .replay-source-line small,
+  .replay-date span {
+    display: none;
+  }
+
+  .replay-map-panel {
+    min-height: max(280px, calc(100dvh - 62px));
+    height: 100%;
+  }
+
+  .replay-metrics {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 4px;
+  }
+
+  .replay-metrics > div {
+    min-height: 44px;
+    padding: 5px 7px;
+  }
+
+  .replay-metrics strong {
+    font-size: 0.86rem;
+  }
+
+  .replay-profile-card {
+    height: auto;
+    min-height: 0;
+    padding: 5px 7px 2px;
+  }
+
+  .replay-profile-svg {
+    height: 88px;
+  }
+
+  .replay-speed-area,
+  .replay-controls {
+    min-height: 0;
+  }
+
+  .replay-speed-grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 4px;
+  }
+
+  .replay-speed-grid button {
+    min-height: 34px;
+    padding: 0 3px;
+  }
+}
+
+@media (orientation: landscape) and (max-height: 599px) and (max-width: 720px) {
+  .replay-screen {
+    grid-template-columns: minmax(0, 1fr) minmax(238px, 38vw);
   }
 }

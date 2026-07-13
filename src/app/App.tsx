@@ -232,6 +232,7 @@ export function App() {
             setReplayTraceId(traceId);
             setCurrentScreen('replay');
           }}
+          onBack={() => navigate('more')}
           replayDisabled={trackingRecording}
           isLoading={traceState.isLoading}
           storageMode={traceState.storageMode}

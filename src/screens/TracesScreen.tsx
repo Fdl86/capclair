@@ -12,6 +12,7 @@ interface TracesScreenProps {
   onDeleteTrace: (traceId: string) => Promise<TraceSaveResult>;
   onImportGpx: (file: File) => Promise<TraceSaveResult>;
   onOpenReplay: (traceId: string) => void;
+  onBack: () => void;
   replayDisabled: boolean;
   isLoading: boolean;
   storageMode: TraceStorageMode;
@@ -23,6 +24,7 @@ export function TracesScreen({
   onDeleteTrace,
   onImportGpx,
   onOpenReplay,
+  onBack,
   replayDisabled,
   isLoading,
   storageMode,
@@ -52,6 +54,11 @@ export function TracesScreen({
 
   return (
     <Page title="Mes traces" subtitle="Traces locales et GPX importés, conservés sur cet appareil.">
+      <div className="traces-screen-nav">
+        <Button variant="ghost" className="traces-back-button" onClick={onBack} aria-label="Retour au menu Plus">
+          <span aria-hidden="true">‹</span> Retour
+        </Button>
+      </div>
       <div className="trace-import-toolbar">
         <div>
           <strong>Importer un GPX</strong>

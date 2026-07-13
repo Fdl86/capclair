@@ -1,10 +1,15 @@
-# CAP CLAIR WEB13.22.1 - VENT + REPLAY HOTFIX
+# CAP CLAIR WEB13.22.2 - MOBILE REPLAY HOTFIX
 
 CAP CLAIR est une application VFR mobile-first en Vite, React, TypeScript et OpenLayers, déployée comme PWA sur Cloudflare Pages.
 
 Cette livraison reprend la base WEB13.21.0 avec import GPX et intègre les évolutions web-compatibles de DEV15.2.4. Elle ne contient aucun service Android natif, Capacitor, plugin natif, signature APK ou workflow Android.
 
-## Hotfix WEB13.22.1
+## Hotfix WEB13.22.2
+
+- Corrige le débordement initial de Mes traces sur mobile avant le premier passage dans Replay.
+- Ajoute un bouton Retour explicite dans Mes traces.
+- Réserve une hauteur suffisante au titre, à la source et au nom de fichier dans le bandeau Replay.
+- Rend le Replay paysage mobile intégralement accessible, sans zone coupée par le navigateur.
 
 - correction de la mise à jour du vent sur toutes les branches lorsque plusieurs branches utilisent la même cellule météo mise en cache ;
 - nouvelle version de cache météo et nettoyage compatible des anciennes clés ;
@@ -99,8 +104,8 @@ Cette livraison reprend la base WEB13.21.0 avec import GPX et intègre les évol
 1. Sélectionner la branche web/PWA concernée.
 2. Vider le dossier local en conservant uniquement `.git`.
 3. Copier le contenu complet du ZIP dans le dossier.
-4. Vérifier `WEB13.22.1` dans la chip.
-5. Vérifier `CAP CLAIR WEB13.22.1 - VENT + REPLAY HOTFIX` dans le titre de l'onglet.
+4. Vérifier `WEB13.22.2` dans la chip.
+5. Vérifier `CAP CLAIR WEB13.22.2 - MOBILE REPLAY HOTFIX` dans le titre de l'onglet.
 6. Commit et push via GitHub Desktop.
 
 Commit recommandé :
