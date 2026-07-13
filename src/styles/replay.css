@@ -882,3 +882,67 @@
     max-width: calc(100% - 150px);
   }
 }
+
+/* WEB13.22.1 - desktop Replay: information and altitude profile below the map */
+@media (min-width: 900px) and (min-height: 600px) {
+  .replay-screen {
+    grid-template-columns: minmax(240px, 0.85fr) minmax(360px, 2fr) minmax(220px, 0.75fr);
+    grid-template-areas:
+      "header header header"
+      "map map map"
+      "metrics profile controls";
+    grid-template-rows: 46px minmax(320px, 1fr) clamp(145px, 18vh, 190px);
+    gap: 6px;
+  }
+
+  .replay-map-panel {
+    width: 100%;
+    height: 100%;
+  }
+
+  .replay-metrics {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-rows: repeat(2, minmax(0, 1fr));
+    align-self: stretch;
+  }
+
+  .replay-metrics > div {
+    min-height: 0;
+    padding: 7px 9px;
+  }
+
+  .replay-metrics strong {
+    font-size: clamp(0.86rem, 1.15vw, 1.08rem);
+  }
+
+  .replay-profile-card {
+    height: auto;
+    min-height: 0;
+    align-self: stretch;
+    padding: 7px 9px 3px;
+  }
+
+  .replay-profile-svg {
+    height: calc(100% - 24px);
+    min-height: 104px;
+  }
+
+  .replay-speed-area {
+    align-self: stretch;
+    align-content: stretch;
+  }
+
+  .replay-controls,
+  .replay-speed-grid {
+    height: 100%;
+  }
+
+  .replay-speed-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-rows: repeat(2, minmax(0, 1fr));
+  }
+
+  .replay-speed-grid button {
+    min-height: 0;
+  }
+}

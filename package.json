@@ -1,7 +1,7 @@
 {
-  "name": "cap-clair-web13-22-0-pdf-log-nav",
+  "name": "cap-clair-web13-22-1-wind-replay-hotfix",
   "private": true,
-  "version": "0.13.22-0",
+  "version": "0.13.22-1",
   "type": "module",
   "scripts": {
     "dev": "vite",
@@ -11,9 +11,9 @@
   },
   "dependencies": {
     "ol": "^10.6.1",
+    "pdf-lib": "^1.17.1",
     "react": "^19.1.1",
-    "react-dom": "^19.1.1",
-    "pdf-lib": "^1.17.1"
+    "react-dom": "^19.1.1"
   },
   "devDependencies": {
     "@types/react": "^19.2.17",

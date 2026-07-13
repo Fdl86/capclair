@@ -1,7 +1,8 @@
 import type { BranchWind, NavBranch, NavPoint, NavRoute } from '../../domain/navigation.types';
 import { averageWind } from './windMath';
 
-const CACHE_PREFIX = 'capclair.weather.windAloft.v13_5.meteofranceStrict.';
+const CACHE_NAMESPACE = 'capclair.weather.windAloft.';
+const CACHE_PREFIX = `${CACHE_NAMESPACE}v13_22_1.multiBranch.`;
 const CACHE_TTL_MS = 60 * 60 * 1000;
 
 interface WindSampleRequest {
@@ -18,6 +19,8 @@ interface WindSampleResponse extends BranchWind {
   branchId: string;
   normalizedKey: string;
 }
+
+type StoredWindSample = Omit<WindSampleResponse, 'sampleId' | 'branchId'>;
 
 interface WindAloftResponse {
   source: 'open-meteo' | 'open-meteo-meteofrance' | 'open-meteo-meteofrance-strict';
@@ -52,14 +55,24 @@ function normalizedCacheKey(sample: WindSampleRequest): string {
 
 function readCache(sample: WindSampleRequest): WindSampleResponse | null {
   try {
-    const raw = window.localStorage.getItem(CACHE_PREFIX + normalizedCacheKey(sample));
+    const normalizedKey = normalizedCacheKey(sample);
+    const raw = window.localStorage.getItem(CACHE_PREFIX + normalizedKey);
     if (!raw) return null;
-    const parsed = JSON.parse(raw) as { savedAt: number; data: WindSampleResponse };
+    const parsed = JSON.parse(raw) as { savedAt: number; data: StoredWindSample };
     if (Date.now() - parsed.savedAt > CACHE_TTL_MS) return null;
+
     return {
       ...parsed.data,
+      sampleId: sample.sampleId,
+      branchId: sample.branchId,
+      normalizedKey,
       cache: 'browser',
-      auditSamples: (parsed.data.auditSamples ?? []).map((sample) => ({ ...sample, cache: 'browser' }))
+      auditSamples: (parsed.data.auditSamples ?? []).map((auditSample) => ({
+        ...auditSample,
+        sampleId: sample.sampleId,
+        normalizedKey,
+        cache: 'browser'
+      }))
     };
   } catch {
     return null;
@@ -68,7 +81,11 @@ function readCache(sample: WindSampleRequest): WindSampleResponse | null {
 
 function writeCache(sample: WindSampleRequest, data: WindSampleResponse): void {
   try {
-    window.localStorage.setItem(CACHE_PREFIX + normalizedCacheKey(sample), JSON.stringify({ savedAt: Date.now(), data }));
+    const { sampleId: _sampleId, branchId: _branchId, ...storedData } = data;
+    window.localStorage.setItem(
+      CACHE_PREFIX + normalizedCacheKey(sample),
+      JSON.stringify({ savedAt: Date.now(), data: storedData satisfies StoredWindSample })
+    );
   } catch {
     // best effort
   }
@@ -175,7 +192,7 @@ export function clearWindAloftCache(): void {
   try {
     for (let index = window.localStorage.length - 1; index >= 0; index -= 1) {
       const key = window.localStorage.key(index);
-      if (key?.startsWith(CACHE_PREFIX)) window.localStorage.removeItem(key);
+      if (key?.startsWith(CACHE_NAMESPACE)) window.localStorage.removeItem(key);
     }
   } catch {
     // best effort
