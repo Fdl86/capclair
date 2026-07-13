@@ -1,10 +1,30 @@
-# CAP CLAIR WEB13.22.2 - MOBILE REPLAY HOTFIX
+# CAP CLAIR WEB13.23.0 - ROBUSTESSE
 
 CAP CLAIR est une application VFR mobile-first en Vite, React, TypeScript et OpenLayers, déployée comme PWA sur Cloudflare Pages.
 
 Cette livraison reprend la base WEB13.21.0 avec import GPX et intègre les évolutions web-compatibles de DEV15.2.4. Elle ne contient aucun service Android natif, Capacitor, plugin natif, signature APK ou workflow Android.
 
-## Hotfix WEB13.22.2
+## WEB13.23.0 - Robustesse
+
+- détection exacte des intersections entre la route et les polygones d’espaces aériens, y compris les zones étroites ;
+- segmentation unifiée des traces pour le résumé, le Replay et l’export GPX ;
+- exclusion des sauts de distance lors des coupures GPS ;
+- seul le dernier point GPS validé peut être sauvegardé ;
+- nouveau segment après une resynchronisation GPS forcée ;
+- protection des traces non sauvegardées après simulation ou erreur de stockage ;
+- ajout incrémental de la trace OpenLayers pendant un enregistrement normal ;
+- décimation progressive des vols longs au lieu de supprimer brutalement leur début ;
+- import GPX renforcé, limité et optimisé pour les fichiers volumineux ;
+- validation des traces chargées depuis IndexedDB et rejet isolé des données corrompues ;
+- suppression IndexedDB vérifiée ;
+- réponses météo obsolètes ignorées et heure d’analyse météo séparée de l’heure prévue de départ ;
+- changement de départ ou d’arrivée sans perte des points intermédiaires ;
+- identifiant unique pour chaque nouvelle préparation de navigation ;
+- vitesse globale clarifiée comme vitesse sol moyenne ;
+- moteur PDF, Replay et catalogue aéronautique mis en cache à l’usage plutôt que dans le précache initial ;
+- 17 tests automatisés couvrant PDF, vent, zones, traces, GPX et routes.
+
+## Correctifs hérités de WEB13.22.2
 
 - Corrige le débordement initial de Mes traces sur mobile avant le premier passage dans Replay.
 - Ajoute un bouton Retour explicite dans Mes traces.
@@ -104,8 +124,8 @@ Cette livraison reprend la base WEB13.21.0 avec import GPX et intègre les évol
 1. Sélectionner la branche web/PWA concernée.
 2. Vider le dossier local en conservant uniquement `.git`.
 3. Copier le contenu complet du ZIP dans le dossier.
-4. Vérifier `WEB13.22.2` dans la chip.
-5. Vérifier `CAP CLAIR WEB13.22.2 - MOBILE REPLAY HOTFIX` dans le titre de l'onglet.
+4. Vérifier `WEB13.23.0` dans la chip.
+5. Vérifier `CAP CLAIR WEB13.23.0 - ROBUSTESSE` dans le titre de l'onglet.
 6. Commit et push via GitHub Desktop.
 
 Commit recommandé :

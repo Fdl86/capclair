@@ -1,7 +1,6 @@
 import type { AirspaceCatalogItem, AirspacePart, AirspaceType, BranchZoneBlock, BranchZoneProfile } from '../../domain/airspace.types';
 import type { NavBranch, NavPoint, NavRoute } from '../../domain/navigation.types';
 
-const SAMPLE_STEPS = 16;
 const ROUTE_BBOX_MARGIN = 0.08;
 
 const TYPE_PRIORITY: Record<AirspaceType, number> = {
@@ -18,13 +17,6 @@ const TYPE_PRIORITY: Record<AirspaceType, number> = {
 
 function pointById(points: NavPoint[], id: string): NavPoint | null {
   return points.find((point) => point.id === id) ?? null;
-}
-
-function branchPoint(from: NavPoint, to: NavPoint, ratio: number) {
-  return {
-    latitude: from.latitude + (to.latitude - from.latitude) * ratio,
-    longitude: from.longitude + (to.longitude - from.longitude) * ratio
-  };
 }
 
 function bboxIntersects(a: [number, number, number, number], b: [number, number, number, number]): boolean {
@@ -54,6 +46,57 @@ function pointInPolygon(latitude: number, longitude: number, polygon: Array<[num
   return inside;
 }
 
+
+function cross(ax: number, ay: number, bx: number, by: number): number {
+  return ax * by - ay * bx;
+}
+
+function segmentPolygonHitRatios(from: NavPoint, to: NavPoint, polygon: Array<[number, number]>): number[] {
+  if (polygon.length < 3) return [];
+  const px = from.longitude;
+  const py = from.latitude;
+  const rx = to.longitude - from.longitude;
+  const ry = to.latitude - from.latitude;
+  const lengthSquared = rx * rx + ry * ry;
+  const epsilon = 1e-10;
+  const ratios: number[] = [];
+
+  if (pointInPolygon(from.latitude, from.longitude, polygon)) ratios.push(0);
+  if (pointInPolygon(to.latitude, to.longitude, polygon)) ratios.push(1);
+  if (lengthSquared <= epsilon) return ratios;
+
+  for (let index = 0; index < polygon.length; index += 1) {
+    const a = polygon[index];
+    const b = polygon[(index + 1) % polygon.length];
+    const qx = a[1];
+    const qy = a[0];
+    const sx = b[1] - a[1];
+    const sy = b[0] - a[0];
+    const qpx = qx - px;
+    const qpy = qy - py;
+    const denominator = cross(rx, ry, sx, sy);
+
+    if (Math.abs(denominator) <= epsilon) {
+      if (Math.abs(cross(qpx, qpy, rx, ry)) > epsilon) continue;
+      const t0 = (qpx * rx + qpy * ry) / lengthSquared;
+      const t1 = t0 + (sx * rx + sy * ry) / lengthSquared;
+      const overlapStart = Math.max(0, Math.min(t0, t1));
+      const overlapEnd = Math.min(1, Math.max(t0, t1));
+      if (overlapStart <= overlapEnd + epsilon) ratios.push(overlapStart, overlapEnd);
+      continue;
+    }
+
+    const t = cross(qpx, qpy, sx, sy) / denominator;
+    const u = cross(qpx, qpy, rx, ry) / denominator;
+    if (t >= -epsilon && t <= 1 + epsilon && u >= -epsilon && u <= 1 + epsilon) {
+      ratios.push(Math.max(0, Math.min(1, t)));
+    }
+  }
+
+  return ratios
+    .sort((a, b) => a - b)
+    .filter((ratio, index, values) => index === 0 || Math.abs(ratio - values[index - 1]) > 1e-7);
+}
 function altitudeRelation(altitudeFt: number, part: AirspacePart): BranchZoneBlock['altitudeRelation'] {
   if (part.verticalUncertain) return 'uncertain';
   if (altitudeFt < part.floorFt) return 'below';
@@ -96,28 +139,19 @@ function buildBlocksForBranch(route: NavRoute, branch: NavBranch, catalog: Airsp
   if (!from || !to) return [];
 
   const routeBbox = buildBranchBbox(from, to);
-  const samples = Array.from({ length: SAMPLE_STEPS + 1 }, (_, index) => {
-    const ratio = index / SAMPLE_STEPS;
-    const point = branchPoint(from, to, ratio);
-    return { ratio, ...point };
-  });
-
   const blocks: BranchZoneBlock[] = [];
 
   for (const zone of catalog) {
     for (const part of zone.parts) {
       if (!bboxIntersects(routeBbox, part.bbox)) continue;
 
-      const hitRatios = samples
-        .filter((sample) => pointInPolygon(sample.latitude, sample.longitude, part.points))
-        .map((sample) => sample.ratio);
-
+      const hitRatios = segmentPolygonHitRatios(from, to, part.points);
       if (!hitRatios.length) continue;
 
       const relation = altitudeRelation(branch.altitudeFt, part);
       const containsPlannedAltitude = relation === 'inside' || relation === 'uncertain';
-      const startRatio = Math.max(0, Math.min(...hitRatios) - 1 / SAMPLE_STEPS);
-      const endRatio = Math.min(1, Math.max(...hitRatios) + 1 / SAMPLE_STEPS);
+      const startRatio = hitRatios[0];
+      const endRatio = hitRatios.at(-1)!;
       const contact = zone.contacts[0];
       const status: BranchZoneBlock['status'] = containsPlannedAltitude
         ? relation === 'uncertain' ? 'confirm' : 'activeAltitude'

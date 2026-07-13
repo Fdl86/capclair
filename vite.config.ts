@@ -7,7 +7,6 @@ export default defineConfig({
     react(),
     VitePWA({
       registerType: 'autoUpdate',
-      includeAssets: ['icons/icon-192.png', 'icons/icon-512.png', 'templates/fiche-nav-a4-paysage-v5.pdf'],
       manifest: {
         name: 'CAP CLAIR - Navigation VFR',
         short_name: 'CAP CLAIR',
@@ -35,13 +34,34 @@ export default defineConfig({
       workbox: {
         cleanupOutdatedCaches: true,
         globPatterns: ['**/*.{js,css,html,ico,png,svg,pdf,webmanifest}'],
-        globIgnores: ['**/airspaceCatalog-*.js'],
+        globIgnores: [
+          '**/airspaceCatalog-*.js',
+          '**/TraceReplayScreen-*.js',
+          '**/TraceReplayScreen-*.css',
+          '**/pdf-engine-*.js'
+        ],
         runtimeCaching: [
           {
             urlPattern: /\/assets\/airspaceCatalog-.*\.js$/,
             handler: 'CacheFirst',
             options: {
               cacheName: 'capclair-airspace-catalog',
+              expiration: { maxEntries: 3, maxAgeSeconds: 30 * 24 * 60 * 60 }
+            }
+          },
+          {
+            urlPattern: /\/assets\/TraceReplayScreen-.*\.(?:js|css)$/,
+            handler: 'CacheFirst',
+            options: {
+              cacheName: 'capclair-replay',
+              expiration: { maxEntries: 6, maxAgeSeconds: 30 * 24 * 60 * 60 }
+            }
+          },
+          {
+            urlPattern: /\/assets\/pdf-engine-.*\.js$/,
+            handler: 'CacheFirst',
+            options: {
+              cacheName: 'capclair-pdf-engine',
               expiration: { maxEntries: 3, maxAgeSeconds: 30 * 24 * 60 * 60 }
             }
           }
@@ -52,6 +72,14 @@ export default defineConfig({
   build: {
     sourcemap: false,
     cssCodeSplit: true,
-    chunkSizeWarningLimit: 900
+    chunkSizeWarningLimit: 900,
+    rolldownOptions: {
+      output: {
+        manualChunks(id) {
+          if (id.includes('/node_modules/pdf-lib/')) return 'pdf-engine';
+          return undefined;
+        }
+      }
+    }
   }
 });

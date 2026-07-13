@@ -57,7 +57,7 @@ describe('nav log PDF renderer', () => {
     const { width, height } = document.getPage(0).getSize();
     expect(width).toBeCloseTo(841.92, 1);
     expect(height).toBeCloseTo(595.32, 1);
-    writeFileSync('/mnt/data/capclair-web13-22-1-navlog-sample.pdf', bytes);
+    writeFileSync('/mnt/data/capclair-web13-23-0-navlog-sample.pdf', bytes);
   });
 
   it('is deterministic for the same snapshot', async () => {

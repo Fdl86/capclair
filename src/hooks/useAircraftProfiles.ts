@@ -76,12 +76,10 @@ export function useAircraftProfiles() {
   };
 
   const updateProfile = (profileId: string, patch: Partial<AircraftProfile>) => {
-    let updated = activeProfile;
-    setProfiles((current) => ensureProfiles(current).map((profile) => {
-      if (profile.id !== profileId) return profile;
-      updated = sanitizeAircraftProfile({ ...profile, ...patch });
-      return updated;
-    }));
+    const source = safeProfiles.find((profile) => profile.id === profileId);
+    if (!source) return activeProfile;
+    const updated = sanitizeAircraftProfile({ ...source, ...patch });
+    setProfiles((current) => ensureProfiles(current).map((profile) => profile.id === profileId ? updated : profile));
     return updated;
   };
 

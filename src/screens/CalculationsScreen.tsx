@@ -26,6 +26,7 @@ import { AIRCRAFT_LIMITS } from '../services/aircraft/aircraftValidation';
 interface CalculationsScreenProps {
   route: NavRoute;
   weatherStatus: string;
+  weatherUpdating: boolean;
   onSetBranchAltitude: (branchId: string, altitudeFt: number) => void;
   onRefreshWinds: () => void;
   onSetTasKt: (tasKt: number) => void;
@@ -91,6 +92,7 @@ function SummaryCard({ label, value, detail }: { label: string; value: string; d
 export function CalculationsScreen({
   route,
   weatherStatus,
+  weatherUpdating,
   onSetBranchAltitude,
   onRefreshWinds,
   onSetTasKt,
@@ -273,7 +275,7 @@ export function CalculationsScreen({
           title="Tableau de navigation"
           subtitle={route.nom}
           className="navlog-card"
-          action={<Button variant="secondary" onClick={onRefreshWinds}>Maj vent</Button>}
+          action={<Button variant="secondary" onClick={onRefreshWinds} disabled={weatherUpdating}>{weatherUpdating ? 'Maj vent...' : 'Maj vent'}</Button>}
           defaultOpen
           storageKey="capclair.accordion.navlog.table.v1"
         >

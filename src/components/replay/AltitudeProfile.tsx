@@ -64,8 +64,12 @@ export function AltitudeProfile({ model, sample, onSeekDistance }: AltitudeProfi
   const altitudeValues = useMemo(() => model.points.map((point) => point.altitudeFt).filter((value): value is number => value !== null), [model]);
   const bounds = useMemo(() => {
     if (altitudeValues.length === 0) return { min: 0, max: 1000, step: 500 };
-    const rawMin = Math.min(...altitudeValues);
-    const rawMax = Math.max(...altitudeValues);
+    let rawMin = Number.POSITIVE_INFINITY;
+    let rawMax = Number.NEGATIVE_INFINITY;
+    for (const value of altitudeValues) {
+      if (value < rawMin) rawMin = value;
+      if (value > rawMax) rawMax = value;
+    }
     const step = niceStep(Math.max(250, rawMax - rawMin));
     const min = Math.max(0, Math.floor((rawMin - step * 0.25) / step) * step);
     const max = Math.max(min + step, Math.ceil((rawMax + step * 0.25) / step) * step);

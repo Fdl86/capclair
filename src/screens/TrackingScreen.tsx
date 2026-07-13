@@ -21,7 +21,7 @@ interface TrackingScreenProps {
   onTraceReady: (trace: Trace) => Promise<TraceSaveResult>;
   mapBaseLayer: MapBaseLayer;
   onMapBaseLayerChange: (value: MapBaseLayer) => void;
-  onRecordingStateChange?: (active: boolean) => void;
+  onRecordingStateChange?: (hasUnsavedTrace: boolean) => void;
 }
 
 type WakeLockSentinelLike = {
@@ -126,9 +126,9 @@ export function TrackingScreen({
   const traceForMap = gps.positions;
 
   useEffect(() => {
-    onRecordingStateChange?.(recordingSessionActive);
+    onRecordingStateChange?.(gps.hasUnsavedTrace);
     return () => onRecordingStateChange?.(false);
-  }, [recordingSessionActive, onRecordingStateChange]);
+  }, [gps.hasUnsavedTrace, onRecordingStateChange]);
 
   useEffect(() => {
     let cancelled = false;
@@ -249,6 +249,7 @@ export function TrackingScreen({
         <OpenLayersMap
           route={route}
           trace={traceForMap}
+          traceSegmentStartIndices={gps.segmentStartIndices}
           aircraft={displayPosition}
           selectedPointId={gps.nextPoint?.id ?? null}
           compact

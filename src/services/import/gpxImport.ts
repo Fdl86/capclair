@@ -1,9 +1,14 @@
 import type { GpsPosition } from '../../domain/gps.types';
 import type { GpxImportKind, Trace } from '../../domain/trace.types';
-import { distanceNm } from '../geo/distance';
+import {
+  TRACE_GAP_BREAK_MS,
+  compactSegmentedTrace,
+  computeTraceMetrics
+} from '../traces/traceSegments';
 
 const MAX_GPX_FILE_BYTES = 20 * 1024 * 1024;
-const GPX_GAP_BREAK_MS = 12_000;
+const MAX_GPX_SOURCE_POINTS = 100_000;
+const MAX_STORED_GPX_POINTS = 25_000;
 const METRES_PER_SECOND_TO_KNOTS = 1.9438444924;
 
 interface RawGpxPoint {
@@ -120,6 +125,9 @@ function collectSegments(containers: Element[], pointName: 'trkpt' | 'rtept'): P
       const segmentStart = points.length;
       elements.forEach((element) => {
         originalPointCount += 1;
+        if (originalPointCount > MAX_GPX_SOURCE_POINTS) {
+          throw new Error(`Le GPX dépasse la limite de ${MAX_GPX_SOURCE_POINTS.toLocaleString('fr-FR')} points.`);
+        }
         const point = parsePoint(element);
         if (point) points.push(point);
         else discardedPointCount += 1;
@@ -189,41 +197,6 @@ function normalizePositions(
   }));
 }
 
-function shouldBreakBefore(
-  index: number,
-  positions: GpsPosition[],
-  explicitStarts: Set<number>,
-  temporalReplayAvailable: boolean
-): boolean {
-  if (index <= 0) return false;
-  if (explicitStarts.has(index)) return true;
-  if (!temporalReplayAvailable) return false;
-  const delta = positions[index].timestamp - positions[index - 1].timestamp;
-  return delta <= 0 || delta > GPX_GAP_BREAK_MS;
-}
-
-function traceMetrics(
-  positions: GpsPosition[],
-  segmentStartIndices: number[],
-  temporalReplayAvailable: boolean
-): { distanceNm: number; durationSec: number } {
-  const explicitStarts = new Set(segmentStartIndices);
-  let totalDistanceNm = 0;
-  let activeDurationMs = 0;
-
-  for (let index = 1; index < positions.length; index += 1) {
-    if (shouldBreakBefore(index, positions, explicitStarts, temporalReplayAvailable)) continue;
-    const legDistance = distanceNm(positions[index - 1], positions[index]);
-    if (Number.isFinite(legDistance)) totalDistanceNm += legDistance;
-    if (temporalReplayAvailable) {
-      const delta = positions[index].timestamp - positions[index - 1].timestamp;
-      if (delta > 0) activeDurationMs += delta;
-    }
-  }
-
-  return { distanceNm: totalDistanceNm, durationSec: Math.round(activeDurationMs / 1000) };
-}
-
 function parseXml(xmlText: string): Document {
   const document = new DOMParser().parseFromString(xmlText, 'application/xml');
   const parserErrors = document.getElementsByTagName('parsererror');
@@ -240,11 +213,10 @@ export function parseGpxText(xmlText: string, fileName: string, fileLastModified
   const tracks = Array.from(root.getElementsByTagNameNS('*', 'trk'));
   const routes = Array.from(root.getElementsByTagNameNS('*', 'rte'));
   const trackCollection = collectSegments(tracks, 'trkpt');
-  const collection = trackCollection.originalPointCount > 0
-    ? trackCollection
-    : collectSegments(routes, 'rtept');
+  const routeCollection = trackCollection.points.length >= 2 ? null : collectSegments(routes, 'rtept');
+  const collection = trackCollection.points.length >= 2 ? trackCollection : routeCollection!;
 
-  if (collection.originalPointCount === 0) {
+  if (trackCollection.originalPointCount === 0 && collection.originalPointCount === 0) {
     throw new Error('Aucun point de trace (trkpt) ou de route (rtept) trouvé dans ce GPX.');
   }
   if (collection.points.length < 2) {
@@ -256,14 +228,20 @@ export function parseGpxText(xmlText: string, fileName: string, fileLastModified
   const fallbackStartMs = Number.isFinite(fileLastModified) && (fileLastModified ?? 0) > 0
     ? Number(fileLastModified)
     : Date.now();
-  const positions = normalizePositions(collection.points, temporalReplayAvailable, fallbackStartMs);
-  const metrics = traceMetrics(positions, collection.segmentStartIndices, temporalReplayAvailable);
-  const firstTimestamp = temporalReplayAvailable ? positions[0].timestamp : fallbackStartMs;
-  const lastTimestamp = temporalReplayAvailable ? positions.at(-1)!.timestamp : fallbackStartMs;
+  const rawPositions = normalizePositions(collection.points, temporalReplayAvailable, fallbackStartMs);
+  const compacted = compactSegmentedTrace(rawPositions, collection.segmentStartIndices, MAX_STORED_GPX_POINTS);
+  const metrics = computeTraceMetrics(
+    compacted.positions,
+    compacted.segmentStartIndices,
+    temporalReplayAvailable,
+    TRACE_GAP_BREAK_MS
+  );
+  const firstTimestamp = temporalReplayAvailable ? compacted.positions[0].timestamp : fallbackStartMs;
+  const lastTimestamp = temporalReplayAvailable ? compacted.positions.at(-1)!.timestamp : fallbackStartMs;
   const routeName = cleanTraceName(metadataName(root) ?? collection.name ?? fileBaseName(fileName));
 
   const trace: Trace = {
-    schemaVersion: 3,
+    schemaVersion: 4,
     id: traceId(),
     sessionId: null,
     routeId: `gpx-import-${Date.now()}`,
@@ -273,8 +251,8 @@ export function parseGpxText(xmlText: string, fileName: string, fileLastModified
     endedAt: temporalReplayAvailable ? new Date(lastTimestamp).toISOString() : undefined,
     source: 'gpx-import',
     timingMode: temporalReplayAvailable ? 'recorded' : 'unavailable',
-    positions,
-    segmentStartIndices: collection.segmentStartIndices,
+    positions: compacted.positions,
+    segmentStartIndices: metrics.segmentStartIndices,
     dureeSec: metrics.durationSec,
     distanceNm: metrics.distanceNm,
     importMetadata: {
@@ -283,6 +261,7 @@ export function parseGpxText(xmlText: string, fileName: string, fileLastModified
       kind: collection.kind,
       originalPointCount: collection.originalPointCount,
       discardedPointCount: collection.discardedPointCount,
+      optimizedPointCount: compacted.compacted ? collection.points.length - compacted.positions.length : 0,
       hadCompleteTimestamps: temporalReplayAvailable
     }
   };
@@ -294,11 +273,14 @@ export function parseGpxText(xmlText: string, fileName: string, fileLastModified
   const discardedLabel = collection.discardedPointCount > 0
     ? ` ${collection.discardedPointCount} point(s) invalide(s) ignoré(s).`
     : '';
+  const optimizedLabel = compacted.compacted
+    ? ` Trace optimisée de ${collection.points.length.toLocaleString('fr-FR')} à ${compacted.positions.length.toLocaleString('fr-FR')} points pour préserver la fluidité.`
+    : '';
 
   return {
     trace,
     temporalReplayAvailable,
-    message: `${collection.points.length} points de ${kindLabel} importés. ${timingLabel}${discardedLabel}`
+    message: `${compacted.positions.length} points de ${kindLabel} importés. ${timingLabel}${discardedLabel}${optimizedLabel}`
   };
 }
 

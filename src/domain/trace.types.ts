@@ -27,6 +27,7 @@ export interface GpxImportMetadata {
   kind: GpxImportKind;
   originalPointCount: number;
   discardedPointCount: number;
+  optimizedPointCount?: number;
   hadCompleteTimestamps: boolean;
 }
 

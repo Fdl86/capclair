@@ -90,5 +90,6 @@ export interface NavRoute {
   profile: FlightProfile;
   branchAltitudeById: Record<string, number>;
   branchWindById: Record<string, BranchWind>;
+  weatherAnalysisTimeIso?: string | null;
   dateModification: string;
 }

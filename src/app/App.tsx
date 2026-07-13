@@ -42,7 +42,7 @@ function clamp(value: number, min: number, max: number) {
 export function App() {
   const [currentScreen, setCurrentScreen] = useState<ScreenId>('planning');
   const [appNotice, setAppNotice] = useState<string | null>(null);
-  const [trackingRecording, setTrackingRecording] = useState(false);
+  const [trackingUnsavedTrace, setTrackingUnsavedTrace] = useState(false);
   const [pendingScreen, setPendingScreen] = useState<ScreenId | null>(null);
   const [replayTraceId, setReplayTraceId] = useState<string | null>(null);
   const routeState = useActiveRoute();
@@ -73,7 +73,7 @@ export function App() {
       ...current,
       finalReserveMin: aircraftState.activeProfile.reserveMinutes
     }));
-  }, [aircraftState.activeProfile.id]);
+  }, [aircraftState.activeProfile.id, aircraftState.activeProfile.reserveMinutes]);
 
   const navigate = (screen: ScreenId) => {
     setAppNotice(null);
@@ -86,7 +86,7 @@ export function App() {
       return;
     }
 
-    if (currentScreen === 'tracking' && trackingRecording && screen !== 'tracking') {
+    if (currentScreen === 'tracking' && trackingUnsavedTrace && screen !== 'tracking') {
       setPendingScreen(screen);
       return;
     }
@@ -190,6 +190,7 @@ export function App() {
         <CalculationsScreen
           route={routeState.route}
           weatherStatus={routeState.weatherStatus}
+          weatherUpdating={routeState.weatherUpdating}
           onSetBranchAltitude={routeState.setBranchAltitudeFt}
           onRefreshWinds={routeState.refreshWinds}
           onSetTasKt={(tasKt) => updateAircraft(aircraftState.activeProfile.id, { cruiseTasKt: tasKt })}
@@ -220,7 +221,7 @@ export function App() {
           onTraceReady={traceState.saveTrace}
           mapBaseLayer={mapBaseLayer}
           onMapBaseLayerChange={setMapBaseLayer}
-          onRecordingStateChange={setTrackingRecording}
+          onRecordingStateChange={setTrackingUnsavedTrace}
         />
       )}
       {currentScreen === 'traces' && (
@@ -233,7 +234,7 @@ export function App() {
             setCurrentScreen('replay');
           }}
           onBack={() => navigate('more')}
-          replayDisabled={trackingRecording}
+          replayDisabled={trackingUnsavedTrace}
           isLoading={traceState.isLoading}
           storageMode={traceState.storageMode}
           storageMessage={traceState.storageMessage}
@@ -272,13 +273,13 @@ export function App() {
       <ConfirmDialog
         open={pendingScreen !== null}
         title="Quitter le suivi en cours ?"
-        message="La trace active ne sera pas sauvegardée. Annulez puis utilisez Arrêter et sauvegarder pour la conserver."
+        message="La trace en cours ou terminée n’est pas encore sauvegardée. Annulez puis utilisez Arrêter et sauvegarder pour la conserver."
         confirmLabel="Quitter sans sauvegarder"
         onCancel={() => setPendingScreen(null)}
         onConfirm={() => {
           const target = pendingScreen;
           setPendingScreen(null);
-          setTrackingRecording(false);
+          setTrackingUnsavedTrace(false);
           if (target) setCurrentScreen(target);
         }}
       />

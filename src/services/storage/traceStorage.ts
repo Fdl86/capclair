@@ -1,4 +1,5 @@
 import type { Trace } from '../../domain/trace.types';
+import { normalizeTraceRecord, normalizeTraceRecords } from '../traces/traceValidation';
 
 const DB_NAME = 'capclair-web';
 const DB_VERSION = 1;
@@ -12,6 +13,12 @@ export interface TraceSaveResult {
   ok: boolean;
   message: string;
   mode: TraceStorageMode;
+}
+
+export interface TraceLoadResult {
+  traces: Trace[];
+  mode: TraceStorageMode;
+  discardedCount: number;
 }
 
 function sortTraces(traces: Trace[]): Trace[] {
@@ -50,29 +57,34 @@ function openTraceDb(): Promise<IDBDatabase> {
   });
 }
 
-function readLegacyTraces(): Trace[] {
+function readLegacyValues(): unknown[] {
   try {
     const raw = window.localStorage.getItem(LEGACY_STORAGE_KEY);
     if (!raw) return [];
     const value: unknown = JSON.parse(raw);
-    return Array.isArray(value) ? (value as Trace[]) : [];
+    return Array.isArray(value) ? value : [];
   } catch {
     return [];
   }
+}
+
+function readLegacyTraces(): { traces: Trace[]; discardedCount: number } {
+  return normalizeTraceRecords(readLegacyValues());
 }
 
 function writeLegacyTraces(traces: Trace[]): void {
   window.localStorage.setItem(LEGACY_STORAGE_KEY, JSON.stringify(sortTraces(traces).slice(0, MAX_TRACES)));
 }
 
-async function loadIndexedDbTraces(): Promise<Trace[]> {
+async function loadIndexedDbTraces(): Promise<{ traces: Trace[]; discardedCount: number }> {
   const db = await openTraceDb();
   try {
     const transaction = db.transaction(STORE_NAME, 'readonly');
     const done = transactionDone(transaction);
-    const traces = await requestPromise(transaction.objectStore(STORE_NAME).getAll()) as Trace[];
+    const values = await requestPromise(transaction.objectStore(STORE_NAME).getAll()) as unknown[];
     await done;
-    return sortTraces(traces);
+    const normalized = normalizeTraceRecords(values);
+    return { traces: sortTraces(normalized.traces), discardedCount: normalized.discardedCount };
   } finally {
     db.close();
   }
@@ -88,9 +100,10 @@ async function saveIndexedDbTrace(trace: Trace): Promise<void> {
 
     const readTransaction = db.transaction(STORE_NAME, 'readonly');
     const readDone = transactionDone(readTransaction);
-    const all = await requestPromise(readTransaction.objectStore(STORE_NAME).getAll()) as Trace[];
+    const all = await requestPromise(readTransaction.objectStore(STORE_NAME).getAll()) as unknown[];
     await readDone;
-    const extras = sortTraces(all).slice(MAX_TRACES);
+    const normalized = normalizeTraceRecords(all).traces;
+    const extras = sortTraces(normalized).slice(MAX_TRACES);
 
     if (extras.length) {
       const pruneTransaction = db.transaction(STORE_NAME, 'readwrite');
@@ -111,45 +124,64 @@ async function deleteIndexedDbTrace(traceId: string): Promise<void> {
     const done = transactionDone(transaction);
     transaction.objectStore(STORE_NAME).delete(traceId);
     await done;
+
+    const verifyTransaction = db.transaction(STORE_NAME, 'readonly');
+    const verifyDone = transactionDone(verifyTransaction);
+    const remaining = await requestPromise(verifyTransaction.objectStore(STORE_NAME).get(traceId));
+    await verifyDone;
+    if (remaining !== undefined) throw new Error('La trace est toujours présente dans IndexedDB après suppression.');
   } finally {
     db.close();
   }
 }
 
-async function migrateLegacyTraces(): Promise<void> {
+function deleteLegacyTrace(traceId: string): void {
+  const current = readLegacyTraces().traces.filter((trace) => trace.id !== traceId);
+  writeLegacyTraces(current);
+}
+
+async function migrateLegacyTraces(): Promise<number> {
   const legacy = readLegacyTraces();
-  if (!legacy.length) return;
-  for (const trace of legacy.slice(0, MAX_TRACES)) {
+  if (!legacy.traces.length) return legacy.discardedCount;
+  for (const trace of legacy.traces.slice(0, MAX_TRACES)) {
     await saveIndexedDbTrace(trace);
   }
   try {
     window.localStorage.removeItem(LEGACY_STORAGE_KEY);
   } catch {
-    // La migration est déjà terminée dans IndexedDB. Le reliquat local peut rester sans impact.
+    // Les données validées sont déjà dans IndexedDB. Le reliquat local est sans impact.
   }
+  return legacy.discardedCount;
 }
 
-export async function loadStoredTraces(): Promise<{ traces: Trace[]; mode: TraceStorageMode }> {
+export async function loadStoredTraces(): Promise<TraceLoadResult> {
   try {
-    await migrateLegacyTraces();
-    return { traces: await loadIndexedDbTraces(), mode: 'indexeddb' };
+    const legacyDiscarded = await migrateLegacyTraces();
+    const indexed = await loadIndexedDbTraces();
+    return {
+      traces: indexed.traces,
+      mode: 'indexeddb',
+      discardedCount: legacyDiscarded + indexed.discardedCount
+    };
   } catch {
-    return { traces: sortTraces(readLegacyTraces()), mode: 'localstorage' };
+    const legacy = readLegacyTraces();
+    return { traces: sortTraces(legacy.traces), mode: 'localstorage', discardedCount: legacy.discardedCount };
   }
 }
 
 export async function saveStoredTrace(trace: Trace): Promise<TraceSaveResult> {
-  if (trace.positions.length < 2) {
-    return { ok: false, mode: 'indexeddb', message: 'Trace trop courte : au moins deux points GPS sont requis.' };
+  const normalized = normalizeTraceRecord(trace);
+  if (!normalized) {
+    return { ok: false, mode: 'indexeddb', message: 'Trace invalide ou trop courte : au moins deux points GPS valides sont requis.' };
   }
 
   try {
-    await saveIndexedDbTrace(trace);
+    await saveIndexedDbTrace(normalized);
     return { ok: true, mode: 'indexeddb', message: 'Trace sauvegardée dans IndexedDB.' };
   } catch (indexedDbError) {
     try {
-      const current = readLegacyTraces().filter((item) => item.id !== trace.id);
-      writeLegacyTraces([trace, ...current]);
+      const current = readLegacyTraces().traces.filter((item) => item.id !== normalized.id);
+      writeLegacyTraces([normalized, ...current]);
       return { ok: true, mode: 'localstorage', message: 'Trace sauvegardée en stockage local de secours.' };
     } catch (localStorageError) {
       const message = localStorageError instanceof Error
@@ -165,18 +197,24 @@ export async function saveStoredTrace(trace: Trace): Promise<TraceSaveResult> {
 export async function deleteStoredTrace(traceId: string): Promise<TraceSaveResult> {
   try {
     await deleteIndexedDbTrace(traceId);
-    return { ok: true, mode: 'indexeddb', message: 'Trace supprimée.' };
-  } catch {
     try {
-      const current = readLegacyTraces().filter((trace) => trace.id !== traceId);
-      writeLegacyTraces(current);
-      return { ok: true, mode: 'localstorage', message: 'Trace supprimée du stockage de secours.' };
-    } catch (error) {
-      return {
-        ok: false,
-        mode: 'localstorage',
-        message: error instanceof Error ? error.message : 'Suppression impossible.'
-      };
+      deleteLegacyTrace(traceId);
+    } catch {
+      // IndexedDB est la source principale et la suppression y est vérifiée.
     }
+    return { ok: true, mode: 'indexeddb', message: 'Trace supprimée.' };
+  } catch (indexedDbError) {
+    try {
+      deleteLegacyTrace(traceId);
+    } catch {
+      // Le message principal doit rester celui de l'échec IndexedDB.
+    }
+    return {
+      ok: false,
+      mode: 'indexeddb',
+      message: indexedDbError instanceof Error
+        ? `Suppression IndexedDB impossible : ${indexedDbError.message}`
+        : 'Suppression IndexedDB impossible. La trace a été conservée dans la liste.'
+    };
   }
 }

@@ -27,6 +27,7 @@ import { closestEquivalentRotation, reliableTrackDeg, viewRotationForTrack } fro
 interface OpenLayersMapProps {
   route: NavRoute;
   trace: GpsPosition[];
+  traceSegmentStartIndices?: number[];
   aircraft: GpsPosition | null;
   selectedPointId: string | null;
   compact?: boolean;
@@ -60,6 +61,7 @@ function replaceLayer(map: Map, previousLayer: BaseLayer | null, nextLayer: Base
 export function OpenLayersMap({
   route,
   trace,
+  traceSegmentStartIndices = [],
   aircraft,
   selectedPointId,
   compact = false,
@@ -213,8 +215,8 @@ export function OpenLayersMap({
   useEffect(() => {
     const traceLayer = traceLayerRef.current;
     if (!traceLayer) return;
-    updateActualTraceLayer(traceLayer, trace);
-  }, [trace]);
+    updateActualTraceLayer(traceLayer, trace, traceSegmentStartIndices);
+  }, [trace, traceSegmentStartIndices]);
 
   useEffect(() => {
     latestAircraftRef.current = aircraft;

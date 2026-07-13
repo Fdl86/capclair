@@ -1,7 +1,7 @@
 {
-  "name": "cap-clair-web13-22-2-mobile-replay-hotfix",
+  "name": "cap-clair-web13-23-0-robustesse",
   "private": true,
-  "version": "0.13.22-2",
+  "version": "0.13.23-0",
   "type": "module",
   "scripts": {
     "dev": "vite",

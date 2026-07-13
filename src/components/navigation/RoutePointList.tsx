@@ -28,14 +28,27 @@ export function RoutePointList({ points, selectedPointId, onSelect, onRemove }: 
   return (
     <div className="route-point-list">
       {points.map((point, index) => (
-        <div key={point.id} className={`route-point ${selectedPointId === point.id ? 'active' : ''}`} onClick={() => onSelect(point.id)} role="button" tabIndex={0}>
+        <div
+          key={point.id}
+          className={`route-point ${selectedPointId === point.id ? 'active' : ''}`}
+          onClick={() => onSelect(point.id)}
+          onKeyDown={(event) => {
+            if (event.key === 'Enter' || event.key === ' ') {
+              event.preventDefault();
+              onSelect(point.id);
+            }
+          }}
+          role="button"
+          tabIndex={0}
+          aria-pressed={selectedPointId === point.id}
+        >
           <span className="point-chip">{chipLabel(point, index)}</span>
           <div className="route-point-main">
             <strong>{point.code ?? point.nom}</strong>
             <small>{roleLabel(point)}</small>
           </div>
           {point.type === 'waypoint' && (
-            <Button variant="ghost" className="route-point-remove" onClick={(event) => { event.stopPropagation(); onRemove(point.id); }}>
+            <Button variant="ghost" className="route-point-remove" aria-label={`Supprimer ${point.code ?? point.nom}`} onClick={(event) => { event.stopPropagation(); onRemove(point.id); }}>
               X
             </Button>
           )}

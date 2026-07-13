@@ -7,6 +7,7 @@ import {
   type TraceSaveResult,
   type TraceStorageMode
 } from '../services/storage/traceStorage';
+import { normalizeTraceRecord } from '../services/traces/traceValidation';
 
 export function useTraces() {
   const [traces, setTraces] = useState<Trace[]>([]);
@@ -21,9 +22,10 @@ export function useTraces() {
         if (cancelled) return;
         setTraces(result.traces);
         setStorageMode(result.mode);
-        if (result.mode === 'localstorage') {
-          setStorageMessage('IndexedDB indisponible. Stockage local de secours actif.');
-        }
+        const warnings: string[] = [];
+        if (result.mode === 'localstorage') warnings.push('IndexedDB indisponible. Stockage local de secours actif.');
+        if (result.discardedCount > 0) warnings.push(`${result.discardedCount} trace(s) locale(s) invalide(s) ont été ignorée(s).`);
+        setStorageMessage(warnings.length ? warnings.join(' ') : null);
       })
       .catch((error) => {
         if (cancelled) return;
@@ -43,7 +45,8 @@ export function useTraces() {
     setStorageMode(result.mode);
     setStorageMessage(result.ok ? result.message : result.message);
     if (result.ok) {
-      setTraces((current) => [trace, ...current.filter((item) => item.id !== trace.id)].slice(0, 20));
+      const normalized = normalizeTraceRecord(trace);
+      if (normalized) setTraces((current) => [normalized, ...current.filter((item) => item.id !== normalized.id)].slice(0, 20));
     }
     return result;
   };

@@ -12,8 +12,17 @@ export interface RouteBuildOptions {
   profile?: Partial<FlightProfile>;
   branchAltitudeById?: Record<string, number>;
   branchWindById?: Record<string, BranchWind>;
+  routeId?: string;
+  weatherAnalysisTimeIso?: string | null;
 }
 
+
+export function createRouteId(): string {
+  if (typeof crypto !== 'undefined' && typeof crypto.randomUUID === 'function') {
+    return `route-${crypto.randomUUID()}`;
+  }
+  return `route-${Date.now()}-${Math.random().toString(36).slice(2, 10)}`;
+}
 function isoNowRoundedHour(): string {
   const date = new Date();
   date.setUTCMinutes(0, 0, 0);
@@ -147,6 +156,12 @@ export function relabelRoutePoints(points: NavPoint[]): NavPoint[] {
   });
 }
 
+
+export function replaceRouteEndpoint(points: NavPoint[], endpoint: NavPoint | null, type: 'depart' | 'destination'): NavPoint[] {
+  const withoutEndpoint = points.filter((point) => point.type !== type);
+  if (!endpoint) return relabelRoutePoints(withoutEndpoint);
+  return relabelRoutePoints(type === 'depart' ? [endpoint, ...withoutEndpoint] : [...withoutEndpoint, endpoint]);
+}
 export function buildBranches(points: NavPoint[], options: RouteBuildOptions = {}): NavBranch[] {
   const hasDeparture = points[0]?.type === 'depart';
   const hasDestination = points.at(-1)?.type === 'destination';
@@ -213,17 +228,24 @@ export function buildRoute(points: NavPoint[], options: RouteBuildOptions = {}):
     ? `${departure ? pointLabel(departure) : '----'} - ${destination ? pointLabel(destination) : '----'}`
     : 'Nouvelle navigation';
 
+  const distanceTotale = Number(branches.reduce((sum, branch) => sum + branch.distanceNm, 0).toFixed(1));
+  const tempsEstimeMin = branches.reduce((sum, branch) => sum + branch.tempsBrancheMin, 0);
+  const vitesseSolMoyenne = tempsEstimeMin > 0
+    ? Math.round(distanceTotale / (tempsEstimeMin / 60))
+    : profile.tasKt;
+
   return {
-    id: 'active-route',
+    id: options.routeId ?? createRouteId(),
     nom: routeName,
     points: normalizedPoints,
     branches,
-    distanceTotale: Number(branches.reduce((sum, branch) => sum + branch.distanceNm, 0).toFixed(1)),
-    tempsEstimeMin: branches.reduce((sum, branch) => sum + branch.tempsBrancheMin, 0),
-    vitesseSolKt: profile.tasKt,
+    distanceTotale,
+    tempsEstimeMin,
+    vitesseSolKt: vitesseSolMoyenne,
     profile,
     branchAltitudeById: Object.fromEntries(branches.map((branch) => [branch.id, branch.altitudeFt])),
     branchWindById: Object.fromEntries(branches.filter((branch) => branch.wind).map((branch) => [branch.id, branch.wind as BranchWind])),
+    weatherAnalysisTimeIso: options.weatherAnalysisTimeIso ?? null,
     dateModification: new Date().toISOString()
   };
 }

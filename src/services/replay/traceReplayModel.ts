@@ -3,8 +3,7 @@ import type { ReplayModel, ReplayPoint, ReplaySample, ReplaySegment } from '../.
 import type { Trace } from '../../domain/trace.types';
 import { bearingDeg } from '../geo/bearing';
 import { distanceNm } from '../geo/distance';
-
-export const REPLAY_GAP_BREAK_MS = 12_000;
+import { TRACE_GAP_BREAK_MS } from '../traces/traceSegments';
 const METRES_TO_FEET = 3.28084;
 const MAX_REASONABLE_SPEED_KT = 500;
 
@@ -99,7 +98,7 @@ export function buildReplayModel(trace: Trace): ReplayModel {
   valid.forEach(({ position, originalIndex }, validIndex) => {
     const deltaMs = previousPosition ? position.timestamp - previousPosition.timestamp : 0;
     const breakBefore = validIndex > 0
-      && (explicitStarts.has(originalIndex) || (temporalAvailable && (deltaMs <= 0 || deltaMs > REPLAY_GAP_BREAK_MS)));
+      && (explicitStarts.has(originalIndex) || (temporalAvailable && (deltaMs <= 0 || deltaMs > TRACE_GAP_BREAK_MS)));
 
     if (breakBefore) {
       segmentIndex += 1;

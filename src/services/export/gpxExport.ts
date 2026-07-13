@@ -1,6 +1,7 @@
 import { APP_VERSION } from '../../app/version';
 import type { Trace } from '../../domain/trace.types';
 import { isReliableGpsAltitude } from '../gps/geolocationService';
+import { TRACE_GAP_BREAK_MS } from '../traces/traceSegments';
 
 export interface TraceExportResult {
   ok: boolean;
@@ -67,7 +68,7 @@ function traceFileName(trace: Trace, fileExtension: 'gpx' | 'json'): string {
   return `cap-clair-${safeSlug(trace.routeName)}-${traceDateSlug(trace)}.${fileExtension}`;
 }
 
-export function splitTraceSegments(trace: Trace, gapMs = 12_000): Trace['positions'][] {
+export function splitTraceSegments(trace: Trace, gapMs = TRACE_GAP_BREAK_MS): Trace['positions'][] {
   const explicitStarts = new Set((trace.segmentStartIndices ?? []).filter((index) => Number.isInteger(index) && index > 0));
   const segments: Trace['positions'][] = [];
   let current: Trace['positions'] = [];
@@ -131,6 +132,7 @@ export function traceToGpx(trace: Trace): string {
     extension('importKind', trace.importMetadata?.kind),
     extension('importedAt', trace.importMetadata?.importedAt),
     extension('originalPointCount', trace.importMetadata?.originalPointCount),
+    extension('optimizedPointCount', trace.importMetadata?.optimizedPointCount),
     extension('startedAt', trace.startedAt),
     extension('endedAt', trace.endedAt),
     extension('segmentCount', segments.length),
