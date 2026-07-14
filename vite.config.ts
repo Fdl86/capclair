@@ -10,7 +10,7 @@ export default defineConfig({
       manifest: {
         name: 'CAP CLAIR - Navigation VFR',
         short_name: 'CAP CLAIR',
-        description: 'PWA de navigation VFR : planification, log de nav PDF, suivi GPS navigateur, traces locales, import GPX et Replay synchronisé.',
+        description: 'PWA de navigation VFR : planification, couche SUP AIP BETA, log de nav PDF, suivi GPS navigateur, traces locales, import GPX et Replay synchronisé.',
         theme_color: '#050B12',
         background_color: '#050B12',
         display: 'standalone',
@@ -33,7 +33,7 @@ export default defineConfig({
       },
       workbox: {
         cleanupOutdatedCaches: true,
-        globPatterns: ['**/*.{js,css,html,ico,png,svg,pdf,webmanifest}'],
+        globPatterns: ['**/*.{js,css,html,ico,png,svg,pdf,json,geojson,webmanifest}'],
         globIgnores: [
           '**/airspaceCatalog-*.js',
           '**/TraceReplayScreen-*.js',

@@ -1,8 +1,21 @@
-# CAP CLAIR WEB13.23.0 - ROBUSTESSE
+# CAP CLAIR WEB13.24.0 - SUP AIP BETA
 
 CAP CLAIR est une application VFR mobile-first en Vite, React, TypeScript et OpenLayers, déployée comme PWA sur Cloudflare Pages.
 
 Cette livraison reprend la base WEB13.21.0 avec import GPX et intègre les évolutions web-compatibles de DEV15.2.4. Elle ne contient aucun service Android natif, Capacitor, plugin natif, signature APK ou workflow Android.
+
+## WEB13.24.0 - SUP AIP BETA
+
+- nouvelle surimpression cartographique `SUP AIP BETA`, désactivée par défaut et mémorisée localement ;
+- couverture pilote volontairement partielle : 4 géométries issues de 3 SUP AIP officiels du SIA ;
+- prise en charge des cercles, polygones et arcs publiés ;
+- distinction visuelle entre créneau publié en cours, publication en vigueur, activation à confirmer par NOTAM et publication à venir ;
+- appui sur une zone pour afficher validité, limites verticales, activation, fréquence et lien vers le PDF SIA officiel ;
+- disponible dans Planification, Suivi et Replay ;
+- données GeoJSON embarquées et mises en cache hors ligne ;
+- avertissement permanent : cette couche BETA ne remplace jamais la consultation SIA, SOFIA et NOTAM.
+
+La couche est un prototype de validation d'interface et de géométrie. Elle n'est pas exhaustive et ne doit pas être utilisée seule pour préparer ou conduire un vol.
 
 ## WEB13.23.0 - Robustesse
 
@@ -124,12 +137,12 @@ Cette livraison reprend la base WEB13.21.0 avec import GPX et intègre les évol
 1. Sélectionner la branche web/PWA concernée.
 2. Vider le dossier local en conservant uniquement `.git`.
 3. Copier le contenu complet du ZIP dans le dossier.
-4. Vérifier `WEB13.23.0` dans la chip.
-5. Vérifier `CAP CLAIR WEB13.23.0 - ROBUSTESSE` dans le titre de l'onglet.
+4. Vérifier `WEB13.24.0` dans la chip.
+5. Vérifier `CAP CLAIR WEB13.24.0 - SUP AIP BETA` dans le titre de l'onglet.
 6. Commit et push via GitHub Desktop.
 
 Commit recommandé :
 
 ```text
-main: port DEV15.2.4 PDF and tracking UX to web PWA
+main: add SUP AIP beta overlay to web PWA
 ```

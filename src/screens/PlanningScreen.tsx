@@ -27,6 +27,8 @@ interface PlanningScreenProps {
   onCalculations: () => void;
   mapBaseLayer: MapBaseLayer;
   onMapBaseLayerChange: (value: MapBaseLayer) => void;
+  showSupAip: boolean;
+  onToggleSupAip: () => void;
   aircraftPosition?: GpsPosition | null;
   onRequestPosition?: () => Promise<GpsPosition | null>;
   locating?: boolean;
@@ -73,6 +75,8 @@ export function PlanningScreen({
   onCalculations,
   mapBaseLayer,
   onMapBaseLayerChange,
+  showSupAip,
+  onToggleSupAip,
   aircraftPosition = null,
   onRequestPosition,
   locating = false,
@@ -195,13 +199,19 @@ export function PlanningScreen({
     <Page title="Planification" subtitle="Carte aéro, route, dégagement et points de navigation.">
       <div className="planning-layout">
         <div className="map-card tall planning-map-card">
-          <MapLayerToggle baseLayer={mapBaseLayer} onChange={onMapBaseLayerChange} />
+          <MapLayerToggle
+            baseLayer={mapBaseLayer}
+            onChange={onMapBaseLayerChange}
+            showSupAip={showSupAip}
+            onToggleSupAip={onToggleSupAip}
+          />
           <OpenLayersMap
             route={route}
             trace={EMPTY_TRACE}
             aircraft={aircraftPosition}
             selectedPointId={selectedPointId}
             baseLayer={mapBaseLayer}
+            showSupAip={showSupAip}
             addWaypointMode={addWaypointMode}
             onMapAddWaypoint={handleAddWaypoint}
             allowUserRotation={false}

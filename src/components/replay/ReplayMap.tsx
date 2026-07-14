@@ -1,11 +1,13 @@
 import { useEffect, useRef, useState } from 'react';
 import Feature from 'ol/Feature';
 import Map from 'ol/Map';
+import type MapBrowserEvent from 'ol/MapBrowserEvent';
 import { defaults as defaultInteractions } from 'ol/interaction/defaults';
 import View from 'ol/View';
 import LineString from 'ol/geom/LineString';
 import MultiLineString from 'ol/geom/MultiLineString';
 import Point from 'ol/geom/Point';
+import type Geometry from 'ol/geom/Geometry';
 import VectorLayer from 'ol/layer/Vector';
 import VectorSource from 'ol/source/Vector';
 import { Circle as CircleStyle, Fill, Stroke, Style, Text } from 'ol/style';
@@ -17,11 +19,14 @@ import type { PlannedRouteSnapshot } from '../../domain/trace.types';
 import type { MapBaseLayer, MapSourceStatus } from '../../mapEngine/mapTypes';
 import { initialMapCenter, initialMapZoom } from '../../mapEngine/mapViewConfig';
 import { createAircraftLayer, updateAircraftLayer, type AircraftLayer } from '../../mapLayers/aircraftLayer';
+import { createSupAipLayer, supAipSelectionFromFeature, type SupAipLayer } from '../../mapLayers/supAipLayer';
+import type { SupAipSelection } from '../../domain/supaip.types';
 import { createFreeMapLayer } from '../../mapSources/freeMapSource';
 import { createIgnOaciVfrLayer } from '../../mapSources/ignOaciVfrSource';
 import { createOpenAipRasterLayer } from '../../mapSources/openAipRasterSource';
 import { MapControls } from '../map/MapControls';
 import { MapFallbackNotice } from '../map/MapFallbackNotice';
+import { SupAipPopup } from '../map/SupAipPopup';
 
 interface ReplayMapProps {
   model: ReplayModel;
@@ -30,6 +35,7 @@ interface ReplayMapProps {
   showPlannedRoute: boolean;
   baseLayer: MapBaseLayer;
   followAircraft: boolean;
+  showSupAip?: boolean;
 }
 
 type TraceLayer = VectorLayer<VectorSource<Feature<MultiLineString>>>;
@@ -89,17 +95,21 @@ function traceCoordinates(model: ReplayModel): number[][][] {
     .filter((segment) => segment.length >= 2);
 }
 
-export function ReplayMap({ model, aircraft, plannedRoute, showPlannedRoute, baseLayer, followAircraft }: ReplayMapProps) {
+export function ReplayMap({ model, aircraft, plannedRoute, showPlannedRoute, baseLayer, followAircraft, showSupAip = false }: ReplayMapProps) {
   const elementRef = useRef<HTMLDivElement | null>(null);
   const mapRef = useRef<Map | null>(null);
   const traceLayerRef = useRef<TraceLayer | null>(null);
   const routeLayerRef = useRef<RouteLayer | null>(null);
   const waypointLayerRef = useRef<WaypointLayer | null>(null);
   const aircraftLayerRef = useRef<AircraftLayer | null>(null);
+  const supAipLayerRef = useRef<SupAipLayer | null>(null);
   const latestAircraftRef = useRef<GpsPosition | null>(aircraft);
   const baseLayerModeRef = useRef<MapBaseLayer>(baseLayer);
   const fittedModelRef = useRef<ReplayModel | null>(null);
   const [sourceStatus, setSourceStatus] = useState<MapSourceStatus>('free');
+  const [supAipLoadState, setSupAipLoadState] = useState<'idle' | 'loading' | 'ready' | 'error'>('idle');
+  const [supAipFeatureCount, setSupAipFeatureCount] = useState(0);
+  const [selectedSupAip, setSelectedSupAip] = useState<SupAipSelection | null>(null);
 
   useEffect(() => {
     if (!elementRef.current || mapRef.current) return;
@@ -114,17 +124,27 @@ export function ReplayMap({ model, aircraft, plannedRoute, showPlannedRoute, bas
     const routeLayer = createRouteLayer();
     const waypointLayer = createWaypointLayer();
     const aircraftLayer = createAircraftLayer(null, 9);
+    const supAipLayer = createSupAipLayer({
+      visible: false,
+      onLoadStart: () => setSupAipLoadState('loading'),
+      onLoadEnd: (featureCount) => {
+        setSupAipFeatureCount(featureCount);
+        setSupAipLoadState('ready');
+      },
+      onLoadError: () => setSupAipLoadState('error')
+    });
 
     traceLayerRef.current = traceLayer;
     routeLayerRef.current = routeLayer;
     waypointLayerRef.current = waypointLayer;
     aircraftLayerRef.current = aircraftLayer;
+    supAipLayerRef.current = supAipLayer;
 
     const map = new Map({
       target: elementRef.current,
       controls: [],
       interactions: defaultInteractions({ altShiftDragRotate: false, pinchRotate: false }),
-      layers: [freeLayer, oaciLayer, openAipLayer, routeLayer, waypointLayer, traceLayer, aircraftLayer],
+      layers: [freeLayer, oaciLayer, openAipLayer, supAipLayer, routeLayer, waypointLayer, traceLayer, aircraftLayer],
       view: new View({ center: initialMapCenter, zoom: initialMapZoom, minZoom: 6, maxZoom: 14, rotation: 0, smoothResolutionConstraint: false })
     });
     mapRef.current = map;
@@ -141,6 +161,7 @@ export function ReplayMap({ model, aircraft, plannedRoute, showPlannedRoute, bas
       waypointLayer.dispose();
       traceLayer.dispose();
       aircraftLayer.dispose();
+      supAipLayer.dispose();
       map.setTarget(undefined);
       mapRef.current = null;
     };
@@ -158,6 +179,36 @@ export function ReplayMap({ model, aircraft, plannedRoute, showPlannedRoute, bas
     });
     setSourceStatus(baseLayer === 'oaci' ? 'oaci' : 'free');
   }, [baseLayer]);
+
+  useEffect(() => {
+    supAipLayerRef.current?.setVisible(showSupAip);
+    if (!showSupAip) setSelectedSupAip(null);
+  }, [showSupAip]);
+
+  useEffect(() => {
+    if (!showSupAip) return undefined;
+    const interval = window.setInterval(() => supAipLayerRef.current?.changed(), 60_000);
+    return () => window.clearInterval(interval);
+  }, [showSupAip]);
+
+  useEffect(() => {
+    const map = mapRef.current;
+    if (!map || !showSupAip) return undefined;
+
+    const handleSupAipClick = (event: MapBrowserEvent) => {
+      const layer = supAipLayerRef.current;
+      if (!layer) return;
+      const selected = map.forEachFeatureAtPixel(
+        event.pixel,
+        (feature) => supAipSelectionFromFeature(feature as Feature<Geometry>),
+        { hitTolerance: 8, layerFilter: (candidate) => candidate === layer }
+      );
+      setSelectedSupAip(selected ?? null);
+    };
+
+    map.on('singleclick', handleSupAipClick);
+    return () => map.un('singleclick', handleSupAipClick);
+  }, [showSupAip]);
 
   useEffect(() => {
     const layer = traceLayerRef.current;
@@ -249,6 +300,14 @@ export function ReplayMap({ model, aircraft, plannedRoute, showPlannedRoute, bas
     <div className="replay-map-shell">
       <div ref={elementRef} className="replay-ol-map" aria-label="Carte du replay CAP CLAIR" />
       <MapControls onRecenter={recenter} onZoomIn={() => zoom(1)} onZoomOut={() => zoom(-1)} />
+      {showSupAip && (
+        <div className={`supaip-beta-notice ${supAipLoadState === 'error' ? 'error' : ''}`}>
+          {supAipLoadState === 'error'
+            ? 'SUP AIP BETA - données indisponibles'
+            : `SUP AIP BETA - couverture pilote${supAipFeatureCount > 0 ? ` - ${supAipFeatureCount} zones` : ''}`}
+        </div>
+      )}
+      {selectedSupAip && <SupAipPopup selection={selectedSupAip} onClose={() => setSelectedSupAip(null)} />}
       {(sourceStatus === 'fallback' || sourceStatus === 'error') && <MapFallbackNotice mode={sourceStatus === 'error' ? 'oaci' : 'openaip'} />}
     </div>
   );

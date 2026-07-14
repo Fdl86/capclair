@@ -1,9 +1,12 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
+import Feature from 'ol/Feature';
 import Map from 'ol/Map';
+import type MapBrowserEvent from 'ol/MapBrowserEvent';
 import DragRotate from 'ol/interaction/DragRotate';
 import PinchRotate from 'ol/interaction/PinchRotate';
 import { defaults as defaultInteractions } from 'ol/interaction/defaults';
 import View from 'ol/View';
+import type Geometry from 'ol/geom/Geometry';
 import { fromLonLat, toLonLat } from 'ol/proj';
 import { boundingExtent } from 'ol/extent';
 import type BaseLayer from 'ol/layer/Base';
@@ -18,10 +21,13 @@ import { createPlannedRouteLayer } from '../../mapLayers/plannedRouteLayer';
 import { createActualTraceLayer, updateActualTraceLayer, type ActualTraceLayer } from '../../mapLayers/actualTraceLayer';
 import { createWaypointLayer } from '../../mapLayers/waypointLayer';
 import { createAircraftLayer, updateAircraftLayer, type AircraftLayer } from '../../mapLayers/aircraftLayer';
+import { createSupAipLayer, supAipSelectionFromFeature, type SupAipLayer } from '../../mapLayers/supAipLayer';
 import type { GpsPosition } from '../../domain/gps.types';
 import type { NavRoute } from '../../domain/navigation.types';
+import type { SupAipSelection } from '../../domain/supaip.types';
 import { MapControls } from './MapControls';
 import { MapFallbackNotice } from './MapFallbackNotice';
+import { SupAipPopup } from './SupAipPopup';
 import { closestEquivalentRotation, reliableTrackDeg, viewRotationForTrack } from '../../services/map/mapOrientation';
 
 interface OpenLayersMapProps {
@@ -47,6 +53,7 @@ interface OpenLayersMapProps {
   recordingControlState?: 'idle' | 'requesting' | 'recording' | 'saving' | 'error';
   onRecordingControl?: () => void;
   recordingControlDisabled?: boolean;
+  showSupAip?: boolean;
 }
 
 function replaceLayer(map: Map, previousLayer: BaseLayer | null, nextLayer: BaseLayer | null): BaseLayer | null {
@@ -80,7 +87,8 @@ export function OpenLayersMap({
   locationError = null,
   recordingControlState,
   onRecordingControl,
-  recordingControlDisabled = false
+  recordingControlDisabled = false,
+  showSupAip = false
 }: OpenLayersMapProps) {
   const mapElementRef = useRef<HTMLDivElement | null>(null);
   const mapRef = useRef<Map | null>(null);
@@ -91,6 +99,7 @@ export function OpenLayersMap({
   const oaciLayerRef = useRef<BaseLayer | null>(null);
   const traceLayerRef = useRef<ActualTraceLayer | null>(null);
   const aircraftLayerRef = useRef<AircraftLayer | null>(null);
+  const supAipLayerRef = useRef<SupAipLayer | null>(null);
   const latestAircraftRef = useRef<GpsPosition | null>(null);
   const lastReliableTrackRef = useRef<number | null>(null);
   const currentBaseLayerModeRef = useRef<MapBaseLayer>(baseLayer);
@@ -102,6 +111,9 @@ export function OpenLayersMap({
   const previousOrientationModeRef = useRef<MapOrientationMode>(orientationMode);
   const lastFollowUpdateAtRef = useRef(0);
   const [sourceStatus, setSourceStatus] = useState<MapSourceStatus>('free');
+  const [supAipLoadState, setSupAipLoadState] = useState<'idle' | 'loading' | 'ready' | 'error'>('idle');
+  const [supAipFeatureCount, setSupAipFeatureCount] = useState(0);
+  const [selectedSupAip, setSelectedSupAip] = useState<SupAipSelection | null>(null);
 
   const routeCoordinates = useMemo(() => route.points.map((point) => fromLonLat([point.longitude, point.latitude])), [route.points]);
   const routeExtent = useMemo(() => routeCoordinates.length > 0 ? boundingExtent(routeCoordinates) : null, [routeCoordinates]);
@@ -136,12 +148,22 @@ export function OpenLayersMap({
     });
     const traceLayer = createActualTraceLayer();
     const aircraftLayer = createAircraftLayer(null, initialMapZoom);
+    const supAipLayer = createSupAipLayer({
+      visible: false,
+      onLoadStart: () => setSupAipLoadState('loading'),
+      onLoadEnd: (featureCount) => {
+        setSupAipFeatureCount(featureCount);
+        setSupAipLoadState('ready');
+      },
+      onLoadError: () => setSupAipLoadState('error')
+    });
 
     baseLayerRef.current = freeMapLayer;
     openAipRasterLayerRef.current = openAipRasterLayer;
     oaciLayerRef.current = oaciLayer;
     traceLayerRef.current = traceLayer;
     aircraftLayerRef.current = aircraftLayer;
+    supAipLayerRef.current = supAipLayer;
 
     const interactions = defaultInteractions();
     dragRotateRef.current = interactions.getArray().find((interaction): interaction is DragRotate => interaction instanceof DragRotate) ?? null;
@@ -153,7 +175,7 @@ export function OpenLayersMap({
       target: mapElementRef.current,
       controls: [],
       interactions,
-      layers: [freeMapLayer, oaciLayer, openAipRasterLayer, traceLayer, aircraftLayer],
+      layers: [freeMapLayer, oaciLayer, openAipRasterLayer, supAipLayer, traceLayer, aircraftLayer],
       view: new View({
         center: initialMapCenter,
         zoom: initialMapZoom,
@@ -175,6 +197,7 @@ export function OpenLayersMap({
       oaciLayerRef.current?.dispose();
       traceLayerRef.current?.dispose();
       aircraftLayerRef.current?.dispose();
+      supAipLayerRef.current?.dispose();
       map.setTarget(undefined);
       mapRef.current = null;
       baseLayerRef.current = null;
@@ -184,6 +207,7 @@ export function OpenLayersMap({
       oaciLayerRef.current = null;
       traceLayerRef.current = null;
       aircraftLayerRef.current = null;
+      supAipLayerRef.current = null;
       dragRotateRef.current = null;
       pinchRotateRef.current = null;
     };
@@ -199,6 +223,17 @@ export function OpenLayersMap({
     setSourceStatus(status);
     onSourceStatusChangeRef.current?.(status);
   }, [baseLayer]);
+
+  useEffect(() => {
+    supAipLayerRef.current?.setVisible(showSupAip);
+    if (!showSupAip) setSelectedSupAip(null);
+  }, [showSupAip]);
+
+  useEffect(() => {
+    if (!showSupAip) return undefined;
+    const interval = window.setInterval(() => supAipLayerRef.current?.changed(), 60_000);
+    return () => window.clearInterval(interval);
+  }, [showSupAip]);
 
   useEffect(() => {
     const map = mapRef.current;
@@ -359,6 +394,27 @@ export function OpenLayersMap({
     };
   }, [addWaypointMode, onMapAddWaypoint]);
 
+  useEffect(() => {
+    const map = mapRef.current;
+    if (!map || !showSupAip) return undefined;
+
+    const handleSupAipClick = (event: MapBrowserEvent) => {
+      if (addWaypointMode) return;
+      const layer = supAipLayerRef.current;
+      if (!layer) return;
+
+      const selected = map.forEachFeatureAtPixel(
+        event.pixel,
+        (feature) => supAipSelectionFromFeature(feature as Feature<Geometry>),
+        { hitTolerance: 8, layerFilter: (candidate) => candidate === layer }
+      );
+      setSelectedSupAip(selected ?? null);
+    };
+
+    map.on('singleclick', handleSupAipClick);
+    return () => map.un('singleclick', handleSupAipClick);
+  }, [addWaypointMode, showSupAip]);
+
   const zoom = (delta: number) => {
     const view = mapRef.current?.getView();
     if (!view) return;
@@ -432,6 +488,14 @@ export function OpenLayersMap({
         onRecordingAction={onRecordingControl}
         recordingDisabled={recordingControlDisabled}
       />
+      {showSupAip && (
+        <div className={`supaip-beta-notice ${supAipLoadState === 'error' ? 'error' : ''}`}>
+          {supAipLoadState === 'error'
+            ? 'SUP AIP BETA - données indisponibles'
+            : `SUP AIP BETA - couverture pilote${supAipFeatureCount > 0 ? ` - ${supAipFeatureCount} zones` : ''}`}
+        </div>
+      )}
+      {selectedSupAip && <SupAipPopup selection={selectedSupAip} onClose={() => setSelectedSupAip(null)} />}
       {locationError && <div className="map-location-notice">{locationError}</div>}
       {(sourceStatus === 'fallback' || sourceStatus === 'error') && <MapFallbackNotice mode={sourceStatus === 'error' ? 'oaci' : 'openaip'} />}
     </div>

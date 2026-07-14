@@ -14,6 +14,8 @@ interface TraceReplayScreenProps {
   trace: Trace;
   mapBaseLayer: MapBaseLayer;
   onMapBaseLayerChange: (value: MapBaseLayer) => void;
+  showSupAip: boolean;
+  onToggleSupAip: () => void;
   onBack: () => void;
 }
 
@@ -36,7 +38,14 @@ function traceSourceLabel(trace: Trace): string {
   return 'Trace locale';
 }
 
-export function TraceReplayScreen({ trace, mapBaseLayer, onMapBaseLayerChange, onBack }: TraceReplayScreenProps) {
+export function TraceReplayScreen({
+  trace,
+  mapBaseLayer,
+  onMapBaseLayerChange,
+  showSupAip,
+  onToggleSupAip,
+  onBack
+}: TraceReplayScreenProps) {
   const model = useMemo(() => buildReplayModel(trace), [trace]);
   const replay = useTraceReplay(model);
   const hasPlannedRoute = (trace.plannedRoute?.points.length ?? 0) >= 2;
@@ -99,7 +108,12 @@ export function TraceReplayScreen({ trace, mapBaseLayer, onMapBaseLayerChange, o
       </div>
 
       <div className="replay-map-panel">
-        <MapLayerToggle baseLayer={mapBaseLayer} onChange={onMapBaseLayerChange} />
+        <MapLayerToggle
+          baseLayer={mapBaseLayer}
+          onChange={onMapBaseLayerChange}
+          showSupAip={showSupAip}
+          onToggleSupAip={onToggleSupAip}
+        />
         <div className="replay-map-modes">
           <button
             type="button"
@@ -127,6 +141,7 @@ export function TraceReplayScreen({ trace, mapBaseLayer, onMapBaseLayerChange, o
           showPlannedRoute={showPlannedRoute}
           baseLayer={mapBaseLayer}
           followAircraft={followAircraft}
+          showSupAip={showSupAip}
         />
         {crossTrack && (
           <div className="replay-cross-track-map">

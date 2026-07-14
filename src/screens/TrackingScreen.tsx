@@ -21,6 +21,8 @@ interface TrackingScreenProps {
   onTraceReady: (trace: Trace) => Promise<TraceSaveResult>;
   mapBaseLayer: MapBaseLayer;
   onMapBaseLayerChange: (value: MapBaseLayer) => void;
+  showSupAip: boolean;
+  onToggleSupAip: () => void;
   onRecordingStateChange?: (hasUnsavedTrace: boolean) => void;
 }
 
@@ -107,6 +109,8 @@ export function TrackingScreen({
   onTraceReady,
   mapBaseLayer,
   onMapBaseLayerChange,
+  showSupAip,
+  onToggleSupAip,
   onRecordingStateChange
 }: TrackingScreenProps) {
   const [confirmStop, setConfirmStop] = useState(false);
@@ -239,7 +243,12 @@ export function TrackingScreen({
   return (
     <section className={`tracking-screen ${fullscreen ? 'is-fullscreen' : ''}`}>
       <div className="tracking-map-panel">
-        <MapLayerToggle baseLayer={mapBaseLayer} onChange={onMapBaseLayerChange} />
+        <MapLayerToggle
+          baseLayer={mapBaseLayer}
+          onChange={onMapBaseLayerChange}
+          showSupAip={showSupAip}
+          onToggleSupAip={onToggleSupAip}
+        />
         {!fullscreen && (
           <div className={`tracking-gps-map-status ${gpsMap.tone}`} title={gpsMap.detail} aria-label={`${gpsMap.label}. ${gpsMap.detail}`}>
             <i aria-hidden="true" />
@@ -254,6 +263,7 @@ export function TrackingScreen({
           selectedPointId={gps.nextPoint?.id ?? null}
           compact
           baseLayer={mapBaseLayer}
+          showSupAip={showSupAip}
           followAircraft={isRecording}
           orientationMode={orientationMode}
           onToggleOrientation={toggleOrientation}

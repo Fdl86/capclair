@@ -52,6 +52,7 @@ export function App() {
   const [alternateCode, setAlternateCode] = useLocalStorageState('capclair.alternateCode.v2.web', '');
   const [fuelPlanConfigRaw, setFuelPlanConfig] = useLocalStorageState('capclair.fuelPlan.v1', DEFAULT_FUEL_PLAN_CONFIG);
   const [mapBaseLayer, setMapBaseLayer] = useLocalStorageState<MapBaseLayer>('capclair.mapBaseLayer.v1', 'free');
+  const [showSupAip, setShowSupAip] = useLocalStorageState('capclair.supaipOverlay.v1', false);
   const fuelPlanConfig = { ...DEFAULT_FUEL_PLAN_CONFIG, ...fuelPlanConfigRaw };
   const ready = isRouteReady(routeState.route);
   const replayTrace = replayTraceId ? traceState.traces.find((trace) => trace.id === replayTraceId) ?? null : null;
@@ -180,6 +181,8 @@ export function App() {
           onCalculations={() => navigate('calculations')}
           mapBaseLayer={mapBaseLayer}
           onMapBaseLayerChange={setMapBaseLayer}
+          showSupAip={showSupAip}
+          onToggleSupAip={() => setShowSupAip((current) => !current)}
           aircraftPosition={oneShotPosition.position}
           onRequestPosition={oneShotPosition.requestPosition}
           locating={oneShotPosition.locating}
@@ -221,6 +224,8 @@ export function App() {
           onTraceReady={traceState.saveTrace}
           mapBaseLayer={mapBaseLayer}
           onMapBaseLayerChange={setMapBaseLayer}
+          showSupAip={showSupAip}
+          onToggleSupAip={() => setShowSupAip((current) => !current)}
           onRecordingStateChange={setTrackingUnsavedTrace}
         />
       )}
@@ -245,6 +250,8 @@ export function App() {
           trace={replayTrace}
           mapBaseLayer={mapBaseLayer}
           onMapBaseLayerChange={setMapBaseLayer}
+          showSupAip={showSupAip}
+          onToggleSupAip={() => setShowSupAip((current) => !current)}
           onBack={() => {
             setReplayTraceId(null);
             setCurrentScreen('traces');
