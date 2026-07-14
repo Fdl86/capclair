@@ -3771,3 +3771,27 @@
   border-color: rgba(255, 99, 110, 0.5);
   color: #FFB6BC;
 }
+
+
+/* WEB13.25.0 - réglages SUP AIP BETA */
+.more-supaip-accordion .accordion-body { padding: 0 12px 12px; }
+.supaip-settings-beta { display: inline-grid; place-items: center; min-height: 17px; margin-left: 5px; border: 1px solid rgba(255, 184, 77, 0.52); border-radius: 999px; padding: 0 6px; color: #FFD49A; font-size: 0.54rem; font-weight: 950; letter-spacing: 0.05em; vertical-align: 1px; }
+.supaip-settings-panel { display: grid; gap: 12px; }
+.supaip-setting-block, .supaip-range-setting, .supaip-altitude-rule { border: 1px solid rgba(30, 49, 69, 0.88); border-radius: 13px; background: rgba(5, 11, 18, 0.46); padding: 12px; }
+.supaip-setting-heading { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; }
+.supaip-setting-heading > div, .supaip-setting-heading > span { display: grid; gap: 3px; }
+.supaip-setting-heading strong { color: var(--text); font-size: 0.84rem; }
+.supaip-setting-heading span, .supaip-setting-heading small { color: var(--text-3); font-size: 0.68rem; line-height: 1.35; }
+.supaip-setting-heading output { flex: 0 0 auto; min-width: 58px; border: 1px solid rgba(255, 184, 77, 0.44); border-radius: 999px; padding: 4px 8px; color: #FFD49A; background: rgba(255, 184, 77, 0.08); font-size: 0.72rem; font-weight: 900; text-align: center; }
+.supaip-mode-selector { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 6px; margin-top: 10px; }
+.supaip-mode-selector button { min-height: 38px; border: 1px solid var(--border); border-radius: 10px; background: rgba(12, 23, 36, 0.9); color: var(--text-2); font-size: 0.7rem; font-weight: 900; letter-spacing: 0.04em; cursor: pointer; }
+.supaip-mode-selector button.active { border-color: rgba(255, 184, 77, 0.78); background: #FFB84D; color: #211203; }
+.supaip-range-setting { display: grid; gap: 9px; cursor: default; }
+.supaip-range-setting input[type='range'] { width: 100%; accent-color: #FFB84D; cursor: pointer; }
+.supaip-range-limits { display: flex; justify-content: space-between; color: var(--text-3); }
+.supaip-range-limits small { font-size: 0.62rem; }
+.supaip-altitude-rule { display: grid; grid-template-columns: 30px 1fr; gap: 10px; border-color: rgba(61, 220, 132, 0.36); background: rgba(61, 220, 132, 0.06); }
+.supaip-altitude-rule > span { width: 28px; height: 28px; display: grid; place-items: center; border-radius: 50%; background: rgba(61, 220, 132, 0.16); color: #8DF0BA; font-weight: 950; }
+.supaip-altitude-rule strong { display: block; color: #BDF8D6; font-size: 0.82rem; }
+.supaip-altitude-rule p, .supaip-settings-warning { margin: 3px 0 0; color: var(--text-3); font-size: 0.68rem; line-height: 1.42; }
+.supaip-settings-warning { color: #FFD49A; padding: 0 2px; }

@@ -10,6 +10,7 @@ import { OpenLayersMap } from '../components/map/OpenLayersMap';
 import { MapLayerToggle } from '../components/map/MapLayerToggle';
 import { RoutePointList } from '../components/navigation/RoutePointList';
 import { isRouteReady, routeMissingMessage } from '../services/navigation/routeValidation';
+import type { SupAipVisibilitySettings } from '../services/supaip/supAipVisibility';
 
 interface PlanningScreenProps {
   route: NavRoute;
@@ -27,8 +28,8 @@ interface PlanningScreenProps {
   onCalculations: () => void;
   mapBaseLayer: MapBaseLayer;
   onMapBaseLayerChange: (value: MapBaseLayer) => void;
-  showSupAip: boolean;
-  onToggleSupAip: () => void;
+  supAipSettings: SupAipVisibilitySettings;
+  onCycleSupAipMode: () => void;
   aircraftPosition?: GpsPosition | null;
   onRequestPosition?: () => Promise<GpsPosition | null>;
   locating?: boolean;
@@ -75,8 +76,8 @@ export function PlanningScreen({
   onCalculations,
   mapBaseLayer,
   onMapBaseLayerChange,
-  showSupAip,
-  onToggleSupAip,
+  supAipSettings,
+  onCycleSupAipMode,
   aircraftPosition = null,
   onRequestPosition,
   locating = false,
@@ -202,8 +203,8 @@ export function PlanningScreen({
           <MapLayerToggle
             baseLayer={mapBaseLayer}
             onChange={onMapBaseLayerChange}
-            showSupAip={showSupAip}
-            onToggleSupAip={onToggleSupAip}
+            supAipMode={supAipSettings.mode}
+            onCycleSupAipMode={onCycleSupAipMode}
           />
           <OpenLayersMap
             route={route}
@@ -211,7 +212,7 @@ export function PlanningScreen({
             aircraft={aircraftPosition}
             selectedPointId={selectedPointId}
             baseLayer={mapBaseLayer}
-            showSupAip={showSupAip}
+            supAipSettings={supAipSettings}
             addWaypointMode={addWaypointMode}
             onMapAddWaypoint={handleAddWaypoint}
             allowUserRotation={false}

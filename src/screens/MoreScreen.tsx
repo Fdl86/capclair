@@ -1,10 +1,18 @@
 import type { ScreenId } from '../app/routes';
 import type { AircraftProfile } from '../domain/aircraft.types';
+import type { SupAipDisplayMode } from '../domain/supaip.types';
 import { Page } from '../components/layout/Page';
 import { Button } from '../components/ui/Button';
 import { Card } from '../components/ui/Card';
 import { Accordion } from '../components/ui/Accordion';
 import { AircraftProfilePanel } from '../components/flight/AircraftProfilePanel';
+import {
+  SUP_AIP_CORRIDOR_MAX_NM,
+  SUP_AIP_CORRIDOR_MIN_NM,
+  SUP_AIP_ENDPOINT_MAX_NM,
+  SUP_AIP_ENDPOINT_MIN_NM,
+  type SupAipVisibilitySettings
+} from '../services/supaip/supAipVisibility';
 
 interface MoreScreenProps {
   onNavigate: (screen: ScreenId) => void;
@@ -13,9 +21,26 @@ interface MoreScreenProps {
   onSelectAircraft: (profileId: string) => void;
   onUpdateAircraft: (profileId: string, patch: Partial<AircraftProfile>) => void;
   onCreateAircraft: () => void;
+  supAipSettings: SupAipVisibilitySettings;
+  onUpdateSupAipSettings: (patch: Partial<SupAipVisibilitySettings>) => void;
 }
 
-export function MoreScreen({ onNavigate, aircraftProfiles, activeAircraft, onSelectAircraft, onUpdateAircraft, onCreateAircraft }: MoreScreenProps) {
+const modeLabel: Record<SupAipDisplayMode, string> = {
+  off: 'Désactivés',
+  route: 'Autour de la route',
+  all: 'Tous affichés'
+};
+
+export function MoreScreen({
+  onNavigate,
+  aircraftProfiles,
+  activeAircraft,
+  onSelectAircraft,
+  onUpdateAircraft,
+  onCreateAircraft,
+  supAipSettings,
+  onUpdateSupAipSettings
+}: MoreScreenProps) {
   return (
     <Page title="Plus" subtitle="Accès rapide aux outils de préparation.">
       <div className="more-grid">
@@ -34,6 +59,87 @@ export function MoreScreen({ onNavigate, aircraftProfiles, activeAircraft, onSel
             onCreateProfile={onCreateAircraft}
           />
         </Accordion>
+
+        <Accordion
+          title="SUP AIP"
+          subtitle={<>{modeLabel[supAipSettings.mode]} <span className="supaip-settings-beta">BETA</span></>}
+          className="more-supaip-accordion"
+          defaultOpen={false}
+          storageKey="capclair.accordion.more.supaip.v1"
+        >
+          <div className="supaip-settings-panel">
+            <div className="supaip-setting-block">
+              <div className="supaip-setting-heading">
+                <div>
+                  <strong>Mode d'affichage</strong>
+                  <span>Le bouton de la carte permet aussi de passer rapidement d'un mode à l'autre.</span>
+                </div>
+              </div>
+              <div className="supaip-mode-selector" role="group" aria-label="Mode d'affichage des SUP AIP">
+                {(['off', 'route', 'all'] as SupAipDisplayMode[]).map((mode) => (
+                  <button
+                    key={mode}
+                    type="button"
+                    className={supAipSettings.mode === mode ? 'active' : ''}
+                    aria-pressed={supAipSettings.mode === mode}
+                    onClick={() => onUpdateSupAipSettings({ mode })}
+                  >
+                    {mode === 'off' ? 'OFF' : mode === 'route' ? 'ROUTE' : 'TOUS'}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            <label className="supaip-range-setting">
+              <span className="supaip-setting-heading">
+                <span>
+                  <strong>Distance autour de la route</strong>
+                  <small>Corridor de chaque côté de tous les segments.</small>
+                </span>
+                <output>{supAipSettings.routeCorridorNm} NM</output>
+              </span>
+              <input
+                type="range"
+                min={SUP_AIP_CORRIDOR_MIN_NM}
+                max={SUP_AIP_CORRIDOR_MAX_NM}
+                step={5}
+                value={supAipSettings.routeCorridorNm}
+                onChange={(event) => onUpdateSupAipSettings({ routeCorridorNm: Number(event.target.value) })}
+              />
+              <span className="supaip-range-limits"><small>{SUP_AIP_CORRIDOR_MIN_NM} NM</small><small>{SUP_AIP_CORRIDOR_MAX_NM} NM</small></span>
+            </label>
+
+            <label className="supaip-range-setting">
+              <span className="supaip-setting-heading">
+                <span>
+                  <strong>Rayon départ et arrivée</strong>
+                  <small>Protection élargie autour des deux aérodromes.</small>
+                </span>
+                <output>{supAipSettings.endpointRadiusNm} NM</output>
+              </span>
+              <input
+                type="range"
+                min={SUP_AIP_ENDPOINT_MIN_NM}
+                max={SUP_AIP_ENDPOINT_MAX_NM}
+                step={5}
+                value={supAipSettings.endpointRadiusNm}
+                onChange={(event) => onUpdateSupAipSettings({ endpointRadiusNm: Number(event.target.value) })}
+              />
+              <span className="supaip-range-limits"><small>{SUP_AIP_ENDPOINT_MIN_NM} NM</small><small>{SUP_AIP_ENDPOINT_MAX_NM} NM</small></span>
+            </label>
+
+            <div className="supaip-altitude-rule">
+              <span aria-hidden="true">✓</span>
+              <div>
+                <strong>Toutes altitudes</strong>
+                <p>Aucun SUP AIP n'est masqué selon l'altitude prévue ou l'altitude GPS. Les limites verticales restent uniquement informatives.</p>
+              </div>
+            </div>
+
+            <p className="supaip-settings-warning">Couverture pilote partielle. Vérifier systématiquement le SIA, SOFIA et les NOTAM avant le vol.</p>
+          </div>
+        </Accordion>
+
         <Card>
           <h2>Log de nav</h2>
           <p>Tableau complet avec altitude, vent, route vraie, variation, route magnétique, cap et vitesse sol.</p>
@@ -46,7 +152,7 @@ export function MoreScreen({ onNavigate, aircraftProfiles, activeAircraft, onSel
         </Card>
         <Card className="safety-card">
           <strong>Limites</strong>
-          <p>Prototype non réglementaire. METAR/TAF bruts, pas de SUP AIP automatique, pas de GPS en arrière-plan.</p>
+          <p>Prototype non réglementaire. SUP AIP BETA à couverture pilote partielle, pas de NOTAM automatiques et pas de GPS en arrière-plan.</p>
         </Card>
       </div>
     </Page>

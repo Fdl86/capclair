@@ -15,14 +15,15 @@ import type { MapBaseLayer, MapOrientationMode } from '../mapEngine/mapTypes';
 import { useLocalStorageState } from '../hooks/useLocalStorageState';
 import { useOneShotPosition } from '../hooks/useOneShotPosition';
 import { getGpsPositionUiState, getRecordingUiState } from '../services/gps/gpsUiState';
+import type { SupAipVisibilitySettings } from '../services/supaip/supAipVisibility';
 
 interface TrackingScreenProps {
   route: NavRoute;
   onTraceReady: (trace: Trace) => Promise<TraceSaveResult>;
   mapBaseLayer: MapBaseLayer;
   onMapBaseLayerChange: (value: MapBaseLayer) => void;
-  showSupAip: boolean;
-  onToggleSupAip: () => void;
+  supAipSettings: SupAipVisibilitySettings;
+  onCycleSupAipMode: () => void;
   onRecordingStateChange?: (hasUnsavedTrace: boolean) => void;
 }
 
@@ -109,8 +110,8 @@ export function TrackingScreen({
   onTraceReady,
   mapBaseLayer,
   onMapBaseLayerChange,
-  showSupAip,
-  onToggleSupAip,
+  supAipSettings,
+  onCycleSupAipMode,
   onRecordingStateChange
 }: TrackingScreenProps) {
   const [confirmStop, setConfirmStop] = useState(false);
@@ -246,8 +247,8 @@ export function TrackingScreen({
         <MapLayerToggle
           baseLayer={mapBaseLayer}
           onChange={onMapBaseLayerChange}
-          showSupAip={showSupAip}
-          onToggleSupAip={onToggleSupAip}
+          supAipMode={supAipSettings.mode}
+          onCycleSupAipMode={onCycleSupAipMode}
         />
         {!fullscreen && (
           <div className={`tracking-gps-map-status ${gpsMap.tone}`} title={gpsMap.detail} aria-label={`${gpsMap.label}. ${gpsMap.detail}`}>
@@ -263,7 +264,7 @@ export function TrackingScreen({
           selectedPointId={gps.nextPoint?.id ?? null}
           compact
           baseLayer={mapBaseLayer}
-          showSupAip={showSupAip}
+          supAipSettings={supAipSettings}
           followAircraft={isRecording}
           orientationMode={orientationMode}
           onToggleOrientation={toggleOrientation}

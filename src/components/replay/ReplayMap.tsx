@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import Feature from 'ol/Feature';
 import Map from 'ol/Map';
 import type MapBrowserEvent from 'ol/MapBrowserEvent';
@@ -21,6 +21,12 @@ import { initialMapCenter, initialMapZoom } from '../../mapEngine/mapViewConfig'
 import { createAircraftLayer, updateAircraftLayer, type AircraftLayer } from '../../mapLayers/aircraftLayer';
 import { createSupAipLayer, supAipSelectionFromFeature, type SupAipLayer } from '../../mapLayers/supAipLayer';
 import type { SupAipSelection } from '../../domain/supaip.types';
+import {
+  applySupAipVisibility,
+  DEFAULT_SUP_AIP_VISIBILITY_SETTINGS,
+  normalizeSupAipVisibilitySettings,
+  type SupAipVisibilitySettings
+} from '../../services/supaip/supAipVisibility';
 import { createFreeMapLayer } from '../../mapSources/freeMapSource';
 import { createIgnOaciVfrLayer } from '../../mapSources/ignOaciVfrSource';
 import { createOpenAipRasterLayer } from '../../mapSources/openAipRasterSource';
@@ -35,7 +41,7 @@ interface ReplayMapProps {
   showPlannedRoute: boolean;
   baseLayer: MapBaseLayer;
   followAircraft: boolean;
-  showSupAip?: boolean;
+  supAipSettings?: SupAipVisibilitySettings;
 }
 
 type TraceLayer = VectorLayer<VectorSource<Feature<MultiLineString>>>;
@@ -95,7 +101,7 @@ function traceCoordinates(model: ReplayModel): number[][][] {
     .filter((segment) => segment.length >= 2);
 }
 
-export function ReplayMap({ model, aircraft, plannedRoute, showPlannedRoute, baseLayer, followAircraft, showSupAip = false }: ReplayMapProps) {
+export function ReplayMap({ model, aircraft, plannedRoute, showPlannedRoute, baseLayer, followAircraft, supAipSettings = DEFAULT_SUP_AIP_VISIBILITY_SETTINGS }: ReplayMapProps) {
   const elementRef = useRef<HTMLDivElement | null>(null);
   const mapRef = useRef<Map | null>(null);
   const traceLayerRef = useRef<TraceLayer | null>(null);
@@ -103,13 +109,24 @@ export function ReplayMap({ model, aircraft, plannedRoute, showPlannedRoute, bas
   const waypointLayerRef = useRef<WaypointLayer | null>(null);
   const aircraftLayerRef = useRef<AircraftLayer | null>(null);
   const supAipLayerRef = useRef<SupAipLayer | null>(null);
+  const supAipSettingsRef = useRef<SupAipVisibilitySettings>(normalizeSupAipVisibilitySettings(supAipSettings));
+  const supAipRoutePointsRef = useRef<Array<{ latitude: number; longitude: number }>>([]);
   const latestAircraftRef = useRef<GpsPosition | null>(aircraft);
   const baseLayerModeRef = useRef<MapBaseLayer>(baseLayer);
   const fittedModelRef = useRef<ReplayModel | null>(null);
   const [sourceStatus, setSourceStatus] = useState<MapSourceStatus>('free');
   const [supAipLoadState, setSupAipLoadState] = useState<'idle' | 'loading' | 'ready' | 'error'>('idle');
   const [supAipFeatureCount, setSupAipFeatureCount] = useState(0);
+  const [supAipVisibleCount, setSupAipVisibleCount] = useState(0);
   const [selectedSupAip, setSelectedSupAip] = useState<SupAipSelection | null>(null);
+  const normalizedSupAipSettings = normalizeSupAipVisibilitySettings(supAipSettings);
+  const showSupAip = normalizedSupAipSettings.mode !== 'off';
+  const supAipRoutePoints = useMemo(() => {
+    const plannedPoints = plannedRoute?.points ?? [];
+    if (plannedPoints.length >= 2) return plannedPoints.map((point) => ({ latitude: point.latitude, longitude: point.longitude }));
+    return model.points.map((point) => ({ latitude: point.position.latitude, longitude: point.position.longitude }));
+  }, [model, plannedRoute]);
+  supAipRoutePointsRef.current = supAipRoutePoints;
 
   useEffect(() => {
     if (!elementRef.current || mapRef.current) return;
@@ -130,6 +147,7 @@ export function ReplayMap({ model, aircraft, plannedRoute, showPlannedRoute, bas
       onLoadEnd: (featureCount) => {
         setSupAipFeatureCount(featureCount);
         setSupAipLoadState('ready');
+        setSupAipVisibleCount(applySupAipVisibility(supAipLayer, supAipRoutePointsRef.current, supAipSettingsRef.current));
       },
       onLoadError: () => setSupAipLoadState('error')
     });
@@ -181,9 +199,13 @@ export function ReplayMap({ model, aircraft, plannedRoute, showPlannedRoute, bas
   }, [baseLayer]);
 
   useEffect(() => {
-    supAipLayerRef.current?.setVisible(showSupAip);
-    if (!showSupAip) setSelectedSupAip(null);
-  }, [showSupAip]);
+    const settings = normalizeSupAipVisibilitySettings(supAipSettings);
+    supAipSettingsRef.current = settings;
+    supAipRoutePointsRef.current = supAipRoutePoints;
+    const layer = supAipLayerRef.current;
+    if (layer) setSupAipVisibleCount(applySupAipVisibility(layer, supAipRoutePoints, settings));
+    setSelectedSupAip(null);
+  }, [supAipRoutePoints, supAipSettings]);
 
   useEffect(() => {
     if (!showSupAip) return undefined;
@@ -304,7 +326,9 @@ export function ReplayMap({ model, aircraft, plannedRoute, showPlannedRoute, bas
         <div className={`supaip-beta-notice ${supAipLoadState === 'error' ? 'error' : ''}`}>
           {supAipLoadState === 'error'
             ? 'SUP AIP BETA - données indisponibles'
-            : `SUP AIP BETA - couverture pilote${supAipFeatureCount > 0 ? ` - ${supAipFeatureCount} zones` : ''}`}
+            : normalizedSupAipSettings.mode === 'route'
+              ? `SUP AIP BETA - ROUTE ${normalizedSupAipSettings.routeCorridorNm} NM - ${supAipVisibleCount}/${supAipFeatureCount} zones`
+              : `SUP AIP BETA - TOUS - ${supAipFeatureCount} zones`}
         </div>
       )}
       {selectedSupAip && <SupAipPopup selection={selectedSupAip} onClose={() => setSelectedSupAip(null)} />}

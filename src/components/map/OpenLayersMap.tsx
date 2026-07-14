@@ -25,6 +25,12 @@ import { createSupAipLayer, supAipSelectionFromFeature, type SupAipLayer } from 
 import type { GpsPosition } from '../../domain/gps.types';
 import type { NavRoute } from '../../domain/navigation.types';
 import type { SupAipSelection } from '../../domain/supaip.types';
+import {
+  applySupAipVisibility,
+  DEFAULT_SUP_AIP_VISIBILITY_SETTINGS,
+  normalizeSupAipVisibilitySettings,
+  type SupAipVisibilitySettings
+} from '../../services/supaip/supAipVisibility';
 import { MapControls } from './MapControls';
 import { MapFallbackNotice } from './MapFallbackNotice';
 import { SupAipPopup } from './SupAipPopup';
@@ -53,7 +59,7 @@ interface OpenLayersMapProps {
   recordingControlState?: 'idle' | 'requesting' | 'recording' | 'saving' | 'error';
   onRecordingControl?: () => void;
   recordingControlDisabled?: boolean;
-  showSupAip?: boolean;
+  supAipSettings?: SupAipVisibilitySettings;
 }
 
 function replaceLayer(map: Map, previousLayer: BaseLayer | null, nextLayer: BaseLayer | null): BaseLayer | null {
@@ -88,7 +94,7 @@ export function OpenLayersMap({
   recordingControlState,
   onRecordingControl,
   recordingControlDisabled = false,
-  showSupAip = false
+  supAipSettings = DEFAULT_SUP_AIP_VISIBILITY_SETTINGS
 }: OpenLayersMapProps) {
   const mapElementRef = useRef<HTMLDivElement | null>(null);
   const mapRef = useRef<Map | null>(null);
@@ -100,6 +106,8 @@ export function OpenLayersMap({
   const traceLayerRef = useRef<ActualTraceLayer | null>(null);
   const aircraftLayerRef = useRef<AircraftLayer | null>(null);
   const supAipLayerRef = useRef<SupAipLayer | null>(null);
+  const supAipSettingsRef = useRef<SupAipVisibilitySettings>(normalizeSupAipVisibilitySettings(supAipSettings));
+  const supAipRoutePointsRef = useRef(route.points);
   const latestAircraftRef = useRef<GpsPosition | null>(null);
   const lastReliableTrackRef = useRef<number | null>(null);
   const currentBaseLayerModeRef = useRef<MapBaseLayer>(baseLayer);
@@ -113,7 +121,11 @@ export function OpenLayersMap({
   const [sourceStatus, setSourceStatus] = useState<MapSourceStatus>('free');
   const [supAipLoadState, setSupAipLoadState] = useState<'idle' | 'loading' | 'ready' | 'error'>('idle');
   const [supAipFeatureCount, setSupAipFeatureCount] = useState(0);
+  const [supAipVisibleCount, setSupAipVisibleCount] = useState(0);
   const [selectedSupAip, setSelectedSupAip] = useState<SupAipSelection | null>(null);
+
+  const normalizedSupAipSettings = normalizeSupAipVisibilitySettings(supAipSettings);
+  const showSupAip = normalizedSupAipSettings.mode !== 'off';
 
   const routeCoordinates = useMemo(() => route.points.map((point) => fromLonLat([point.longitude, point.latitude])), [route.points]);
   const routeExtent = useMemo(() => routeCoordinates.length > 0 ? boundingExtent(routeCoordinates) : null, [routeCoordinates]);
@@ -154,6 +166,7 @@ export function OpenLayersMap({
       onLoadEnd: (featureCount) => {
         setSupAipFeatureCount(featureCount);
         setSupAipLoadState('ready');
+        setSupAipVisibleCount(applySupAipVisibility(supAipLayer, supAipRoutePointsRef.current, supAipSettingsRef.current));
       },
       onLoadError: () => setSupAipLoadState('error')
     });
@@ -225,9 +238,13 @@ export function OpenLayersMap({
   }, [baseLayer]);
 
   useEffect(() => {
-    supAipLayerRef.current?.setVisible(showSupAip);
-    if (!showSupAip) setSelectedSupAip(null);
-  }, [showSupAip]);
+    const settings = normalizeSupAipVisibilitySettings(supAipSettings);
+    supAipSettingsRef.current = settings;
+    supAipRoutePointsRef.current = route.points;
+    const layer = supAipLayerRef.current;
+    if (layer) setSupAipVisibleCount(applySupAipVisibility(layer, route.points, settings));
+    setSelectedSupAip(null);
+  }, [route.points, supAipSettings]);
 
   useEffect(() => {
     if (!showSupAip) return undefined;
@@ -492,7 +509,9 @@ export function OpenLayersMap({
         <div className={`supaip-beta-notice ${supAipLoadState === 'error' ? 'error' : ''}`}>
           {supAipLoadState === 'error'
             ? 'SUP AIP BETA - données indisponibles'
-            : `SUP AIP BETA - couverture pilote${supAipFeatureCount > 0 ? ` - ${supAipFeatureCount} zones` : ''}`}
+            : normalizedSupAipSettings.mode === 'route'
+              ? `SUP AIP BETA - ROUTE ${normalizedSupAipSettings.routeCorridorNm} NM - ${supAipVisibleCount}/${supAipFeatureCount} zones`
+              : `SUP AIP BETA - TOUS - ${supAipFeatureCount} zones`}
         </div>
       )}
       {selectedSupAip && <SupAipPopup selection={selectedSupAip} onClose={() => setSelectedSupAip(null)} />}

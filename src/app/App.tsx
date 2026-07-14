@@ -16,11 +16,18 @@ import { useAircraftProfiles } from '../hooks/useAircraftProfiles';
 import { useAerodromeWeather } from '../hooks/useAerodromeWeather';
 import { DEFAULT_FUEL_PLAN_CONFIG } from '../domain/aircraft.types';
 import type { MapBaseLayer } from '../mapEngine/mapTypes';
+import type { SupAipDisplayMode } from '../domain/supaip.types';
 import { isRouteReady, routeMissingMessage } from '../services/navigation/routeValidation';
 import { useOneShotPosition } from '../hooks/useOneShotPosition';
 import { importGpxFile } from '../services/import/gpxImport';
 import type { TraceSaveResult } from '../services/storage/traceStorage';
 import { exportNavLogPdf } from '../services/export/navLogExport';
+import {
+  DEFAULT_SUP_AIP_VISIBILITY_SETTINGS,
+  nextSupAipDisplayMode,
+  normalizeSupAipVisibilitySettings,
+  type SupAipVisibilitySettings
+} from '../services/supaip/supAipVisibility';
 
 const TraceReplayScreen = lazy(() => import('../screens/TraceReplayScreen').then((module) => ({ default: module.TraceReplayScreen })));
 
@@ -52,7 +59,18 @@ export function App() {
   const [alternateCode, setAlternateCode] = useLocalStorageState('capclair.alternateCode.v2.web', '');
   const [fuelPlanConfigRaw, setFuelPlanConfig] = useLocalStorageState('capclair.fuelPlan.v1', DEFAULT_FUEL_PLAN_CONFIG);
   const [mapBaseLayer, setMapBaseLayer] = useLocalStorageState<MapBaseLayer>('capclair.mapBaseLayer.v1', 'free');
-  const [showSupAip, setShowSupAip] = useLocalStorageState('capclair.supaipOverlay.v1', false);
+  const [supAipSettingsRaw, setSupAipSettingsRaw] = useLocalStorageState<SupAipVisibilitySettings>(
+    'capclair.supaipSettings.v1',
+    DEFAULT_SUP_AIP_VISIBILITY_SETTINGS
+  );
+  const supAipSettings = normalizeSupAipVisibilitySettings(supAipSettingsRaw);
+  const setSupAipMode = (mode: SupAipDisplayMode) => {
+    setSupAipSettingsRaw((current) => ({ ...normalizeSupAipVisibilitySettings(current), mode }));
+  };
+  const updateSupAipSettings = (patch: Partial<SupAipVisibilitySettings>) => {
+    setSupAipSettingsRaw((current) => normalizeSupAipVisibilitySettings({ ...current, ...patch }));
+  };
+  const cycleSupAipMode = () => setSupAipMode(nextSupAipDisplayMode(supAipSettings.mode));
   const fuelPlanConfig = { ...DEFAULT_FUEL_PLAN_CONFIG, ...fuelPlanConfigRaw };
   const ready = isRouteReady(routeState.route);
   const replayTrace = replayTraceId ? traceState.traces.find((trace) => trace.id === replayTraceId) ?? null : null;
@@ -181,8 +199,8 @@ export function App() {
           onCalculations={() => navigate('calculations')}
           mapBaseLayer={mapBaseLayer}
           onMapBaseLayerChange={setMapBaseLayer}
-          showSupAip={showSupAip}
-          onToggleSupAip={() => setShowSupAip((current) => !current)}
+          supAipSettings={supAipSettings}
+          onCycleSupAipMode={cycleSupAipMode}
           aircraftPosition={oneShotPosition.position}
           onRequestPosition={oneShotPosition.requestPosition}
           locating={oneShotPosition.locating}
@@ -224,8 +242,8 @@ export function App() {
           onTraceReady={traceState.saveTrace}
           mapBaseLayer={mapBaseLayer}
           onMapBaseLayerChange={setMapBaseLayer}
-          showSupAip={showSupAip}
-          onToggleSupAip={() => setShowSupAip((current) => !current)}
+          supAipSettings={supAipSettings}
+          onCycleSupAipMode={cycleSupAipMode}
           onRecordingStateChange={setTrackingUnsavedTrace}
         />
       )}
@@ -250,8 +268,8 @@ export function App() {
           trace={replayTrace}
           mapBaseLayer={mapBaseLayer}
           onMapBaseLayerChange={setMapBaseLayer}
-          showSupAip={showSupAip}
-          onToggleSupAip={() => setShowSupAip((current) => !current)}
+          supAipSettings={supAipSettings}
+          onCycleSupAipMode={cycleSupAipMode}
           onBack={() => {
             setReplayTraceId(null);
             setCurrentScreen('traces');
@@ -272,6 +290,8 @@ export function App() {
           onSelectAircraft={selectAircraft}
           onUpdateAircraft={updateAircraft}
           onCreateAircraft={createAircraft}
+          supAipSettings={supAipSettings}
+          onUpdateSupAipSettings={updateSupAipSettings}
         />
       )}
 

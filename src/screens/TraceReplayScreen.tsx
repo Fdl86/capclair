@@ -9,13 +9,14 @@ import { MapLayerToggle } from '../components/map/MapLayerToggle';
 import { useTraceReplay } from '../hooks/useTraceReplay';
 import { buildReplayModel } from '../services/replay/traceReplayModel';
 import { getCrossTrackError } from '../services/geo/crossTrackError';
+import type { SupAipVisibilitySettings } from '../services/supaip/supAipVisibility';
 
 interface TraceReplayScreenProps {
   trace: Trace;
   mapBaseLayer: MapBaseLayer;
   onMapBaseLayerChange: (value: MapBaseLayer) => void;
-  showSupAip: boolean;
-  onToggleSupAip: () => void;
+  supAipSettings: SupAipVisibilitySettings;
+  onCycleSupAipMode: () => void;
   onBack: () => void;
 }
 
@@ -42,8 +43,8 @@ export function TraceReplayScreen({
   trace,
   mapBaseLayer,
   onMapBaseLayerChange,
-  showSupAip,
-  onToggleSupAip,
+  supAipSettings,
+  onCycleSupAipMode,
   onBack
 }: TraceReplayScreenProps) {
   const model = useMemo(() => buildReplayModel(trace), [trace]);
@@ -111,8 +112,8 @@ export function TraceReplayScreen({
         <MapLayerToggle
           baseLayer={mapBaseLayer}
           onChange={onMapBaseLayerChange}
-          showSupAip={showSupAip}
-          onToggleSupAip={onToggleSupAip}
+          supAipMode={supAipSettings.mode}
+          onCycleSupAipMode={onCycleSupAipMode}
         />
         <div className="replay-map-modes">
           <button
@@ -141,7 +142,7 @@ export function TraceReplayScreen({
           showPlannedRoute={showPlannedRoute}
           baseLayer={mapBaseLayer}
           followAircraft={followAircraft}
-          showSupAip={showSupAip}
+          supAipSettings={supAipSettings}
         />
         {crossTrack && (
           <div className="replay-cross-track-map">

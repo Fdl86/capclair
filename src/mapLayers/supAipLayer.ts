@@ -6,6 +6,7 @@ import VectorSource from 'ol/source/Vector';
 import { Fill, Stroke, Style, Text } from 'ol/style';
 import type { SupAipProperties, SupAipSelection, SupAipVisualStatus } from '../domain/supaip.types';
 import { getSupAipVisualStatus } from '../services/supaip/supAipStatus';
+import { isSupAipFeatureVisible } from '../services/supaip/supAipVisibility';
 
 export type SupAipLayer = VectorLayer<VectorSource<Feature<Geometry>>>;
 
@@ -31,7 +32,8 @@ function featureProperties(feature: FeatureLike): Partial<SupAipProperties> {
   return feature.getProperties() as Partial<SupAipProperties>;
 }
 
-function styleFor(feature: FeatureLike, resolution: number): Style {
+function styleFor(feature: FeatureLike, resolution: number): Style | undefined {
+  if (!isSupAipFeatureVisible(feature as Feature<Geometry>)) return undefined;
   const properties = featureProperties(feature);
   const status = getSupAipVisualStatus(properties);
   const showLabel = resolution <= 2500;
@@ -93,6 +95,7 @@ export function createSupAipLayer({
 }
 
 export function supAipSelectionFromFeature(feature: Feature<Geometry>): SupAipSelection | null {
+  if (!isSupAipFeatureVisible(feature)) return null;
   const properties = featureProperties(feature);
   if (!properties.id || !properties.name || !properties.supAip || !properties.sourcePdf) return null;
 

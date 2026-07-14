@@ -1,12 +1,24 @@
-# CAP CLAIR WEB13.24.0 - SUP AIP BETA
+# CAP CLAIR WEB13.25.0 - SUP AIP ROUTE BETA
 
 CAP CLAIR est une application VFR mobile-first en Vite, React, TypeScript et OpenLayers, déployée comme PWA sur Cloudflare Pages.
 
 Cette livraison reprend la base WEB13.21.0 avec import GPX et intègre les évolutions web-compatibles de DEV15.2.4. Elle ne contient aucun service Android natif, Capacitor, plugin natif, signature APK ou workflow Android.
 
+## WEB13.25.0 - SUP AIP ROUTE BETA
+
+- trois modes d'affichage `OFF`, `ROUTE` et `TOUS`, avec passage rapide depuis le bouton de carte ;
+- mode `ROUTE` utilisé par défaut ;
+- corridor horizontal réglable de 5 à 50 NM autour de tous les segments de la navigation ;
+- rayon distinct de 5 à 50 NM autour du départ et de l'arrivée ;
+- réglages persistants dans `Plus > SUP AIP` ;
+- aucune zone n'est jamais masquée en fonction de l'altitude prévue ou GPS ;
+- compteur des zones retenues par le filtre de route dans Planification, Suivi et Replay ;
+- en Replay, la route planifiée est utilisée si elle existe, sinon la trace réelle sert de référence ;
+- couverture pilote toujours limitée aux 4 géométries de validation de la BETA.
+
 ## WEB13.24.0 - SUP AIP BETA
 
-- nouvelle surimpression cartographique `SUP AIP BETA`, désactivée par défaut et mémorisée localement ;
+- nouvelle surimpression cartographique `SUP AIP BETA`, désactivable et mémorisée localement ;
 - couverture pilote volontairement partielle : 4 géométries issues de 3 SUP AIP officiels du SIA ;
 - prise en charge des cercles, polygones et arcs publiés ;
 - distinction visuelle entre créneau publié en cours, publication en vigueur, activation à confirmer par NOTAM et publication à venir ;
@@ -137,12 +149,12 @@ La couche est un prototype de validation d'interface et de géométrie. Elle n'e
 1. Sélectionner la branche web/PWA concernée.
 2. Vider le dossier local en conservant uniquement `.git`.
 3. Copier le contenu complet du ZIP dans le dossier.
-4. Vérifier `WEB13.24.0` dans la chip.
-5. Vérifier `CAP CLAIR WEB13.24.0 - SUP AIP BETA` dans le titre de l'onglet.
+4. Vérifier `WEB13.25.0` dans la chip.
+5. Vérifier `CAP CLAIR WEB13.25.0 - SUP AIP ROUTE BETA` dans le titre de l'onglet.
 6. Commit et push via GitHub Desktop.
 
 Commit recommandé :
 
 ```text
-main: add SUP AIP beta overlay to web PWA
+main: add SUP AIP route filtering and settings
 ```

@@ -729,3 +729,11 @@
     padding: 0 6px;
   }
 }
+
+
+/* WEB13.25.0 - modes SUP AIP */
+.map-layer-toggle .map-overlay-toggle em { margin-left: 3px; font-style: normal; font-size: 0.57rem; font-weight: 950; letter-spacing: 0.035em; }
+.map-layer-toggle .map-overlay-toggle.mode-off em { color: var(--text-3); }
+.map-layer-toggle .map-overlay-toggle.active em { color: #211203; }
+.map-layer-toggle .map-overlay-toggle.mode-all.active { background: #FF9B4A; }
+@media (max-width: 520px) { .map-layer-toggle .map-overlay-toggle em { display: none; } }

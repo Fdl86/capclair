@@ -1,3 +1,5 @@
+export type SupAipDisplayMode = 'off' | 'route' | 'all';
+
 export type SupAipActivationMode = 'schedule' | 'notam' | 'windows' | 'published';
 
 export interface SupAipActivationWindow {
