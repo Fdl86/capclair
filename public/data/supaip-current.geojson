@@ -1,7 +1,7 @@
 {
   "type": "FeatureCollection",
   "name": "CAP CLAIR SUP AIP AUTO BETA - Parser V2.1",
-  "generatedAt": "2026-07-15T06:03:20Z",
+  "generatedAt": "2026-07-15T08:38:29Z",
   "source": "SIA France - liste et PDF officiels SUP AIP Métropole",
   "sourceUrl": "https://www.sia.aviation-civile.gouv.fr/documents/supaip/aip/id/6",
   "coverage": "Analyse de toutes les publications listées. Extraction layout-aware conservatrice; les limites non reconstructibles restent signalées.",
