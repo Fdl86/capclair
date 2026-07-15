@@ -30,7 +30,7 @@ from requests.adapters import HTTPAdapter
 from urllib3.util.retry import Retry
 
 SOURCE_URL = "https://www.sia.aviation-civile.gouv.fr/documents/supaip/aip/id/6"
-PARSER_VERSION = "capclair-supaip-parser-1.0.0"
+PARSER_VERSION = "capclair-supaip-parser-1.0.1"
 USER_AGENT = "CAP-CLAIR-SUPAIP-BETA/1.0 (+automatic SIA public-document reader)"
 ZONE_TITLE_RE = re.compile(
     r"\b(?:ZRT|ZDT|ZIT|TRA|TSA|zone(?:s)?\s+(?:r[eé]glement[eé]e|dangereuse|interdite|r[eé]serv[eé]e)(?:s)?\s+temporaire(?:s)?|CTR\s+temporaire|TMA\s+temporaire)\b",
@@ -421,6 +421,41 @@ def slugify(value: str) -> str:
     return normalized[:80] or "zone"
 
 
+def make_unique_feature_id(
+    sup_aip: str,
+    name: str,
+    geometry: dict[str, Any],
+    lower_limit: str,
+    upper_limit: str,
+    used_ids: set[str],
+) -> str:
+    prefix = sup_aip.replace("/", "-")
+    base_feature_id = f"{prefix}-{slugify(name)}"[:96].rstrip("-")
+    feature_id = base_feature_id
+
+    if feature_id in used_ids:
+        identity_payload = {
+            "name": name,
+            "geometry": geometry,
+            "lowerLimit": lower_limit,
+            "upperLimit": upper_limit,
+        }
+        identity_hash = hashlib.sha256(
+            json.dumps(identity_payload, ensure_ascii=False, sort_keys=True, separators=(",", ":")).encode("utf-8")
+        ).hexdigest()[:12]
+        suffix = f"-{identity_hash}"
+        feature_id = f"{base_feature_id[:96 - len(suffix)].rstrip('-')}{suffix}"
+
+        duplicate_index = 2
+        while feature_id in used_ids:
+            suffix = f"-{identity_hash}-{duplicate_index}"
+            feature_id = f"{base_feature_id[:96 - len(suffix)].rstrip('-')}{suffix}"
+            duplicate_index += 1
+
+    used_ids.add(feature_id)
+    return feature_id
+
+
 def parse_spatial_pdf(entry: ListingEntry, pdf_text: str) -> tuple[list[dict[str, Any]], list[str]]:
     warnings: list[str] = []
     section = limits_section(pdf_text)
@@ -455,6 +490,7 @@ def parse_spatial_pdf(entry: ListingEntry, pdf_text: str) -> tuple[list[dict[str
     activation_mode = infer_activation_mode(activation_text, pdf_text)
     frequency = extract_frequencies(pdf_text)
     features: list[dict[str, Any]] = []
+    used_feature_ids: set[str] = set()
 
     for index, (geometry, confidence) in enumerate(geometries):
         name = names[index] if index < len(names) else f"Zone temporaire {index + 1}"
@@ -465,7 +501,14 @@ def parse_spatial_pdf(entry: ListingEntry, pdf_text: str) -> tuple[list[dict[str
             lower, upper = verticals[index]
         else:
             lower, upper = "À vérifier", "À vérifier"
-        feature_id = f"{entry.sup_aip.replace('/', '-')}-{slugify(name)}"
+        feature_id = make_unique_feature_id(
+            entry.sup_aip,
+            name,
+            geometry,
+            lower,
+            upper,
+            used_feature_ids,
+        )
         properties: dict[str, Any] = {
             "id": feature_id,
             "name": name,

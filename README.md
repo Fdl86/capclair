@@ -1,10 +1,15 @@
-# CAP CLAIR WEB13.26.0 - SUP AIP AUTO BETA
+# CAP CLAIR WEB13.26.1 - SUP AIP AUTO BETA
 
 CAP CLAIR est une application VFR mobile-first en Vite, React, TypeScript et OpenLayers, déployée comme PWA sur Cloudflare Pages.
 
 Cette livraison ajoute l'actualisation automatique gratuite des SUP AIP Métropole depuis les publications officielles du SIA. Elle ne contient aucun service Android natif, Capacitor, plugin natif, signature APK ou workflow Android.
 
-## WEB13.26.0 - SUP AIP AUTO BETA
+## WEB13.26.1 - SUP AIP AUTO BETA
+
+- hotfix de génération des identifiants pour les SUP contenant plusieurs zones aux noms longs ou répétés, notamment Romorantin ;
+- identifiants uniques et stables avec empreinte géométrique en cas de collision ;
+- contrôle GitHub renforcé : échec si un PDF attendu n'est ni téléchargé ni réutilisé ;
+- bilan détaillé directement dans chaque exécution GitHub Actions.
 
 - workflow GitHub automatique toutes les 6 heures et lancement manuel de contrôle disponible ;
 - lecture de la liste officielle SIA et téléchargement uniquement des publications spatiales nouvelles ou modifiées ;
@@ -166,7 +171,7 @@ La couche est un prototype de validation d'interface et de géométrie. Elle n'e
 2. Vider le dossier local en conservant uniquement `.git`.
 3. Copier le contenu complet du ZIP dans le dossier.
 4. Commit et push via GitHub Desktop sur `main`.
-5. Vérifier `WEB13.26.0` dans la chip et `CAP CLAIR WEB13.26.0 - SUP AIP AUTO BETA` dans le titre de l'onglet.
+5. Vérifier `WEB13.26.1` dans la chip et `CAP CLAIR WEB13.26.1 - SUP AIP AUTO BETA` dans le titre de l'onglet.
 
 Commit recommandé :
 

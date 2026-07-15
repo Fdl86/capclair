@@ -3,6 +3,7 @@ import unittest
 from tools.supaip.update_supaip import (
     ListingEntry,
     coordinate_matches,
+    make_unique_feature_id,
     parse_listing,
     parse_spatial_pdf,
 )
@@ -61,6 +62,22 @@ class SupAipParserTests(unittest.TestCase):
         self.assertEqual(features[0]["properties"]["name"], "ZRT BLOIS")
         self.assertEqual(features[0]["properties"]["lowerLimit"], "FL 050")
         self.assertFalse(warnings)
+
+
+    def test_duplicate_truncated_zone_names_receive_unique_ids(self):
+        used_ids: set[str] = set()
+        common_prefix = "ZRT DSV ROMORANTIN " * 8
+        geometry_a = {"type": "Polygon", "coordinates": [[[1.0, 47.0], [1.1, 47.0], [1.1, 47.1], [1.0, 47.0]]]}
+        geometry_b = {"type": "Polygon", "coordinates": [[[1.2, 47.2], [1.3, 47.2], [1.3, 47.3], [1.2, 47.2]]]}
+
+        first = make_unique_feature_id("094/25", f"{common_prefix}DELTA", geometry_a, "SFC", "FL 050", used_ids)
+        second = make_unique_feature_id("094/25", f"{common_prefix}ECHO", geometry_b, "SFC", "FL 060", used_ids)
+        third = make_unique_feature_id("094/25", f"{common_prefix}ECHO", geometry_b, "SFC", "FL 060", used_ids)
+
+        self.assertEqual(len({first, second, third}), 3)
+        self.assertLessEqual(max(map(len, (first, second, third))), 96)
+        self.assertRegex(second, r"-[0-9a-f]{12}$")
+        self.assertRegex(third, r"-[0-9a-f]{12}-2$")
 
     def test_circle_pdf(self):
         entry = ListingEntry("154/26", "Création ZRT", "2026-07-16", "2027-07-14", "https://example.invalid", True, "def")

@@ -46,7 +46,45 @@ jobs:
           assert geo['type'] == 'FeatureCollection'
           assert len(geo['features']) == status['featureCount']
           assert status['featureCount'] > 0
+          assert status['zonalPublicationCount'] == status['mappedPublicationCount'] + status['completeUnmappedPublicationCount']
+          assert status['downloadedPublicationCount'] + status['reusedPublicationCount'] == status['zonalPublicationCount']
+
+          ids = [feature.get('id') or feature.get('properties', {}).get('id') for feature in geo['features']]
+          assert all(ids)
+          assert len(ids) == len(set(ids))
+
           print(f"Validated {status['featureCount']} zones from {status['mappedPublicationCount']} publications")
+          PY
+
+      - name: Publish run summary
+        run: |
+          python - <<'PY'
+          import json
+          import os
+          from pathlib import Path
+
+          status = json.loads(Path('public/data/supaip-status.json').read_text(encoding='utf-8'))
+          unmapped = json.loads(Path('public/data/supaip-unmapped.json').read_text(encoding='utf-8')).get('publications', [])
+          summary = Path(os.environ['GITHUB_STEP_SUMMARY'])
+          lines = [
+              '# CAP CLAIR - bilan SUP AIP',
+              '',
+              f"- Publications SIA listées : {status['listingPublicationCount']}",
+              f"- Publications spatiales retenues : {status['zonalPublicationCount']}",
+              f"- PDF téléchargés : {status['downloadedPublicationCount']}",
+              f"- Publications réutilisées : {status['reusedPublicationCount']}",
+              f"- Publications cartographiées : {status['mappedPublicationCount']}",
+              f"- Zones produites : {status['featureCount']}",
+              f"- Publications non cartographiées : {status['completeUnmappedPublicationCount']}",
+              f"- Publications partielles : {status['partialPublicationCount']}",
+              '',
+          ]
+          if unmapped:
+              lines.extend(['## Publications à contrôler', ''])
+              for item in unmapped[:40]:
+                  state = 'partiel' if item.get('partial') else 'non cartographié'
+                  lines.append(f"- {item.get('supAip')} - {state} - {item.get('title')}")
+          summary.write_text('\n'.join(lines) + '\n', encoding='utf-8')
           PY
 
       - name: Commit updated data
