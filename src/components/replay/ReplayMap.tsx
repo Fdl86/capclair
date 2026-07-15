@@ -24,6 +24,7 @@ import type { SupAipSelection } from '../../domain/supaip.types';
 import {
   applySupAipVisibility,
   DEFAULT_SUP_AIP_VISIBILITY_SETTINGS,
+  formatSupAipAltitudeCeiling,
   normalizeSupAipVisibilitySettings,
   type SupAipVisibilitySettings
 } from '../../services/supaip/supAipVisibility';
@@ -327,8 +328,8 @@ export function ReplayMap({ model, aircraft, plannedRoute, showPlannedRoute, bas
           {supAipLoadState === 'error'
             ? 'SUP AIP BETA - données indisponibles'
             : normalizedSupAipSettings.mode === 'route'
-              ? `SUP AIP BETA - ROUTE ${normalizedSupAipSettings.routeCorridorNm} NM - ${supAipVisibleCount}/${supAipFeatureCount} zones`
-              : `SUP AIP BETA - TOUS - ${supAipFeatureCount} zones`}
+              ? `SUP AIP BETA - ROUTE ${normalizedSupAipSettings.routeCorridorNm} NM - ${formatSupAipAltitudeCeiling(normalizedSupAipSettings.maxDisplayFlightLevel)} - ${supAipVisibleCount}/${supAipFeatureCount} zones`
+              : `SUP AIP BETA - TOUS - ${formatSupAipAltitudeCeiling(normalizedSupAipSettings.maxDisplayFlightLevel)} - ${supAipVisibleCount}/${supAipFeatureCount} zones`}
         </div>
       )}
       {selectedSupAip && <SupAipPopup selection={selectedSupAip} onClose={() => setSelectedSupAip(null)} />}

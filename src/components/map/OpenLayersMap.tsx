@@ -28,6 +28,7 @@ import type { SupAipSelection } from '../../domain/supaip.types';
 import {
   applySupAipVisibility,
   DEFAULT_SUP_AIP_VISIBILITY_SETTINGS,
+  formatSupAipAltitudeCeiling,
   normalizeSupAipVisibilitySettings,
   type SupAipVisibilitySettings
 } from '../../services/supaip/supAipVisibility';
@@ -545,8 +546,8 @@ export function OpenLayersMap({
             : supAipLoadState === 'loading' && supAipFeatureCount === 0
               ? 'SUP AIP AUTO BETA - chargement...'
               : normalizedSupAipSettings.mode === 'route'
-                ? `SUP AIP AUTO BETA - ROUTE ${normalizedSupAipSettings.routeCorridorNm} NM - ${supAipVisibleCount}/${supAipFeatureCount} zones${supAipDatasetStatus && (supAipDatasetStatus.completeUnmappedPublicationCount + supAipDatasetStatus.partialPublicationCount) > 0 ? ` - ${supAipDatasetStatus.completeUnmappedPublicationCount + supAipDatasetStatus.partialPublicationCount} SUP à contrôler` : ''}`
-                : `SUP AIP AUTO BETA - TOUS - ${supAipFeatureCount} zones${supAipDatasetStatus && (supAipDatasetStatus.completeUnmappedPublicationCount + supAipDatasetStatus.partialPublicationCount) > 0 ? ` - ${supAipDatasetStatus.completeUnmappedPublicationCount + supAipDatasetStatus.partialPublicationCount} SUP à contrôler` : ''}`}
+                ? `SUP AIP AUTO BETA - ROUTE ${normalizedSupAipSettings.routeCorridorNm} NM - ${formatSupAipAltitudeCeiling(normalizedSupAipSettings.maxDisplayFlightLevel)} - ${supAipVisibleCount}/${supAipFeatureCount} zones${supAipDatasetStatus && (supAipDatasetStatus.completeUnmappedPublicationCount + supAipDatasetStatus.partialPublicationCount) > 0 ? ` - ${supAipDatasetStatus.completeUnmappedPublicationCount + supAipDatasetStatus.partialPublicationCount} SUP à contrôler` : ''}`
+                : `SUP AIP AUTO BETA - TOUS - ${formatSupAipAltitudeCeiling(normalizedSupAipSettings.maxDisplayFlightLevel)} - ${supAipVisibleCount}/${supAipFeatureCount} zones${supAipDatasetStatus && (supAipDatasetStatus.completeUnmappedPublicationCount + supAipDatasetStatus.partialPublicationCount) > 0 ? ` - ${supAipDatasetStatus.completeUnmappedPublicationCount + supAipDatasetStatus.partialPublicationCount} SUP à contrôler` : ''}`}
         </div>
       )}
       {selectedSupAip && <SupAipPopup selection={selectedSupAip} onClose={() => setSelectedSupAip(null)} />}

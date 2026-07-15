@@ -5,6 +5,7 @@ from tools.supaip.update_supaip import (
     PdfBlock,
     PdfDocumentLayout,
     PdfPageLayout,
+    classify_incomplete_causes,
     clean_listing_title,
     coordinate_matches,
     declared_zone_count,
@@ -247,6 +248,32 @@ class SupAipParserTests(unittest.TestCase):
         self.assertLessEqual(max(map(len, (first, second, third))), 96)
         self.assertRegex(second, r"-[0-9a-f]{12}$")
         self.assertRegex(third, r"-[0-9a-f]{12}-2$")
+
+
+    def test_incomplete_cause_classification(self):
+        causes = classify_incomplete_causes(
+            parsed_features=[{"type": "Feature"}],
+            warnings=[
+                "ZRT TEST: Exclusion interne non découpée: contour extérieur affiché par prudence.",
+                "ZRT BRAVO: limites latérales non extraites.",
+            ],
+            expected_named_count=2,
+            missing_vertical_count=1,
+            used_safety_fallback=False,
+        )
+        self.assertEqual(
+            set(causes),
+            {
+                "lateral-boundary-not-extracted",
+                "internal-exclusion-not-cut",
+                "named-geometry-missing",
+                "vertical-limit-not-extracted",
+            },
+        )
+        self.assertEqual(
+            classify_incomplete_causes([], [], 0, 0, False),
+            ["zone-block-not-detected"],
+        )
 
     def test_circle_pdf(self):
         entry = ListingEntry("154/26", "Création ZRT", "2026-07-16", "2027-07-14", "https://example.invalid", True, "def")

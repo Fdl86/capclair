@@ -8,10 +8,15 @@ import { Card } from '../components/ui/Card';
 import { Accordion } from '../components/ui/Accordion';
 import { AircraftProfilePanel } from '../components/flight/AircraftProfilePanel';
 import {
+  SUP_AIP_ALTITUDE_ALL_SLIDER_VALUE,
+  SUP_AIP_ALTITUDE_MIN_FL,
   SUP_AIP_CORRIDOR_MAX_NM,
   SUP_AIP_CORRIDOR_MIN_NM,
   SUP_AIP_ENDPOINT_MAX_NM,
   SUP_AIP_ENDPOINT_MIN_NM,
+  formatSupAipAltitudeCeiling,
+  supAipAltitudeFromSliderValue,
+  supAipAltitudeSliderValue,
   type SupAipVisibilitySettings
 } from '../services/supaip/supAipVisibility';
 import {
@@ -149,11 +154,32 @@ export function MoreScreen({
               <span className="supaip-range-limits"><small>{SUP_AIP_ENDPOINT_MIN_NM} NM</small><small>{SUP_AIP_ENDPOINT_MAX_NM} NM</small></span>
             </label>
 
+            <label className="supaip-range-setting">
+              <span className="supaip-setting-heading">
+                <span>
+                  <strong>Plafond d'affichage</strong>
+                  <small>Affiche les zones dont le plancher connu peut concerner un vol jusqu'à ce niveau.</small>
+                </span>
+                <output>{formatSupAipAltitudeCeiling(supAipSettings.maxDisplayFlightLevel)}</output>
+              </span>
+              <input
+                type="range"
+                min={SUP_AIP_ALTITUDE_MIN_FL}
+                max={SUP_AIP_ALTITUDE_ALL_SLIDER_VALUE}
+                step={10}
+                value={supAipAltitudeSliderValue(supAipSettings.maxDisplayFlightLevel)}
+                onChange={(event) => onUpdateSupAipSettings({
+                  maxDisplayFlightLevel: supAipAltitudeFromSliderValue(Number(event.target.value))
+                })}
+              />
+              <span className="supaip-range-limits"><small>FL{SUP_AIP_ALTITUDE_MIN_FL}</small><small>TOUTES</small></span>
+            </label>
+
             <div className="supaip-altitude-rule">
               <span aria-hidden="true">✓</span>
               <div>
-                <strong>Toutes altitudes</strong>
-                <p>Aucun SUP AIP n'est masqué selon l'altitude prévue ou l'altitude GPS. Les limites verticales restent uniquement informatives.</p>
+                <strong>Filtrage vertical conservateur</strong>
+                <p>Seules les zones dont le plancher absolu connu est strictement au-dessus du plafond choisi sont masquées. Les limites AGL, ASFC ou non extraites restent toujours affichées.</p>
               </div>
             </div>
 
@@ -179,6 +205,22 @@ export function MoreScreen({
                     <div><dt>Verticales manquantes</dt><dd>{supAipDatasetStatus.missingVerticalFeatureCount ?? 0}</dd></div>
                     {(supAipDatasetStatus.safetyFallbackPublicationCount ?? 0) > 0 && <div><dt>Replis de sécurité</dt><dd>{supAipDatasetStatus.safetyFallbackPublicationCount}</dd></div>}
                   </dl>
+                  {supAipDatasetStatus.incompleteCausePublicationCounts && Object.values(supAipDatasetStatus.incompleteCausePublicationCounts).some((count) => count > 0) && (
+                    <div className="supaip-cause-summary">
+                      <strong>Causes des publications incomplètes</strong>
+                      <small>Une publication peut cumuler plusieurs causes.</small>
+                      <ul>
+                        {Object.entries(supAipDatasetStatus.incompleteCausePublicationCounts)
+                          .filter(([, count]) => count > 0)
+                          .map(([code, count]) => (
+                            <li key={code}>
+                              <span>{supAipDatasetStatus.incompleteCauseLabels?.[code] ?? code}</span>
+                              <b>{count}</b>
+                            </li>
+                          ))}
+                      </ul>
+                    </div>
+                  )}
                   {supAipDatasetStatus.mode === 'bootstrap' && <p className="supaip-dataset-alert">Le premier lancement du workflow GitHub est nécessaire pour remplacer la base initiale par la couverture automatique.</p>}
                   {(supAipDatasetStatus.completeUnmappedPublicationCount > 0 || supAipDatasetStatus.partialPublicationCount > 0) && <p className="supaip-dataset-alert">Les publications incomplètes restent signalées. Elles ne sont jamais considérées comme absentes: consulter leur PDF officiel avant le vol.</p>}
                   {(supAipDatasetStatus.missingVerticalFeatureCount ?? 0) > 0 && <p className="supaip-dataset-alert">Certaines zones n'ont pas de limites verticales extraites. La fiche l'indique explicitement et renvoie vers le PDF SIA.</p>}

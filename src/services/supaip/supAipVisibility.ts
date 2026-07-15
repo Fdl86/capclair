@@ -10,12 +10,19 @@ export interface SupAipVisibilitySettings {
   mode: SupAipDisplayMode;
   routeCorridorNm: number;
   endpointRadiusNm: number;
+  maxDisplayFlightLevel: number | null;
 }
+
+export const SUP_AIP_ALTITUDE_MIN_FL = 55;
+export const SUP_AIP_ALTITUDE_MAX_FL = 195;
+export const SUP_AIP_ALTITUDE_ALL_SLIDER_VALUE = 205;
+export const SUP_AIP_ALTITUDE_STEP_FL = 10;
 
 export const DEFAULT_SUP_AIP_VISIBILITY_SETTINGS: SupAipVisibilitySettings = {
   mode: 'route',
   routeCorridorNm: 15,
-  endpointRadiusNm: 25
+  endpointRadiusNm: 25,
+  maxDisplayFlightLevel: 115
 };
 
 export const SUP_AIP_CORRIDOR_MIN_NM = 5;
@@ -38,6 +45,15 @@ function clamp(value: number, min: number, max: number, fallback: number): numbe
   return Math.max(min, Math.min(max, Math.round(value)));
 }
 
+function normalizeFlightLevel(value: unknown): number | null {
+  if (value === null) return null;
+  const numeric = Number(value);
+  if (!Number.isFinite(numeric)) return DEFAULT_SUP_AIP_VISIBILITY_SETTINGS.maxDisplayFlightLevel;
+  const clamped = clamp(numeric, SUP_AIP_ALTITUDE_MIN_FL, SUP_AIP_ALTITUDE_MAX_FL, 115);
+  const steps = Math.round((clamped - SUP_AIP_ALTITUDE_MIN_FL) / SUP_AIP_ALTITUDE_STEP_FL);
+  return SUP_AIP_ALTITUDE_MIN_FL + steps * SUP_AIP_ALTITUDE_STEP_FL;
+}
+
 export function normalizeSupAipVisibilitySettings(value: Partial<SupAipVisibilitySettings> | null | undefined): SupAipVisibilitySettings {
   const mode: SupAipDisplayMode = value?.mode === 'off' || value?.mode === 'all' || value?.mode === 'route'
     ? value.mode
@@ -56,7 +72,10 @@ export function normalizeSupAipVisibilitySettings(value: Partial<SupAipVisibilit
       SUP_AIP_ENDPOINT_MIN_NM,
       SUP_AIP_ENDPOINT_MAX_NM,
       DEFAULT_SUP_AIP_VISIBILITY_SETTINGS.endpointRadiusNm
-    )
+    ),
+    maxDisplayFlightLevel: value && Object.prototype.hasOwnProperty.call(value, 'maxDisplayFlightLevel')
+      ? normalizeFlightLevel(value.maxDisplayFlightLevel)
+      : DEFAULT_SUP_AIP_VISIBILITY_SETTINGS.maxDisplayFlightLevel
   };
 }
 
@@ -64,6 +83,55 @@ export function nextSupAipDisplayMode(mode: SupAipDisplayMode): SupAipDisplayMod
   if (mode === 'off') return 'route';
   if (mode === 'route') return 'all';
   return 'off';
+}
+
+export function formatSupAipAltitudeCeiling(value: number | null): string {
+  return value === null ? 'TOUTES' : `FL${String(value).padStart(3, '0')}`;
+}
+
+export function supAipAltitudeSliderValue(value: number | null): number {
+  return value === null ? SUP_AIP_ALTITUDE_ALL_SLIDER_VALUE : value;
+}
+
+export function supAipAltitudeFromSliderValue(value: number): number | null {
+  if (value >= SUP_AIP_ALTITUDE_ALL_SLIDER_VALUE) return null;
+  return normalizeFlightLevel(value);
+}
+
+/**
+ * Returns an absolute lower limit in feet when it can be compared safely.
+ * AGL and ASFC limits deliberately return null because terrain elevation is
+ * unknown here. Unknown values are kept visible by the altitude filter.
+ */
+export function supAipLowerLimitFeet(lowerLimit: unknown): number | null {
+  if (typeof lowerLimit !== 'string') return null;
+  const normalized = lowerLimit
+    .normalize('NFKC')
+    .toUpperCase()
+    .replace(/,/g, '.')
+    .replace(/\s+/g, ' ')
+    .trim();
+  if (!normalized) return null;
+  if (/^(?:SFC|GND)\b/.test(normalized)) return 0;
+
+  const flightLevel = normalized.match(/^FL\s*(\d{2,3})\b/);
+  if (flightLevel) return Number(flightLevel[1]) * 100;
+
+  const absoluteFeet = normalized.match(/^(\d{1,5}(?:\.\d+)?)\s*FT\s*(AMSL|QNH)\b/);
+  if (absoluteFeet) return Number(absoluteFeet[1]);
+
+  const absoluteMeters = normalized.match(/^(\d{1,5}(?:\.\d+)?)\s*M\s*(AMSL|QNH)\b/);
+  if (absoluteMeters) return Number(absoluteMeters[1]) * 3.28084;
+
+  return null;
+}
+
+export function isSupAipWithinAltitudeCeiling(feature: Feature<Geometry>, maxDisplayFlightLevel: number | null): boolean {
+  if (maxDisplayFlightLevel === null) return true;
+  if (feature.get('verticalLimitsExtracted') === false) return true;
+  const lowerLimitFeet = supAipLowerLimitFeet(feature.get('lowerLimit'));
+  if (lowerLimitFeet === null) return true;
+  return lowerLimitFeet <= maxDisplayFlightLevel * 100;
 }
 
 function reduceInputPoints(points: GeoPoint[]): GeoPoint[] {
@@ -147,8 +215,9 @@ export function applySupAipVisibility(
   let visibleCount = 0;
 
   for (const feature of features) {
-    const visible = settings.mode === 'all'
+    const horizontallyVisible = settings.mode === 'all'
       || (settings.mode === 'route' && points.length > 0 && featureMatchesRoute(feature, routeSamples, endpointPoints, settings));
+    const visible = horizontallyVisible && isSupAipWithinAltitudeCeiling(feature, settings.maxDisplayFlightLevel);
     feature.set(VISIBILITY_PROPERTY, visible, true);
     if (visible) visibleCount += 1;
   }

@@ -23,6 +23,8 @@ export interface SupAipDatasetStatus {
   reusedPublicationCount: number;
   downloadedPublicationCount: number;
   safetyFallbackPublicationCount?: number;
+  incompleteCausePublicationCounts?: Record<string, number>;
+  incompleteCauseLabels?: Record<string, string>;
   staleAfterHours: number;
   message: string;
 }

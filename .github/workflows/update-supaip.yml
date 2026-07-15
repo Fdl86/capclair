@@ -88,7 +88,7 @@ jobs:
           unmapped = json.loads(Path('public/data/supaip-unmapped.json').read_text(encoding='utf-8')).get('publications', [])
           summary = Path(os.environ['GITHUB_STEP_SUMMARY'])
           lines = [
-              '# CAP CLAIR - bilan SUP AIP Parser V2.1',
+              '# CAP CLAIR - bilan SUP AIP Parser V2.2',
               '',
               f"- Publications SIA listées : {status['listingPublicationCount']}",
               f"- PDF contrôlés : {status['processedPublicationCount']}",
@@ -105,7 +105,15 @@ jobs:
               f"- Géométries sans verticales : {status['missingVerticalFeatureCount']}",
               f"- Replis de sécurité : {status.get('safetyFallbackPublicationCount', 0)}",
               '',
+              '## Causes des publications incomplètes',
+              '',
           ]
+          cause_counts = status.get('incompleteCausePublicationCounts', {})
+          cause_labels = status.get('incompleteCauseLabels', {})
+          for code, count in cause_counts.items():
+              if count:
+                  lines.append(f"- {cause_labels.get(code, code)} : {count} publication(s)")
+          lines.append('')
           if unmapped:
               lines.extend(['## Publications à contrôler', ''])
               for item in unmapped[:60]:
@@ -132,5 +140,5 @@ jobs:
           git config user.name "CAP CLAIR SUP AIP Bot"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add public/data/supaip-current.geojson public/data/supaip-status.json public/data/supaip-unmapped.json public/data/supaip-manifest.json
-          git commit -m "data: actualisation automatique SUP AIP Parser V2.1"
+          git commit -m "data: actualisation automatique SUP AIP Parser V2.2"
           git push

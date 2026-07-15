@@ -32,8 +32,8 @@ from requests.adapters import HTTPAdapter
 from urllib3.util.retry import Retry
 
 SOURCE_URL = "https://www.sia.aviation-civile.gouv.fr/documents/supaip/aip/id/6"
-PARSER_VERSION = "capclair-supaip-parser-2.0.2"
-USER_AGENT = "CAP-CLAIR-SUPAIP-BETA/2.0.2 (+automatic SIA public-document reader)"
+PARSER_VERSION = "capclair-supaip-parser-2.1.0"
+USER_AGENT = "CAP-CLAIR-SUPAIP-BETA/2.1.0 (+automatic SIA public-document reader)"
 ZONE_TITLE_RE = re.compile(
     r"\b(?:ZRT|ZDT|ZIT|TRA|TSA|zone(?:s)?\s+(?:r[eé]glement[eé]e|dangereuse|interdite|r[eé]serv[eé]e)(?:s)?\s+temporaire(?:s)?|CTR\s+temporaire|TMA\s+temporaire)\b",
     re.IGNORECASE,
@@ -1328,6 +1328,41 @@ def is_critical_parse_warning(value: str) -> bool:
     )
 
 
+INCOMPLETE_CAUSE_LABELS = {
+    "zone-block-not-detected": "Blocs de zones non reconnus",
+    "lateral-boundary-not-extracted": "Limites latérales non extraites",
+    "internal-exclusion-not-cut": "Exclusions internes non découpées",
+    "named-geometry-missing": "Géométries nommées manquantes",
+    "vertical-limit-not-extracted": "Limites verticales non extraites",
+    "safety-fallback": "Repli de sécurité depuis une ancienne géométrie",
+    "other": "Autre format à contrôler",
+}
+
+
+def classify_incomplete_causes(
+    parsed_features: list[dict[str, Any]],
+    warnings: list[str],
+    expected_named_count: int,
+    missing_vertical_count: int,
+    used_safety_fallback: bool,
+) -> list[str]:
+    causes: list[str] = []
+    warning_text = " ".join(warnings)
+    if not parsed_features and expected_named_count == 0:
+        causes.append("zone-block-not-detected")
+    if re.search(r"limites? lat[eé]rales? non extraites?", warning_text, re.IGNORECASE):
+        causes.append("lateral-boundary-not-extracted")
+    if re.search(r"exclusion interne non d[eé]coup[eé]e", warning_text, re.IGNORECASE):
+        causes.append("internal-exclusion-not-cut")
+    if expected_named_count > len(parsed_features):
+        causes.append("named-geometry-missing")
+    if missing_vertical_count > 0:
+        causes.append("vertical-limit-not-extracted")
+    if used_safety_fallback:
+        causes.append("safety-fallback")
+    return causes or ["other"]
+
+
 def build_dataset(output_dir: Path, override_path: Path, polite_delay: float = 0.12) -> dict[str, Any]:
     session = make_session()
     listing_html = fetch_bytes(session, SOURCE_URL).decode("utf-8", errors="replace")
@@ -1365,6 +1400,7 @@ def build_dataset(output_dir: Path, override_path: Path, polite_delay: float = 0
         missing_vertical_count = 0
         previous_partial = False
         spatial = False
+        used_safety_fallback = False
 
         if can_reuse_features(cached_features, entry):
             parsed_features = cached_features
@@ -1476,6 +1512,9 @@ def build_dataset(output_dir: Path, override_path: Path, polite_delay: float = 0
         if not parsed_features:
             reason_parts.append("Aucune géométrie fiable extraite.")
         if partial or not parsed_features:
+            cause_codes = classify_incomplete_causes(
+                parsed_features, warnings, expected_named_count, missing_vertical_count, used_safety_fallback
+            )
             unmapped.append({
                 "supAip": entry.sup_aip,
                 "title": entry.title,
@@ -1488,6 +1527,8 @@ def build_dataset(output_dir: Path, override_path: Path, polite_delay: float = 0
                 "mappedGeometryCount": len(parsed_features),
                 "declaredZoneCount": declared_count,
                 "missingVerticalCount": missing_vertical_count,
+                "causeCodes": cause_codes,
+                "causeLabels": [INCOMPLETE_CAUSE_LABELS[code] for code in cause_codes],
                 "sourceFingerprint": entry.fingerprint,
                 "parserVersion": PARSER_VERSION,
             })
@@ -1523,7 +1564,7 @@ def build_dataset(output_dir: Path, override_path: Path, polite_delay: float = 0
     generated_at = datetime.now(timezone.utc).replace(microsecond=0).isoformat().replace("+00:00", "Z")
     collection = {
         "type": "FeatureCollection",
-        "name": "CAP CLAIR SUP AIP AUTO BETA - Parser V2.1",
+        "name": "CAP CLAIR SUP AIP AUTO BETA - Parser V2.2",
         "generatedAt": generated_at,
         "source": "SIA France - liste et PDF officiels SUP AIP Métropole",
         "sourceUrl": SOURCE_URL,
@@ -1535,6 +1576,10 @@ def build_dataset(output_dir: Path, override_path: Path, polite_delay: float = 0
 
     complete_unmapped_count = sum(1 for item in unmapped if not item.get("partial"))
     partial_count = sum(1 for item in unmapped if item.get("partial"))
+    cause_counts = {code: 0 for code in INCOMPLETE_CAUSE_LABELS}
+    for item in unmapped:
+        for code in item.get("causeCodes", []):
+            cause_counts[code] = cause_counts.get(code, 0) + 1
     status = {
         "schemaVersion": 2,
         "mode": "automatic",
@@ -1560,8 +1605,10 @@ def build_dataset(output_dir: Path, override_path: Path, polite_delay: float = 0
         "reusedPublicationCount": reused_publications,
         "downloadedPublicationCount": downloaded_publications,
         "safetyFallbackPublicationCount": safety_fallback_publications,
+        "incompleteCausePublicationCounts": cause_counts,
+        "incompleteCauseLabels": INCOMPLETE_CAUSE_LABELS,
         "staleAfterHours": 36,
-        "message": "Parser V2.1: toutes les publications SIA listées sont contrôlées. Vérifier le PDF, SOFIA et les NOTAM avant le vol.",
+        "message": "Parser V2.2: toutes les publications SIA listées sont contrôlées et les causes d’incomplétude sont classées. Vérifier le PDF, SOFIA et les NOTAM avant le vol.",
     }
     unmapped_payload = {
         "schemaVersion": 2,

@@ -1,7 +1,7 @@
 {
-  "name": "cap-clair-web13-27-2-sup-aip-column-table-hotfix-beta",
+  "name": "cap-clair-web13-28-0-sup-aip-altitude-filter-beta",
   "private": true,
-  "version": "0.13.27-2",
+  "version": "0.13.28-0",
   "type": "module",
   "scripts": {
     "dev": "vite",

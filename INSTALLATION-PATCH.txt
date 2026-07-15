@@ -1,0 +1,11 @@
+CAP CLAIR WEB13.28.0 - PATCH
+
+1. Dans GitHub Desktop, faire Pull origin si le bouton est proposé.
+2. Ne pas vider le dossier local.
+3. Copier tout le contenu de ce patch à la racine du dépôt et accepter les remplacements.
+4. Vérifier qu'aucun fichier public/data/supaip-* n'est supprimé ou remplacé.
+5. Commit puis Push origin sur main.
+6. Lancer une fois Actions > Update SUP AIP data > Run workflow sur main.
+7. Vérifier WEB13.28.0 dans la chip et le titre de l'onglet.
+
+Le workflow régénère les données et ajoute le diagnostic des causes. Le plafond d'affichage est réglable dans Plus > SUP AIP.

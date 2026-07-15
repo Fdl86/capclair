@@ -1,9 +1,19 @@
-# CAP CLAIR WEB13.27.2 - SUP AIP COLUMN TABLE HOTFIX BETA
+# CAP CLAIR WEB13.28.0 - SUP AIP ALTITUDE FILTER BETA
 
 CAP CLAIR est une application VFR mobile-first en Vite, React, TypeScript et OpenLayers, déployée comme PWA sur Cloudflare Pages.
 
-Cette livraison remplace le premier extracteur par un Parser V2 layout-aware, tout en conservant l'actualisation automatique gratuite des SUP AIP Métropole depuis les publications officielles du SIA. Elle ne contient aucun service Android natif, Capacitor, plugin natif, signature APK ou workflow Android.
+Cette livraison ajoute un plafond d'affichage vertical volontairement conservateur et rend visibles les causes principales des publications SUP AIP incomplètes. Elle conserve les correctifs Parser V2.1, TRA et tableaux en colonnes.
 
+## WEB13.28.0 - SUP AIP ALTITUDE FILTER BETA
+
+- curseur `Plus > SUP AIP > Plafond d'affichage`, de `FL055` à `FL195`, avec position `TOUTES` ;
+- valeur par défaut `FL115` ;
+- une zone n'est masquée que si son plancher absolu connu est strictement supérieur au plafond choisi ;
+- les zones `SFC`, `GND`, dont le plancher est inférieur au plafond, ou qui traversent le plafond restent affichées ;
+- les limites `AGL`, `ASFC`, non extraites ou ambiguës restent toujours affichées par prudence ;
+- le badge cartographique indique le plafond sélectionné et le nombre réellement visible ;
+- diagnostic automatique des causes d'incomplétude dans GitHub Actions et dans `Plus > SUP AIP` ;
+- aucune modification des données `public/data/supaip-*` dans le patch afin de conserver la base générée automatiquement par GitHub.
 
 ## WEB13.27.2 - SUP AIP COLUMN TABLE HOTFIX BETA
 
@@ -198,7 +208,7 @@ La couche est un prototype de validation d'interface et de géométrie. Elle n'e
 2. Vider le dossier local en conservant uniquement `.git`.
 3. Copier le contenu complet du ZIP dans le dossier.
 4. Commit et push via GitHub Desktop sur `main`.
-5. Vérifier `WEB13.27.2` dans la chip et `CAP CLAIR WEB13.27.2 - SUP AIP COLUMN TABLE HOTFIX BETA` dans le titre de l'onglet.
+5. Vérifier `WEB13.28.0` dans la chip et `CAP CLAIR WEB13.28.0 - SUP AIP ALTITUDE FILTER BETA` dans le titre de l'onglet.
 
 Commit recommandé :
 
