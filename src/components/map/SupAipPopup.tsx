@@ -6,8 +6,18 @@ interface SupAipPopupProps {
   onClose: () => void;
 }
 
+function hasExtractedVerticalLimits(selection: SupAipSelection): boolean {
+  if (typeof selection.verticalLimitsExtracted === 'boolean') return selection.verticalLimitsExtracted;
+  const lower = selection.lowerLimit?.trim();
+  const upper = selection.upperLimit?.trim();
+  return Boolean(lower && upper && lower.toLocaleLowerCase('fr-FR') !== 'à vérifier' && upper.toLocaleLowerCase('fr-FR') !== 'à vérifier');
+}
+
 export function SupAipPopup({ selection, onClose }: SupAipPopupProps) {
-  const automaticGeometry = selection.geometrySource === 'automatic';
+  const automaticGeometry = selection.geometrySource?.startsWith('automatic') ?? false;
+  const verticalLimitsExtracted = hasExtractedVerticalLimits(selection);
+  const geometryWarning = selection.geometryWarnings?.[0];
+
   return (
     <aside className={`supaip-popup status-${selection.visualStatus}`} aria-label={`Détail ${selection.name}`}>
       <div className="supaip-popup-heading">
@@ -26,10 +36,27 @@ export function SupAipPopup({ selection, onClose }: SupAipPopupProps) {
       <p>{selection.title}</p>
       <dl>
         <div><dt>Validité</dt><dd>{formatSupAipDateRange(selection.validFrom, selection.validTo)}</dd></div>
-        <div><dt>Vertical</dt><dd>{selection.lowerLimit} - {selection.upperLimit}</dd></div>
+        <div>
+          <dt>Vertical</dt>
+          <dd>
+            {verticalLimitsExtracted
+              ? <strong className="supaip-vertical-value">{selection.lowerLimit} - {selection.upperLimit}</strong>
+              : <span className="supaip-vertical-missing">{selection.verticalLimitNotice || 'Limites verticales non extraites - consulter le PDF SIA'}</span>}
+          </dd>
+        </div>
         <div><dt>Activation</dt><dd>{selection.activationText}</dd></div>
         {selection.frequency && <div><dt>Information</dt><dd>{selection.frequency}</dd></div>}
-        {automaticGeometry && <div><dt>Géométrie</dt><dd>Extraite automatiquement du PDF SIA{selection.geometryConfidence === 'medium' ? ' - contrôle renforcé conseillé' : ''}</dd></div>}
+        {automaticGeometry && (
+          <div>
+            <dt>Géométrie</dt>
+            <dd>
+              Extraite automatiquement du PDF SIA
+              {selection.sourcePageNumber ? ` - page ${selection.sourcePageNumber}` : ''}
+              {selection.geometryConfidence === 'medium' ? ' - contrôle renforcé conseillé' : ''}
+              {geometryWarning ? <span className="supaip-geometry-warning">{geometryWarning}</span> : null}
+            </dd>
+          </div>
+        )}
       </dl>
 
       <div className="supaip-popup-actions">

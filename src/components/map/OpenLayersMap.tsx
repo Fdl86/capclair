@@ -545,8 +545,8 @@ export function OpenLayersMap({
             : supAipLoadState === 'loading' && supAipFeatureCount === 0
               ? 'SUP AIP AUTO BETA - chargement...'
               : normalizedSupAipSettings.mode === 'route'
-                ? `SUP AIP AUTO BETA - ROUTE ${normalizedSupAipSettings.routeCorridorNm} NM - ${supAipVisibleCount}/${supAipFeatureCount} zones${supAipDatasetStatus?.completeUnmappedPublicationCount ? ` - ${supAipDatasetStatus.completeUnmappedPublicationCount} SUP à vérifier` : ''}`
-                : `SUP AIP AUTO BETA - TOUS - ${supAipFeatureCount} zones${supAipDatasetStatus?.completeUnmappedPublicationCount ? ` - ${supAipDatasetStatus.completeUnmappedPublicationCount} SUP à vérifier` : ''}`}
+                ? `SUP AIP AUTO BETA - ROUTE ${normalizedSupAipSettings.routeCorridorNm} NM - ${supAipVisibleCount}/${supAipFeatureCount} zones${supAipDatasetStatus && (supAipDatasetStatus.completeUnmappedPublicationCount + supAipDatasetStatus.partialPublicationCount) > 0 ? ` - ${supAipDatasetStatus.completeUnmappedPublicationCount + supAipDatasetStatus.partialPublicationCount} SUP à contrôler` : ''}`
+                : `SUP AIP AUTO BETA - TOUS - ${supAipFeatureCount} zones${supAipDatasetStatus && (supAipDatasetStatus.completeUnmappedPublicationCount + supAipDatasetStatus.partialPublicationCount) > 0 ? ` - ${supAipDatasetStatus.completeUnmappedPublicationCount + supAipDatasetStatus.partialPublicationCount} SUP à contrôler` : ''}`}
         </div>
       )}
       {selectedSupAip && <SupAipPopup selection={selectedSupAip} onClose={() => setSelectedSupAip(null)} />}

@@ -1,15 +1,17 @@
 #!/usr/bin/env python3
 """Build CAP CLAIR's SUP AIP overlay from the official French SIA listing.
 
-The parser is deliberately conservative: it publishes only geometries that can be
-reconstructed with sufficient confidence from coordinates contained in the PDF.
-Publications that look spatial but cannot be parsed are written to
-``supaip-unmapped.json`` instead of being silently ignored.
+Parser V2 is layout-aware. It reads PyMuPDF text blocks so multi-column tables,
+row tables, circles and common arc descriptions remain associated with the
+correct named zone and vertical limits. It remains conservative: a boundary
+that depends on an external coastline, frontier or another airspace is reported
+instead of being silently approximated.
 """
 
 from __future__ import annotations
 
 import argparse
+import copy
 import hashlib
 import json
 import math
@@ -17,8 +19,8 @@ import re
 import sys
 import time
 import unicodedata
-from dataclasses import dataclass
-from datetime import date, datetime, timezone
+from dataclasses import dataclass, field
+from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, Iterable
 from urllib.parse import urljoin
@@ -30,15 +32,15 @@ from requests.adapters import HTTPAdapter
 from urllib3.util.retry import Retry
 
 SOURCE_URL = "https://www.sia.aviation-civile.gouv.fr/documents/supaip/aip/id/6"
-PARSER_VERSION = "capclair-supaip-parser-1.0.1"
-USER_AGENT = "CAP-CLAIR-SUPAIP-BETA/1.0 (+automatic SIA public-document reader)"
+PARSER_VERSION = "capclair-supaip-parser-2.0.0"
+USER_AGENT = "CAP-CLAIR-SUPAIP-BETA/2.0 (+automatic SIA public-document reader)"
 ZONE_TITLE_RE = re.compile(
     r"\b(?:ZRT|ZDT|ZIT|TRA|TSA|zone(?:s)?\s+(?:r[eé]glement[eé]e|dangereuse|interdite|r[eé]serv[eé]e)(?:s)?\s+temporaire(?:s)?|CTR\s+temporaire|TMA\s+temporaire)\b",
     re.IGNORECASE,
 )
 ZONE_TOKEN_RE = re.compile(r"\b(ZRT|ZDT|ZIT|TRA|TSA|CTR|TMA|RMZ|TMZ|FBZ)\b", re.IGNORECASE)
-COMPLEX_BOUNDARY_RE = re.compile(
-    r"\b(?:arc\s+de\s+cercle|portion\s+de\s+cercle|fronti[eè]re|ligne\s+de\s+c[oô]te|rivage|limite\s+maritime|thalweg)\b",
+ZONE_START_RE = re.compile(
+    r"(?<![A-Z0-9/])(?:ZRT/ZDT|ZRT|ZDT|ZIT|TRA|TSA|CTR(?:\s+TEMPORAIRE)?|TMA(?:\s+TEMPORAIRE)?|RMZ|TMZ|FBZ)\b",
     re.IGNORECASE,
 )
 VALIDITY_RE = re.compile(r"Valide\s+du\s+(\d{4}-\d{2}-\d{2})\s+au\s+(\d{4}-\d{2}-\d{2})", re.IGNORECASE)
@@ -57,11 +59,28 @@ COMPACT_DMS_RE = re.compile(
     r"(?P<lond>\d{3})(?P<lonm>\d{2})(?P<lons>\d{2}(?:[.,]\d+)?)(?P<lonh>[EW])(?!\d)",
     re.IGNORECASE,
 )
-VERTICAL_RE = re.compile(
-    r"(?im)^\s*(?P<lower>(?:SFC|GND|FL\s*\d{2,3}|\d{2,5}\s*(?:FT|M)\s*(?:AMSL|ASFC|AGL|QNH)?))"
-    r"\s*[/\-]\s*"
-    r"(?P<upper>(?:UNL|FL\s*\d{2,3}|\d{2,5}\s*(?:FT|M)\s*(?:AMSL|ASFC|AGL|QNH)?))\s*$"
+
+LIMIT_ATOM = r"(?:SFC|GND|UNL|FL\s*\d{2,3}|\d{1,5}\s*(?:FT|M)\s*(?:AMSL|ASFC|AGL|QNH)?)"
+VERTICAL_SLASH_RE = re.compile(
+    rf"(?P<lower>{LIMIT_ATOM}(?:\s*-\s*{LIMIT_ATOM})?)\s*/\s*(?P<upper>{LIMIT_ATOM})",
+    re.IGNORECASE,
 )
+VERTICAL_DASH_RE = re.compile(rf"(?P<lower>{LIMIT_ATOM})\s+-\s+(?P<upper>{LIMIT_ATOM})", re.IGNORECASE)
+CIRCLE_RE = re.compile(
+    r"(?:cercle|circonf[eé]rence)\s+de\s+(?P<radius>\d+(?:[.,]\d+)?)\s*(?P<unit>NM|N\s*M|KM|M)"
+    r"(?:\s*\([^)]*\))?\s+de\s+rayon",
+    re.IGNORECASE,
+)
+ARC_RE = re.compile(
+    r"arc\s+(?P<direction>anti\s*-?\s*horaire|horaire)\s+de\s+(?P<radius>\d+(?:[.,]\d+)?)\s*(?P<unit>NM|N\s*M|KM|M)"
+    r"\s+de\s+rayon\s+centr[eé]\s+sur",
+    re.IGNORECASE,
+)
+EXTERNAL_BOUNDARY_RE = re.compile(
+    r"\b(?:fronti[eè]re|ligne\s+de\s+c[oô]te|rivage|limite\s+maritime|thalweg|identiques?\s+[àa]\s+celles?)\b",
+    re.IGNORECASE,
+)
+EXCLUSION_RE = re.compile(r"\b(?:[àa]\s+l['’]exclusion|hors\s+la\s+partie|se\s+substitue)\b", re.IGNORECASE)
 
 
 @dataclass(frozen=True)
@@ -75,7 +94,7 @@ class ListingEntry:
     fingerprint: str
 
 
-@dataclass
+@dataclass(frozen=True)
 class CoordinateMatch:
     lon: float
     lat: float
@@ -83,19 +102,70 @@ class CoordinateMatch:
     end: int
 
 
+@dataclass(frozen=True)
+class PdfBlock:
+    page_index: int
+    x0: float
+    y0: float
+    x1: float
+    y1: float
+    text: str
+
+    @property
+    def center_x(self) -> float:
+        return (self.x0 + self.x1) / 2.0
+
+    @property
+    def center_y(self) -> float:
+        return (self.y0 + self.y1) / 2.0
+
+
+@dataclass(frozen=True)
+class PdfPageLayout:
+    page_index: int
+    width: float
+    height: float
+    blocks: tuple[PdfBlock, ...]
+
+
+@dataclass(frozen=True)
+class PdfDocumentLayout:
+    text: str
+    pages: tuple[PdfPageLayout, ...]
+
+
 @dataclass
-class ParsedGeometry:
+class ParsedZone:
     name: str
     zone_type: str
-    geometry: dict[str, Any]
-    lower_limit: str
-    upper_limit: str
-    confidence: str
+    geometry: dict[str, Any] | None
+    lower_limit: str = ""
+    upper_limit: str = ""
+    vertical_extracted: bool = False
+    confidence: str = "high"
+    page_index: int | None = None
+    position_y: float = 0.0
+    warnings: list[str] = field(default_factory=list)
+
+
+@dataclass(frozen=True)
+class ParseResult:
+    features: list[dict[str, Any]]
+    warnings: list[str]
+    expected_named_geometry_count: int
+    declared_zone_count: int | None
+    missing_vertical_count: int
 
 
 def clean_space(value: str) -> str:
     value = value.replace("\u00a0", " ").replace("\u200b", " ").replace("\xad", "")
     return re.sub(r"\s+", " ", value).strip()
+
+
+def clean_listing_title(value: str) -> str:
+    value = BeautifulSoup(value, "html.parser").get_text(" ", strip=True)
+    value = value.replace("\\'", "'")
+    return clean_space(value)
 
 
 def normalize_text(value: str) -> str:
@@ -123,7 +193,7 @@ def make_session() -> requests.Session:
     return session
 
 
-def fetch_bytes(session: requests.Session, url: str, timeout: int = 45) -> bytes:
+def fetch_bytes(session: requests.Session, url: str, timeout: int = 60) -> bytes:
     response = session.get(url, timeout=timeout)
     response.raise_for_status()
     return response.content
@@ -144,7 +214,7 @@ def parse_listing(html: str) -> tuple[list[ListingEntry], str | None]:
     entries_by_number: dict[str, ListingEntry] = {}
 
     for anchor in soup.find_all("a", href=True):
-        anchor_text = clean_space(anchor.get_text(" ", strip=True))
+        anchor_text = clean_listing_title(anchor.get_text(" ", strip=True))
         number_match = SUP_NUMBER_RE.search(anchor_text)
         if not number_match:
             continue
@@ -157,7 +227,7 @@ def parse_listing(html: str) -> tuple[list[ListingEntry], str | None]:
         container_text = anchor_text
         validity_match = None
         for _ in range(8):
-            container_text = clean_space(container.get_text(" ", strip=True))
+            container_text = clean_listing_title(container.get_text(" ", strip=True))
             validity_match = VALIDITY_RE.search(container_text)
             if validity_match:
                 break
@@ -170,8 +240,7 @@ def parse_listing(html: str) -> tuple[list[ListingEntry], str | None]:
 
         sup_aip = normalize_sup_number(number_match.group(0))
         title = re.sub(r"^\s*\d{3}\s*/\s*\d{2,4}\s*", "", anchor_text).strip(" -")
-        if not title:
-            title = anchor_text
+        title = clean_listing_title(title or anchor_text)
         valid_from, valid_to = validity_match.groups()
         vfr = bool(re.search(r"\bVFR\b", container_text, re.IGNORECASE))
         fingerprint_raw = "|".join((sup_aip, title, valid_from, valid_to, href, PARSER_VERSION))
@@ -186,7 +255,7 @@ def parse_listing(html: str) -> tuple[list[ListingEntry], str | None]:
             fingerprint=fingerprint,
         )
 
-    page_text = clean_space(soup.get_text(" ", strip=True))
+    page_text = clean_listing_title(soup.get_text(" ", strip=True))
     source_updated_at = None
     update_match = UPDATE_DATE_RE.search(page_text)
     if update_match:
@@ -196,16 +265,28 @@ def parse_listing(html: str) -> tuple[list[ListingEntry], str | None]:
     return sorted(entries_by_number.values(), key=lambda item: item.sup_aip, reverse=True), source_updated_at
 
 
-def extract_pdf_text(pdf_bytes: bytes) -> str:
+def extract_pdf_document(pdf_bytes: bytes) -> PdfDocumentLayout:
     document = fitz.open(stream=pdf_bytes, filetype="pdf")
-    pages: list[str] = []
+    pages: list[PdfPageLayout] = []
+    page_texts: list[str] = []
     try:
         for page_index, page in enumerate(document):
             page_text = page.get_text("text", sort=True)
-            pages.append(f"\n--- PAGE {page_index + 1} ---\n{page_text}")
+            page_texts.append(f"\n--- PAGE {page_index + 1} ---\n{page_text}")
+            blocks: list[PdfBlock] = []
+            for x0, y0, x1, y1, text, *_ in page.get_text("blocks", sort=False):
+                normalized = normalize_text(text)
+                if not normalized:
+                    continue
+                blocks.append(PdfBlock(page_index, float(x0), float(y0), float(x1), float(y1), normalized))
+            pages.append(PdfPageLayout(page_index, float(page.rect.width), float(page.rect.height), tuple(blocks)))
     finally:
         document.close()
-    return normalize_text("\n".join(pages))
+    return PdfDocumentLayout(normalize_text("\n".join(page_texts)), tuple(pages))
+
+
+def extract_pdf_text(pdf_bytes: bytes) -> str:
+    return extract_pdf_document(pdf_bytes).text
 
 
 def dms_to_decimal(deg: str, minute: str, second: str, hemisphere: str) -> float:
@@ -248,138 +329,557 @@ def close_ring(points: list[tuple[float, float]]) -> list[list[float]]:
     return [[round(lon, 7), round(lat, 7)] for lon, lat in unique]
 
 
-def circle_polygon(center_lon: float, center_lat: float, radius_nm: float, steps: int = 96) -> dict[str, Any]:
+def destination_point(center_lon: float, center_lat: float, radius_nm: float, bearing_deg: float) -> tuple[float, float]:
     earth_radius_nm = 3440.065
     angular = radius_nm / earth_radius_nm
+    bearing = math.radians(bearing_deg)
     lat1 = math.radians(center_lat)
     lon1 = math.radians(center_lon)
-    coordinates: list[list[float]] = []
-    for index in range(steps + 1):
-        bearing = 2.0 * math.pi * index / steps
-        lat2 = math.asin(math.sin(lat1) * math.cos(angular) + math.cos(lat1) * math.sin(angular) * math.cos(bearing))
-        lon2 = lon1 + math.atan2(
-            math.sin(bearing) * math.sin(angular) * math.cos(lat1),
-            math.cos(angular) - math.sin(lat1) * math.sin(lat2),
-        )
-        coordinates.append([round(math.degrees(lon2), 7), round(math.degrees(lat2), 7)])
+    lat2 = math.asin(math.sin(lat1) * math.cos(angular) + math.cos(lat1) * math.sin(angular) * math.cos(bearing))
+    lon2 = lon1 + math.atan2(
+        math.sin(bearing) * math.sin(angular) * math.cos(lat1),
+        math.cos(angular) - math.sin(lat1) * math.sin(lat2),
+    )
+    return math.degrees(lon2), math.degrees(lat2)
+
+
+def circle_polygon(center_lon: float, center_lat: float, radius_nm: float, steps: int = 96) -> dict[str, Any]:
+    coordinates = [
+        [round(lon, 7), round(lat, 7)]
+        for lon, lat in (destination_point(center_lon, center_lat, radius_nm, 360.0 * index / steps) for index in range(steps + 1))
+    ]
     return {"type": "Polygon", "coordinates": [coordinates]}
 
 
-def limits_section(text: str) -> str:
-    match = re.search(r"LIMITES\s+LAT[EÉ]RALES(?:\s+ET\s+VERTICALES)?", text, re.IGNORECASE)
+def initial_bearing(center: tuple[float, float], point: tuple[float, float]) -> float:
+    lon1, lat1 = map(math.radians, center)
+    lon2, lat2 = map(math.radians, point)
+    delta_lon = lon2 - lon1
+    y = math.sin(delta_lon) * math.cos(lat2)
+    x = math.cos(lat1) * math.sin(lat2) - math.sin(lat1) * math.cos(lat2) * math.cos(delta_lon)
+    return (math.degrees(math.atan2(y, x)) + 360.0) % 360.0
+
+
+def interpolate_arc(
+    start: tuple[float, float],
+    end: tuple[float, float],
+    center: tuple[float, float],
+    radius_nm: float,
+    clockwise: bool,
+) -> list[tuple[float, float]]:
+    start_bearing = initial_bearing(center, start)
+    end_bearing = initial_bearing(center, end)
+    if clockwise:
+        sweep = (end_bearing - start_bearing) % 360.0
+    else:
+        sweep = -((start_bearing - end_bearing) % 360.0)
+    steps = max(8, min(180, int(abs(sweep) / 3.0) + 1))
+    points: list[tuple[float, float]] = []
+    for index in range(steps + 1):
+        bearing = start_bearing + sweep * index / steps
+        points.append(destination_point(center[0], center[1], radius_nm, bearing))
+    points[0] = start
+    points[-1] = end
+    return points
+
+
+def normalize_vertical_limit(value: str) -> str:
+    normalized = clean_space(value).upper()
+    normalized = re.sub(r"FL\s*(\d+)", r"FL \1", normalized)
+    normalized = re.sub(r"\s*FT\b", " ft", normalized)
+    normalized = re.sub(r"\s+", " ", normalized)
+    return normalized.strip()
+
+
+def extract_vertical_pair(text: str) -> tuple[str, str] | None:
+    normalized = normalize_text(text)
+    match = VERTICAL_SLASH_RE.search(normalized) or VERTICAL_DASH_RE.search(normalized)
     if not match:
-        return text
-    section = text[match.end() :]
-    end = re.search(r"\n\s*(?:ORGANISME(?:S)?\s+[ÀA]\s+CONTACTER|CONTACTS?|REMARQUES?)\b", section, re.IGNORECASE)
-    return section[: end.start()] if end else section
+        return None
+    lower = normalize_vertical_limit(match.group("lower"))
+    upper = normalize_vertical_limit(match.group("upper"))
+    return lower, upper
 
 
-def is_zone_heading(line: str) -> bool:
-    stripped = clean_space(line).strip(" :")
-    if not stripped or len(stripped) > 120:
-        return False
-    if stripped.upper().startswith(("LIMITES ", "DATES ", "INFORMATION ", "CONDITIONS ", "STATUT ", "SERVICES ")):
-        return False
-    if len(stripped.split()) > 15:
-        return False
-    if re.search(r"\b(?:ZONE|ZONES)\s+(?:R[EÉ]GLEMENT[EÉ]ES?|DANGEREUSES?|INTERDITES?)\s+TEMPORAIRES?\b", stripped, re.IGNORECASE):
-        return False
-    return bool(re.match(r"^(?:ZRT|ZDT|ZIT|TRA|TSA|CTR(?:\s+TEMPORAIRE)?|TMA(?:\s+TEMPORAIRE)?|RMZ|TMZ|FBZ)\b", stripped, re.IGNORECASE))
-
-
-def extract_zone_names(text: str, title: str) -> list[str]:
-    section = limits_section(text)
-    names: list[str] = []
-    for line in section.splitlines():
-        line = clean_space(line)
-        if is_zone_heading(line):
-            line = re.sub(r"\s+", " ", line).strip(" :")
-            if line not in names:
-                names.append(line)
-
-    if not names:
-        before_activity = re.split(r"\bACTIVIT[EÉ]\b", text, maxsplit=1, flags=re.IGNORECASE)[0]
-        for line in before_activity.splitlines():
-            line = clean_space(line)
-            if is_zone_heading(line) and line not in names:
-                names.append(line)
-
-    if not names:
-        token = ZONE_TOKEN_RE.search(title)
-        if token:
-            names.append(f"{token.group(1).upper()} {title}"[:110])
-    return names
-
-
-def zone_type_from_name(name: str, title: str) -> str:
-    match = ZONE_TOKEN_RE.search(name) or ZONE_TOKEN_RE.search(title)
-    return match.group(1).upper() if match else "Zone temporaire"
-
-
-def extract_vertical_limits(section: str) -> list[tuple[str, str]]:
+def extract_vertical_limits(text: str) -> list[tuple[str, str]]:
     values: list[tuple[str, str]] = []
-    for match in VERTICAL_RE.finditer(section):
-        lower = clean_space(match.group("lower")).upper().replace("FT", "ft")
-        upper = clean_space(match.group("upper")).upper().replace("FT", "ft")
-        pair = (lower, upper)
-        if pair not in values:
-            values.append(pair)
+    for pattern in (VERTICAL_SLASH_RE, VERTICAL_DASH_RE):
+        for match in pattern.finditer(normalize_text(text)):
+            pair = (normalize_vertical_limit(match.group("lower")), normalize_vertical_limit(match.group("upper")))
+            if pair not in values:
+                values.append(pair)
     return values
 
 
-def extract_circle_geometries(section: str) -> tuple[list[dict[str, Any]], set[int]]:
-    coordinates = coordinate_matches(section)
-    geometries: list[dict[str, Any]] = []
-    consumed_indices: set[int] = set()
-    for radius_match in re.finditer(
-        r"(?:cercle|circonf[eé]rence)\s+de\s+(?P<radius>\d+(?:[.,]\d+)?)\s*(?P<unit>NM|N M|KM|M)\s+de\s+rayon",
-        section,
-        re.IGNORECASE,
-    ):
-        window_end = min(len(section), radius_match.end() + 320)
-        center_index = next((index for index, coord in enumerate(coordinates) if coord.start >= radius_match.start() and coord.end <= window_end), None)
-        if center_index is None:
-            continue
-        center = coordinates[center_index]
-        radius = float(radius_match.group("radius").replace(",", "."))
-        unit = radius_match.group("unit").replace(" ", "").upper()
-        if unit == "KM":
-            radius /= 1.852
-        elif unit == "M":
-            radius /= 1852.0
-        if not (0.02 <= radius <= 250):
-            continue
-        geometries.append(circle_polygon(center.lon, center.lat, radius))
-        consumed_indices.add(center_index)
-    return geometries, consumed_indices
+ZONE_NAME_STOP_RE = re.compile(
+    r"\b(?:LIMITES?\s+(?:LAT[EÉ]RALES?|VERTICALES?)|DATES?\s+ET\s+HEURES?|ACTIVIT[EÉ]|STATUT|GESTIONNAIRE(?:S)?|INFORMATION\s+DES\s+USAGERS)\b",
+    re.IGNORECASE,
+)
+SERVICE_SUFFIX_RE = re.compile(
+    r"\b(?:PARIS|BORDEAUX|BREST|NANTES|LILLE|COGNAC|ORLY|IROISE|LORIENT|LANV[EÉ]OC|OCHEY|AQUITAINE|MARSEILLE|CLERMONT|TOULOUSE|BIARRITZ|PYR[EÉ]N[EÉ]ES|MARSAN|ARMOR|MARINA|RAMBERT)\s+(?:CTL|APP|INFO|ACC|CDC)\b",
+    re.IGNORECASE,
+)
 
 
-def split_polygon_coordinates(section: str, consumed_indices: set[int]) -> list[list[tuple[float, float]]]:
-    coordinates = coordinate_matches(section)
-    remaining = [(index, coord) for index, coord in enumerate(coordinates) if index not in consumed_indices]
-    if not remaining:
+def clean_zone_name(value: str) -> str:
+    name = clean_space(value).strip(" /,;:-")
+    cut_positions: list[int] = []
+    for pattern in (ZONE_NAME_STOP_RE, SERVICE_SUFFIX_RE, DMS_RE, COMPACT_DMS_RE):
+        match = pattern.search(name)
+        if match:
+            cut_positions.append(match.start())
+    degree_match = re.search(r"\b\d{2,3}\s*[°º]", name)
+    if degree_match:
+        cut_positions.append(degree_match.start())
+    frequency_match = re.search(r"\b\d{3}[.,]\d{3}\s*MHz\b", name, re.IGNORECASE)
+    if frequency_match:
+        cut_positions.append(frequency_match.start())
+    if cut_positions:
+        name = name[: min(cut_positions)]
+    vertical = VERTICAL_SLASH_RE.search(name) or VERTICAL_DASH_RE.search(name)
+    if vertical:
+        name = name[: vertical.start()]
+    name = clean_space(name).strip(" /,;:-")
+    name = re.sub(r"\s+[NSEW]$", "", name, flags=re.IGNORECASE).strip()
+    if re.fullmatch(r"(?:ZRT/ZDT|ZRT|ZDT|ZIT|TRA|TSA|CTR|TMA|RMZ|TMZ|FBZ)(?:\s+(?:ILES?\s+DE|ILE\s+DE))?", name, re.IGNORECASE):
+        return ""
+    return name
+
+
+def zone_identity_key(name: str) -> str:
+    cleaned = clean_zone_name(name)
+    cleaned = re.sub(r"\s*\((?:PPS|IHEDN)[^)]*\)\s*", " ", cleaned, flags=re.IGNORECASE)
+    normalized = unicodedata.normalize("NFKD", cleaned).encode("ascii", "ignore").decode("ascii").upper()
+    normalized = re.sub(r"[^A-Z0-9/]+", " ", normalized)
+    return clean_space(normalized)
+
+
+def split_zone_names(value: str) -> list[str]:
+    text = clean_space(value).strip(" :")
+    starts = [match.start() for match in ZONE_START_RE.finditer(text)]
+    names: list[str] = []
+    for index, start in enumerate(starts):
+        end = starts[index + 1] if index + 1 < len(starts) else len(text)
+        name = clean_zone_name(text[start:end])
+        if not name:
+            continue
+        if re.search(r"\b(?:lorsqu['’]elle|interf[eé]rente|sont\s+utilisables?|ne\s+seront\s+pas)\b", name, re.IGNORECASE):
+            continue
+        if name.upper() in {"ZRT/ZDT ORG", "ZRT ORG", "ZDT ORG"}:
+            continue
+        if name and name not in names:
+            names.append(name)
+    return names
+
+
+def leading_zone_name(value: str) -> str:
+    text = clean_space(value)
+    match = ZONE_START_RE.match(text)
+    if not match:
+        return ""
+    stop = ZONE_NAME_STOP_RE.search(text, match.end())
+    candidate = text[: stop.start()] if stop else text
+    return clean_zone_name(candidate)
+
+
+def starts_with_zone(value: str) -> bool:
+    return bool(re.match(r"^\s*(?:ZRT/ZDT|ZRT|ZDT|ZIT|TRA|TSA|CTR|TMA|RMZ|TMZ|FBZ)\b", clean_space(value), re.IGNORECASE))
+
+
+def is_zone_heading_block(block: PdfBlock) -> bool:
+    text = clean_space(block.text)
+    if not starts_with_zone(text) or "°" in text:
+        return False
+    if len(text) > 320:
+        return False
+    if re.search(r"\b(?:LIMITES|ACTIVIT[EÉ]|STATUT|CONDITIONS|INFORMATION|GESTIONNAIRE|SERVICES|TOUTES\s+LES\s+ZONES)\b", text, re.IGNORECASE):
+        return False
+    return bool(split_zone_names(text))
+
+
+def zone_type_from_name(name: str, title: str) -> str:
+    match = re.match(r"^\s*(ZRT/ZDT|ZRT|ZDT|ZIT|TRA|TSA|CTR|TMA|RMZ|TMZ|FBZ)\b", name, re.IGNORECASE)
+    if match:
+        return match.group(1).upper()
+    match = ZONE_TOKEN_RE.search(title)
+    return match.group(1).upper() if match else "Zone temporaire"
+
+
+def radius_to_nm(value: str, unit: str) -> float:
+    radius = float(value.replace(",", "."))
+    normalized_unit = unit.replace(" ", "").upper()
+    if normalized_unit == "KM":
+        radius /= 1.852
+    elif normalized_unit == "M":
+        radius /= 1852.0
+    return radius
+
+
+def geometry_from_text(text: str) -> tuple[dict[str, Any] | None, str, list[str]]:
+    normalized = normalize_text(text)
+    coordinates = coordinate_matches(normalized)
+    warnings: list[str] = []
+    confidence = "high"
+
+    circle_match = CIRCLE_RE.search(normalized)
+    if circle_match and coordinates:
+        center = next((coord for coord in coordinates if coord.start >= circle_match.start()), coordinates[0])
+        radius_nm = radius_to_nm(circle_match.group("radius"), circle_match.group("unit"))
+        if not (0.02 <= radius_nm <= 250.0):
+            return None, "medium", ["Rayon circulaire hors plage de contrôle."]
+        if EXCLUSION_RE.search(normalized):
+            warnings.append("Exclusion interne non découpée: contour extérieur affiché par prudence.")
+            confidence = "medium"
+        return circle_polygon(center.lon, center.lat, radius_nm), confidence, warnings
+
+    if len(coordinates) < 3:
+        return None, "medium", ["Moins de trois coordonnées exploitables."]
+
+    if EXTERNAL_BOUNDARY_RE.search(normalized):
+        return None, "medium", ["Limite dépendant d'une frontière, d'une côte ou d'un autre espace aérien."]
+
+    points = [(coord.lon, coord.lat) for coord in coordinates]
+    arc_matches = list(ARC_RE.finditer(normalized))
+    if arc_matches:
+        for arc_match in reversed(arc_matches):
+            center_index = next(
+                (
+                    index
+                    for index, coordinate in enumerate(coordinates)
+                    if coordinate.start >= arc_match.start() and coordinate.start <= arc_match.end() + 300
+                ),
+                None,
+            )
+            if center_index is None or center_index == 0 or center_index >= len(coordinates) - 1:
+                return None, "medium", ["Arc détecté mais centre ou extrémités non identifiés."]
+            radius_nm = radius_to_nm(arc_match.group("radius"), arc_match.group("unit"))
+            clockwise = not bool(re.search(r"anti", arc_match.group("direction"), re.IGNORECASE))
+            arc_points = interpolate_arc(points[center_index - 1], points[center_index + 1], points[center_index], radius_nm, clockwise)
+            points = points[: center_index - 1] + arc_points + points[center_index + 2 :]
+            coordinates = coordinates[: center_index] + coordinates[center_index + 1 :]
+
+    ring = close_ring(points)
+    if len(ring) < 4:
+        return None, "medium", ["Polygone incomplet."]
+    if not point_equal(points[0], points[-1]):
+        confidence = "medium"
+        warnings.append("Contour fermé automatiquement entre la dernière et la première coordonnée.")
+    if EXCLUSION_RE.search(normalized):
+        confidence = "medium"
+        warnings.append("Exclusion interne non découpée: contour extérieur affiché par prudence.")
+    return {"type": "Polygon", "coordinates": [ring]}, confidence, warnings
+
+
+def block_distance_to_y(block: PdfBlock, y: float) -> float:
+    if block.y0 <= y <= block.y1:
+        return 0.0
+    return min(abs(y - block.y0), abs(y - block.y1))
+
+
+def self_contained_zones(page: PdfPageLayout) -> list[ParsedZone]:
+    zones: list[ParsedZone] = []
+    for block in page.blocks:
+        name = leading_zone_name(block.text)
+        if not name:
+            continue
+        vertical = extract_vertical_pair(block.text)
+        geometry, confidence, warnings = geometry_from_text(block.text)
+        if not geometry or not vertical:
+            continue
+        zones.append(
+            ParsedZone(
+                name=name,
+                zone_type=zone_type_from_name(name, ""),
+                geometry=geometry,
+                lower_limit=vertical[0],
+                upper_limit=vertical[1],
+                vertical_extracted=True,
+                confidence=confidence,
+                page_index=page.page_index,
+                position_y=block.y0,
+                warnings=warnings,
+            )
+        )
+    return zones
+
+
+def row_table_zones(page: PdfPageLayout) -> list[ParsedZone]:
+    headings = [
+        block
+        for block in page.blocks
+        if block.x0 < page.width * 0.30 and is_zone_heading_block(block) and len(split_zone_names(block.text)) == 1
+    ]
+    coordinate_blocks = [
+        block
+        for block in page.blocks
+        if page.width * 0.22 <= block.x0 <= page.width * 0.62 and len(coordinate_matches(block.text)) >= 3
+    ]
+    vertical_blocks = [block for block in page.blocks if extract_vertical_pair(block.text)]
+    if not headings or not coordinate_blocks:
         return []
 
-    polygons: list[list[tuple[float, float]]] = []
-    current: list[tuple[float, float]] = []
-    last_end: int | None = None
+    zones: list[ParsedZone] = []
+    for heading in sorted(headings, key=lambda item: item.center_y):
+        name = split_zone_names(heading.text)[0]
+        coordinate_candidates = [
+            block
+            for block in coordinate_blocks
+            if block_distance_to_y(block, heading.center_y) <= 55.0
+        ]
+        coordinate_block = min(coordinate_candidates, key=lambda block: block_distance_to_y(block, heading.center_y), default=None)
 
-    for _, coord in remaining:
-        point = (coord.lon, coord.lat)
-        gap = coord.start - last_end if last_end is not None else 0
-        if current and gap > 420 and len(current) >= 3:
-            polygons.append(current)
-            current = []
-        current.append(point)
-        last_end = coord.end
-        if len(current) >= 4 and point_equal(current[0], current[-1]):
-            polygons.append(current)
-            current = []
-            last_end = None
+        vertical = extract_vertical_pair(heading.text)
+        if not vertical:
+            vertical_candidates = [
+                block
+                for block in vertical_blocks
+                if block.x0 >= page.width * 0.40 and block_distance_to_y(block, heading.center_y) <= 55.0
+            ]
+            vertical_block = min(vertical_candidates, key=lambda block: block_distance_to_y(block, heading.center_y), default=None)
+            vertical = extract_vertical_pair(vertical_block.text) if vertical_block else None
 
-    if len(current) >= 3:
-        polygons.append(current)
-    return polygons
+        if coordinate_block:
+            geometry_text = coordinate_block.text
+            geometry, confidence, warnings = geometry_from_text(geometry_text)
+        else:
+            geometry, confidence, warnings = None, "medium", []
+
+        if geometry or vertical:
+            zones.append(
+                ParsedZone(
+                    name=name,
+                    zone_type=zone_type_from_name(name, ""),
+                    geometry=geometry,
+                    lower_limit=vertical[0] if vertical else "",
+                    upper_limit=vertical[1] if vertical else "",
+                    vertical_extracted=bool(vertical),
+                    confidence=confidence,
+                    page_index=page.page_index,
+                    position_y=heading.y0,
+                    warnings=warnings,
+                )
+            )
+    return zones
+
+
+def grouped_heading_rows(page: PdfPageLayout) -> list[tuple[float, list[PdfBlock], list[str], list[PdfBlock]]]:
+    heading_blocks = [block for block in page.blocks if is_zone_heading_block(block)]
+    raw_groups: list[list[PdfBlock]] = []
+    for block in sorted(heading_blocks, key=lambda item: (item.y0, item.x0)):
+        group = next((items for items in raw_groups if abs(items[0].y0 - block.y0) <= 6.0), None)
+        if group is None:
+            raw_groups.append([block])
+        else:
+            group.append(block)
+
+    groups: list[tuple[float, list[PdfBlock], list[str], list[PdfBlock]]] = []
+    for blocks in raw_groups:
+        y = min(block.y0 for block in blocks)
+        names: list[str] = []
+        for block in sorted(blocks, key=lambda item: item.x0):
+            names.extend(split_zone_names(block.text))
+        markers = [
+            block
+            for block in page.blocks
+            if y < block.y0 < y + 105.0 and re.search(r"LIMITES\s+LAT", block.text, re.IGNORECASE)
+        ]
+        markers.sort(key=lambda item: item.center_x)
+        if names and len(markers) == len(names):
+            groups.append((y, blocks, names, markers))
+    return groups
+
+
+def grid_zones(page: PdfPageLayout) -> list[ParsedZone]:
+    groups = grouped_heading_rows(page)
+    zones: list[ParsedZone] = []
+    for group_index, (heading_y, _, names, markers) in enumerate(groups):
+        next_y = groups[group_index + 1][0] if group_index + 1 < len(groups) else page.height - 20.0
+        centers = [marker.center_x for marker in markers]
+        boundaries = [0.0]
+        boundaries.extend((centers[index] + centers[index + 1]) / 2.0 for index in range(len(centers) - 1))
+        boundaries.append(page.width)
+
+        for index, (name, marker) in enumerate(zip(names, markers)):
+            column_blocks = [
+                block
+                for block in page.blocks
+                if marker.y0 - 2.0 <= block.y0 < next_y
+                and boundaries[index] <= block.center_x < boundaries[index + 1]
+            ]
+            column_blocks.sort(key=lambda item: item.y0)
+            column_text = "\n".join(block.text for block in column_blocks)
+            geometry, confidence, warnings = geometry_from_text(column_text)
+            vertical = extract_vertical_pair(column_text)
+            if geometry or vertical:
+                zones.append(
+                    ParsedZone(
+                        name=name,
+                        zone_type=zone_type_from_name(name, ""),
+                        geometry=geometry,
+                        lower_limit=vertical[0] if vertical else "",
+                        upper_limit=vertical[1] if vertical else "",
+                        vertical_extracted=bool(vertical),
+                        confidence=confidence,
+                        page_index=page.page_index,
+                        position_y=heading_y,
+                        warnings=warnings,
+                    )
+                )
+    return zones
+
+
+def text_fallback_zones(text: str, title: str) -> list[ParsedZone]:
+    section_match = re.search(r"LIMITES\s+LAT[EÉ]RALES(?:\s+ET\s+VERTICALES)?", text, re.IGNORECASE)
+    section = text[section_match.end() :] if section_match else text
+    lines = section.splitlines()
+    heading_indices: list[tuple[int, str]] = []
+    for index, line in enumerate(lines):
+        cleaned = clean_space(line)
+        names = split_zone_names(cleaned)
+        if len(names) == 1 and starts_with_zone(cleaned) and len(cleaned) < 160:
+            heading_indices.append((index, names[0]))
+
+    zones: list[ParsedZone] = []
+    for position, (line_index, name) in enumerate(heading_indices):
+        end_index = heading_indices[position + 1][0] if position + 1 < len(heading_indices) else min(len(lines), line_index + 80)
+        body = "\n".join(lines[line_index:end_index])
+        geometry, confidence, warnings = geometry_from_text(body)
+        vertical = extract_vertical_pair(body)
+        if geometry or vertical:
+            zones.append(
+                ParsedZone(
+                    name=name,
+                    zone_type=zone_type_from_name(name, title),
+                    geometry=geometry,
+                    lower_limit=vertical[0] if vertical else "",
+                    upper_limit=vertical[1] if vertical else "",
+                    vertical_extracted=bool(vertical),
+                    confidence=confidence,
+                    warnings=warnings,
+                )
+            )
+    return zones
+
+
+def zone_core_tokens(name: str) -> set[str]:
+    normalized = unicodedata.normalize("NFKD", name).encode("ascii", "ignore").decode("ascii").upper()
+    tokens = set(re.findall(r"[A-Z0-9]+", normalized))
+    return tokens - {"ZRT", "ZDT", "ZIT", "TRA", "TSA", "HIGH", "LOW", "LIFT", "TEMPO", "UNIQUEMENT", "PPS", "IHEDN"}
+
+
+def inherit_shared_geometries(zones: list[ParsedZone]) -> None:
+    ordered = sorted(zones, key=lambda zone: ((zone.page_index if zone.page_index is not None else 10_000), zone.position_y))
+    for index, zone in enumerate(ordered):
+        if zone.geometry is not None or not zone.vertical_extracted or zone.page_index is None:
+            continue
+        core = zone_core_tokens(zone.name)
+        if not core:
+            continue
+        candidates: list[tuple[float, ParsedZone]] = []
+        for previous in ordered[:index]:
+            if previous.page_index != zone.page_index or previous.geometry is None:
+                continue
+            distance = zone.position_y - previous.position_y
+            if not (0.0 < distance <= 150.0):
+                continue
+            previous_core = zone_core_tokens(previous.name)
+            overlap = len(core & previous_core) / max(1, len(core | previous_core))
+            if overlap >= 0.45:
+                candidates.append((distance - overlap * 100.0, previous))
+        if not candidates:
+            continue
+        source = min(candidates, key=lambda item: item[0])[1]
+        zone.geometry = copy.deepcopy(source.geometry)
+        zone.confidence = "medium"
+        zone.warnings.append(f"Limites latérales reprises de la zone adjacente {source.name} dans le même tableau SIA.")
+
+
+def parsed_zone_score(zone: ParsedZone) -> int:
+    return (100 if zone.geometry else 0) + (20 if zone.vertical_extracted else 0) + (5 if zone.confidence == "high" else 0)
+
+
+def deduplicate_zones(zones: list[ParsedZone]) -> list[ParsedZone]:
+    by_name: dict[str, ParsedZone] = {}
+    for zone in zones:
+        key = zone_identity_key(zone.name)
+        if not key:
+            continue
+        current = by_name.get(key)
+        if current is None or parsed_zone_score(zone) > parsed_zone_score(current):
+            by_name[key] = zone
+        elif current and zone.warnings:
+            for warning in zone.warnings:
+                if warning not in current.warnings:
+                    current.warnings.append(warning)
+    return list(by_name.values())
+
+
+def declared_zone_count(title: str) -> int | None:
+    cleaned = clean_space(title).lower()
+    numeric_counts = [
+        int(value)
+        for value in re.findall(
+            r"(\d+)\s+(?:zones?\s+)?(?:r[eé]glement[eé]es?|dangereuses?|interdites?|r[eé]serv[eé]es?|zrt|zdt|zit|tra|tsa)\b",
+            cleaned,
+        )
+    ]
+    if numeric_counts:
+        return sum(numeric_counts)
+    total_match = re.search(r"cr[eé]ation\s+de\s+(\d+)\s+zones?", cleaned)
+    if total_match:
+        return int(total_match.group(1))
+    word_values = {"une": 1, "un": 1, "deux": 2, "trois": 3, "quatre": 4, "cinq": 5, "six": 6, "sept": 7, "huit": 8, "neuf": 9, "douze": 12, "seize": 16}
+    word_counts = [
+        word_values[word]
+        for word in re.findall(
+            r"\b(une|un|deux|trois|quatre|cinq|six|sept|huit|neuf|douze|seize)\s+(?:zones?\s+)?(?:r[eé]glement[eé]es?|dangereuses?|interdites?|r[eé]serv[eé]es?|zrt|zdt|zit|tra|tsa)\b",
+            cleaned,
+        )
+    ]
+    return sum(word_counts) if word_counts else None
+
+
+def authoritative_row_headings(document: PdfDocumentLayout) -> dict[str, str]:
+    headings: dict[str, str] = {}
+    for page in document.pages:
+        for block in page.blocks:
+            if block.x0 >= page.width * 0.35 or not is_zone_heading_block(block):
+                continue
+            for name in split_zone_names(block.text):
+                key = zone_identity_key(name)
+                if key and key not in headings:
+                    headings[key] = name
+    return headings
+
+
+def select_authoritative_row_zones(document: PdfDocumentLayout, candidates: list[ParsedZone]) -> list[ParsedZone]:
+    headings = authoritative_row_headings(document)
+    if len(headings) < 10:
+        return candidates
+    grouped: dict[str, list[ParsedZone]] = {}
+    for zone in candidates:
+        key = zone_identity_key(zone.name)
+        if key in headings:
+            grouped.setdefault(key, []).append(zone)
+    selected: list[ParsedZone] = []
+    for key, official_name in headings.items():
+        options = grouped.get(key, [])
+        if options:
+            best = max(options, key=parsed_zone_score)
+            best.name = official_name
+            selected.append(best)
+        else:
+            selected.append(ParsedZone(name=official_name, zone_type=zone_type_from_name(official_name, ""), geometry=None))
+    return selected
+
+
+def expected_layout_names(document: PdfDocumentLayout) -> list[str]:
+    names: list[str] = []
+    for page in document.pages:
+        for zone in self_contained_zones(page) + row_table_zones(page) + grid_zones(page):
+            if zone.name not in names:
+                names.append(zone.name)
+    return names
 
 
 def extract_activation_text(text: str) -> str:
@@ -388,15 +888,15 @@ def extract_activation_text(text: str) -> str:
         return "Activation et horaires à vérifier dans le PDF officiel et les NOTAM."
     tail = text[match.end() :]
     end = re.search(r"\n\s*(?:INFORMATION\s+DES\s+USAGERS|GESTIONNAIRE(?:S)?|STATUT)\b", tail, re.IGNORECASE)
-    section = tail[: end.start()] if end else tail[:1200]
+    section = tail[: end.start()] if end else tail[:1600]
     cleaned = clean_space(section)
-    if len(cleaned) > 700:
-        cleaned = cleaned[:697].rstrip() + "..."
+    if len(cleaned) > 900:
+        cleaned = cleaned[:897].rstrip() + "..."
     return cleaned or "Activation et horaires à vérifier dans le PDF officiel et les NOTAM."
 
 
 def infer_activation_mode(activation_text: str, full_text: str) -> str:
-    sample = f"{activation_text} {full_text[:2500]}"
+    sample = f"{activation_text} {full_text[:3000]}"
     if re.search(r"\b(?:NOTAM|activable|activation\s+sur\s+demande|pr[eé]avis)\b", sample, re.IGNORECASE):
         return "notam"
     return "schedule" if re.search(r"\b(?:H24|UTC|SR|SS|\d{4}\s*[àa-]\s*\d{4})\b", activation_text, re.IGNORECASE) else "published"
@@ -407,10 +907,9 @@ def extract_frequencies(text: str) -> str | None:
     for line in text.splitlines():
         cleaned = clean_space(line)
         if re.search(r"\b\d{3}[.,]\d{3}\s*MHz\b", cleaned, re.IGNORECASE):
-            cleaned = re.sub(r"\s+", " ", cleaned)
             if cleaned not in lines:
                 lines.append(cleaned)
-        if len(lines) >= 4:
+        if len(lines) >= 5:
             break
     return " | ".join(lines) if lines else None
 
@@ -456,63 +955,54 @@ def make_unique_feature_id(
     return feature_id
 
 
-def parse_spatial_pdf(entry: ListingEntry, pdf_text: str) -> tuple[list[dict[str, Any]], list[str]]:
-    warnings: list[str] = []
-    section = limits_section(pdf_text)
-    names = extract_zone_names(pdf_text, entry.title)
-    verticals = extract_vertical_limits(section)
-    circle_geometries, consumed = extract_circle_geometries(section)
-    polygon_points = split_polygon_coordinates(section, consumed)
-    complex_boundary = bool(COMPLEX_BOUNDARY_RE.search(section))
+def is_spatial_document(entry: ListingEntry, document: PdfDocumentLayout) -> bool:
+    if ZONE_TITLE_RE.search(entry.title):
+        return True
+    normalized = document.text.upper()
+    return bool(ZONE_TOKEN_RE.search(normalized) and re.search(r"LIMITES\s+LAT[EÉ]RALES(?:\s+ET\s+VERTICALES)?", normalized))
 
-    geometries: list[tuple[dict[str, Any], str]] = [(geometry, "high") for geometry in circle_geometries]
-    if complex_boundary and polygon_points:
-        warnings.append("Limite complexe (arc, frontière ou côte) non reconstruite automatiquement.")
-    else:
-        for points in polygon_points:
-            ring = close_ring(points)
-            if len(ring) >= 4:
-                was_closed = point_equal(points[0], points[-1])
-                geometries.append(({"type": "Polygon", "coordinates": [ring]}, "high" if was_closed else "medium"))
 
-    if not geometries:
-        warnings.append("Aucune géométrie fiable extraite du PDF.")
-        return [], warnings
+def parse_spatial_document(entry: ListingEntry, document: PdfDocumentLayout) -> ParseResult:
+    layout_zones: list[ParsedZone] = []
+    grid_count = 0
+    for page in document.pages:
+        self_zones = self_contained_zones(page)
+        grid_page_zones = grid_zones(page)
+        row_zones = row_table_zones(page)
+        layout_zones.extend(self_zones)
+        layout_zones.extend(grid_page_zones)
+        if not grid_page_zones:
+            layout_zones.extend(row_zones)
+        grid_count += len(grid_page_zones)
+    fallback_zones = text_fallback_zones(document.text, entry.title)
+    zones = layout_zones + fallback_zones
+    if grid_count == 0:
+        zones = select_authoritative_row_zones(document, zones)
+    zones = deduplicate_zones(zones)
+    inherit_shared_geometries(zones)
+    zones = deduplicate_zones(zones)
 
-    if len(names) < len(geometries):
-        base = names[0] if names else zone_type_from_name(entry.title, entry.title)
-        for index in range(len(names), len(geometries)):
-            names.append(f"{base} {index + 1}" if len(geometries) > 1 else base)
-    elif len(names) > len(geometries):
-        warnings.append(f"{len(names) - len(geometries)} zone(s) nommée(s) sans géométrie fiable.")
-
-    activation_text = extract_activation_text(pdf_text)
-    activation_mode = infer_activation_mode(activation_text, pdf_text)
-    frequency = extract_frequencies(pdf_text)
+    expected_names = [zone.name for zone in zones]
+    expected_named_geometry_count = len(expected_names)
+    declared_count = declared_zone_count(entry.title)
+    activation_text = extract_activation_text(document.text)
+    activation_mode = infer_activation_mode(activation_text, document.text)
+    frequency = extract_frequencies(document.text)
     features: list[dict[str, Any]] = []
+    warnings: list[str] = []
     used_feature_ids: set[str] = set()
 
-    for index, (geometry, confidence) in enumerate(geometries):
-        name = names[index] if index < len(names) else f"Zone temporaire {index + 1}"
-        zone_type = zone_type_from_name(name, entry.title)
-        if len(verticals) == 1:
-            lower, upper = verticals[0]
-        elif index < len(verticals):
-            lower, upper = verticals[index]
-        else:
-            lower, upper = "À vérifier", "À vérifier"
-        feature_id = make_unique_feature_id(
-            entry.sup_aip,
-            name,
-            geometry,
-            lower,
-            upper,
-            used_feature_ids,
-        )
+    for zone in sorted(zones, key=lambda item: ((item.page_index if item.page_index is not None else 10_000), item.position_y, item.name)):
+        if zone.geometry is None:
+            warnings.append(f"{zone.name}: limites latérales non extraites.")
+            continue
+        lower = zone.lower_limit if zone.vertical_extracted else ""
+        upper = zone.upper_limit if zone.vertical_extracted else ""
+        feature_id = make_unique_feature_id(entry.sup_aip, zone.name, zone.geometry, lower, upper, used_feature_ids)
         properties: dict[str, Any] = {
             "id": feature_id,
-            "name": name,
-            "zoneType": zone_type,
+            "name": zone.name,
+            "zoneType": zone.zone_type or zone_type_from_name(zone.name, entry.title),
             "beta": True,
             "supAip": entry.sup_aip,
             "title": entry.title,
@@ -522,19 +1012,86 @@ def parse_spatial_pdf(entry: ListingEntry, pdf_text: str) -> tuple[list[dict[str
             "activationText": activation_text,
             "lowerLimit": lower,
             "upperLimit": upper,
+            "verticalLimitsExtracted": zone.vertical_extracted,
+            "verticalLimitNotice": None if zone.vertical_extracted else "Limites verticales non extraites - consulter le PDF SIA",
             "sourcePdf": entry.pdf_url,
             "sourcePage": SOURCE_URL,
+            "sourcePageNumber": (zone.page_index + 1) if zone.page_index is not None else None,
             "dataScope": "auto-sia",
-            "geometrySource": "automatic",
-            "geometryConfidence": confidence,
+            "geometrySource": "automatic-layout-v2",
+            "geometryConfidence": zone.confidence,
+            "geometryWarnings": zone.warnings,
             "sourceFingerprint": entry.fingerprint,
             "parserVersion": PARSER_VERSION,
         }
         if frequency:
             properties["frequency"] = frequency
-        features.append({"type": "Feature", "id": feature_id, "properties": properties, "geometry": geometry})
+        features.append({"type": "Feature", "id": feature_id, "properties": properties, "geometry": zone.geometry})
+        for warning in zone.warnings:
+            warnings.append(f"{zone.name}: {warning}")
 
-    return features, warnings
+    missing_vertical_count = sum(1 for feature in features if not feature["properties"].get("verticalLimitsExtracted"))
+    if missing_vertical_count:
+        warnings.append(f"{missing_vertical_count} zone(s) cartographiée(s) sans limites verticales extraites.")
+    if not features:
+        warnings.append("Aucune géométrie fiable extraite du PDF.")
+
+    return ParseResult(
+        features=features,
+        warnings=list(dict.fromkeys(warnings)),
+        expected_named_geometry_count=expected_named_geometry_count,
+        declared_zone_count=declared_count,
+        missing_vertical_count=missing_vertical_count,
+    )
+
+
+def parse_spatial_pdf(entry: ListingEntry, pdf_text: str) -> tuple[list[dict[str, Any]], list[str]]:
+    """Text-only compatibility entry point used by unit tests and small simple PDFs."""
+    document = PdfDocumentLayout(pdf_text, tuple())
+    zones = text_fallback_zones(pdf_text, entry.title)
+    activation_text = extract_activation_text(pdf_text)
+    activation_mode = infer_activation_mode(activation_text, pdf_text)
+    frequency = extract_frequencies(pdf_text)
+    features: list[dict[str, Any]] = []
+    warnings: list[str] = []
+    used_ids: set[str] = set()
+    for zone in zones:
+        if not zone.geometry:
+            continue
+        lower = zone.lower_limit if zone.vertical_extracted else ""
+        upper = zone.upper_limit if zone.vertical_extracted else ""
+        feature_id = make_unique_feature_id(entry.sup_aip, zone.name, zone.geometry, lower, upper, used_ids)
+        properties: dict[str, Any] = {
+            "id": feature_id,
+            "name": zone.name,
+            "zoneType": zone.zone_type,
+            "beta": True,
+            "supAip": entry.sup_aip,
+            "title": entry.title,
+            "validFrom": f"{entry.valid_from}T00:00:00Z",
+            "validTo": f"{entry.valid_to}T23:59:59Z",
+            "activationMode": activation_mode,
+            "activationText": activation_text,
+            "lowerLimit": lower,
+            "upperLimit": upper,
+            "verticalLimitsExtracted": zone.vertical_extracted,
+            "verticalLimitNotice": None if zone.vertical_extracted else "Limites verticales non extraites - consulter le PDF SIA",
+            "sourcePdf": entry.pdf_url,
+            "sourcePage": SOURCE_URL,
+            "dataScope": "auto-sia",
+            "geometrySource": "automatic-text-v2",
+            "geometryConfidence": zone.confidence,
+            "geometryWarnings": zone.warnings,
+            "sourceFingerprint": entry.fingerprint,
+            "parserVersion": PARSER_VERSION,
+        }
+        if frequency:
+            properties["frequency"] = frequency
+        features.append({"type": "Feature", "id": feature_id, "properties": properties, "geometry": zone.geometry})
+        warnings.extend(zone.warnings)
+    if not features:
+        warnings.append("Aucune géométrie fiable extraite du PDF.")
+    return features, list(dict.fromkeys(warnings))
 
 
 def load_json(path: Path, default: Any) -> Any:
@@ -544,7 +1101,7 @@ def load_json(path: Path, default: Any) -> Any:
         return default
 
 
-def existing_cache(output_dir: Path) -> tuple[dict[str, list[dict[str, Any]]], dict[str, dict[str, Any]]]:
+def existing_cache(output_dir: Path) -> tuple[dict[str, list[dict[str, Any]]], dict[str, dict[str, Any]], dict[str, dict[str, Any]]]:
     previous_geojson = load_json(output_dir / "supaip-current.geojson", {"features": []})
     feature_groups: dict[str, list[dict[str, Any]]] = {}
     for feature in previous_geojson.get("features", []):
@@ -558,7 +1115,13 @@ def existing_cache(output_dir: Path) -> tuple[dict[str, list[dict[str, Any]]], d
         for item in previous_unmapped.get("publications", [])
         if isinstance(item, dict) and item.get("supAip")
     }
-    return feature_groups, unmapped_by_sup
+    previous_manifest = load_json(output_dir / "supaip-manifest.json", {"publications": []})
+    manifest_by_sup = {
+        item.get("supAip"): item
+        for item in previous_manifest.get("publications", [])
+        if isinstance(item, dict) and item.get("supAip")
+    }
+    return feature_groups, unmapped_by_sup, manifest_by_sup
 
 
 def can_reuse_features(features: list[dict[str, Any]], entry: ListingEntry) -> bool:
@@ -573,6 +1136,10 @@ def can_reuse_unmapped(item: dict[str, Any] | None, entry: ListingEntry) -> bool
     return bool(item) and item.get("sourceFingerprint") == entry.fingerprint and item.get("parserVersion") == PARSER_VERSION
 
 
+def can_reuse_non_spatial(item: dict[str, Any] | None, entry: ListingEntry) -> bool:
+    return bool(item) and not item.get("spatial") and item.get("sourceFingerprint") == entry.fingerprint and item.get("parserVersion") == PARSER_VERSION
+
+
 def load_manual_overrides(path: Path) -> dict[str, list[dict[str, Any]]]:
     data = load_json(path, {"features": []})
     groups: dict[str, list[dict[str, Any]]] = {}
@@ -583,6 +1150,7 @@ def load_manual_overrides(path: Path) -> dict[str, list[dict[str, Any]]]:
             continue
         properties.setdefault("geometrySource", "manual-override")
         properties.setdefault("geometryConfidence", "high")
+        properties.setdefault("verticalLimitsExtracted", bool(properties.get("lowerLimit") and properties.get("upperLimit")))
         properties.setdefault("dataScope", "manual-override")
         properties.setdefault("beta", True)
         groups.setdefault(sup_aip, []).append(feature)
@@ -610,6 +1178,9 @@ def validate_feature_collection(collection: dict[str, Any], previous_count: int)
         raw = json.dumps(geometry)
         if "NaN" in raw or "Infinity" in raw:
             raise RuntimeError(f"Coordonnée invalide pour {feature_id}")
+        properties = feature.get("properties", {})
+        if properties.get("verticalLimitsExtracted") and (not properties.get("lowerLimit") or not properties.get("upperLimit")):
+            raise RuntimeError(f"Limites verticales incohérentes pour {feature_id}")
 
 
 def write_json_atomic(path: Path, payload: Any) -> None:
@@ -619,46 +1190,111 @@ def write_json_atomic(path: Path, payload: Any) -> None:
     temporary.replace(path)
 
 
-def build_dataset(output_dir: Path, override_path: Path, polite_delay: float = 0.15) -> dict[str, Any]:
+def is_critical_parse_warning(value: str) -> bool:
+    return bool(
+        re.search(
+            r"(?:limites? lat[eé]rales? non extraites?|sans limites verticales|exclusion interne non d[eé]coup[eé]e|"
+            r"limite d[eé]pendant|arc d[eé]tect[eé]|polygone incomplet|moins de trois coordonn[eé]es|rayon circulaire hors)",
+            value,
+            re.IGNORECASE,
+        )
+    )
+
+
+def build_dataset(output_dir: Path, override_path: Path, polite_delay: float = 0.12) -> dict[str, Any]:
     session = make_session()
     listing_html = fetch_bytes(session, SOURCE_URL).decode("utf-8", errors="replace")
     entries, source_updated_at = parse_listing(listing_html)
     if len(entries) < 10:
         raise RuntimeError(f"Liste SIA anormalement courte: {len(entries)} publication(s).")
 
-    candidate_entries = [entry for entry in entries if ZONE_TITLE_RE.search(entry.title)]
-    previous_features, previous_unmapped = existing_cache(output_dir)
+    previous_features, previous_unmapped, previous_manifest = existing_cache(output_dir)
     overrides = load_manual_overrides(override_path)
     previous_count = sum(len(items) for items in previous_features.values())
 
     all_features: list[dict[str, Any]] = []
     unmapped: list[dict[str, Any]] = []
+    manifest: list[dict[str, Any]] = []
     mapped_publications = 0
+    fully_mapped_publications = 0
     reused_publications = 0
     downloaded_publications = 0
+    non_spatial_publications = 0
+    zonal_publications = 0
+    declared_zone_total = 0
+    expected_named_total = 0
+    missing_vertical_total = 0
+    download_failures: list[str] = []
 
-    for entry in candidate_entries:
+    for entry in entries:
         cached_features = previous_features.get(entry.sup_aip, [])
         cached_unmapped = previous_unmapped.get(entry.sup_aip)
-        warnings: list[str] = []
+        cached_manifest = previous_manifest.get(entry.sup_aip)
         parsed_features: list[dict[str, Any]] = []
+        warnings: list[str] = []
+        expected_named_count = 0
+        declared_count: int | None = None
+        missing_vertical_count = 0
+        previous_partial = False
+        spatial = False
 
         if can_reuse_features(cached_features, entry):
             parsed_features = cached_features
+            spatial = True
             reused_publications += 1
+            expected_named_count = int((cached_manifest or {}).get("expectedNamedGeometryCount") or len(parsed_features))
+            declared_count = (cached_manifest or {}).get("declaredZoneCount")
+            missing_vertical_count = sum(1 for feature in parsed_features if not feature.get("properties", {}).get("verticalLimitsExtracted", True))
+            previous_partial = bool((cached_manifest or {}).get("partial"))
         elif can_reuse_unmapped(cached_unmapped, entry):
-            unmapped.append(cached_unmapped)
+            spatial = True
             reused_publications += 1
+            warnings = [cached_unmapped.get("reason", "Aucune géométrie fiable extraite.")]
+            expected_named_count = int(cached_unmapped.get("expectedNamedGeometryCount") or 0)
+            declared_count = cached_unmapped.get("declaredZoneCount")
+            previous_partial = bool(cached_unmapped.get("partial"))
+        elif can_reuse_non_spatial(cached_manifest, entry):
+            reused_publications += 1
+            non_spatial_publications += 1
+            manifest.append(cached_manifest)
             continue
         else:
             try:
-                pdf_bytes = fetch_bytes(session, entry.pdf_url, timeout=60)
+                pdf_bytes = fetch_bytes(session, entry.pdf_url, timeout=90)
                 downloaded_publications += 1
-                pdf_text = extract_pdf_text(pdf_bytes)
-                parsed_features, warnings = parse_spatial_pdf(entry, pdf_text)
-            except Exception as error:  # keep the scheduled job alive and report the publication
-                warnings = [f"Téléchargement ou lecture PDF impossible: {type(error).__name__}: {error}"]
+                document = extract_pdf_document(pdf_bytes)
+                spatial = is_spatial_document(entry, document)
+                if spatial:
+                    result = parse_spatial_document(entry, document)
+                    parsed_features = result.features
+                    warnings = result.warnings
+                    expected_named_count = result.expected_named_geometry_count
+                    declared_count = result.declared_zone_count
+                    missing_vertical_count = result.missing_vertical_count
+                else:
+                    non_spatial_publications += 1
+            except Exception as error:
+                download_failures.append(f"{entry.sup_aip}: {type(error).__name__}: {error}")
             time.sleep(polite_delay)
+
+        if download_failures:
+            continue
+
+        if not spatial:
+            manifest.append({
+                "supAip": entry.sup_aip,
+                "title": entry.title,
+                "spatial": False,
+                "sourcePdf": entry.pdf_url,
+                "sourceFingerprint": entry.fingerprint,
+                "parserVersion": PARSER_VERSION,
+            })
+            continue
+
+        zonal_publications += 1
+        declared_zone_total += int(declared_count or 0)
+        expected_named_total += expected_named_count
+        missing_vertical_total += missing_vertical_count
 
         generated_ids = {feature.get("id") for feature in parsed_features}
         for override in overrides.get(entry.sup_aip, []):
@@ -669,52 +1305,90 @@ def build_dataset(output_dir: Path, override_path: Path, polite_delay: float = 0
                 props["parserVersion"] = PARSER_VERSION
                 props["validFrom"] = f"{entry.valid_from}T00:00:00Z"
                 props["validTo"] = f"{entry.valid_to}T23:59:59Z"
+                lower = clean_space(str(props.get("lowerLimit") or ""))
+                upper = clean_space(str(props.get("upperLimit") or ""))
+                vertical_ok = bool(lower and upper and lower.lower() != "à vérifier" and upper.lower() != "à vérifier")
+                props["verticalLimitsExtracted"] = vertical_ok
+                props["verticalLimitNotice"] = None if vertical_ok else "Limites verticales non extraites - consulter le PDF SIA"
+                props.setdefault("geometryWarnings", [])
                 parsed_features.append(override_copy)
 
+        critical_warnings = [warning for warning in warnings if is_critical_parse_warning(warning)]
+        partial = previous_partial or bool(critical_warnings) or (expected_named_count > 0 and len(parsed_features) < expected_named_count) or missing_vertical_count > 0
         if parsed_features:
             mapped_publications += 1
+            if not partial:
+                fully_mapped_publications += 1
             all_features.extend(parsed_features)
-            if warnings:
-                unmapped.append({
-                    "supAip": entry.sup_aip,
-                    "title": entry.title,
-                    "validFrom": entry.valid_from,
-                    "validTo": entry.valid_to,
-                    "sourcePdf": entry.pdf_url,
-                    "reason": " ".join(warnings),
-                    "partial": True,
-                    "sourceFingerprint": entry.fingerprint,
-                    "parserVersion": PARSER_VERSION,
-                })
-        else:
+        reason_parts = list(critical_warnings)
+        if expected_named_count > len(parsed_features):
+            reason_parts.append(f"{len(parsed_features)}/{expected_named_count} géométries nommées extraites.")
+        if missing_vertical_count:
+            reason_parts.append(f"{missing_vertical_count} zone(s) sans limites verticales extraites.")
+        if not parsed_features:
+            reason_parts.append("Aucune géométrie fiable extraite.")
+        if partial or not parsed_features:
             unmapped.append({
                 "supAip": entry.sup_aip,
                 "title": entry.title,
                 "validFrom": entry.valid_from,
                 "validTo": entry.valid_to,
                 "sourcePdf": entry.pdf_url,
-                "reason": " ".join(warnings) or "Aucune géométrie fiable extraite.",
-                "partial": False,
+                "reason": " ".join(dict.fromkeys(reason_parts)),
+                "partial": bool(parsed_features),
+                "expectedNamedGeometryCount": expected_named_count,
+                "mappedGeometryCount": len(parsed_features),
+                "declaredZoneCount": declared_count,
+                "missingVerticalCount": missing_vertical_count,
                 "sourceFingerprint": entry.fingerprint,
                 "parserVersion": PARSER_VERSION,
             })
 
-    all_features.sort(key=lambda feature: (feature.get("properties", {}).get("supAip", ""), feature.get("properties", {}).get("name", "")), reverse=True)
+        manifest.append({
+            "supAip": entry.sup_aip,
+            "title": entry.title,
+            "spatial": True,
+            "mappedGeometryCount": len(parsed_features),
+            "expectedNamedGeometryCount": expected_named_count,
+            "declaredZoneCount": declared_count,
+            "missingVerticalCount": missing_vertical_count,
+            "partial": partial,
+            "sourcePdf": entry.pdf_url,
+            "sourceFingerprint": entry.fingerprint,
+            "parserVersion": PARSER_VERSION,
+        })
+
+    if download_failures:
+        raise RuntimeError("Protection activée: tous les PDF SIA n'ont pas été récupérés. " + " | ".join(download_failures[:10]))
+    if downloaded_publications + reused_publications != len(entries):
+        raise RuntimeError(
+            f"Protection activée: {downloaded_publications + reused_publications}/{len(entries)} publications seulement ont été traitées."
+        )
+
+    all_features.sort(
+        key=lambda feature: (feature.get("properties", {}).get("supAip", ""), feature.get("properties", {}).get("name", "")),
+        reverse=True,
+    )
+    missing_vertical_total = sum(
+        1 for feature in all_features if not feature.get("properties", {}).get("verticalLimitsExtracted", False)
+    )
     generated_at = datetime.now(timezone.utc).replace(microsecond=0).isoformat().replace("+00:00", "Z")
     collection = {
         "type": "FeatureCollection",
-        "name": "CAP CLAIR SUP AIP AUTO BETA",
+        "name": "CAP CLAIR SUP AIP AUTO BETA - Parser V2",
         "generatedAt": generated_at,
         "source": "SIA France - liste et PDF officiels SUP AIP Métropole",
         "sourceUrl": SOURCE_URL,
-        "coverage": "Extraction automatique conservatrice. Les publications non cartographiées sont signalées séparément.",
+        "coverage": "Analyse de toutes les publications listées. Extraction layout-aware conservatrice; les limites non reconstructibles restent signalées.",
         "parserVersion": PARSER_VERSION,
         "features": all_features,
     }
     validate_feature_collection(collection, previous_count)
 
+    complete_unmapped_count = sum(1 for item in unmapped if not item.get("partial"))
+    partial_count = sum(1 for item in unmapped if item.get("partial"))
     status = {
-        "schemaVersion": 1,
+        "schemaVersion": 2,
         "mode": "automatic",
         "beta": True,
         "generatedAt": generated_at,
@@ -722,28 +1396,43 @@ def build_dataset(output_dir: Path, override_path: Path, polite_delay: float = 0
         "sourceUrl": SOURCE_URL,
         "parserVersion": PARSER_VERSION,
         "listingPublicationCount": len(entries),
-        "zonalPublicationCount": len(candidate_entries),
+        "processedPublicationCount": downloaded_publications + reused_publications,
+        "nonSpatialPublicationCount": non_spatial_publications,
+        "zonalPublicationCount": zonal_publications,
         "mappedPublicationCount": mapped_publications,
+        "fullyMappedPublicationCount": fully_mapped_publications,
         "featureCount": len(all_features),
+        "expectedNamedGeometryCount": expected_named_total,
+        "declaredZoneCount": declared_zone_total,
+        "verticalCompleteFeatureCount": len(all_features) - missing_vertical_total,
+        "missingVerticalFeatureCount": missing_vertical_total,
         "unmappedPublicationCount": len(unmapped),
-        "completeUnmappedPublicationCount": sum(1 for item in unmapped if not item.get("partial")),
-        "partialPublicationCount": sum(1 for item in unmapped if item.get("partial")),
+        "completeUnmappedPublicationCount": complete_unmapped_count,
+        "partialPublicationCount": partial_count,
         "reusedPublicationCount": reused_publications,
         "downloadedPublicationCount": downloaded_publications,
         "staleAfterHours": 36,
-        "message": "Données générées automatiquement depuis les publications officielles du SIA. Vérifier le PDF, SOFIA et les NOTAM avant le vol.",
+        "message": "Parser V2: toutes les publications SIA listées sont contrôlées. Vérifier le PDF, SOFIA et les NOTAM avant le vol.",
     }
     unmapped_payload = {
-        "schemaVersion": 1,
+        "schemaVersion": 2,
         "generatedAt": generated_at,
         "sourceUrl": SOURCE_URL,
         "parserVersion": PARSER_VERSION,
         "publications": sorted(unmapped, key=lambda item: item.get("supAip", ""), reverse=True),
     }
+    manifest_payload = {
+        "schemaVersion": 1,
+        "generatedAt": generated_at,
+        "sourceUrl": SOURCE_URL,
+        "parserVersion": PARSER_VERSION,
+        "publications": sorted(manifest, key=lambda item: item.get("supAip", ""), reverse=True),
+    }
 
     write_json_atomic(output_dir / "supaip-current.geojson", collection)
     write_json_atomic(output_dir / "supaip-status.json", status)
     write_json_atomic(output_dir / "supaip-unmapped.json", unmapped_payload)
+    write_json_atomic(output_dir / "supaip-manifest.json", manifest_payload)
     return status
 
 
@@ -751,7 +1440,7 @@ def main(argv: Iterable[str] | None = None) -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("--output-dir", type=Path, default=Path("public/data"))
     parser.add_argument("--overrides", type=Path, default=Path("tools/supaip/overrides.geojson"))
-    parser.add_argument("--polite-delay", type=float, default=0.15)
+    parser.add_argument("--polite-delay", type=float, default=0.12)
     args = parser.parse_args(list(argv) if argv is not None else None)
 
     try:

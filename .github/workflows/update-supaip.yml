@@ -15,7 +15,7 @@ concurrency:
 jobs:
   update:
     runs-on: ubuntu-latest
-    timeout-minutes: 25
+    timeout-minutes: 35
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -41,19 +41,40 @@ jobs:
           python - <<'PY'
           import json
           from pathlib import Path
+
           geo = json.loads(Path('public/data/supaip-current.geojson').read_text(encoding='utf-8'))
           status = json.loads(Path('public/data/supaip-status.json').read_text(encoding='utf-8'))
+          manifest = json.loads(Path('public/data/supaip-manifest.json').read_text(encoding='utf-8'))
+
           assert geo['type'] == 'FeatureCollection'
+          assert status['schemaVersion'] >= 2
           assert len(geo['features']) == status['featureCount']
           assert status['featureCount'] > 0
+          assert status['processedPublicationCount'] == status['listingPublicationCount']
+          assert status['downloadedPublicationCount'] + status['reusedPublicationCount'] == status['listingPublicationCount']
           assert status['zonalPublicationCount'] == status['mappedPublicationCount'] + status['completeUnmappedPublicationCount']
-          assert status['downloadedPublicationCount'] + status['reusedPublicationCount'] == status['zonalPublicationCount']
+          assert len(manifest.get('publications', [])) == status['listingPublicationCount']
 
           ids = [feature.get('id') or feature.get('properties', {}).get('id') for feature in geo['features']]
           assert all(ids)
           assert len(ids) == len(set(ids))
 
-          print(f"Validated {status['featureCount']} zones from {status['mappedPublicationCount']} publications")
+          missing_vertical = 0
+          for feature in geo['features']:
+              props = feature.get('properties', {})
+              extracted = props.get('verticalLimitsExtracted', False)
+              if extracted:
+                  assert props.get('lowerLimit') and props.get('upperLimit')
+              else:
+                  missing_vertical += 1
+                  assert props.get('verticalLimitNotice')
+          assert missing_vertical == status['missingVerticalFeatureCount']
+          assert status['verticalCompleteFeatureCount'] + status['missingVerticalFeatureCount'] == status['featureCount']
+
+          print(
+              f"Validated {status['processedPublicationCount']}/{status['listingPublicationCount']} PDF, "
+              f"{status['featureCount']} geometries and {status['missingVerticalFeatureCount']} missing vertical limits"
+          )
           PY
 
       - name: Publish run summary
@@ -67,34 +88,48 @@ jobs:
           unmapped = json.loads(Path('public/data/supaip-unmapped.json').read_text(encoding='utf-8')).get('publications', [])
           summary = Path(os.environ['GITHUB_STEP_SUMMARY'])
           lines = [
-              '# CAP CLAIR - bilan SUP AIP',
+              '# CAP CLAIR - bilan SUP AIP Parser V2',
               '',
               f"- Publications SIA listées : {status['listingPublicationCount']}",
-              f"- Publications spatiales retenues : {status['zonalPublicationCount']}",
+              f"- PDF contrôlés : {status['processedPublicationCount']}",
               f"- PDF téléchargés : {status['downloadedPublicationCount']}",
               f"- Publications réutilisées : {status['reusedPublicationCount']}",
-              f"- Publications cartographiées : {status['mappedPublicationCount']}",
-              f"- Zones produites : {status['featureCount']}",
-              f"- Publications non cartographiées : {status['completeUnmappedPublicationCount']}",
+              f"- Publications non spatiales : {status['nonSpatialPublicationCount']}",
+              f"- Publications spatiales : {status['zonalPublicationCount']}",
+              f"- Publications entièrement cartographiées : {status['fullyMappedPublicationCount']}",
               f"- Publications partielles : {status['partialPublicationCount']}",
+              f"- Publications non cartographiées : {status['completeUnmappedPublicationCount']}",
+              f"- Géométries nommées attendues : {status['expectedNamedGeometryCount']}",
+              f"- Géométries produites : {status['featureCount']}",
+              f"- Géométries avec verticales : {status['verticalCompleteFeatureCount']}",
+              f"- Géométries sans verticales : {status['missingVerticalFeatureCount']}",
               '',
           ]
           if unmapped:
               lines.extend(['## Publications à contrôler', ''])
-              for item in unmapped[:40]:
+              for item in unmapped[:60]:
                   state = 'partiel' if item.get('partial') else 'non cartographié'
-                  lines.append(f"- {item.get('supAip')} - {state} - {item.get('title')}")
+                  mapped = item.get('mappedGeometryCount', 0)
+                  expected = item.get('expectedNamedGeometryCount', 0)
+                  vertical = item.get('missingVerticalCount', 0)
+                  lines.append(
+                      f"- {item.get('supAip')} - {state} - {mapped}/{expected} géométries - "
+                      f"{vertical} verticale(s) manquante(s) - {item.get('title')}"
+                  )
+                  reason = item.get('reason')
+                  if reason:
+                      lines.append(f"  - Diagnostic : {reason}")
           summary.write_text('\n'.join(lines) + '\n', encoding='utf-8')
           PY
 
       - name: Commit updated data
         run: |
-          if git diff --quiet -- public/data/supaip-current.geojson public/data/supaip-status.json public/data/supaip-unmapped.json; then
+          if git diff --quiet -- public/data/supaip-current.geojson public/data/supaip-status.json public/data/supaip-unmapped.json public/data/supaip-manifest.json; then
             echo "No SUP AIP change"
             exit 0
           fi
           git config user.name "CAP CLAIR SUP AIP Bot"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add public/data/supaip-current.geojson public/data/supaip-status.json public/data/supaip-unmapped.json
-          git commit -m "data: actualisation automatique SUP AIP"
+          git add public/data/supaip-current.geojson public/data/supaip-status.json public/data/supaip-unmapped.json public/data/supaip-manifest.json
+          git commit -m "data: actualisation automatique SUP AIP Parser V2"
           git push

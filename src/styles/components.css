@@ -3796,7 +3796,7 @@
 .supaip-altitude-rule p, .supaip-settings-warning { margin: 3px 0 0; color: var(--text-3); font-size: 0.68rem; line-height: 1.42; }
 .supaip-settings-warning { color: #FFD49A; padding: 0 2px; }
 
-/* WEB13.26.1 - état de la base SUP AIP automatique */
+/* WEB13.27.0 - état de la base SUP AIP automatique */
 .supaip-dataset-status {
   display: grid;
   gap: 9px;

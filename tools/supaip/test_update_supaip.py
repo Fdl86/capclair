@@ -2,7 +2,13 @@ import unittest
 
 from tools.supaip.update_supaip import (
     ListingEntry,
+    PdfBlock,
+    PdfPageLayout,
+    clean_listing_title,
     coordinate_matches,
+    declared_zone_count,
+    extract_vertical_pair,
+    grid_zones,
     make_unique_feature_id,
     parse_listing,
     parse_spatial_pdf,
@@ -22,12 +28,30 @@ class SupAipParserTests(unittest.TestCase):
         self.assertTrue(entries[0].vfr)
         self.assertEqual(updated, "2026-07-09T00:00:00Z")
 
+    def test_listing_title_cleanup(self):
+        self.assertEqual(clean_listing_title("<p>Création d\\'une ZRT</p>"), "Création d'une ZRT")
+
     def test_coordinate_formats(self):
         text = "47°44'58.00\" N 001°21'31.00\" E\n471933N 0022818W"
         matches = coordinate_matches(text)
         self.assertEqual(len(matches), 2)
         self.assertAlmostEqual(matches[0].lat, 47.749444, places=5)
         self.assertLess(matches[1].lon, 0)
+
+    def test_vertical_formats(self):
+        self.assertEqual(extract_vertical_pair("FL125/FL135"), ("FL 125", "FL 135"))
+        self.assertEqual(
+            extract_vertical_pair("1000 ft ASFC - 3100 ft AMSL / 6500 ft AMSL"),
+            ("1000 ft ASFC - 3100 ft AMSL", "6500 ft AMSL"),
+        )
+        self.assertEqual(extract_vertical_pair("SFC - FL085"), ("SFC", "FL 085"))
+
+    def test_declared_zone_count(self):
+        self.assertEqual(
+            declared_zone_count("Création de 95 zones réglementées temporaires et 4 zones dangereuses temporaires"),
+            99,
+        )
+        self.assertEqual(declared_zone_count("Création de 16 ZRT et 4 ZDT"), 20)
 
     def test_polygon_pdf(self):
         entry = ListingEntry(
@@ -61,8 +85,31 @@ class SupAipParserTests(unittest.TestCase):
         self.assertEqual(len(features), 1)
         self.assertEqual(features[0]["properties"]["name"], "ZRT BLOIS")
         self.assertEqual(features[0]["properties"]["lowerLimit"], "FL 050")
+        self.assertTrue(features[0]["properties"]["verticalLimitsExtracted"])
+        self.assertIsNone(features[0]["properties"]["verticalLimitNotice"])
         self.assertFalse(warnings)
 
+    def test_grid_layout_keeps_columns_and_vertical_limits_together(self):
+        page = PdfPageLayout(
+            page_index=0,
+            width=600,
+            height=800,
+            blocks=(
+                PdfBlock(0, 40, 50, 180, 70, "ZRT ALPHA"),
+                PdfBlock(0, 320, 50, 460, 70, "ZRT BRAVO"),
+                PdfBlock(0, 70, 90, 170, 110, "LIMITES LATÉRALES"),
+                PdfBlock(0, 350, 90, 450, 110, "LIMITES LATÉRALES"),
+                PdfBlock(0, 60, 115, 250, 260, "47°00'00'' N - 001°00'00'' E\n47°10'00'' N - 001°00'00'' E\n47°00'00'' N - 001°10'00'' E"),
+                PdfBlock(0, 340, 115, 530, 260, "48°00'00'' N - 002°00'00'' E\n48°10'00'' N - 002°00'00'' E\n48°00'00'' N - 002°10'00'' E"),
+                PdfBlock(0, 60, 270, 250, 290, "SFC / FL 065"),
+                PdfBlock(0, 340, 270, 530, 290, "2500 FT AMSL / FL 095"),
+            ),
+        )
+        zones = grid_zones(page)
+        self.assertEqual(len(zones), 2)
+        self.assertEqual(zones[0].name, "ZRT ALPHA")
+        self.assertEqual((zones[0].lower_limit, zones[0].upper_limit), ("SFC", "FL 065"))
+        self.assertEqual((zones[1].lower_limit, zones[1].upper_limit), ("2500 ft AMSL", "FL 095"))
 
     def test_duplicate_truncated_zone_names_receive_unique_ids(self):
         used_ids: set[str] = set()

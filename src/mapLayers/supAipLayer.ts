@@ -157,6 +157,10 @@ export function supAipSelectionFromFeature(feature: Feature<Geometry>): SupAipSe
     dataScope: properties.dataScope,
     geometrySource: properties.geometrySource,
     geometryConfidence: properties.geometryConfidence,
+    geometryWarnings: properties.geometryWarnings,
+    verticalLimitsExtracted: properties.verticalLimitsExtracted,
+    verticalLimitNotice: properties.verticalLimitNotice,
+    sourcePageNumber: properties.sourcePageNumber,
     sourceFingerprint: properties.sourceFingerprint,
     parserVersion: properties.parserVersion,
     visualStatus: getSupAipVisualStatus(properties)

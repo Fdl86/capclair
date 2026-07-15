@@ -7,9 +7,16 @@ export interface SupAipDatasetStatus {
   sourceUrl: string;
   parserVersion: string;
   listingPublicationCount: number;
+  processedPublicationCount?: number;
+  nonSpatialPublicationCount?: number;
   zonalPublicationCount: number;
   mappedPublicationCount: number;
+  fullyMappedPublicationCount?: number;
   featureCount: number;
+  expectedNamedGeometryCount?: number;
+  declaredZoneCount?: number;
+  verticalCompleteFeatureCount?: number;
+  missingVerticalFeatureCount?: number;
   unmappedPublicationCount: number;
   completeUnmappedPublicationCount: number;
   partialPublicationCount: number;
