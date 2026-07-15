@@ -1,71 +1,97 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-07-15T14:20:23Z",
+  "generatedAt": "2026-07-15T16:09:24Z",
+  "datasetRevision": "79c15e1ac72f9224ed6a42919e7ef1f919f576a03d30f056fb5b0964851417a4",
   "sourceUrl": "https://www.sia.aviation-civile.gouv.fr/documents/supaip/aip/id/6",
-  "parserVersion": "capclair-supaip-parser-2.1.0",
+  "parserVersion": "capclair-supaip-parser-3.0.0",
   "publications": [
-    {
-      "supAip": "234/24",
-      "title": "Modification des zones LF-R204 : Création de deux zones réglementées temporaires",
-      "validFrom": "2025-01-09",
-      "validTo": "2027-04-14",
-      "sourcePdf": "https://www.sia.aviation-civile.gouv.fr/documents/download/f/d/13791055/",
-      "reason": "Aucune géométrie fiable extraite.",
-      "partial": false,
-      "expectedNamedGeometryCount": 0,
-      "mappedGeometryCount": 0,
-      "declaredZoneCount": 2,
-      "missingVerticalCount": 0,
-      "causeCodes": [
-        "zone-block-not-detected"
-      ],
-      "causeLabels": [
-        "Blocs de zones non reconnus"
-      ],
-      "sourceFingerprint": "5a3b21d3226b602e0c2b",
-      "parserVersion": "capclair-supaip-parser-2.1.0"
-    },
     {
       "supAip": "233/24",
       "title": "Création d’une zone dangereuse temporaire (ZDT) et de zones réglementées temporaires (ZRT) pour le transit d’un drone en UIR France",
       "validFrom": "2025-01-16",
       "validTo": "2027-01-13",
       "sourcePdf": "https://www.sia.aviation-civile.gouv.fr/documents/download/f/d/13791052/",
-      "reason": "Aucune géométrie fiable extraite.",
-      "partial": false,
-      "expectedNamedGeometryCount": 0,
-      "mappedGeometryCount": 0,
+      "reason": "ZRT TREVERI: limites latérales non extraites. 2/3 géométries nommées extraites.",
+      "partial": true,
+      "expectedNamedGeometryCount": 3,
+      "mappedGeometryCount": 2,
       "declaredZoneCount": 1,
       "missingVerticalCount": 0,
       "causeCodes": [
-        "zone-block-not-detected"
+        "lateral-boundary-not-extracted",
+        "named-geometry-missing"
       ],
       "causeLabels": [
-        "Blocs de zones non reconnus"
+        "Limites latérales non extraites",
+        "Géométries nommées manquantes"
       ],
-      "sourceFingerprint": "5007d510f29f8abf1dc2",
-      "parserVersion": "capclair-supaip-parser-2.1.0"
+      "sourceFingerprint": "61c9b1b050c03eb0438f",
+      "parserVersion": "capclair-supaip-parser-3.0.0"
     },
     {
-      "supAip": "211/25",
-      "title": "Création de 2 Zones Règlementées Temporaires (ZRT) dans le cadre de la campagne CANSOLE dans la région de Valensole",
-      "validFrom": "2026-01-06",
-      "validTo": "2026-09-14",
-      "sourcePdf": "https://www.sia.aviation-civile.gouv.fr/documents/download/f/d/15016248/",
-      "reason": "Aucune géométrie fiable extraite.",
-      "partial": false,
-      "expectedNamedGeometryCount": 0,
-      "mappedGeometryCount": 0,
-      "declaredZoneCount": 2,
+      "supAip": "216/25",
+      "title": "Création d’une Zone Réglementée Temporaire (ZRT) « METZ - THIONVILLE » pour vols hors vue d’un aéronef télépiloté sans équipage à bord entre le Centre Hospitalier Universitaire de METZ et le Centre Hospitalier de THIONVILLE (57)",
+      "validFrom": "2026-01-01",
+      "validTo": "2026-12-31",
+      "sourcePdf": "https://www.sia.aviation-civile.gouv.fr/documents/download/f/d/15016258/",
+      "reason": "ZRT activable H24: Exclusion interne non découpée: contour extérieur affiché par prudence.",
+      "partial": true,
+      "expectedNamedGeometryCount": 1,
+      "mappedGeometryCount": 2,
+      "declaredZoneCount": 1,
       "missingVerticalCount": 0,
       "causeCodes": [
-        "zone-block-not-detected"
+        "internal-exclusion-not-cut",
+        "safety-fallback"
       ],
       "causeLabels": [
-        "Blocs de zones non reconnus"
+        "Exclusions internes non découpées",
+        "Repli de sécurité depuis une ancienne géométrie"
       ],
-      "sourceFingerprint": "22fe00b69d0fd225b16e",
-      "parserVersion": "capclair-supaip-parser-2.1.0"
+      "sourceFingerprint": "3ac8d2bd708d68c57c1c",
+      "parserVersion": "capclair-supaip-parser-3.0.0"
+    },
+    {
+      "supAip": "212/25",
+      "title": "Création d'une Zone Réglementée Temporaire (ZRT HIRSON) au profit de vols d'aéronefs sans équipage à bord, hors vue de jour et de nuit, dans la région des Hauts de France",
+      "validFrom": "2026-01-01",
+      "validTo": "2026-12-31",
+      "sourcePdf": "https://www.sia.aviation-civile.gouv.fr/documents/download/f/d/15016250/",
+      "reason": "ZRT HIRSON: Exclusion interne non découpée: contour extérieur affiché par prudence.",
+      "partial": true,
+      "expectedNamedGeometryCount": 1,
+      "mappedGeometryCount": 1,
+      "declaredZoneCount": 1,
+      "missingVerticalCount": 0,
+      "causeCodes": [
+        "internal-exclusion-not-cut"
+      ],
+      "causeLabels": [
+        "Exclusions internes non découpées"
+      ],
+      "sourceFingerprint": "8dfc8d425552e829572d",
+      "parserVersion": "capclair-supaip-parser-3.0.0"
+    },
+    {
+      "supAip": "210/25",
+      "title": "Création d’une Zone Réglementée Temporaire (ZRT) au profit de vols d’aéronefs sans équipage à bord, hors vue, entre le centre hospitalier de Verneuil-d’Avre-et-d’Iton (27) et le centre hospitalier de L’Aigle (61)",
+      "validFrom": "2026-01-01",
+      "validTo": "2027-12-31",
+      "sourcePdf": "https://www.sia.aviation-civile.gouv.fr/documents/download/f/d/15016246/",
+      "reason": "",
+      "partial": true,
+      "expectedNamedGeometryCount": 1,
+      "mappedGeometryCount": 2,
+      "declaredZoneCount": 1,
+      "missingVerticalCount": 0,
+      "causeCodes": [
+        "safety-fallback"
+      ],
+      "causeLabels": [
+        "Repli de sécurité depuis une ancienne géométrie"
+      ],
+      "sourceFingerprint": "87d23a16ab4ff21e9696",
+      "parserVersion": "capclair-supaip-parser-3.0.0"
     },
     {
       "supAip": "207/25",
@@ -85,8 +111,8 @@
       "causeLabels": [
         "Exclusions internes non découpées"
       ],
-      "sourceFingerprint": "402aed8f6ca839c98d60",
-      "parserVersion": "capclair-supaip-parser-2.1.0"
+      "sourceFingerprint": "05b6ccf7ffd38ad68f05",
+      "parserVersion": "capclair-supaip-parser-3.0.0"
     },
     {
       "supAip": "206/25",
@@ -94,20 +120,20 @@
       "validFrom": "2026-01-01",
       "validTo": "2027-12-31",
       "sourcePdf": "https://www.sia.aviation-civile.gouv.fr/documents/download/f/d/15016224/",
-      "reason": "1 zone(s) cartographiée(s) sans limites verticales extraites. 1 zone(s) sans limites verticales extraites.",
+      "reason": "2/3 géométries nommées extraites.",
       "partial": true,
-      "expectedNamedGeometryCount": 1,
-      "mappedGeometryCount": 1,
+      "expectedNamedGeometryCount": 3,
+      "mappedGeometryCount": 2,
       "declaredZoneCount": 3,
-      "missingVerticalCount": 1,
+      "missingVerticalCount": 0,
       "causeCodes": [
-        "vertical-limit-not-extracted"
+        "named-geometry-missing"
       ],
       "causeLabels": [
-        "Limites verticales non extraites"
+        "Géométries nommées manquantes"
       ],
-      "sourceFingerprint": "8fa2b569f1012ea2c8c8",
-      "parserVersion": "capclair-supaip-parser-2.1.0"
+      "sourceFingerprint": "60757cfe4c70f62d9806",
+      "parserVersion": "capclair-supaip-parser-3.0.0"
     },
     {
       "supAip": "192/25",
@@ -115,91 +141,7 @@
       "validFrom": "2025-11-27",
       "validTo": "2026-11-25",
       "sourcePdf": "https://www.sia.aviation-civile.gouv.fr/documents/download/f/d/15005527/",
-      "reason": "Aucune géométrie fiable extraite.",
-      "partial": false,
-      "expectedNamedGeometryCount": 0,
-      "mappedGeometryCount": 0,
-      "declaredZoneCount": 1,
-      "missingVerticalCount": 0,
-      "causeCodes": [
-        "zone-block-not-detected"
-      ],
-      "causeLabels": [
-        "Blocs de zones non reconnus"
-      ],
-      "sourceFingerprint": "68414a2ce3b442eb6cc3",
-      "parserVersion": "capclair-supaip-parser-2.1.0"
-    },
-    {
-      "supAip": "188/25",
-      "title": "Création de neuf Zones Réglementées Temporaires (ZRT) au profit de vols en vue et hors vue d’aéronefs sans équipage à bord sur la côte Atlantique en Gironde",
-      "validFrom": "2025-11-13",
-      "validTo": "2026-11-10",
-      "sourcePdf": "https://www.sia.aviation-civile.gouv.fr/documents/download/f/d/15000061/",
-      "reason": "ZRT CESA COULOIR HOURTIN PLAGE: Exclusion interne non découpée: contour extérieur affiché par prudence. ZRT CESA COULOIR NAUJAC: Exclusion interne non découpée: contour extérieur affiché par prudence.",
-      "partial": true,
-      "expectedNamedGeometryCount": 7,
-      "mappedGeometryCount": 7,
-      "declaredZoneCount": 9,
-      "missingVerticalCount": 0,
-      "causeCodes": [
-        "internal-exclusion-not-cut"
-      ],
-      "causeLabels": [
-        "Exclusions internes non découpées"
-      ],
-      "sourceFingerprint": "9608658ba362f7c63213",
-      "parserVersion": "capclair-supaip-parser-2.1.0"
-    },
-    {
-      "supAip": "187/25",
-      "title": "Création de 2 Zones Réglementées Temporaires (ZRT) RAPACE dans le cadre d’un projet d’extension de la LF-R151 LA LANDE D’OUEE au nord-est de Rennes",
-      "validFrom": "2025-11-18",
-      "validTo": "2026-09-24",
-      "sourcePdf": "https://www.sia.aviation-civile.gouv.fr/documents/download/f/d/15000059/",
-      "reason": "Aucune géométrie fiable extraite.",
-      "partial": false,
-      "expectedNamedGeometryCount": 0,
-      "mappedGeometryCount": 0,
-      "declaredZoneCount": 2,
-      "missingVerticalCount": 0,
-      "causeCodes": [
-        "zone-block-not-detected"
-      ],
-      "causeLabels": [
-        "Blocs de zones non reconnus"
-      ],
-      "sourceFingerprint": "d2701ff032d2b7610304",
-      "parserVersion": "capclair-supaip-parser-2.1.0"
-    },
-    {
-      "supAip": "172/25",
-      "title": "Création de quatre Zones Réglementées Temporaires (ZRT) au profit de vols en vue et hors vue d’aéronefs sans équipage en baie de Lannion",
-      "validFrom": "2025-10-02",
-      "validTo": "2026-09-30",
-      "sourcePdf": "https://www.sia.aviation-civile.gouv.fr/documents/download/f/d/14989127/",
-      "reason": "Aucune géométrie fiable extraite.",
-      "partial": false,
-      "expectedNamedGeometryCount": 0,
-      "mappedGeometryCount": 0,
-      "declaredZoneCount": 4,
-      "missingVerticalCount": 0,
-      "causeCodes": [
-        "zone-block-not-detected"
-      ],
-      "causeLabels": [
-        "Blocs de zones non reconnus"
-      ],
-      "sourceFingerprint": "42203501edca1b244945",
-      "parserVersion": "capclair-supaip-parser-2.1.0"
-    },
-    {
-      "supAip": "167/25",
-      "title": "Création à titre expérimental d’une Zone Réglementée Temporaire (ZRT) sur l’aérodrome de Nancy Ochey",
-      "validFrom": "2025-09-29",
-      "validTo": "2026-12-31",
-      "sourcePdf": "https://www.sia.aviation-civile.gouv.fr/documents/download/f/d/14983716/",
-      "reason": "ZRT OCHEY: Exclusion interne non découpée: contour extérieur affiché par prudence.",
+      "reason": "ZRT VILLACOUBLAY: Exclusion interne non découpée: contour extérieur affiché par prudence.",
       "partial": true,
       "expectedNamedGeometryCount": 1,
       "mappedGeometryCount": 1,
@@ -211,8 +153,117 @@
       "causeLabels": [
         "Exclusions internes non découpées"
       ],
-      "sourceFingerprint": "b4f58faddbd6c886d3a9",
-      "parserVersion": "capclair-supaip-parser-2.1.0"
+      "sourceFingerprint": "5957057e46d3401f114a",
+      "parserVersion": "capclair-supaip-parser-3.0.0"
+    },
+    {
+      "supAip": "191/25",
+      "title": "Création d’une Zone Réglementée Temporaire (ZRT DRONE COUBERT) au profit de vols d'aéronefs sans équipage à bord, hors vue de jour et de nuit, dans la région Ile de France",
+      "validFrom": "2025-11-20",
+      "validTo": "2026-12-31",
+      "sourcePdf": "https://www.sia.aviation-civile.gouv.fr/documents/download/f/d/15005525/",
+      "reason": "ZRT DRONE COUBERT: Exclusion interne non découpée: contour extérieur affiché par prudence.",
+      "partial": true,
+      "expectedNamedGeometryCount": 1,
+      "mappedGeometryCount": 1,
+      "declaredZoneCount": 1,
+      "missingVerticalCount": 0,
+      "causeCodes": [
+        "internal-exclusion-not-cut"
+      ],
+      "causeLabels": [
+        "Exclusions internes non découpées"
+      ],
+      "sourceFingerprint": "ba0e9bf334b67e74f05e",
+      "parserVersion": "capclair-supaip-parser-3.0.0"
+    },
+    {
+      "supAip": "188/25",
+      "title": "Création de neuf Zones Réglementées Temporaires (ZRT) au profit de vols en vue et hors vue d’aéronefs sans équipage à bord sur la côte Atlantique en Gironde",
+      "validFrom": "2025-11-13",
+      "validTo": "2026-11-10",
+      "sourcePdf": "https://www.sia.aviation-civile.gouv.fr/documents/download/f/d/15000061/",
+      "reason": "ZRT CESA COULOIR HOURTIN PLAGE: Exclusion interne non découpée: contour extérieur affiché par prudence. ZRT CESA COULOIR NAUJAC: Exclusion interne non découpée: contour extérieur affiché par prudence. 7/9 géométries nommées extraites.",
+      "partial": true,
+      "expectedNamedGeometryCount": 9,
+      "mappedGeometryCount": 7,
+      "declaredZoneCount": 9,
+      "missingVerticalCount": 0,
+      "causeCodes": [
+        "internal-exclusion-not-cut",
+        "named-geometry-missing"
+      ],
+      "causeLabels": [
+        "Exclusions internes non découpées",
+        "Géométries nommées manquantes"
+      ],
+      "sourceFingerprint": "2a9418a90ff62f4023ff",
+      "parserVersion": "capclair-supaip-parser-3.0.0"
+    },
+    {
+      "supAip": "176/25",
+      "title": "Création d’une Zone Réglementée Temporaire (ZRT) au profit de vols hors vue d’aéronefs sans équipage à bord dans la région Sud de Chartres",
+      "validFrom": "2025-10-16",
+      "validTo": "2026-10-14",
+      "sourcePdf": "https://www.sia.aviation-civile.gouv.fr/documents/download/f/d/14989135/",
+      "reason": "ZRT DRONE REGION SUD DE CHARTRES: Exclusion interne non découpée: contour extérieur affiché par prudence.",
+      "partial": true,
+      "expectedNamedGeometryCount": 1,
+      "mappedGeometryCount": 1,
+      "declaredZoneCount": 1,
+      "missingVerticalCount": 0,
+      "causeCodes": [
+        "internal-exclusion-not-cut"
+      ],
+      "causeLabels": [
+        "Exclusions internes non découpées"
+      ],
+      "sourceFingerprint": "b130acc36ed6ee8196d7",
+      "parserVersion": "capclair-supaip-parser-3.0.0"
+    },
+    {
+      "supAip": "172/25",
+      "title": "Création de quatre Zones Réglementées Temporaires (ZRT) au profit de vols en vue et hors vue d’aéronefs sans équipage en baie de Lannion",
+      "validFrom": "2025-10-02",
+      "validTo": "2026-09-30",
+      "sourcePdf": "https://www.sia.aviation-civile.gouv.fr/documents/download/f/d/14989127/",
+      "reason": "3/4 géométries nommées extraites.",
+      "partial": true,
+      "expectedNamedGeometryCount": 4,
+      "mappedGeometryCount": 3,
+      "declaredZoneCount": 4,
+      "missingVerticalCount": 0,
+      "causeCodes": [
+        "named-geometry-missing"
+      ],
+      "causeLabels": [
+        "Géométries nommées manquantes"
+      ],
+      "sourceFingerprint": "82f558f41d4b8892410b",
+      "parserVersion": "capclair-supaip-parser-3.0.0"
+    },
+    {
+      "supAip": "167/25",
+      "title": "Création à titre expérimental d’une Zone Réglementée Temporaire (ZRT) sur l’aérodrome de Nancy Ochey",
+      "validFrom": "2025-09-29",
+      "validTo": "2026-12-31",
+      "sourcePdf": "https://www.sia.aviation-civile.gouv.fr/documents/download/f/d/14983716/",
+      "reason": "LFR110: Exclusion interne non découpée: contour extérieur affiché par prudence.",
+      "partial": true,
+      "expectedNamedGeometryCount": 1,
+      "mappedGeometryCount": 2,
+      "declaredZoneCount": 1,
+      "missingVerticalCount": 0,
+      "causeCodes": [
+        "internal-exclusion-not-cut",
+        "safety-fallback"
+      ],
+      "causeLabels": [
+        "Exclusions internes non découpées",
+        "Repli de sécurité depuis une ancienne géométrie"
+      ],
+      "sourceFingerprint": "23f8ba736e322b50f3b3",
+      "parserVersion": "capclair-supaip-parser-3.0.0"
     },
     {
       "supAip": "159/25",
@@ -220,20 +271,20 @@
       "validFrom": "2025-09-22",
       "validTo": "2027-04-14",
       "sourcePdf": "https://www.sia.aviation-civile.gouv.fr/documents/download/f/d/14967497/",
-      "reason": "Aucune géométrie fiable extraite.",
-      "partial": false,
-      "expectedNamedGeometryCount": 0,
-      "mappedGeometryCount": 0,
+      "reason": "ZRT SAINT-DIZIER: Exclusion interne non découpée: contour extérieur affiché par prudence.",
+      "partial": true,
+      "expectedNamedGeometryCount": 3,
+      "mappedGeometryCount": 3,
       "declaredZoneCount": 3,
       "missingVerticalCount": 0,
       "causeCodes": [
-        "zone-block-not-detected"
+        "internal-exclusion-not-cut"
       ],
       "causeLabels": [
-        "Blocs de zones non reconnus"
+        "Exclusions internes non découpées"
       ],
-      "sourceFingerprint": "a9bdd6c03e29acc6c0a0",
-      "parserVersion": "capclair-supaip-parser-2.1.0"
+      "sourceFingerprint": "6d9db30ec71b4b057d66",
+      "parserVersion": "capclair-supaip-parser-3.0.0"
     },
     {
       "supAip": "157/26",
@@ -241,24 +292,26 @@
       "validFrom": "2026-07-25",
       "validTo": "2027-07-24",
       "sourcePdf": "https://www.sia.aviation-civile.gouv.fr/documents/download/f/d/15060798/",
-      "reason": "ZRT DAX ALPHA: Exclusion interne non découpée: contour extérieur affiché par prudence. ZRT DAX BRAVO: Exclusion interne non découpée: contour extérieur affiché par prudence. ZRT SEYRESSE: Exclusion interne non découpée: contour extérieur affiché par prudence. TMA 6 BIARRITZ: limites latérales non extraites. 3/4 géométries nommées extraites.",
+      "reason": "ZRT DAX ALPHA: Exclusion interne non découpée: contour extérieur affiché par prudence. ZRT DAX BRAVO: Exclusion interne non découpée: contour extérieur affiché par prudence. ZRT SEYRESSE: Exclusion interne non découpée: contour extérieur affiché par prudence. TMA 6 BIARRITZ: limites latérales non extraites. 1 zone(s) cartographiée(s) sans limites verticales extraites. 4/5 géométries nommées extraites. 1 zone(s) sans limites verticales extraites.",
       "partial": true,
-      "expectedNamedGeometryCount": 4,
-      "mappedGeometryCount": 3,
+      "expectedNamedGeometryCount": 5,
+      "mappedGeometryCount": 4,
       "declaredZoneCount": 3,
-      "missingVerticalCount": 0,
+      "missingVerticalCount": 1,
       "causeCodes": [
         "lateral-boundary-not-extracted",
         "internal-exclusion-not-cut",
-        "named-geometry-missing"
+        "named-geometry-missing",
+        "vertical-limit-not-extracted"
       ],
       "causeLabels": [
         "Limites latérales non extraites",
         "Exclusions internes non découpées",
-        "Géométries nommées manquantes"
+        "Géométries nommées manquantes",
+        "Limites verticales non extraites"
       ],
-      "sourceFingerprint": "635078afab6455d48617",
-      "parserVersion": "capclair-supaip-parser-2.1.0"
+      "sourceFingerprint": "f4dd27befdef87ec659b",
+      "parserVersion": "capclair-supaip-parser-3.0.0"
     },
     {
       "supAip": "156/26",
@@ -280,8 +333,8 @@
         "Limites latérales non extraites",
         "Géométries nommées manquantes"
       ],
-      "sourceFingerprint": "e7f0207e273ff585ce06",
-      "parserVersion": "capclair-supaip-parser-2.1.0"
+      "sourceFingerprint": "71e54c8dc43548badf5d",
+      "parserVersion": "capclair-supaip-parser-3.0.0"
     },
     {
       "supAip": "155/26",
@@ -303,8 +356,29 @@
         "Limites latérales non extraites",
         "Géométries nommées manquantes"
       ],
-      "sourceFingerprint": "f6d00758de123677aa9d",
-      "parserVersion": "capclair-supaip-parser-2.1.0"
+      "sourceFingerprint": "adebb9e369d12d49ce21",
+      "parserVersion": "capclair-supaip-parser-3.0.0"
+    },
+    {
+      "supAip": "153/26",
+      "title": "Création d’une ZRT dans la région de BLOIS pour des évolutions d'un drone",
+      "validFrom": "2026-07-20",
+      "validTo": "2026-12-24",
+      "sourcePdf": "https://www.sia.aviation-civile.gouv.fr/documents/download/f/d/15060790/",
+      "reason": "ZRT BLOIS: Exclusion interne non découpée: contour extérieur affiché par prudence.",
+      "partial": true,
+      "expectedNamedGeometryCount": 1,
+      "mappedGeometryCount": 1,
+      "declaredZoneCount": 1,
+      "missingVerticalCount": 0,
+      "causeCodes": [
+        "internal-exclusion-not-cut"
+      ],
+      "causeLabels": [
+        "Exclusions internes non découpées"
+      ],
+      "sourceFingerprint": "38c9411e23bf70ed4ec4",
+      "parserVersion": "capclair-supaip-parser-3.0.0"
     },
     {
       "supAip": "150/25",
@@ -312,20 +386,22 @@
       "validFrom": "2025-09-11",
       "validTo": "2026-08-05",
       "sourcePdf": "https://www.sia.aviation-civile.gouv.fr/documents/download/f/d/14967477/",
-      "reason": "",
+      "reason": "CTR de Cognac Châteaubernard (LFBG) publiée à: limites latérales non extraites.",
       "partial": true,
-      "expectedNamedGeometryCount": 1,
-      "mappedGeometryCount": 1,
+      "expectedNamedGeometryCount": 2,
+      "mappedGeometryCount": 2,
       "declaredZoneCount": 2,
       "missingVerticalCount": 0,
       "causeCodes": [
+        "lateral-boundary-not-extracted",
         "safety-fallback"
       ],
       "causeLabels": [
+        "Limites latérales non extraites",
         "Repli de sécurité depuis une ancienne géométrie"
       ],
-      "sourceFingerprint": "93f2247c12ff0bf92ac3",
-      "parserVersion": "capclair-supaip-parser-2.1.0"
+      "sourceFingerprint": "b44d916418ad83de99c7",
+      "parserVersion": "capclair-supaip-parser-3.0.0"
     },
     {
       "supAip": "149/26",
@@ -347,8 +423,8 @@
         "Limites latérales non extraites",
         "Géométries nommées manquantes"
       ],
-      "sourceFingerprint": "3f189c5d4b25d4496523",
-      "parserVersion": "capclair-supaip-parser-2.1.0"
+      "sourceFingerprint": "ff4f4f387cb058646bc5",
+      "parserVersion": "capclair-supaip-parser-3.0.0"
     },
     {
       "supAip": "148/26",
@@ -370,8 +446,8 @@
         "Limites latérales non extraites",
         "Géométries nommées manquantes"
       ],
-      "sourceFingerprint": "4230695055d2927e4714",
-      "parserVersion": "capclair-supaip-parser-2.1.0"
+      "sourceFingerprint": "1f28459172ebbf0da0a6",
+      "parserVersion": "capclair-supaip-parser-3.0.0"
     },
     {
       "supAip": "147/25",
@@ -393,8 +469,8 @@
         "Limites latérales non extraites",
         "Géométries nommées manquantes"
       ],
-      "sourceFingerprint": "67e10e53cc5a0b61752d",
-      "parserVersion": "capclair-supaip-parser-2.1.0"
+      "sourceFingerprint": "24f686bc59d2f8644be8",
+      "parserVersion": "capclair-supaip-parser-3.0.0"
     },
     {
       "supAip": "146/26",
@@ -402,7 +478,7 @@
       "validFrom": "2026-07-09",
       "validTo": "2027-05-01",
       "sourcePdf": "https://www.sia.aviation-civile.gouv.fr/documents/download/f/d/15060776/",
-      "reason": "ZRT Vald'Yerre: Exclusion interne non découpée: contour extérieur affiché par prudence. ZRT évolution est: Exclusion interne non découpée: contour extérieur affiché par prudence. ZRT Puits Bricy: Exclusion interne non découpée: contour extérieur affiché par prudence. ZRT Corridor NE: Exclusion interne non découpée: contour extérieur affiché par prudence. ZRT Corridor SW1: Exclusion interne non découpée: contour extérieur affiché par prudence. ZRT Corridor SW2: Exclusion interne non découpée: contour extérieur affiché par prudence.",
+      "reason": "ZRT Vald'Yerre: Exclusion interne non découpée: contour extérieur affiché par prudence. ZRT évolution est: Exclusion interne non découpée: contour extérieur affiché par prudence. ZRT Puits Bricy: Exclusion interne non découpée: contour extérieur affiché par prudence. ZRT Corridor SE: Exclusion interne non découpée: contour extérieur affiché par prudence. ZRT Puits Feuilletorse: Exclusion interne non découpée: contour extérieur affiché par prudence. ZRT Puits La Lande: Exclusion interne non découpée: contour extérieur affiché par prudence. ZRT Corridor NE: Exclusion interne non découpée: contour extérieur affiché par prudence. ZRT Corridor SW1: Exclusion interne non découpée: contour extérieur affiché par prudence. ZRT Corridor SW2: Exclusion interne non découpée: contour extérieur affiché par prudence.",
       "partial": true,
       "expectedNamedGeometryCount": 12,
       "mappedGeometryCount": 12,
@@ -414,8 +490,8 @@
       "causeLabels": [
         "Exclusions internes non découpées"
       ],
-      "sourceFingerprint": "719250ff323281fcbaa5",
-      "parserVersion": "capclair-supaip-parser-2.1.0"
+      "sourceFingerprint": "9c5d707abbaef337e113",
+      "parserVersion": "capclair-supaip-parser-3.0.0"
     },
     {
       "supAip": "144/26",
@@ -423,10 +499,10 @@
       "validFrom": "2026-07-10",
       "validTo": "2026-07-18",
       "sourcePdf": "https://www.sia.aviation-civile.gouv.fr/documents/download/f/d/15060772/",
-      "reason": "ZRT 1 CRVVGE: Exclusion interne non découpée: contour extérieur affiché par prudence.",
+      "reason": "ZRT 1 CRVVGE: Exclusion interne non découpée: contour extérieur affiché par prudence. CTR OCHEY et: Exclusion interne non découpée: contour extérieur affiché par prudence.",
       "partial": true,
-      "expectedNamedGeometryCount": 3,
-      "mappedGeometryCount": 3,
+      "expectedNamedGeometryCount": 4,
+      "mappedGeometryCount": 4,
       "declaredZoneCount": 3,
       "missingVerticalCount": 0,
       "causeCodes": [
@@ -435,8 +511,8 @@
       "causeLabels": [
         "Exclusions internes non découpées"
       ],
-      "sourceFingerprint": "3eae7cb93bd61cdc9c71",
-      "parserVersion": "capclair-supaip-parser-2.1.0"
+      "sourceFingerprint": "c54bcdac0d9cc42fa104",
+      "parserVersion": "capclair-supaip-parser-3.0.0"
     },
     {
       "supAip": "142/26",
@@ -456,8 +532,8 @@
       "causeLabels": [
         "Exclusions internes non découpées"
       ],
-      "sourceFingerprint": "aa8d1f86a6f61beba89d",
-      "parserVersion": "capclair-supaip-parser-2.1.0"
+      "sourceFingerprint": "68cce012811dd67f82a0",
+      "parserVersion": "capclair-supaip-parser-3.0.0"
     },
     {
       "supAip": "141/26",
@@ -479,8 +555,8 @@
         "Limites latérales non extraites",
         "Géométries nommées manquantes"
       ],
-      "sourceFingerprint": "384abf8f4f4138e9e49b",
-      "parserVersion": "capclair-supaip-parser-2.1.0"
+      "sourceFingerprint": "162eccac6d2eca822a0c",
+      "parserVersion": "capclair-supaip-parser-3.0.0"
     },
     {
       "supAip": "140/26",
@@ -502,8 +578,8 @@
         "Limites latérales non extraites",
         "Géométries nommées manquantes"
       ],
-      "sourceFingerprint": "55324bf4a70818604855",
-      "parserVersion": "capclair-supaip-parser-2.1.0"
+      "sourceFingerprint": "c446c72757d36cb323f4",
+      "parserVersion": "capclair-supaip-parser-3.0.0"
     },
     {
       "supAip": "139/26",
@@ -525,8 +601,8 @@
         "Limites latérales non extraites",
         "Géométries nommées manquantes"
       ],
-      "sourceFingerprint": "3cdd1628f65c05f263ce",
-      "parserVersion": "capclair-supaip-parser-2.1.0"
+      "sourceFingerprint": "4b2b6b42ab1d29d6cc06",
+      "parserVersion": "capclair-supaip-parser-3.0.0"
     },
     {
       "supAip": "138/25",
@@ -534,20 +610,43 @@
       "validFrom": "2025-08-18",
       "validTo": "2026-07-10",
       "sourcePdf": "https://www.sia.aviation-civile.gouv.fr/documents/download/f/d/14945880/",
-      "reason": "Aucune géométrie fiable extraite.",
-      "partial": false,
-      "expectedNamedGeometryCount": 0,
-      "mappedGeometryCount": 0,
+      "reason": "ZRT BUCK ALPHA 1: Exclusion interne non découpée: contour extérieur affiché par prudence. ZRT BUCK ALPHA 2: Exclusion interne non découpée: contour extérieur affiché par prudence. 2/4 géométries nommées extraites.",
+      "partial": true,
+      "expectedNamedGeometryCount": 4,
+      "mappedGeometryCount": 2,
       "declaredZoneCount": 4,
       "missingVerticalCount": 0,
       "causeCodes": [
-        "zone-block-not-detected"
+        "internal-exclusion-not-cut",
+        "named-geometry-missing"
       ],
       "causeLabels": [
-        "Blocs de zones non reconnus"
+        "Exclusions internes non découpées",
+        "Géométries nommées manquantes"
       ],
-      "sourceFingerprint": "3ddd4b7e6df1c4e533ec",
-      "parserVersion": "capclair-supaip-parser-2.1.0"
+      "sourceFingerprint": "1b9592947923de05669e",
+      "parserVersion": "capclair-supaip-parser-3.0.0"
+    },
+    {
+      "supAip": "137/26",
+      "title": "Création d’une Zone Réglementée Temporaire (ZRT NANCY - PONT-A- MOUSSON) au profit de vols d'aéronefs sans équipage à bord, hors vue de jour, pour du transport de matériel médical entre CHRU Nancy-Brabois et le CH de Pont-à-Mousson (54)",
+      "validFrom": "2026-07-02",
+      "validTo": "2027-06-30",
+      "sourcePdf": "https://www.sia.aviation-civile.gouv.fr/documents/download/f/d/15060758/",
+      "reason": "ZRT NANCY - PONT A MOUSSON: Exclusion interne non découpée: contour extérieur affiché par prudence.",
+      "partial": true,
+      "expectedNamedGeometryCount": 1,
+      "mappedGeometryCount": 1,
+      "declaredZoneCount": 1,
+      "missingVerticalCount": 0,
+      "causeCodes": [
+        "internal-exclusion-not-cut"
+      ],
+      "causeLabels": [
+        "Exclusions internes non découpées"
+      ],
+      "sourceFingerprint": "dce73d21d6964fb36ee2",
+      "parserVersion": "capclair-supaip-parser-3.0.0"
     },
     {
       "supAip": "135/26",
@@ -569,8 +668,29 @@
         "Limites latérales non extraites",
         "Géométries nommées manquantes"
       ],
-      "sourceFingerprint": "c84796257f3ba4a279d7",
-      "parserVersion": "capclair-supaip-parser-2.1.0"
+      "sourceFingerprint": "6f94b132b792fc582a31",
+      "parserVersion": "capclair-supaip-parser-3.0.0"
+    },
+    {
+      "supAip": "133/26",
+      "title": "Création d'une Zone Réglementée Temporaire (ZRT) 'Drone HNO-B' pour vols hors vue d'un aéronef télépiloté sans équipage à bord entre les Centres Hospitaliers de Villefranche-sur-Saône et de Beaujeu (69)",
+      "validFrom": "2026-06-22",
+      "validTo": "2026-12-31",
+      "sourcePdf": "https://www.sia.aviation-civile.gouv.fr/documents/download/f/d/15055172/",
+      "reason": "ZRT DRONE HNO-B: Exclusion interne non découpée: contour extérieur affiché par prudence.",
+      "partial": true,
+      "expectedNamedGeometryCount": 1,
+      "mappedGeometryCount": 1,
+      "declaredZoneCount": 1,
+      "missingVerticalCount": 0,
+      "causeCodes": [
+        "internal-exclusion-not-cut"
+      ],
+      "causeLabels": [
+        "Exclusions internes non découpées"
+      ],
+      "sourceFingerprint": "48e86b9004664a4adad3",
+      "parserVersion": "capclair-supaip-parser-3.0.0"
     },
     {
       "supAip": "128/26",
@@ -592,8 +712,73 @@
         "Limites latérales non extraites",
         "Géométries nommées manquantes"
       ],
-      "sourceFingerprint": "8cb70a723c7f719e335b",
-      "parserVersion": "capclair-supaip-parser-2.1.0"
+      "sourceFingerprint": "329d54c5e9e51d0a19dc",
+      "parserVersion": "capclair-supaip-parser-3.0.0"
+    },
+    {
+      "supAip": "119/26",
+      "title": "Création d’une Zone Réglementée Temporaire (ZRT) « DEFILE » pour le baptême de la promotion 2025 de l’école de l’air et de l’espace",
+      "validFrom": "2026-06-16",
+      "validTo": "2026-08-19",
+      "sourcePdf": "https://www.sia.aviation-civile.gouv.fr/documents/download/f/d/15055132/",
+      "reason": "ZRT.: Exclusion interne non découpée: contour extérieur affiché par prudence.",
+      "partial": true,
+      "expectedNamedGeometryCount": 1,
+      "mappedGeometryCount": 2,
+      "declaredZoneCount": 1,
+      "missingVerticalCount": 0,
+      "causeCodes": [
+        "internal-exclusion-not-cut",
+        "safety-fallback"
+      ],
+      "causeLabels": [
+        "Exclusions internes non découpées",
+        "Repli de sécurité depuis une ancienne géométrie"
+      ],
+      "sourceFingerprint": "cf1ef020a752320b2e67",
+      "parserVersion": "capclair-supaip-parser-3.0.0"
+    },
+    {
+      "supAip": "115/26",
+      "title": "Création d'une zone réglementée temporaire (ZRT) \"COL DU LAUTARET\" au profit du CNRS",
+      "validFrom": "2026-06-04",
+      "validTo": "2027-12-31",
+      "sourcePdf": "https://www.sia.aviation-civile.gouv.fr/documents/download/f/d/15055124/",
+      "reason": "ZRT COL DU LAUTARET: Exclusion interne non découpée: contour extérieur affiché par prudence.",
+      "partial": true,
+      "expectedNamedGeometryCount": 1,
+      "mappedGeometryCount": 1,
+      "declaredZoneCount": 1,
+      "missingVerticalCount": 0,
+      "causeCodes": [
+        "internal-exclusion-not-cut"
+      ],
+      "causeLabels": [
+        "Exclusions internes non découpées"
+      ],
+      "sourceFingerprint": "6c5ba52aa6a8a6e75c2a",
+      "parserVersion": "capclair-supaip-parser-3.0.0"
+    },
+    {
+      "supAip": "111/26",
+      "title": "Création d'une Zone Réglementée Temporaire (ZRT) 'FIRMINY' au profit de vols d'aéronefs sans équipage à bord, hors vue de jour et de nuit, dans la région de Saint-Etienne",
+      "validFrom": "2026-06-08",
+      "validTo": "2026-12-31",
+      "sourcePdf": "https://www.sia.aviation-civile.gouv.fr/documents/download/f/d/15055116/",
+      "reason": "ZRT FIRMINY: Exclusion interne non découpée: contour extérieur affiché par prudence.",
+      "partial": true,
+      "expectedNamedGeometryCount": 1,
+      "mappedGeometryCount": 1,
+      "declaredZoneCount": 1,
+      "missingVerticalCount": 0,
+      "causeCodes": [
+        "internal-exclusion-not-cut"
+      ],
+      "causeLabels": [
+        "Exclusions internes non découpées"
+      ],
+      "sourceFingerprint": "4e69c5cbfa2eee34e130",
+      "parserVersion": "capclair-supaip-parser-3.0.0"
     },
     {
       "supAip": "109/26",
@@ -613,8 +798,8 @@
       "causeLabels": [
         "Exclusions internes non découpées"
       ],
-      "sourceFingerprint": "630466b48d0b71d6349b",
-      "parserVersion": "capclair-supaip-parser-2.1.0"
+      "sourceFingerprint": "66e2da44b07496969aff",
+      "parserVersion": "capclair-supaip-parser-3.0.0"
     },
     {
       "supAip": "094/25",
@@ -622,20 +807,62 @@
       "validFrom": "2025-06-05",
       "validTo": "2027-04-14",
       "sourcePdf": "https://www.sia.aviation-civile.gouv.fr/documents/download/f/d/14934800/",
-      "reason": "Aucune géométrie fiable extraite.",
-      "partial": false,
-      "expectedNamedGeometryCount": 0,
-      "mappedGeometryCount": 0,
+      "reason": "ZRT DSV ROMORANTIN ALPHA: Exclusion interne non découpée: contour extérieur affiché par prudence.",
+      "partial": true,
+      "expectedNamedGeometryCount": 4,
+      "mappedGeometryCount": 4,
       "declaredZoneCount": 4,
       "missingVerticalCount": 0,
       "causeCodes": [
-        "zone-block-not-detected"
+        "internal-exclusion-not-cut"
       ],
       "causeLabels": [
-        "Blocs de zones non reconnus"
+        "Exclusions internes non découpées"
       ],
-      "sourceFingerprint": "6f6299df5931524e0421",
-      "parserVersion": "capclair-supaip-parser-2.1.0"
+      "sourceFingerprint": "fff9c0e977063b430309",
+      "parserVersion": "capclair-supaip-parser-3.0.0"
+    },
+    {
+      "supAip": "093/26",
+      "title": "Création d’une Zone Réglementée Temporaire autour de Lourdes (65)",
+      "validFrom": "2026-05-22",
+      "validTo": "2026-10-10",
+      "sourcePdf": "https://www.sia.aviation-civile.gouv.fr/documents/download/f/d/15049516/",
+      "reason": "ZRT LOURDES: Exclusion interne non découpée: contour extérieur affiché par prudence.",
+      "partial": true,
+      "expectedNamedGeometryCount": 1,
+      "mappedGeometryCount": 1,
+      "declaredZoneCount": 1,
+      "missingVerticalCount": 0,
+      "causeCodes": [
+        "internal-exclusion-not-cut"
+      ],
+      "causeLabels": [
+        "Exclusions internes non découpées"
+      ],
+      "sourceFingerprint": "e5c8ad77ac11bbdb2421",
+      "parserVersion": "capclair-supaip-parser-3.0.0"
+    },
+    {
+      "supAip": "084/26",
+      "title": "Création d’une Zone Réglementée Temporaire (ZRT), dans la région de Salbris (41), au profit d’évolutions d’aéronefs d’État sans équipage à bord",
+      "validFrom": "2026-05-07",
+      "validTo": "2027-05-06",
+      "sourcePdf": "https://www.sia.aviation-civile.gouv.fr/documents/download/f/d/15049494/",
+      "reason": "ZRT SALBRIS: Exclusion interne non découpée: contour extérieur affiché par prudence.",
+      "partial": true,
+      "expectedNamedGeometryCount": 1,
+      "mappedGeometryCount": 1,
+      "declaredZoneCount": 1,
+      "missingVerticalCount": 0,
+      "causeCodes": [
+        "internal-exclusion-not-cut"
+      ],
+      "causeLabels": [
+        "Exclusions internes non découpées"
+      ],
+      "sourceFingerprint": "2ca6e721b657b5beb0a7",
+      "parserVersion": "capclair-supaip-parser-3.0.0"
     },
     {
       "supAip": "077/26",
@@ -643,43 +870,41 @@
       "validFrom": "2026-05-01",
       "validTo": "2027-04-30",
       "sourcePdf": "https://www.sia.aviation-civile.gouv.fr/documents/download/f/d/15043925/",
-      "reason": "ZRT AVEL LF-R17 A1: Exclusion interne non découpée: contour extérieur affiché par prudence. ZRT AVEL LF-R17 A2: Exclusion interne non découpée: contour extérieur affiché par prudence. ZRT BATZ LF-R17 B1: Exclusion interne non découpée: contour extérieur affiché par prudence. ZRT BATZ LF-R17 B2: Exclusion interne non découpée: contour extérieur affiché par prudence. ZRT CORSEN LF-R17 C1: Exclusion interne non découpée: contour extérieur affiché par prudence. ZRT CORSEN LF-R17 C2: Exclusion interne non découpée: contour extérieur affiché par prudence. ZRT DOLMEN LF-R17 D1: Exclusion interne non découpée: contour extérieur affiché par prudence. ZRT DOLMEN LF-R17 D2: Exclusion interne non découpée: contour extérieur affiché par prudence. ZRT ECKMUHL LF-R17 E1: Exclusion interne non découpée: contour extérieur affiché par prudence. ZRT ECKMUHL LF-R17 E2: Exclusion interne non découpée: contour extérieur affiché par prudence. ZRT FOUESNANT LF-R17: Exclusion interne non découpée: contour extérieur affiché par prudence. 1 zone(s) cartographiée(s) sans limites verticales extraites. 1 zone(s) sans limites verticales extraites.",
+      "reason": "ZRT AVEL LF-R17 A1: Exclusion interne non découpée: contour extérieur affiché par prudence. ZRT AVEL LF-R17 A2: Exclusion interne non découpée: contour extérieur affiché par prudence. ZRT BATZ LF-R17 B1: Exclusion interne non découpée: contour extérieur affiché par prudence. ZRT BATZ LF-R17 B2: Exclusion interne non découpée: contour extérieur affiché par prudence. ZRT CORSEN LF-R17 C1: Exclusion interne non découpée: contour extérieur affiché par prudence. ZRT CORSEN LF-R17 C2: Exclusion interne non découpée: contour extérieur affiché par prudence. ZRT DOLMEN LF-R17 D1: Exclusion interne non découpée: contour extérieur affiché par prudence. ZRT DOLMEN LF-R17 D2: Exclusion interne non découpée: contour extérieur affiché par prudence. ZRT ECKMUHL LF-R17 E1: Exclusion interne non découpée: contour extérieur affiché par prudence. ZRT ECKMUHL LF-R17 E2: Exclusion interne non découpée: contour extérieur affiché par prudence. ZRT FOUESNANT LF-R17: Exclusion interne non découpée: contour extérieur affiché par prudence. ZRT GUERANDE LF-R17: Exclusion interne non découpée: contour extérieur affiché par prudence.",
       "partial": true,
       "expectedNamedGeometryCount": 12,
       "mappedGeometryCount": 12,
       "declaredZoneCount": 7,
-      "missingVerticalCount": 1,
-      "causeCodes": [
-        "internal-exclusion-not-cut",
-        "vertical-limit-not-extracted"
-      ],
-      "causeLabels": [
-        "Exclusions internes non découpées",
-        "Limites verticales non extraites"
-      ],
-      "sourceFingerprint": "6cf4840709226d6dbbe6",
-      "parserVersion": "capclair-supaip-parser-2.1.0"
-    },
-    {
-      "supAip": "075/26",
-      "title": "Modiﬁcation temporaire de l'itinéraire hélicoptères en CTR Paris entre LFPI et IH3 (Gentilly)",
-      "validFrom": "2026-04-30",
-      "validTo": "2026-10-14",
-      "sourcePdf": "https://www.sia.aviation-civile.gouv.fr/documents/download/f/d/15043921/",
-      "reason": "Aucune géométrie fiable extraite.",
-      "partial": false,
-      "expectedNamedGeometryCount": 0,
-      "mappedGeometryCount": 0,
-      "declaredZoneCount": null,
       "missingVerticalCount": 0,
       "causeCodes": [
-        "zone-block-not-detected"
+        "internal-exclusion-not-cut"
       ],
       "causeLabels": [
-        "Blocs de zones non reconnus"
+        "Exclusions internes non découpées"
       ],
-      "sourceFingerprint": "6c2125eb7403b9385506",
-      "parserVersion": "capclair-supaip-parser-2.1.0"
+      "sourceFingerprint": "b40f94c4152d287fdf5e",
+      "parserVersion": "capclair-supaip-parser-3.0.0"
+    },
+    {
+      "supAip": "076/26",
+      "title": "Création de Zones Réglementées Temporaires (12 ZRT) et de Zones Dangereuses Temporaires (5 ZDT) au proﬁt de vols hors vue d'aéronefs sans équipage à bord en baie de Seine et Cotentin",
+      "validFrom": "2026-04-27",
+      "validTo": "2027-04-26",
+      "sourcePdf": "https://www.sia.aviation-civile.gouv.fr/documents/download/f/d/15043923/",
+      "reason": "12/17 géométries nommées extraites.",
+      "partial": true,
+      "expectedNamedGeometryCount": 17,
+      "mappedGeometryCount": 12,
+      "declaredZoneCount": 17,
+      "missingVerticalCount": 0,
+      "causeCodes": [
+        "named-geometry-missing"
+      ],
+      "causeLabels": [
+        "Géométries nommées manquantes"
+      ],
+      "sourceFingerprint": "1bdf45a9192da61fef4d",
+      "parserVersion": "capclair-supaip-parser-3.0.0"
     },
     {
       "supAip": "070/26",
@@ -687,9 +912,9 @@
       "validFrom": "2026-04-23",
       "validTo": "2027-04-15",
       "sourcePdf": "https://www.sia.aviation-civile.gouv.fr/documents/download/f/d/15043915/",
-      "reason": "ZRT 1 PHALSBOURG: Exclusion interne non découpée: contour extérieur affiché par prudence. ZRT 2 PHALSBOURG: Exclusion interne non découpée: contour extérieur affiché par prudence. ZRT 4 PHALSBOURG: limites latérales non extraites. ZRT 5 PHALSBOURG: limites latérales non extraites. 3/5 géométries nommées extraites.",
+      "reason": "ZRT 1 PHALSBOURG: Exclusion interne non découpée: contour extérieur affiché par prudence. ZRT 1 PHALSBOURG: Limite dépendant d'une frontière, d'une côte ou d'un autre espace aérien. ZRT 2 PHALSBOURG: Exclusion interne non découpée: contour extérieur affiché par prudence. ZRT 3 PHALSBOURG: Limite dépendant d'une frontière, d'une côte ou d'un autre espace aérien. ZRT 4 PHALSBOURG: limites latérales non extraites. ZRT 5 PHALSBOURG: limites latérales non extraites. LFR604: limites latérales non extraites. 3/6 géométries nommées extraites.",
       "partial": true,
-      "expectedNamedGeometryCount": 5,
+      "expectedNamedGeometryCount": 6,
       "mappedGeometryCount": 3,
       "declaredZoneCount": 5,
       "missingVerticalCount": 0,
@@ -703,8 +928,8 @@
         "Exclusions internes non découpées",
         "Géométries nommées manquantes"
       ],
-      "sourceFingerprint": "a34c6b8908d354a7b5f0",
-      "parserVersion": "capclair-supaip-parser-2.1.0"
+      "sourceFingerprint": "6a93bec39d607bd652ce",
+      "parserVersion": "capclair-supaip-parser-3.0.0"
     },
     {
       "supAip": "065/25",
@@ -712,41 +937,20 @@
       "validFrom": "2025-05-15",
       "validTo": "2027-05-12",
       "sourcePdf": "https://www.sia.aviation-civile.gouv.fr/documents/download/f/d/14634691/",
-      "reason": "Aucune géométrie fiable extraite.",
-      "partial": false,
-      "expectedNamedGeometryCount": 0,
-      "mappedGeometryCount": 0,
+      "reason": "1/2 géométries nommées extraites.",
+      "partial": true,
+      "expectedNamedGeometryCount": 2,
+      "mappedGeometryCount": 1,
       "declaredZoneCount": 2,
       "missingVerticalCount": 0,
       "causeCodes": [
-        "zone-block-not-detected"
+        "named-geometry-missing"
       ],
       "causeLabels": [
-        "Blocs de zones non reconnus"
+        "Géométries nommées manquantes"
       ],
-      "sourceFingerprint": "cd677004b068251fbe69",
-      "parserVersion": "capclair-supaip-parser-2.1.0"
-    },
-    {
-      "supAip": "062/26",
-      "title": "Création de trois zones réglementées temporaires (ZRT) en moyenne et haute altitude LFR343L (ZENA PERIGORD LOW), LFR343M (ZENA PERIGORD MEDIUM), et LFR343H (ZENA PERIGORD HIGH)",
-      "validFrom": "2026-04-23",
-      "validTo": "2027-03-25",
-      "sourcePdf": "https://www.sia.aviation-civile.gouv.fr/documents/download/f/d/15038352/",
-      "reason": "Aucune géométrie fiable extraite.",
-      "partial": false,
-      "expectedNamedGeometryCount": 0,
-      "mappedGeometryCount": 0,
-      "declaredZoneCount": 3,
-      "missingVerticalCount": 0,
-      "causeCodes": [
-        "zone-block-not-detected"
-      ],
-      "causeLabels": [
-        "Blocs de zones non reconnus"
-      ],
-      "sourceFingerprint": "268298c1ed61fa5d6678",
-      "parserVersion": "capclair-supaip-parser-2.1.0"
+      "sourceFingerprint": "e9bdd45b9531fde3e2dd",
+      "parserVersion": "capclair-supaip-parser-3.0.0"
     },
     {
       "supAip": "060/26",
@@ -754,20 +958,22 @@
       "validFrom": "2026-04-16",
       "validTo": "2028-04-12",
       "sourcePdf": "https://www.sia.aviation-civile.gouv.fr/documents/download/f/d/15038346/",
-      "reason": "ZRT CHENEVIERES: Exclusion interne non découpée: contour extérieur affiché par prudence.",
+      "reason": "LFR230: Exclusion interne non découpée: contour extérieur affiché par prudence.",
       "partial": true,
       "expectedNamedGeometryCount": 1,
-      "mappedGeometryCount": 1,
+      "mappedGeometryCount": 2,
       "declaredZoneCount": 1,
       "missingVerticalCount": 0,
       "causeCodes": [
-        "internal-exclusion-not-cut"
+        "internal-exclusion-not-cut",
+        "safety-fallback"
       ],
       "causeLabels": [
-        "Exclusions internes non découpées"
+        "Exclusions internes non découpées",
+        "Repli de sécurité depuis une ancienne géométrie"
       ],
-      "sourceFingerprint": "e14bf21f58f5ac09c429",
-      "parserVersion": "capclair-supaip-parser-2.1.0"
+      "sourceFingerprint": "0165fd3e26b16169876f",
+      "parserVersion": "capclair-supaip-parser-3.0.0"
     },
     {
       "supAip": "055/26",
@@ -789,20 +995,20 @@
         "Limites latérales non extraites",
         "Géométries nommées manquantes"
       ],
-      "sourceFingerprint": "5d64dc31a8820470c0cb",
-      "parserVersion": "capclair-supaip-parser-2.1.0"
+      "sourceFingerprint": "fb6fd71a22400f9a5f61",
+      "parserVersion": "capclair-supaip-parser-3.0.0"
     },
     {
-      "supAip": "053/26",
-      "title": "Création de 95 zones réglementées temporaires (ZRT) et 4 zones dangereuses temporaires (ZDT) en moyenne et haute altitude, pour le transit et les évolutions de drones d'État vers une zone de travail",
+      "supAip": "054/26",
+      "title": "Expérimentation : création d’une Zone Réglementée Temporaire « GARRIGUES » dans la région de NIMES (30)",
       "validFrom": "2026-04-16",
-      "validTo": "2028-04-12",
-      "sourcePdf": "https://www.sia.aviation-civile.gouv.fr/documents/download/f/d/15038332/",
-      "reason": "ZRT VIRE HIGH: Exclusion interne non découpée: contour extérieur affiché par prudence.",
+      "validTo": "2027-04-14",
+      "sourcePdf": "https://www.sia.aviation-civile.gouv.fr/documents/download/f/d/15038334/",
+      "reason": "ZRT GARRIGUES: Exclusion interne non découpée: contour extérieur affiché par prudence.",
       "partial": true,
-      "expectedNamedGeometryCount": 94,
-      "mappedGeometryCount": 94,
-      "declaredZoneCount": 99,
+      "expectedNamedGeometryCount": 1,
+      "mappedGeometryCount": 1,
+      "declaredZoneCount": 1,
       "missingVerticalCount": 0,
       "causeCodes": [
         "internal-exclusion-not-cut"
@@ -810,8 +1016,33 @@
       "causeLabels": [
         "Exclusions internes non découpées"
       ],
-      "sourceFingerprint": "46d8a83b76fd74dc8e89",
-      "parserVersion": "capclair-supaip-parser-2.1.0"
+      "sourceFingerprint": "84a1788714ae8a65fda4",
+      "parserVersion": "capclair-supaip-parser-3.0.0"
+    },
+    {
+      "supAip": "053/26",
+      "title": "Création de 95 zones réglementées temporaires (ZRT) et 4 zones dangereuses temporaires (ZDT) en moyenne et haute altitude, pour le transit et les évolutions de drones d'État vers une zone de travail",
+      "validFrom": "2026-04-16",
+      "validTo": "2028-04-12",
+      "sourcePdf": "https://www.sia.aviation-civile.gouv.fr/documents/download/f/d/15038332/",
+      "reason": "ZRT FOUGERES: Polygone incomplet. ZRT PARIS (PPS uniquement): Moins de trois coordonnées exploitables. ZRT PARIS HIGH (PPS uniquement): Moins de trois coordonnées exploitables. ZRT LE BOURGET (PPS uniquement): Moins de trois coordonnées exploitables. ZRT PARIS LIFT (PPS uniquement): Moins de trois coordonnées exploitables. ZRT VIRE HIGH: Exclusion interne non découpée: contour extérieur affiché par prudence. ZRT BEUVRON LIFT: Moins de trois coordonnées exploitables. ZRT BEYNES HIGH (PPS uniquement): Moins de trois coordonnées exploitables. ZRT LE BOURGET HIGH: limites latérales non extraites. 96/99 géométries nommées extraites.",
+      "partial": true,
+      "expectedNamedGeometryCount": 99,
+      "mappedGeometryCount": 96,
+      "declaredZoneCount": 99,
+      "missingVerticalCount": 0,
+      "causeCodes": [
+        "lateral-boundary-not-extracted",
+        "internal-exclusion-not-cut",
+        "named-geometry-missing"
+      ],
+      "causeLabels": [
+        "Limites latérales non extraites",
+        "Exclusions internes non découpées",
+        "Géométries nommées manquantes"
+      ],
+      "sourceFingerprint": "08862d261ed266e4860d",
+      "parserVersion": "capclair-supaip-parser-3.0.0"
     },
     {
       "supAip": "052/26",
@@ -833,8 +1064,52 @@
         "Limites latérales non extraites",
         "Géométries nommées manquantes"
       ],
-      "sourceFingerprint": "26819c9b1c867fbe6604",
-      "parserVersion": "capclair-supaip-parser-2.1.0"
+      "sourceFingerprint": "c6e358e2188e60f3712b",
+      "parserVersion": "capclair-supaip-parser-3.0.0"
+    },
+    {
+      "supAip": "051/26",
+      "title": "Création d'une zone réglementée temporaire au profit de vols d'aéronefs sans équipage à bord dans la région de VALENCE (26)",
+      "validFrom": "2026-04-06",
+      "validTo": "2026-11-24",
+      "sourcePdf": "https://www.sia.aviation-civile.gouv.fr/documents/download/f/d/15038326/",
+      "reason": "LFR570: Exclusion interne non découpée: contour extérieur affiché par prudence.",
+      "partial": true,
+      "expectedNamedGeometryCount": 1,
+      "mappedGeometryCount": 2,
+      "declaredZoneCount": 1,
+      "missingVerticalCount": 0,
+      "causeCodes": [
+        "internal-exclusion-not-cut",
+        "safety-fallback"
+      ],
+      "causeLabels": [
+        "Exclusions internes non découpées",
+        "Repli de sécurité depuis une ancienne géométrie"
+      ],
+      "sourceFingerprint": "f1a50910bb5baa55dbe8",
+      "parserVersion": "capclair-supaip-parser-3.0.0"
+    },
+    {
+      "supAip": "050/26",
+      "title": "Création d’une Zone Réglementée Temporaire (ZRT) 'SAINT-HILAIRE' au profit de vols d'aéronefs sans équipage à bord, en et hors vue de jour et de nuit, dans la région d'Orléans",
+      "validFrom": "2026-04-01",
+      "validTo": "2027-03-31",
+      "sourcePdf": "https://www.sia.aviation-civile.gouv.fr/documents/download/f/d/15032778/",
+      "reason": "ZRT SAINT-HILAIRE: Exclusion interne non découpée: contour extérieur affiché par prudence.",
+      "partial": true,
+      "expectedNamedGeometryCount": 1,
+      "mappedGeometryCount": 1,
+      "declaredZoneCount": 1,
+      "missingVerticalCount": 0,
+      "causeCodes": [
+        "internal-exclusion-not-cut"
+      ],
+      "causeLabels": [
+        "Exclusions internes non découpées"
+      ],
+      "sourceFingerprint": "099a31a0852d05189cf0",
+      "parserVersion": "capclair-supaip-parser-3.0.0"
     },
     {
       "supAip": "047/26",
@@ -856,8 +1131,8 @@
         "Limites latérales non extraites",
         "Géométries nommées manquantes"
       ],
-      "sourceFingerprint": "acb2bb78b4b67f61b821",
-      "parserVersion": "capclair-supaip-parser-2.1.0"
+      "sourceFingerprint": "f8355c00cebbce990bcd",
+      "parserVersion": "capclair-supaip-parser-3.0.0"
     },
     {
       "supAip": "042/26",
@@ -865,20 +1140,22 @@
       "validFrom": "2026-04-02",
       "validTo": "2026-11-29",
       "sourcePdf": "https://www.sia.aviation-civile.gouv.fr/documents/download/f/d/15032762/",
-      "reason": "Aucune géométrie fiable extraite.",
+      "reason": "ZRT OLONNE A: limites latérales non extraites. ZRT OLONNE B: limites latérales non extraites. ZRT OLONNE C: limites latérales non extraites. 0/3 géométries nommées extraites. Aucune géométrie fiable extraite.",
       "partial": false,
-      "expectedNamedGeometryCount": 0,
+      "expectedNamedGeometryCount": 3,
       "mappedGeometryCount": 0,
       "declaredZoneCount": 3,
       "missingVerticalCount": 0,
       "causeCodes": [
-        "zone-block-not-detected"
+        "lateral-boundary-not-extracted",
+        "named-geometry-missing"
       ],
       "causeLabels": [
-        "Blocs de zones non reconnus"
+        "Limites latérales non extraites",
+        "Géométries nommées manquantes"
       ],
-      "sourceFingerprint": "715f4b8a8dcd5c481d44",
-      "parserVersion": "capclair-supaip-parser-2.1.0"
+      "sourceFingerprint": "d8301874de70bc195ba2",
+      "parserVersion": "capclair-supaip-parser-3.0.0"
     },
     {
       "supAip": "041/26",
@@ -898,8 +1175,8 @@
       "causeLabels": [
         "Exclusions internes non découpées"
       ],
-      "sourceFingerprint": "d0d94aec9ec9f139cfd0",
-      "parserVersion": "capclair-supaip-parser-2.1.0"
+      "sourceFingerprint": "5b9f2505a5b678b35772",
+      "parserVersion": "capclair-supaip-parser-3.0.0"
     },
     {
       "supAip": "022/26",
@@ -919,8 +1196,8 @@
       "causeLabels": [
         "Exclusions internes non découpées"
       ],
-      "sourceFingerprint": "b523075da9270df323e6",
-      "parserVersion": "capclair-supaip-parser-2.1.0"
+      "sourceFingerprint": "d4141177d5b92fe9fd6b",
+      "parserVersion": "capclair-supaip-parser-3.0.0"
     },
     {
       "supAip": "021/26",
@@ -928,31 +1205,10 @@
       "validFrom": "2026-02-26",
       "validTo": "2026-08-26",
       "sourcePdf": "https://www.sia.aviation-civile.gouv.fr/documents/download/f/d/15027169/",
-      "reason": "1 zone(s) cartographiée(s) sans limites verticales extraites. 1 zone(s) sans limites verticales extraites.",
+      "reason": "ZRT ARGENTAN: Exclusion interne non découpée: contour extérieur affiché par prudence. 1 zone(s) cartographiée(s) sans limites verticales extraites. 1 zone(s) sans limites verticales extraites.",
       "partial": true,
       "expectedNamedGeometryCount": 1,
       "mappedGeometryCount": 1,
-      "declaredZoneCount": 1,
-      "missingVerticalCount": 1,
-      "causeCodes": [
-        "vertical-limit-not-extracted"
-      ],
-      "causeLabels": [
-        "Limites verticales non extraites"
-      ],
-      "sourceFingerprint": "f371c49bcdae453ddcb9",
-      "parserVersion": "capclair-supaip-parser-2.1.0"
-    },
-    {
-      "supAip": "018/26",
-      "title": "Création d’une Zone Réglementée Temporaire (ZRT DRONE COURTALAIN) au profit de vols d'aéronefs sans équipage à bord, hors vue de jour et de nuit, dans la région Centre",
-      "validFrom": "2026-03-03",
-      "validTo": "2026-12-31",
-      "sourcePdf": "https://www.sia.aviation-civile.gouv.fr/documents/download/f/d/15027163/",
-      "reason": "ZRT DRONE COURTALAIN: Exclusion interne non découpée: contour extérieur affiché par prudence. ZRT 'PUITS LA LANDE' et 'PUITS LA FONTENNELLE': Exclusion interne non découpée: contour extérieur affiché par prudence. 1 zone(s) cartographiée(s) sans limites verticales extraites. 1 zone(s) sans limites verticales extraites.",
-      "partial": true,
-      "expectedNamedGeometryCount": 2,
-      "mappedGeometryCount": 2,
       "declaredZoneCount": 1,
       "missingVerticalCount": 1,
       "causeCodes": [
@@ -963,8 +1219,33 @@
         "Exclusions internes non découpées",
         "Limites verticales non extraites"
       ],
-      "sourceFingerprint": "a1c9f12195d6a858b46b",
-      "parserVersion": "capclair-supaip-parser-2.1.0"
+      "sourceFingerprint": "ed90763fa14ecca29727",
+      "parserVersion": "capclair-supaip-parser-3.0.0"
+    },
+    {
+      "supAip": "018/26",
+      "title": "Création d’une Zone Réglementée Temporaire (ZRT DRONE COURTALAIN) au profit de vols d'aéronefs sans équipage à bord, hors vue de jour et de nuit, dans la région Centre",
+      "validFrom": "2026-03-03",
+      "validTo": "2026-12-31",
+      "sourcePdf": "https://www.sia.aviation-civile.gouv.fr/documents/download/f/d/15027163/",
+      "reason": "ZRT DRONE COURTALAIN: Exclusion interne non découpée: contour extérieur affiché par prudence. 1 zone(s) sans limites verticales extraites.",
+      "partial": true,
+      "expectedNamedGeometryCount": 2,
+      "mappedGeometryCount": 2,
+      "declaredZoneCount": 1,
+      "missingVerticalCount": 1,
+      "causeCodes": [
+        "internal-exclusion-not-cut",
+        "vertical-limit-not-extracted",
+        "safety-fallback"
+      ],
+      "causeLabels": [
+        "Exclusions internes non découpées",
+        "Limites verticales non extraites",
+        "Repli de sécurité depuis une ancienne géométrie"
+      ],
+      "sourceFingerprint": "c0fa594eedc9f63bdc13",
+      "parserVersion": "capclair-supaip-parser-3.0.0"
     },
     {
       "supAip": "017/26",
@@ -986,29 +1267,29 @@
         "Limites latérales non extraites",
         "Géométries nommées manquantes"
       ],
-      "sourceFingerprint": "dcadf45c142885044634",
-      "parserVersion": "capclair-supaip-parser-2.1.0"
+      "sourceFingerprint": "a957b54369509c14c1da",
+      "parserVersion": "capclair-supaip-parser-3.0.0"
     },
     {
-      "supAip": "013/26",
-      "title": "Création d'une zone interdite temporaire (ZIT) ORANGE (84)",
-      "validFrom": "2026-02-12",
-      "validTo": "2027-04-14",
-      "sourcePdf": "https://www.sia.aviation-civile.gouv.fr/documents/download/f/d/15027153/",
-      "reason": "Aucune géométrie fiable extraite.",
-      "partial": false,
-      "expectedNamedGeometryCount": 0,
-      "mappedGeometryCount": 0,
+      "supAip": "012/26",
+      "title": "Création d’une zone réglementée temporaire « ZRT ALBI-GAILLAC » dans le Tarn (81)",
+      "validFrom": "2026-02-16",
+      "validTo": "2026-07-31",
+      "sourcePdf": "https://www.sia.aviation-civile.gouv.fr/documents/download/f/d/15027151/",
+      "reason": "ZRT ALBI-GAILLAC: Exclusion interne non découpée: contour extérieur affiché par prudence.",
+      "partial": true,
+      "expectedNamedGeometryCount": 1,
+      "mappedGeometryCount": 1,
       "declaredZoneCount": 1,
       "missingVerticalCount": 0,
       "causeCodes": [
-        "zone-block-not-detected"
+        "internal-exclusion-not-cut"
       ],
       "causeLabels": [
-        "Blocs de zones non reconnus"
+        "Exclusions internes non découpées"
       ],
-      "sourceFingerprint": "1a856e79ce89ad61930c",
-      "parserVersion": "capclair-supaip-parser-2.1.0"
+      "sourceFingerprint": "521607f923b36dd50672",
+      "parserVersion": "capclair-supaip-parser-3.0.0"
     },
     {
       "supAip": "005/26",
@@ -1028,8 +1309,8 @@
       "causeLabels": [
         "Exclusions internes non découpées"
       ],
-      "sourceFingerprint": "bc4cf167470b8c57a0ed",
-      "parserVersion": "capclair-supaip-parser-2.1.0"
+      "sourceFingerprint": "fdd8ee60fd2acfa47cc1",
+      "parserVersion": "capclair-supaip-parser-3.0.0"
     }
   ]
 }
