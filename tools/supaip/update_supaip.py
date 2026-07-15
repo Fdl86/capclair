@@ -32,8 +32,8 @@ from requests.adapters import HTTPAdapter
 from urllib3.util.retry import Retry
 
 SOURCE_URL = "https://www.sia.aviation-civile.gouv.fr/documents/supaip/aip/id/6"
-PARSER_VERSION = "capclair-supaip-parser-2.0.1"
-USER_AGENT = "CAP-CLAIR-SUPAIP-BETA/2.0.1 (+automatic SIA public-document reader)"
+PARSER_VERSION = "capclair-supaip-parser-2.0.2"
+USER_AGENT = "CAP-CLAIR-SUPAIP-BETA/2.0.2 (+automatic SIA public-document reader)"
 ZONE_TITLE_RE = re.compile(
     r"\b(?:ZRT|ZDT|ZIT|TRA|TSA|zone(?:s)?\s+(?:r[eé]glement[eé]e|dangereuse|interdite|r[eé]serv[eé]e)(?:s)?\s+temporaire(?:s)?|CTR\s+temporaire|TMA\s+temporaire)\b",
     re.IGNORECASE,
@@ -617,6 +617,76 @@ def self_contained_zones(page: PdfPageLayout) -> list[ParsedZone]:
     return zones
 
 
+
+def embedded_column_zones(page: PdfPageLayout) -> list[ParsedZone]:
+    """Parse table cells that contain name, coordinates and a detached vertical block.
+
+    Some SIA PDFs, notably SUP AIP 207/25, expose each table cell as one
+    PyMuPDF block while the vertical value (for example SFC/UNL) is emitted as
+    a second tiny block immediately underneath. The standard grid parser
+    expects separate heading blocks and therefore misses these cells entirely.
+    """
+    vertical_blocks: list[tuple[PdfBlock, tuple[str, str]]] = []
+    for candidate in page.blocks:
+        pair = extract_vertical_pair(candidate.text)
+        if pair:
+            vertical_blocks.append((candidate, pair))
+
+    zones: list[ParsedZone] = []
+    for block in page.blocks:
+        normalized = normalize_text(block.text)
+        if not re.search(r"LIMITES?\s+LAT[EÉ]RALES?", normalized, re.IGNORECASE):
+            continue
+        if len(coordinate_matches(normalized)) < 3:
+            continue
+        names = split_zone_names(normalized)
+        if len(names) != 1:
+            continue
+
+        name = names[0]
+        geometry, confidence, warnings = geometry_from_text(normalized)
+        vertical = extract_vertical_pair(normalized)
+        if vertical is None:
+            # The meaningful column centre is close to x0 + 45 pt. This also
+            # handles a first cell whose block is widened by a page-wide table
+            # title while its coordinates remain in the left-most column.
+            target_x = block.x0 + min(45.0, max(1.0, (block.x1 - block.x0) / 2.0))
+            candidates = [
+                (candidate, pair)
+                for candidate, pair in vertical_blocks
+                if block.y1 - 6.0 <= candidate.y0 <= block.y1 + 60.0
+                and (
+                    candidate.x0 - 8.0 <= target_x <= candidate.x1 + 8.0
+                    or abs(candidate.center_x - target_x) <= 42.0
+                )
+            ]
+            if candidates:
+                _, vertical = min(
+                    candidates,
+                    key=lambda item: (
+                        max(0.0, item[0].y0 - block.y1),
+                        abs(item[0].center_x - target_x),
+                    ),
+                )
+
+        if geometry is None and vertical is None:
+            continue
+        zones.append(
+            ParsedZone(
+                name=name,
+                zone_type=zone_type_from_name(name, ""),
+                geometry=geometry,
+                lower_limit=vertical[0] if vertical else "",
+                upper_limit=vertical[1] if vertical else "",
+                vertical_extracted=bool(vertical),
+                confidence=confidence,
+                page_index=page.page_index,
+                position_y=block.y0,
+                warnings=warnings,
+            )
+        )
+    return zones
+
 def row_table_zones(page: PdfPageLayout) -> list[ParsedZone]:
     headings = [
         block
@@ -890,7 +960,7 @@ def select_authoritative_row_zones(document: PdfDocumentLayout, candidates: list
 def expected_layout_names(document: PdfDocumentLayout) -> list[str]:
     names: list[str] = []
     for page in document.pages:
-        for zone in self_contained_zones(page) + row_table_zones(page) + grid_zones(page):
+        for zone in self_contained_zones(page) + row_table_zones(page) + grid_zones(page) + embedded_column_zones(page):
             if zone.name not in names:
                 names.append(zone.name)
     return names
@@ -985,12 +1055,14 @@ def parse_spatial_document(entry: ListingEntry, document: PdfDocumentLayout) -> 
             continue
         self_zones = self_contained_zones(page)
         grid_page_zones = grid_zones(page)
+        embedded_page_zones = embedded_column_zones(page)
         row_zones = row_table_zones(page)
         layout_zones.extend(self_zones)
         layout_zones.extend(grid_page_zones)
-        if not grid_page_zones:
+        layout_zones.extend(embedded_page_zones)
+        if not grid_page_zones and not embedded_page_zones:
             layout_zones.extend(row_zones)
-        grid_count += len(grid_page_zones)
+        grid_count += len(grid_page_zones) + len(embedded_page_zones)
         page_text = "\n".join(block.text for block in page.blocks)
         if FBZ_SECTION_RE.search(page_text):
             in_fbz_section = True

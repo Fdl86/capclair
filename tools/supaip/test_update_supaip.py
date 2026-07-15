@@ -9,6 +9,7 @@ from tools.supaip.update_supaip import (
     coordinate_matches,
     declared_zone_count,
     extract_vertical_pair,
+    embedded_column_zones,
     grid_zones,
     make_unique_feature_id,
     parse_listing,
@@ -114,6 +115,24 @@ class SupAipParserTests(unittest.TestCase):
         self.assertEqual((zones[0].lower_limit, zones[0].upper_limit), ("SFC", "FL 065"))
         self.assertEqual((zones[1].lower_limit, zones[1].upper_limit), ("2500 ft AMSL", "FL 095"))
 
+
+    def test_embedded_column_cells_with_detached_verticals(self):
+        page = PdfPageLayout(
+            page_index=3,
+            width=595,
+            height=842,
+            blocks=(
+                PdfBlock(3, 74, 72, 367, 228, "LIMITES LATERALES ET VERTICALES\nZDT LFDB11\nLimites latérales\n45°43'58'' N,002°49'59'' W\n45°17'34'' N,002°53'08'' W\n44°04'43'' N,003°01'47'' W\n45°43'58'' N,002°49'59'' W\nLimites verticales"),
+                PdfBlock(3, 102, 228, 136, 239, "SFC/UNL"),
+                PdfBlock(3, 195, 83, 287, 228, "ZRT/ZDT LFDB21\nLimites latérales\n45°47'52'' N,001°17'25'' W\n45°33'39'' N,001°10'20'' W\n45°33'40'' N,001°56'00'' W\n45°47'52'' N,001°17'25'' W\nLimites verticales"),
+                PdfBlock(3, 223, 228, 257, 239, "SFC/UNL"),
+            ),
+        )
+        zones = embedded_column_zones(page)
+        self.assertEqual([zone.name for zone in zones], ["ZDT LFDB11", "ZRT/ZDT LFDB21"])
+        self.assertTrue(all(zone.geometry for zone in zones))
+        self.assertTrue(all(zone.vertical_extracted for zone in zones))
+        self.assertEqual((zones[0].lower_limit, zones[0].upper_limit), ("SFC", "UNL"))
 
     def test_compact_tra_codes_in_two_column_table(self):
         page = PdfPageLayout(

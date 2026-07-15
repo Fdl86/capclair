@@ -1,8 +1,19 @@
-# CAP CLAIR WEB13.27.1 - SUP AIP TRA HOTFIX BETA
+# CAP CLAIR WEB13.27.2 - SUP AIP COLUMN TABLE HOTFIX BETA
 
 CAP CLAIR est une application VFR mobile-first en Vite, React, TypeScript et OpenLayers, déployée comme PWA sur Cloudflare Pages.
 
 Cette livraison remplace le premier extracteur par un Parser V2 layout-aware, tout en conservant l'actualisation automatique gratuite des SUP AIP Métropole depuis les publications officielles du SIA. Elle ne contient aucun service Android natif, Capacitor, plugin natif, signature APK ou workflow Android.
+
+
+## WEB13.27.2 - SUP AIP COLUMN TABLE HOTFIX BETA
+
+- correction des tableaux SIA dont chaque zone, ses coordonnées et sa limite verticale sont réparties entre deux blocs PDF superposés ;
+- restauration complète du SUP AIP 207/25 avec 16 zones officielles LFDB11 à LFDB7 ;
+- restauration des zones autour de Belle-Ile, de l'Ile d'Yeu et des Sables d'Olonne ;
+- limites verticales `SFC - UNL` affichées pour les 16 zones ;
+- les exclusions locales de Belle-Ile, de l'Ile d'Yeu et des Sables d'Olonne restent signalées comme non découpées : le contour extérieur est affiché par prudence ;
+- ajout d'un parseur générique pour les cellules en colonnes, utile aux autres SUP AIP de même format ;
+- 13 tests Python du parseur et tests de l'application validés.
 
 
 ## WEB13.27.1 - SUP AIP TRA HOTFIX BETA
@@ -187,7 +198,7 @@ La couche est un prototype de validation d'interface et de géométrie. Elle n'e
 2. Vider le dossier local en conservant uniquement `.git`.
 3. Copier le contenu complet du ZIP dans le dossier.
 4. Commit et push via GitHub Desktop sur `main`.
-5. Vérifier `WEB13.27.1` dans la chip et `CAP CLAIR WEB13.27.1 - SUP AIP TRA HOTFIX BETA` dans le titre de l'onglet.
+5. Vérifier `WEB13.27.2` dans la chip et `CAP CLAIR WEB13.27.2 - SUP AIP COLUMN TABLE HOTFIX BETA` dans le titre de l'onglet.
 
 Commit recommandé :
 
