@@ -13,6 +13,10 @@ from tools.supaip.update_supaip import (
     embedded_column_zones,
     column_cluster_zones,
     grid_zones,
+    filter_target_zones,
+    is_conservative_parse_warning,
+    is_critical_parse_warning,
+    is_target_zone_name,
     make_unique_feature_id,
     parse_listing,
     parse_spatial_document,
@@ -336,6 +340,59 @@ class SupAipParserTests(unittest.TestCase):
             classify_incomplete_causes([], [], 0, 0, False),
             ["zone-block-not-detected"],
         )
+
+
+    def test_permanent_airspace_references_are_not_counted_as_sup_aip_zones(self):
+        title = "Création à titre expérimental d'une Zone Réglementée Temporaire sur Nancy Ochey"
+        self.assertTrue(is_target_zone_name("ZRT OCHEY", title))
+        self.assertFalse(is_target_zone_name("LFR110", title))
+        self.assertFalse(is_target_zone_name("TMA 6 BIARRITZ", "Création de 3 ZRT à Dax"))
+        self.assertFalse(is_target_zone_name("CTR OCHEY", "Création de trois ZRT"))
+
+    def test_temporary_lfr_codes_named_in_title_remain_operational(self):
+        title = "Création de trois zones réglementées temporaires LFR343L, LFR343M et LFR343H"
+        self.assertTrue(is_target_zone_name("LFR343L", title))
+        self.assertTrue(is_target_zone_name("LFR343M", title))
+        self.assertFalse(
+            is_target_zone_name(
+                "LFR204",
+                "Modification des zones LF-R204 : Création de deux zones réglementées temporaires",
+            )
+        )
+
+    def test_metadata_headings_are_not_published_as_extra_zones(self):
+        title = "Création d'une ZRT METZ - THIONVILLE"
+        self.assertFalse(is_target_zone_name("ZRT activable H24", title))
+        self.assertFalse(is_target_zone_name("ZRT.", title))
+        self.assertFalse(is_target_zone_name("CTR de Cognac publiée à", title))
+
+    def test_filter_never_merges_stacked_operational_zones(self):
+        geometry = {"type": "Polygon", "coordinates": [[[1.0, 47.0], [1.1, 47.0], [1.1, 47.1], [1.0, 47.0]]]}
+        entry = ListingEntry("023/26", "Création de deux TRA90NL et TRA90NH", "2026-01-01", "2027-01-01", "x", True, "f")
+        zones = [
+            ParsedZone("TRA90NL", "TRA", geometry, "FL 195", "FL 275", True),
+            ParsedZone("TRA90NH", "TRA", geometry, "FL 305", "FL 335", True),
+        ]
+        filtered, ignored = filter_target_zones(zones, entry)
+        self.assertEqual({zone.name for zone in filtered}, {"TRA90NL", "TRA90NH"})
+        self.assertEqual(ignored, [])
+
+    def test_internal_exclusion_is_conservative_not_incomplete(self):
+        warning = "ZRT TEST: Exclusion interne non découpée: contour extérieur affiché par prudence."
+        self.assertTrue(is_conservative_parse_warning(warning))
+        self.assertFalse(is_critical_parse_warning(warning))
+
+    def test_regression_guard_does_not_restore_permanent_reference_feature(self):
+        entry = ListingEntry("167/25", "Création d'une ZRT sur Nancy Ochey", "2026-01-01", "2027-01-01", "x", True, "f")
+        geometry = {"type": "Polygon", "coordinates": [[[1.0, 47.0], [1.1, 47.0], [1.1, 47.1], [1.0, 47.0]]]}
+        cached = [
+            {"type": "Feature", "id": "ref", "properties": {"name": "LFR110"}, "geometry": geometry},
+        ]
+        recovered, used = preserve_cached_features_on_complete_regression(
+            entry, [], cached, {"title": entry.title, "sourcePdf": entry.pdf_url}
+        )
+        self.assertEqual(recovered, [])
+        self.assertFalse(used)
 
     def test_circle_pdf(self):
         entry = ListingEntry("154/26", "Création ZRT", "2026-07-16", "2027-07-14", "https://example.invalid", True, "def")

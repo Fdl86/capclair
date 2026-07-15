@@ -1,10 +1,19 @@
-# CAP CLAIR WEB13.29.0 - SUP AIP PARSER V3 ROBUSTESSE BETA
+# CAP CLAIR WEB13.29.1 - SUP AIP PARSER V3.1 FIABILISATION BETA
 
 CAP CLAIR est une application VFR mobile-first en Vite, React, TypeScript et OpenLayers, déployée comme PWA sur Cloudflare Pages.
 
 Cette livraison renforce l'extraction automatique des SUP AIP, protège la base contre les régressions partielles et conserve indépendamment les vues cartographiques de Planifier, Suivi et Replay.
 
-## WEB13.29.0 - SUP AIP PARSER V3 ROBUSTESSE BETA
+## WEB13.29.1 - SUP AIP PARSER V3.1 FIABILISATION BETA
+
+- séparation stricte entre zones temporaires SUP AIP et espaces permanents cités comme références ou exclusions ;
+- suppression des faux objets issus de libellés tels que `ZRT activable H24`, `ZRT.`, CTR/TMA de référence et codes LF-R permanents non créés par le SUP AIP ;
+- le garde-fou anti-régression ne restaure plus un ancien objet identifié comme simple référence permanente ;
+- distinction dans le bilan entre `entièrement cartographié`, `affiché avec prudence`, `réellement partiel` et `non cartographié` ;
+- une exclusion interne non découpée ne fait plus artificiellement passer un SUP complet dans les publications réellement partielles ;
+- audit détaillé des replis de sécurité avec le numéro du SUP AIP et le nom de chaque zone conservée ;
+- compteur des références permanentes ignorées, visible dans GitHub Actions et dans `Plus > SUP AIP` ;
+- maintien volontaire des zones superposées partageant un même contour mais des verticales différentes, notamment `TRA90NL` et `TRA90NH` ;
 
 - nouvel assembleur de tableaux PDF multi-colonnes, même lorsque les titres, coordonnées et verticales sont séparés en plusieurs blocs ;
 - prise en charge des désignations temporaires compactes `LFR343L`, `LFR343M`, `LFR343H` ;
@@ -226,12 +235,12 @@ La couche est un prototype de validation d'interface et de géométrie. Elle n'e
 2. Vider le dossier local en conservant uniquement `.git`.
 3. Copier le contenu complet du ZIP dans le dossier.
 4. Commit et push via GitHub Desktop sur `main`.
-5. Vérifier `WEB13.29.0` dans la chip et `CAP CLAIR WEB13.29.0 - SUP AIP PARSER V3 ROBUSTESSE BETA` dans le titre de l'onglet.
+5. Vérifier `WEB13.29.1` dans la chip et `CAP CLAIR WEB13.29.1 - SUP AIP PARSER V3.1 FIABILISATION BETA` dans le titre de l'onglet.
 
 Commit recommandé :
 
 ```text
-main: add SUP AIP Parser V3 robustness
+main: add SUP AIP Parser V3.1 robustness
 ```
 
 ## Activation GitHub Actions - une seule fois
@@ -243,6 +252,6 @@ main: add SUP AIP Parser V3 robustness
 5. Sélectionner `Update SUP AIP data`.
 6. Cliquer `Run workflow`, choisir la branche `main`, puis confirmer.
 7. Attendre que le run passe au vert.
-8. GitHub crée alors automatiquement un commit `data: actualisation automatique SUP AIP Parser V3`, ce qui déclenche le redéploiement Cloudflare Pages.
+8. GitHub crée alors automatiquement un commit `data: actualisation automatique SUP AIP Parser V3.1`, ce qui déclenche le redéploiement Cloudflare Pages.
 
 Après ce premier lancement, le workflow s'exécute seul toutes les 6 heures. Dans `Plus > SUP AIP`, le statut doit passer de `À INITIALISER` à `ACTIVE` après le redéploiement.

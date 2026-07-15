@@ -53,6 +53,12 @@ jobs:
           assert status['processedPublicationCount'] == status['listingPublicationCount']
           assert status['downloadedPublicationCount'] + status['reusedPublicationCount'] == status['listingPublicationCount']
           assert status['zonalPublicationCount'] == status['mappedPublicationCount'] + status['completeUnmappedPublicationCount']
+          assert status['mappedPublicationCount'] == (
+              status['fullyMappedPublicationCount']
+              + status.get('conservativePublicationCount', 0)
+              + status['partialPublicationCount']
+          )
+          assert status.get('conservativePublicationCount', 0) == status.get('conservativelyMappedPublicationCount', 0)
           assert len(manifest.get('publications', [])) == status['listingPublicationCount']
 
           ids = [feature.get('id') or feature.get('properties', {}).get('id') for feature in geo['features']]
@@ -88,7 +94,7 @@ jobs:
           unmapped = json.loads(Path('public/data/supaip-unmapped.json').read_text(encoding='utf-8')).get('publications', [])
           summary = Path(os.environ['GITHUB_STEP_SUMMARY'])
           lines = [
-              '# CAP CLAIR - bilan SUP AIP Parser V3',
+              '# CAP CLAIR - bilan SUP AIP Parser V3.1',
               '',
               f"- Publications SIA listées : {status['listingPublicationCount']}",
               f"- PDF contrôlés : {status['processedPublicationCount']}",
@@ -97,13 +103,15 @@ jobs:
               f"- Publications non spatiales : {status['nonSpatialPublicationCount']}",
               f"- Publications spatiales : {status['zonalPublicationCount']}",
               f"- Publications entièrement cartographiées : {status['fullyMappedPublicationCount']}",
-              f"- Publications partielles : {status['partialPublicationCount']}",
+              f"- Publications affichées avec prudence : {status.get('conservativePublicationCount', 0)}",
+              f"- Publications réellement partielles : {status['partialPublicationCount']}",
               f"- Publications non cartographiées : {status['completeUnmappedPublicationCount']}",
               f"- Géométries nommées attendues : {status['expectedNamedGeometryCount']}",
               f"- Géométries produites : {status['featureCount']}",
               f"- Géométries avec verticales : {status['verticalCompleteFeatureCount']}",
               f"- Géométries sans verticales : {status['missingVerticalFeatureCount']}",
-              f"- Replis de sécurité : {status.get('safetyFallbackPublicationCount', 0)}",
+              f"- Replis de sécurité : {status.get('safetyFallbackPublicationCount', 0)} publication(s) / {status.get('safetyFallbackFeatureCount', 0)} zone(s)",
+              f"- Références permanentes ignorées : {status.get('ignoredReferenceObjectCount', 0)}",
               '',
               '## Causes des publications incomplètes',
               '',
@@ -117,7 +125,8 @@ jobs:
           if unmapped:
               lines.extend(['## Publications à contrôler', ''])
               for item in unmapped[:60]:
-                  state = 'partiel' if item.get('partial') else 'non cartographié'
+                  item_status = item.get('status')
+                  state = 'affiché avec prudence' if item_status == 'conservative' else 'partiel' if item_status == 'partial' or item.get('partial') else 'non cartographié'
                   mapped = item.get('mappedGeometryCount', 0)
                   expected = item.get('expectedNamedGeometryCount', 0)
                   vertical = item.get('missingVerticalCount', 0)
@@ -128,6 +137,12 @@ jobs:
                   reason = item.get('reason')
                   if reason:
                       lines.append(f"  - Diagnostic : {reason}")
+          fallback_details = status.get('safetyFallbackDetails', [])
+          if fallback_details:
+              lines.extend(['', '## Replis de sécurité détaillés', ''])
+              for item in fallback_details:
+                  names = ', '.join(item.get('featureNames', [])) or 'noms indisponibles'
+                  lines.append(f"- {item.get('supAip')} - {item.get('featureCount', 0)} zone(s) : {names}")
           summary.write_text('\n'.join(lines) + '\n', encoding='utf-8')
           PY
 
@@ -140,5 +155,5 @@ jobs:
           git config user.name "CAP CLAIR SUP AIP Bot"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add public/data/supaip-current.geojson public/data/supaip-status.json public/data/supaip-unmapped.json public/data/supaip-manifest.json
-          git commit -m "data: actualisation automatique SUP AIP Parser V3"
+          git commit -m "data: actualisation automatique SUP AIP Parser V3.1"
           git push

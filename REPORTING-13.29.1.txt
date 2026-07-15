@@ -1,0 +1,28 @@
+CAP CLAIR WEB13.29.1 - REPORTING DE FIABILISATION SUP AIP
+
+OBJECTIF
+Nettoyer le bilan Parser V3 sans masquer de zone plausible et rendre les replis de securite auditables.
+
+CORRECTIONS PRINCIPALES
+- Les espaces permanents cites dans les PDF comme references ou exclusions ne sont plus publies comme zones SUP AIP supplementaires.
+- Les faux objets issus des entetes de tableau sont ignores: ZRT activable H24, ZRT., CTR/TMA de reference, codes LF-R permanents non crees par le SUP AIP.
+- Le garde-fou anti-regression ne restaure plus une ancienne reference permanente.
+- Les SUP sont maintenant classes dans quatre etats distincts:
+  1. entierement cartographie;
+  2. affiche avec prudence, toutes les zones principales sont presentes mais une exclusion interne n'est pas decoupee;
+  3. reellement partiel;
+  4. non cartographie.
+- Une exclusion interne non decoupee ne gonfle plus artificiellement le nombre de publications reellement partielles.
+- Les replis de securite sont detailles dans GitHub Actions avec le numero du SUP AIP et le nom exact des zones conservees.
+- Le bilan affiche aussi le nombre de references permanentes ignorees.
+- Les zones superposees qui partagent le meme contour mais ont des verticales differentes sont conservees, notamment TRA90NL et TRA90NH.
+
+VALIDATION
+- 24 tests Python du parseur reussis.
+- 28 tests TypeScript/React reussis.
+- Compilation TypeScript reussie.
+- Build Vite de production reussi.
+- Simulation locale du bilan: repartition complete / prudente / partielle / non cartographiee coherente.
+
+ATTENTION
+Le resultat reel sur les 110 PDF sera mesure apres le premier workflow GitHub Parser V3.1. Aucun fichier public/data/supaip-* n'est inclus dans ce patch.

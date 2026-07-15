@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Build CAP CLAIR's SUP AIP overlay from the official French SIA listing.
 
-Parser V3 is layout-aware and regression-safe. It reads PyMuPDF text blocks,
+Parser V3.1 is layout-aware, regression-safe and reference-aware. It reads PyMuPDF text blocks,
 rebuilds common multi-column SIA tables, recognises temporary LFR designators,
 and keeps previously valid individual geometries if a parser upgrade loses only
 part of a publication. It remains conservative: a boundary that depends on an
@@ -33,8 +33,8 @@ from requests.adapters import HTTPAdapter
 from urllib3.util.retry import Retry
 
 SOURCE_URL = "https://www.sia.aviation-civile.gouv.fr/documents/supaip/aip/id/6"
-PARSER_VERSION = "capclair-supaip-parser-3.0.0"
-USER_AGENT = "CAP-CLAIR-SUPAIP-BETA/3.0.0 (+automatic SIA public-document reader)"
+PARSER_VERSION = "capclair-supaip-parser-3.0.1"
+USER_AGENT = "CAP-CLAIR-SUPAIP-BETA/3.0.1 (+automatic SIA public-document reader)"
 ZONE_TITLE_RE = re.compile(
     r"\b(?:ZRT|ZDT|ZIT|TRA|TSA|zone(?:s)?\s+(?:r[eé]glement[eé]e|dangereuse|interdite|r[eé]serv[eé]e)(?:s)?\s+temporaire(?:s)?|CTR\s+temporaire|TMA\s+temporaire)\b",
     re.IGNORECASE,
@@ -96,6 +96,16 @@ FBZ_SECTION_RE = re.compile(
 NON_SPATIAL_TITLE_RE = re.compile(
     r"\b(?:modification\s+temporaire\s+de\s+l['’]itin[eé]raire\s+h[eé]licopt[eè]res?|"
     r"itin[eé]raire\s+h[eé]licopt[eè]res?)\b",
+    re.IGNORECASE,
+)
+
+GENERIC_ZONE_NAME_RE = re.compile(
+    r"^(?:ZRT/ZDT|ZRT|ZDT|ZIT|TRA|TSA|CTR|TMA|RMZ|TMZ|FBZ)[.\s:-]*(?:ACTIVABLE\s+H24)?$",
+    re.IGNORECASE,
+)
+ZONE_METADATA_NAME_RE = re.compile(
+    r"\b(?:ACTIVABLE\s+H24|PUBLI[EÉ]E?\s+[ÀA]|LIMITES?\s+(?:LAT[EÉ]RALES?|VERTICALES?)|"
+    r"DATES?\s+ET\s+HEURES?|CONDITIONS?\s+D['’]ACTIVATION)\b",
     re.IGNORECASE,
 )
 
@@ -172,6 +182,7 @@ class ParseResult:
     expected_named_geometry_count: int
     declared_zone_count: int | None
     missing_vertical_count: int
+    ignored_reference_object_count: int
 
 
 _AIRSPACE_CATALOG_CACHE: list[dict[str, Any]] | None = None
@@ -1203,6 +1214,61 @@ def deduplicate_zones(zones: list[ParsedZone]) -> list[ParsedZone]:
     return list(by_name.values())
 
 
+def compact_airspace_code(value: str) -> str:
+    normalized = unicodedata.normalize("NFKD", value).encode("ascii", "ignore").decode("ascii").upper()
+    return re.sub(r"[^A-Z0-9]", "", normalized)
+
+
+def is_target_zone_name(name: str, entry_title: str) -> bool:
+    """Return True only for an operational temporary-zone object.
+
+    SIA tables frequently cite permanent CTR/TMA/LF-R spaces as exclusions or
+    references. Those objects may provide a boundary, but they are not an
+    additional SUP AIP zone and must not inflate counts or be restored by the
+    regression guard.
+    """
+    cleaned = clean_zone_name(name)
+    if not cleaned or GENERIC_ZONE_NAME_RE.fullmatch(cleaned) or ZONE_METADATA_NAME_RE.search(cleaned):
+        return False
+    upper = clean_space(cleaned).upper()
+    if upper.startswith("FBZ"):
+        return False
+
+    token = re.match(r"^(ZRT/ZDT|ZRT|ZDT|ZIT|TRA(?=\b|\d)|TSA(?=\b|\d)|CTR|TMA|RMZ|TMZ)", upper)
+    if token and token.group(1) in {"CTR", "TMA", "RMZ", "TMZ"}:
+        zone_type = token.group(1)
+        if not re.search(rf"\b{zone_type}\s+TEMPORAIRE(?:S)?\b", entry_title, re.IGNORECASE):
+            return False
+
+    lfr_code = normalize_temporary_lfr_code(cleaned)
+    if lfr_code:
+        title_code = compact_airspace_code(entry_title)
+        if lfr_code not in title_code:
+            return False
+        if re.search(r"MODIFICATION\s+DES?\s+ZONES?\s+LF\s*-?\s*R", entry_title, re.IGNORECASE):
+            return False
+        if not re.search(r"CR[EÉ]ATION", entry_title, re.IGNORECASE):
+            return False
+
+    return True
+
+
+def filter_target_zones(zones: list[ParsedZone], entry: ListingEntry) -> tuple[list[ParsedZone], list[str]]:
+    """Remove only clearly non-operational labels, never a plausible zone.
+
+    We deliberately avoid geometry-based deletion: two operational zones can
+    share the same lateral contour while having different rules or names.
+    """
+    filtered: list[ParsedZone] = []
+    ignored: list[str] = []
+    for zone in zones:
+        if is_target_zone_name(zone.name, entry.title):
+            filtered.append(zone)
+        else:
+            ignored.append(zone.name)
+    return filtered, list(dict.fromkeys(filter(None, ignored)))
+
+
 def declared_zone_count(title: str) -> int | None:
     cleaned = clean_space(title).lower()
     numeric_counts = [
@@ -1397,6 +1463,8 @@ def parse_spatial_document(entry: ListingEntry, document: PdfDocumentLayout) -> 
     inherit_shared_geometries(zones)
     resolve_permanent_airspace_references(zones, operational_text)
     zones = deduplicate_zones(zones)
+    zones, ignored_reference_names = filter_target_zones(zones, entry)
+    zones = deduplicate_zones(zones)
 
     expected_names = [zone.name for zone in zones]
     expected_named_geometry_count = max(len(expected_names), int(declared_count or 0))
@@ -1404,7 +1472,7 @@ def parse_spatial_document(entry: ListingEntry, document: PdfDocumentLayout) -> 
     activation_mode = infer_activation_mode(activation_text, document.text)
     frequency = extract_frequencies(document.text)
     features: list[dict[str, Any]] = []
-    warnings: list[str] = []
+    warnings: list[str] = [f"Objet de référence ignoré: {name}." for name in ignored_reference_names]
     used_feature_ids: set[str] = set()
 
     for zone in sorted(zones, key=lambda item: ((item.page_index if item.page_index is not None else 10_000), item.position_y, item.name)):
@@ -1457,6 +1525,7 @@ def parse_spatial_document(entry: ListingEntry, document: PdfDocumentLayout) -> 
         expected_named_geometry_count=expected_named_geometry_count,
         declared_zone_count=declared_count,
         missing_vertical_count=missing_vertical_count,
+        ignored_reference_object_count=len(ignored_reference_names),
     )
 
 
@@ -1573,6 +1642,9 @@ def preserve_cached_features_on_complete_regression(
 
     recovered: list[dict[str, Any]] = []
     for feature in cached_features:
+        cached_name = str(feature.get("properties", {}).get("name") or "")
+        if not is_target_zone_name(cached_name, entry.title):
+            continue
         feature_copy = copy.deepcopy(feature)
         properties = feature_copy.setdefault("properties", {})
         properties["sourceFingerprint"] = entry.fingerprint
@@ -1585,7 +1657,7 @@ def preserve_cached_features_on_complete_regression(
             geometry_warnings.append(warning)
         properties["geometryWarnings"] = geometry_warnings
         recovered.append(feature_copy)
-    return recovered, True
+    return recovered, bool(recovered)
 
 
 def preserve_cached_features_on_partial_regression(
@@ -1612,7 +1684,10 @@ def preserve_cached_features_on_partial_regression(
     recovered: list[dict[str, Any]] = []
     for feature in cached_features:
         properties = feature.get("properties", {})
-        key = zone_identity_key(str(properties.get("name") or ""))
+        cached_name = str(properties.get("name") or "")
+        if not is_target_zone_name(cached_name, entry.title):
+            continue
+        key = zone_identity_key(cached_name)
         if not key or key in current_keys:
             continue
         feature_copy = copy.deepcopy(feature)
@@ -1690,12 +1765,16 @@ def stable_payload_hash(payload: Any) -> str:
 def is_critical_parse_warning(value: str) -> bool:
     return bool(
         re.search(
-            r"(?:limites? lat[eé]rales? non extraites?|sans limites verticales|exclusion interne non d[eé]coup[eé]e|"
+            r"(?:limites? lat[eé]rales? non extraites?|sans limites verticales|"
             r"limite d[eé]pendant|arc d[eé]tect[eé]|polygone incomplet|moins de trois coordonn[eé]es|rayon circulaire hors)",
             value,
             re.IGNORECASE,
         )
     )
+
+
+def is_conservative_parse_warning(value: str) -> bool:
+    return bool(re.search(r"exclusion interne non d[eé]coup[eé]e", value, re.IGNORECASE))
 
 
 INCOMPLETE_CAUSE_LABELS = {
@@ -1769,6 +1848,7 @@ def build_dataset(output_dir: Path, override_path: Path, polite_delay: float = 0
     manifest: list[dict[str, Any]] = []
     mapped_publications = 0
     fully_mapped_publications = 0
+    conservatively_mapped_publications = 0
     reused_publications = 0
     downloaded_publications = 0
     non_spatial_publications = 0
@@ -1777,7 +1857,9 @@ def build_dataset(output_dir: Path, override_path: Path, polite_delay: float = 0
     expected_named_total = 0
     missing_vertical_total = 0
     download_failures: list[str] = []
-    safety_fallback_publications = 0
+    safety_fallback_features = 0
+    safety_fallback_details: list[dict[str, Any]] = []
+    ignored_reference_object_total = 0
 
     for entry in entries:
         cached_features = previous_features.get(entry.sup_aip, [])
@@ -1792,6 +1874,7 @@ def build_dataset(output_dir: Path, override_path: Path, polite_delay: float = 0
         spatial = False
         used_safety_fallback = False
         partial_fallback_count = 0
+        ignored_reference_object_count = 0
 
         if can_reuse_features(cached_features, entry):
             parsed_features = cached_features
@@ -1801,6 +1884,7 @@ def build_dataset(output_dir: Path, override_path: Path, polite_delay: float = 0
             declared_count = (cached_manifest or {}).get("declaredZoneCount")
             missing_vertical_count = sum(1 for feature in parsed_features if not feature.get("properties", {}).get("verticalLimitsExtracted", True))
             previous_partial = bool((cached_manifest or {}).get("partial"))
+            ignored_reference_object_count = int((cached_manifest or {}).get("ignoredReferenceObjectCount") or 0)
         elif can_reuse_unmapped(cached_unmapped, entry):
             spatial = True
             reused_publications += 1
@@ -1808,6 +1892,7 @@ def build_dataset(output_dir: Path, override_path: Path, polite_delay: float = 0
             expected_named_count = int(cached_unmapped.get("expectedNamedGeometryCount") or 0)
             declared_count = cached_unmapped.get("declaredZoneCount")
             previous_partial = bool(cached_unmapped.get("partial"))
+            ignored_reference_object_count = int(cached_unmapped.get("ignoredReferenceObjectCount") or 0)
         elif can_reuse_non_spatial(cached_manifest, entry):
             reused_publications += 1
             non_spatial_publications += 1
@@ -1826,6 +1911,7 @@ def build_dataset(output_dir: Path, override_path: Path, polite_delay: float = 0
                     expected_named_count = result.expected_named_geometry_count
                     declared_count = result.declared_zone_count
                     missing_vertical_count = result.missing_vertical_count
+                    ignored_reference_object_count = result.ignored_reference_object_count
                 else:
                     non_spatial_publications += 1
             except Exception as error:
@@ -1840,7 +1926,6 @@ def build_dataset(output_dir: Path, override_path: Path, polite_delay: float = 0
                 entry, parsed_features, cached_features, cached_manifest
             )
             if used_safety_fallback:
-                safety_fallback_publications += 1
                 warnings.append(
                     "Régression complète du parseur détectée: dernière géométrie valide conservée par sécurité."
                 )
@@ -1860,7 +1945,6 @@ def build_dataset(output_dir: Path, override_path: Path, polite_delay: float = 0
                 )
                 if partial_fallback_count:
                     used_safety_fallback = True
-                    safety_fallback_publications += 1
                     warnings.append(
                         f"Régression partielle du parseur détectée: {partial_fallback_count} ancienne(s) zone(s) conservée(s) par sécurité."
                     )
@@ -1887,9 +1971,6 @@ def build_dataset(output_dir: Path, override_path: Path, polite_delay: float = 0
             continue
 
         zonal_publications += 1
-        declared_zone_total += int(declared_count or 0)
-        expected_named_total += expected_named_count
-        missing_vertical_total += missing_vertical_count
 
         generated_ids = {feature.get("id") for feature in parsed_features}
         for override in overrides.get(entry.sup_aip, []):
@@ -1908,21 +1989,55 @@ def build_dataset(output_dir: Path, override_path: Path, polite_delay: float = 0
                 props.setdefault("geometryWarnings", [])
                 parsed_features.append(override_copy)
 
+        expected_named_count = max(expected_named_count, len(parsed_features))
+        missing_vertical_count = sum(
+            1 for feature in parsed_features if not feature.get("properties", {}).get("verticalLimitsExtracted", False)
+        )
+        declared_zone_total += int(declared_count or 0)
+        expected_named_total += expected_named_count
+        missing_vertical_total += missing_vertical_count
+        ignored_reference_object_total += ignored_reference_object_count
+
+        fallback_names = [
+            str(feature.get("properties", {}).get("name") or "")
+            for feature in parsed_features
+            if "safety-fallback" in str(feature.get("properties", {}).get("geometrySource") or "")
+        ]
+        used_safety_fallback = used_safety_fallback or bool(fallback_names)
+        previous_partial = previous_partial or bool(fallback_names)
+
         critical_warnings = [warning for warning in warnings if is_critical_parse_warning(warning)]
-        partial = previous_partial or bool(critical_warnings) or (expected_named_count > 0 and len(parsed_features) < expected_named_count) or missing_vertical_count > 0
+        conservative_warnings = [warning for warning in warnings if is_conservative_parse_warning(warning)]
+        geometry_missing = expected_named_count > 0 and len(parsed_features) < expected_named_count
+        partial = previous_partial or bool(critical_warnings) or geometry_missing or missing_vertical_count > 0
+        conservative = bool(parsed_features) and not partial and bool(conservative_warnings)
+        publication_state = "unmapped" if not parsed_features else "partial" if partial else "conservative" if conservative else "complete"
+
+        if fallback_names:
+            safety_fallback_features += len(fallback_names)
+            safety_fallback_details.append({
+                "supAip": entry.sup_aip,
+                "featureCount": len(fallback_names),
+                "featureNames": fallback_names,
+            })
+
         if parsed_features:
             mapped_publications += 1
-            if not partial:
+            if publication_state == "complete":
                 fully_mapped_publications += 1
+            elif publication_state == "conservative":
+                conservatively_mapped_publications += 1
             all_features.extend(parsed_features)
         reason_parts = list(critical_warnings)
-        if expected_named_count > len(parsed_features):
+        if conservative_warnings:
+            reason_parts.extend(conservative_warnings)
+        if geometry_missing:
             reason_parts.append(f"{len(parsed_features)}/{expected_named_count} géométries nommées extraites.")
         if missing_vertical_count:
             reason_parts.append(f"{missing_vertical_count} zone(s) sans limites verticales extraites.")
         if not parsed_features:
             reason_parts.append("Aucune géométrie fiable extraite.")
-        if partial or not parsed_features:
+        if publication_state != "complete":
             cause_codes = classify_incomplete_causes(
                 parsed_features, warnings, expected_named_count, missing_vertical_count, used_safety_fallback
             )
@@ -1933,11 +2048,16 @@ def build_dataset(output_dir: Path, override_path: Path, polite_delay: float = 0
                 "validTo": entry.valid_to,
                 "sourcePdf": entry.pdf_url,
                 "reason": " ".join(dict.fromkeys(reason_parts)),
-                "partial": bool(parsed_features),
+                "status": publication_state,
+                "partial": publication_state == "partial",
+                "conservative": publication_state == "conservative",
                 "expectedNamedGeometryCount": expected_named_count,
                 "mappedGeometryCount": len(parsed_features),
                 "declaredZoneCount": declared_count,
                 "missingVerticalCount": missing_vertical_count,
+                "safetyFallbackFeatureCount": len(fallback_names),
+                "safetyFallbackFeatureNames": fallback_names,
+                "ignoredReferenceObjectCount": ignored_reference_object_count,
                 "causeCodes": cause_codes,
                 "causeLabels": [INCOMPLETE_CAUSE_LABELS[code] for code in cause_codes],
                 "sourceFingerprint": entry.fingerprint,
@@ -1952,7 +2072,12 @@ def build_dataset(output_dir: Path, override_path: Path, polite_delay: float = 0
             "expectedNamedGeometryCount": expected_named_count,
             "declaredZoneCount": declared_count,
             "missingVerticalCount": missing_vertical_count,
-            "partial": partial,
+            "status": publication_state,
+            "partial": publication_state == "partial",
+            "conservative": publication_state == "conservative",
+            "safetyFallbackFeatureCount": len(fallback_names),
+            "safetyFallbackFeatureNames": fallback_names,
+            "ignoredReferenceObjectCount": ignored_reference_object_count,
             "sourcePdf": entry.pdf_url,
             "sourceFingerprint": entry.fingerprint,
             "parserVersion": PARSER_VERSION,
@@ -1974,17 +2099,18 @@ def build_dataset(output_dir: Path, override_path: Path, polite_delay: float = 0
     )
     collection_base = {
         "type": "FeatureCollection",
-        "name": "CAP CLAIR SUP AIP AUTO BETA - Parser V3",
+        "name": "CAP CLAIR SUP AIP AUTO BETA - Parser V3.1",
         "source": "SIA France - liste et PDF officiels SUP AIP Métropole",
         "sourceUrl": SOURCE_URL,
-        "coverage": "Analyse de toutes les publications listées. Extraction multi-colonnes conservatrice et protection contre les régressions partielles.",
+        "coverage": "Analyse de toutes les publications listées. Les espaces permanents cités comme références sont séparés des zones SUP AIP et les contours prudents sont distingués des zones réellement manquantes.",
         "parserVersion": PARSER_VERSION,
         "features": all_features,
     }
     validate_feature_collection(collection_base, previous_count)
 
-    complete_unmapped_count = sum(1 for item in unmapped if not item.get("partial"))
-    partial_count = sum(1 for item in unmapped if item.get("partial"))
+    complete_unmapped_count = sum(1 for item in unmapped if item.get("status") == "unmapped")
+    partial_count = sum(1 for item in unmapped if item.get("status") == "partial")
+    conservative_count = sum(1 for item in unmapped if item.get("status") == "conservative")
     cause_counts = {code: 0 for code in INCOMPLETE_CAUSE_LABELS}
     for item in unmapped:
         for code in item.get("causeCodes", []):
@@ -2020,21 +2146,27 @@ def build_dataset(output_dir: Path, override_path: Path, polite_delay: float = 0
         "zonalPublicationCount": zonal_publications,
         "mappedPublicationCount": mapped_publications,
         "fullyMappedPublicationCount": fully_mapped_publications,
+        "conservativelyMappedPublicationCount": conservatively_mapped_publications,
         "featureCount": len(all_features),
         "expectedNamedGeometryCount": expected_named_total,
         "declaredZoneCount": declared_zone_total,
         "verticalCompleteFeatureCount": len(all_features) - missing_vertical_total,
         "missingVerticalFeatureCount": missing_vertical_total,
         "unmappedPublicationCount": len(unmapped),
+        "reviewPublicationCount": len(unmapped),
         "completeUnmappedPublicationCount": complete_unmapped_count,
         "partialPublicationCount": partial_count,
+        "conservativePublicationCount": conservative_count,
         "reusedPublicationCount": reused_publications,
         "downloadedPublicationCount": downloaded_publications,
-        "safetyFallbackPublicationCount": safety_fallback_publications,
+        "safetyFallbackPublicationCount": len(safety_fallback_details),
+        "safetyFallbackFeatureCount": safety_fallback_features,
+        "safetyFallbackDetails": safety_fallback_details,
+        "ignoredReferenceObjectCount": ignored_reference_object_total,
         "incompleteCausePublicationCounts": cause_counts,
         "incompleteCauseLabels": INCOMPLETE_CAUSE_LABELS,
         "staleAfterHours": 36,
-        "message": "Parser V3: toutes les publications SIA listées sont contrôlées, les tableaux multi-colonnes sont renforcés et les régressions partielles sont protégées. Vérifier le PDF, SOFIA et les NOTAM avant le vol.",
+        "message": "Parser V3.1: les zones temporaires sont séparées des espaces permanents cités, les contours prudents sont distingués des géométries manquantes et chaque repli de sécurité est auditable. Vérifier le PDF, SOFIA et les NOTAM avant le vol.",
     }
     unmapped_payload = {
         "schemaVersion": 2,

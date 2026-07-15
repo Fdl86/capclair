@@ -13,6 +13,7 @@ export interface SupAipDatasetStatus {
   zonalPublicationCount: number;
   mappedPublicationCount: number;
   fullyMappedPublicationCount?: number;
+  conservativelyMappedPublicationCount?: number;
   featureCount: number;
   expectedNamedGeometryCount?: number;
   declaredZoneCount?: number;
@@ -21,9 +22,14 @@ export interface SupAipDatasetStatus {
   unmappedPublicationCount: number;
   completeUnmappedPublicationCount: number;
   partialPublicationCount: number;
+  conservativePublicationCount?: number;
+  reviewPublicationCount?: number;
   reusedPublicationCount: number;
   downloadedPublicationCount: number;
   safetyFallbackPublicationCount?: number;
+  safetyFallbackFeatureCount?: number;
+  safetyFallbackDetails?: Array<{ supAip: string; featureCount: number; featureNames: string[] }>;
+  ignoredReferenceObjectCount?: number;
   incompleteCausePublicationCounts?: Record<string, number>;
   incompleteCauseLabels?: Record<string, string>;
   staleAfterHours: number;
