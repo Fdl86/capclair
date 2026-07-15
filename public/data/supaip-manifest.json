@@ -1,9 +1,9 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-07-15T16:09:24Z",
-  "datasetRevision": "79c15e1ac72f9224ed6a42919e7ef1f919f576a03d30f056fb5b0964851417a4",
+  "generatedAt": "2026-07-15T16:36:37Z",
+  "datasetRevision": "750cdf46cb9d678c04edd0d1e20fbaa8dad5a997dc733deb785abb8e70bfe9fc",
   "sourceUrl": "https://www.sia.aviation-civile.gouv.fr/documents/supaip/aip/id/6",
-  "parserVersion": "capclair-supaip-parser-3.0.0",
+  "parserVersion": "capclair-supaip-parser-3.0.1",
   "publications": [
     {
       "supAip": "237/24",
@@ -13,10 +13,15 @@
       "expectedNamedGeometryCount": 2,
       "declaredZoneCount": 2,
       "missingVerticalCount": 0,
+      "status": "complete",
       "partial": false,
+      "conservative": false,
+      "safetyFallbackFeatureCount": 0,
+      "safetyFallbackFeatureNames": [],
+      "ignoredReferenceObjectCount": 0,
       "sourcePdf": "https://www.sia.aviation-civile.gouv.fr/documents/download/f/d/13791066/",
-      "sourceFingerprint": "b05c7388b86640137fa9",
-      "parserVersion": "capclair-supaip-parser-3.0.0"
+      "sourceFingerprint": "785873cc6f2206ce6b69",
+      "parserVersion": "capclair-supaip-parser-3.0.1"
     },
     {
       "supAip": "234/24",
@@ -26,10 +31,15 @@
       "expectedNamedGeometryCount": 2,
       "declaredZoneCount": 2,
       "missingVerticalCount": 0,
+      "status": "complete",
       "partial": false,
+      "conservative": false,
+      "safetyFallbackFeatureCount": 0,
+      "safetyFallbackFeatureNames": [],
+      "ignoredReferenceObjectCount": 0,
       "sourcePdf": "https://www.sia.aviation-civile.gouv.fr/documents/download/f/d/13791055/",
-      "sourceFingerprint": "38f3c2c2da7158e12f84",
-      "parserVersion": "capclair-supaip-parser-3.0.0"
+      "sourceFingerprint": "1c13a19f68ef9cc72572",
+      "parserVersion": "capclair-supaip-parser-3.0.1"
     },
     {
       "supAip": "233/24",
@@ -39,10 +49,15 @@
       "expectedNamedGeometryCount": 3,
       "declaredZoneCount": 1,
       "missingVerticalCount": 0,
+      "status": "partial",
       "partial": true,
+      "conservative": false,
+      "safetyFallbackFeatureCount": 0,
+      "safetyFallbackFeatureNames": [],
+      "ignoredReferenceObjectCount": 0,
       "sourcePdf": "https://www.sia.aviation-civile.gouv.fr/documents/download/f/d/13791052/",
-      "sourceFingerprint": "61c9b1b050c03eb0438f",
-      "parserVersion": "capclair-supaip-parser-3.0.0"
+      "sourceFingerprint": "8beb64ca479412f523d2",
+      "parserVersion": "capclair-supaip-parser-3.0.1"
     },
     {
       "supAip": "232/24",
@@ -52,31 +67,43 @@
       "expectedNamedGeometryCount": 2,
       "declaredZoneCount": 2,
       "missingVerticalCount": 0,
+      "status": "complete",
       "partial": false,
+      "conservative": false,
+      "safetyFallbackFeatureCount": 0,
+      "safetyFallbackFeatureNames": [],
+      "ignoredReferenceObjectCount": 0,
       "sourcePdf": "https://www.sia.aviation-civile.gouv.fr/documents/download/f/d/13739998/",
-      "sourceFingerprint": "b306bafd32dacd9a0201",
-      "parserVersion": "capclair-supaip-parser-3.0.0"
+      "sourceFingerprint": "695c5e9cfd4afd967aaa",
+      "parserVersion": "capclair-supaip-parser-3.0.1"
     },
     {
       "supAip": "218/25",
       "title": "Départs initiaux RNAV pour les SID RNAV de Beauvais Tillé AD LFOB.",
       "spatial": false,
       "sourcePdf": "https://www.sia.aviation-civile.gouv.fr/documents/download/f/d/15016262/",
-      "sourceFingerprint": "234fde75c9a37ca12f50",
-      "parserVersion": "capclair-supaip-parser-3.0.0"
+      "sourceFingerprint": "309374d0a057f7db8398",
+      "parserVersion": "capclair-supaip-parser-3.0.1"
     },
     {
       "supAip": "216/25",
       "title": "Création d’une Zone Réglementée Temporaire (ZRT) « METZ - THIONVILLE » pour vols hors vue d’un aéronef télépiloté sans équipage à bord entre le Centre Hospitalier Universitaire de METZ et le Centre Hospitalier de THIONVILLE (57)",
       "spatial": true,
-      "mappedGeometryCount": 2,
+      "mappedGeometryCount": 1,
       "expectedNamedGeometryCount": 1,
       "declaredZoneCount": 1,
       "missingVerticalCount": 0,
+      "status": "partial",
       "partial": true,
+      "conservative": false,
+      "safetyFallbackFeatureCount": 1,
+      "safetyFallbackFeatureNames": [
+        "ZRT METZ - THIONVILLE"
+      ],
+      "ignoredReferenceObjectCount": 1,
       "sourcePdf": "https://www.sia.aviation-civile.gouv.fr/documents/download/f/d/15016258/",
-      "sourceFingerprint": "3ac8d2bd708d68c57c1c",
-      "parserVersion": "capclair-supaip-parser-3.0.0"
+      "sourceFingerprint": "037d6bc5731996f309f1",
+      "parserVersion": "capclair-supaip-parser-3.0.1"
     },
     {
       "supAip": "214/25",
@@ -86,10 +113,15 @@
       "expectedNamedGeometryCount": 1,
       "declaredZoneCount": 1,
       "missingVerticalCount": 0,
+      "status": "complete",
       "partial": false,
+      "conservative": false,
+      "safetyFallbackFeatureCount": 0,
+      "safetyFallbackFeatureNames": [],
+      "ignoredReferenceObjectCount": 0,
       "sourcePdf": "https://www.sia.aviation-civile.gouv.fr/documents/download/f/d/15016254/",
-      "sourceFingerprint": "084c8737fac2e84197a0",
-      "parserVersion": "capclair-supaip-parser-3.0.0"
+      "sourceFingerprint": "e9562be5899a41afb431",
+      "parserVersion": "capclair-supaip-parser-3.0.1"
     },
     {
       "supAip": "212/25",
@@ -99,10 +131,15 @@
       "expectedNamedGeometryCount": 1,
       "declaredZoneCount": 1,
       "missingVerticalCount": 0,
-      "partial": true,
+      "status": "conservative",
+      "partial": false,
+      "conservative": true,
+      "safetyFallbackFeatureCount": 0,
+      "safetyFallbackFeatureNames": [],
+      "ignoredReferenceObjectCount": 0,
       "sourcePdf": "https://www.sia.aviation-civile.gouv.fr/documents/download/f/d/15016250/",
-      "sourceFingerprint": "8dfc8d425552e829572d",
-      "parserVersion": "capclair-supaip-parser-3.0.0"
+      "sourceFingerprint": "669b683fa3ffa4ed16f0",
+      "parserVersion": "capclair-supaip-parser-3.0.1"
     },
     {
       "supAip": "211/25",
@@ -112,31 +149,43 @@
       "expectedNamedGeometryCount": 2,
       "declaredZoneCount": 2,
       "missingVerticalCount": 0,
+      "status": "complete",
       "partial": false,
+      "conservative": false,
+      "safetyFallbackFeatureCount": 0,
+      "safetyFallbackFeatureNames": [],
+      "ignoredReferenceObjectCount": 0,
       "sourcePdf": "https://www.sia.aviation-civile.gouv.fr/documents/download/f/d/15016248/",
-      "sourceFingerprint": "6861dc6feb773a55230f",
-      "parserVersion": "capclair-supaip-parser-3.0.0"
+      "sourceFingerprint": "b1516c932a461e3249c7",
+      "parserVersion": "capclair-supaip-parser-3.0.1"
     },
     {
       "supAip": "210/25",
       "title": "Création d’une Zone Réglementée Temporaire (ZRT) au profit de vols d’aéronefs sans équipage à bord, hors vue, entre le centre hospitalier de Verneuil-d’Avre-et-d’Iton (27) et le centre hospitalier de L’Aigle (61)",
       "spatial": true,
-      "mappedGeometryCount": 2,
+      "mappedGeometryCount": 1,
       "expectedNamedGeometryCount": 1,
       "declaredZoneCount": 1,
       "missingVerticalCount": 0,
+      "status": "partial",
       "partial": true,
+      "conservative": false,
+      "safetyFallbackFeatureCount": 1,
+      "safetyFallbackFeatureNames": [
+        "ZRT L'AIGLE - VERNEUIL D'AVRE"
+      ],
+      "ignoredReferenceObjectCount": 1,
       "sourcePdf": "https://www.sia.aviation-civile.gouv.fr/documents/download/f/d/15016246/",
-      "sourceFingerprint": "87d23a16ab4ff21e9696",
-      "parserVersion": "capclair-supaip-parser-3.0.0"
+      "sourceFingerprint": "8c8ece2b38cf2a584218",
+      "parserVersion": "capclair-supaip-parser-3.0.1"
     },
     {
       "supAip": "208/25",
       "title": "Expérimentation de modification des procédures de départ RNAV en piste 15 AD Bâle Mulhouse LFSB",
       "spatial": false,
       "sourcePdf": "https://www.sia.aviation-civile.gouv.fr/documents/download/f/d/15016228/",
-      "sourceFingerprint": "726996c21d4ea3fb95ae",
-      "parserVersion": "capclair-supaip-parser-3.0.0"
+      "sourceFingerprint": "a951616deda679e6cab1",
+      "parserVersion": "capclair-supaip-parser-3.0.1"
     },
     {
       "supAip": "207/25",
@@ -146,10 +195,15 @@
       "expectedNamedGeometryCount": 16,
       "declaredZoneCount": null,
       "missingVerticalCount": 0,
-      "partial": true,
+      "status": "conservative",
+      "partial": false,
+      "conservative": true,
+      "safetyFallbackFeatureCount": 0,
+      "safetyFallbackFeatureNames": [],
+      "ignoredReferenceObjectCount": 0,
       "sourcePdf": "https://www.sia.aviation-civile.gouv.fr/documents/download/f/d/15016226/",
-      "sourceFingerprint": "05b6ccf7ffd38ad68f05",
-      "parserVersion": "capclair-supaip-parser-3.0.0"
+      "sourceFingerprint": "11c8f15e2d7423bdf799",
+      "parserVersion": "capclair-supaip-parser-3.0.1"
     },
     {
       "supAip": "206/25",
@@ -159,26 +213,31 @@
       "expectedNamedGeometryCount": 3,
       "declaredZoneCount": 3,
       "missingVerticalCount": 0,
+      "status": "partial",
       "partial": true,
+      "conservative": false,
+      "safetyFallbackFeatureCount": 0,
+      "safetyFallbackFeatureNames": [],
+      "ignoredReferenceObjectCount": 0,
       "sourcePdf": "https://www.sia.aviation-civile.gouv.fr/documents/download/f/d/15016224/",
-      "sourceFingerprint": "60757cfe4c70f62d9806",
-      "parserVersion": "capclair-supaip-parser-3.0.0"
+      "sourceFingerprint": "6551a9798a8ba3801be2",
+      "parserVersion": "capclair-supaip-parser-3.0.1"
     },
     {
       "supAip": "203/25",
       "title": "Modification des points de compte-rendu et trajectoires hélicoptères à l’approche de l’AD de Courchevel LFLJ",
       "spatial": false,
       "sourcePdf": "https://www.sia.aviation-civile.gouv.fr/documents/download/f/d/15005561/",
-      "sourceFingerprint": "4dc585675f236849cff2",
-      "parserVersion": "capclair-supaip-parser-3.0.0"
+      "sourceFingerprint": "986e3fb1708756fabeb2",
+      "parserVersion": "capclair-supaip-parser-3.0.1"
     },
     {
       "supAip": "196/25",
       "title": "Modification de la zone de stationnement « Parking Principal » de l’aérodrome de Chambéry-Aix Les Bains (LFLB)",
       "spatial": false,
       "sourcePdf": "https://www.sia.aviation-civile.gouv.fr/documents/download/f/d/15005535/",
-      "sourceFingerprint": "624e5a7239b83c6c5242",
-      "parserVersion": "capclair-supaip-parser-3.0.0"
+      "sourceFingerprint": "76fc109730b7c191a9b8",
+      "parserVersion": "capclair-supaip-parser-3.0.1"
     },
     {
       "supAip": "192/25",
@@ -188,10 +247,15 @@
       "expectedNamedGeometryCount": 1,
       "declaredZoneCount": 1,
       "missingVerticalCount": 0,
-      "partial": true,
+      "status": "conservative",
+      "partial": false,
+      "conservative": true,
+      "safetyFallbackFeatureCount": 0,
+      "safetyFallbackFeatureNames": [],
+      "ignoredReferenceObjectCount": 0,
       "sourcePdf": "https://www.sia.aviation-civile.gouv.fr/documents/download/f/d/15005527/",
-      "sourceFingerprint": "5957057e46d3401f114a",
-      "parserVersion": "capclair-supaip-parser-3.0.0"
+      "sourceFingerprint": "e574e09154a07c2e46f7",
+      "parserVersion": "capclair-supaip-parser-3.0.1"
     },
     {
       "supAip": "191/25",
@@ -201,10 +265,15 @@
       "expectedNamedGeometryCount": 1,
       "declaredZoneCount": 1,
       "missingVerticalCount": 0,
-      "partial": true,
+      "status": "conservative",
+      "partial": false,
+      "conservative": true,
+      "safetyFallbackFeatureCount": 0,
+      "safetyFallbackFeatureNames": [],
+      "ignoredReferenceObjectCount": 0,
       "sourcePdf": "https://www.sia.aviation-civile.gouv.fr/documents/download/f/d/15005525/",
-      "sourceFingerprint": "ba0e9bf334b67e74f05e",
-      "parserVersion": "capclair-supaip-parser-3.0.0"
+      "sourceFingerprint": "9d9c4dfd77887d40b66f",
+      "parserVersion": "capclair-supaip-parser-3.0.1"
     },
     {
       "supAip": "188/25",
@@ -214,10 +283,15 @@
       "expectedNamedGeometryCount": 9,
       "declaredZoneCount": 9,
       "missingVerticalCount": 0,
+      "status": "partial",
       "partial": true,
+      "conservative": false,
+      "safetyFallbackFeatureCount": 0,
+      "safetyFallbackFeatureNames": [],
+      "ignoredReferenceObjectCount": 0,
       "sourcePdf": "https://www.sia.aviation-civile.gouv.fr/documents/download/f/d/15000061/",
-      "sourceFingerprint": "2a9418a90ff62f4023ff",
-      "parserVersion": "capclair-supaip-parser-3.0.0"
+      "sourceFingerprint": "a967b738b3ddf278d030",
+      "parserVersion": "capclair-supaip-parser-3.0.1"
     },
     {
       "supAip": "187/25",
@@ -227,10 +301,15 @@
       "expectedNamedGeometryCount": 2,
       "declaredZoneCount": 2,
       "missingVerticalCount": 0,
+      "status": "complete",
       "partial": false,
+      "conservative": false,
+      "safetyFallbackFeatureCount": 0,
+      "safetyFallbackFeatureNames": [],
+      "ignoredReferenceObjectCount": 0,
       "sourcePdf": "https://www.sia.aviation-civile.gouv.fr/documents/download/f/d/15000059/",
-      "sourceFingerprint": "3c4c8871782e28eae246",
-      "parserVersion": "capclair-supaip-parser-3.0.0"
+      "sourceFingerprint": "8217658624f9cf9ab23a",
+      "parserVersion": "capclair-supaip-parser-3.0.1"
     },
     {
       "supAip": "176/25",
@@ -240,10 +319,15 @@
       "expectedNamedGeometryCount": 1,
       "declaredZoneCount": 1,
       "missingVerticalCount": 0,
-      "partial": true,
+      "status": "conservative",
+      "partial": false,
+      "conservative": true,
+      "safetyFallbackFeatureCount": 0,
+      "safetyFallbackFeatureNames": [],
+      "ignoredReferenceObjectCount": 0,
       "sourcePdf": "https://www.sia.aviation-civile.gouv.fr/documents/download/f/d/14989135/",
-      "sourceFingerprint": "b130acc36ed6ee8196d7",
-      "parserVersion": "capclair-supaip-parser-3.0.0"
+      "sourceFingerprint": "010adba378ae5250230e",
+      "parserVersion": "capclair-supaip-parser-3.0.1"
     },
     {
       "supAip": "172/25",
@@ -253,23 +337,35 @@
       "expectedNamedGeometryCount": 4,
       "declaredZoneCount": 4,
       "missingVerticalCount": 0,
+      "status": "partial",
       "partial": true,
+      "conservative": false,
+      "safetyFallbackFeatureCount": 0,
+      "safetyFallbackFeatureNames": [],
+      "ignoredReferenceObjectCount": 0,
       "sourcePdf": "https://www.sia.aviation-civile.gouv.fr/documents/download/f/d/14989127/",
-      "sourceFingerprint": "82f558f41d4b8892410b",
-      "parserVersion": "capclair-supaip-parser-3.0.0"
+      "sourceFingerprint": "5a062fdb5b0b7be8caa5",
+      "parserVersion": "capclair-supaip-parser-3.0.1"
     },
     {
       "supAip": "167/25",
       "title": "Création à titre expérimental d’une Zone Réglementée Temporaire (ZRT) sur l’aérodrome de Nancy Ochey",
       "spatial": true,
-      "mappedGeometryCount": 2,
+      "mappedGeometryCount": 1,
       "expectedNamedGeometryCount": 1,
       "declaredZoneCount": 1,
       "missingVerticalCount": 0,
+      "status": "partial",
       "partial": true,
+      "conservative": false,
+      "safetyFallbackFeatureCount": 1,
+      "safetyFallbackFeatureNames": [
+        "ZRT OCHEY"
+      ],
+      "ignoredReferenceObjectCount": 1,
       "sourcePdf": "https://www.sia.aviation-civile.gouv.fr/documents/download/f/d/14983716/",
-      "sourceFingerprint": "23f8ba736e322b50f3b3",
-      "parserVersion": "capclair-supaip-parser-3.0.0"
+      "sourceFingerprint": "47d62aab63071172e6cf",
+      "parserVersion": "capclair-supaip-parser-3.0.1"
     },
     {
       "supAip": "159/25",
@@ -279,31 +375,41 @@
       "expectedNamedGeometryCount": 3,
       "declaredZoneCount": 3,
       "missingVerticalCount": 0,
-      "partial": true,
+      "status": "conservative",
+      "partial": false,
+      "conservative": true,
+      "safetyFallbackFeatureCount": 0,
+      "safetyFallbackFeatureNames": [],
+      "ignoredReferenceObjectCount": 0,
       "sourcePdf": "https://www.sia.aviation-civile.gouv.fr/documents/download/f/d/14967497/",
-      "sourceFingerprint": "6d9db30ec71b4b057d66",
-      "parserVersion": "capclair-supaip-parser-3.0.0"
+      "sourceFingerprint": "6612d6448415f273dbc3",
+      "parserVersion": "capclair-supaip-parser-3.0.1"
     },
     {
       "supAip": "158/26",
       "title": "Annulé le 15/07/2026 Modification des points de compte-rendu et trajectoires hélicoptères à l’approche de l’AD de Courchevel LFLJ",
       "spatial": false,
       "sourcePdf": "https://www.sia.aviation-civile.gouv.fr/documents/download/f/d/15060800/",
-      "sourceFingerprint": "f0f6a683cc9e4099c1f4",
-      "parserVersion": "capclair-supaip-parser-3.0.0"
+      "sourceFingerprint": "20c54b8cebd8a01b210f",
+      "parserVersion": "capclair-supaip-parser-3.0.1"
     },
     {
       "supAip": "157/26",
       "title": "Création de 3 zones réglementées temporaires (ZRT) à Dax (40)",
       "spatial": true,
-      "mappedGeometryCount": 4,
-      "expectedNamedGeometryCount": 5,
+      "mappedGeometryCount": 3,
+      "expectedNamedGeometryCount": 3,
       "declaredZoneCount": 3,
-      "missingVerticalCount": 1,
-      "partial": true,
+      "missingVerticalCount": 0,
+      "status": "conservative",
+      "partial": false,
+      "conservative": true,
+      "safetyFallbackFeatureCount": 0,
+      "safetyFallbackFeatureNames": [],
+      "ignoredReferenceObjectCount": 2,
       "sourcePdf": "https://www.sia.aviation-civile.gouv.fr/documents/download/f/d/15060798/",
-      "sourceFingerprint": "f4dd27befdef87ec659b",
-      "parserVersion": "capclair-supaip-parser-3.0.0"
+      "sourceFingerprint": "dc34bbd14e6b8c88fa2e",
+      "parserVersion": "capclair-supaip-parser-3.0.1"
     },
     {
       "supAip": "156/26",
@@ -313,10 +419,15 @@
       "expectedNamedGeometryCount": 1,
       "declaredZoneCount": 1,
       "missingVerticalCount": 0,
-      "partial": true,
+      "status": "unmapped",
+      "partial": false,
+      "conservative": false,
+      "safetyFallbackFeatureCount": 0,
+      "safetyFallbackFeatureNames": [],
+      "ignoredReferenceObjectCount": 0,
       "sourcePdf": "https://www.sia.aviation-civile.gouv.fr/documents/download/f/d/15060796/",
-      "sourceFingerprint": "71e54c8dc43548badf5d",
-      "parserVersion": "capclair-supaip-parser-3.0.0"
+      "sourceFingerprint": "73a1214ca0c7c0b94772",
+      "parserVersion": "capclair-supaip-parser-3.0.1"
     },
     {
       "supAip": "155/26",
@@ -326,23 +437,33 @@
       "expectedNamedGeometryCount": 1,
       "declaredZoneCount": 1,
       "missingVerticalCount": 0,
-      "partial": true,
+      "status": "unmapped",
+      "partial": false,
+      "conservative": false,
+      "safetyFallbackFeatureCount": 0,
+      "safetyFallbackFeatureNames": [],
+      "ignoredReferenceObjectCount": 0,
       "sourcePdf": "https://www.sia.aviation-civile.gouv.fr/documents/download/f/d/15060794/",
-      "sourceFingerprint": "adebb9e369d12d49ce21",
-      "parserVersion": "capclair-supaip-parser-3.0.0"
+      "sourceFingerprint": "6f3be14f125f06eec9f8",
+      "parserVersion": "capclair-supaip-parser-3.0.1"
     },
     {
       "supAip": "154/26",
       "title": "Création de 2 Zones Réglementées Temporaires (ZRT) à proximité de Magnac-Lavalette- Villars en Charente",
       "spatial": true,
       "mappedGeometryCount": 4,
-      "expectedNamedGeometryCount": 2,
+      "expectedNamedGeometryCount": 4,
       "declaredZoneCount": 2,
       "missingVerticalCount": 0,
+      "status": "complete",
       "partial": false,
+      "conservative": false,
+      "safetyFallbackFeatureCount": 0,
+      "safetyFallbackFeatureNames": [],
+      "ignoredReferenceObjectCount": 0,
       "sourcePdf": "https://www.sia.aviation-civile.gouv.fr/documents/download/f/d/15060792/",
-      "sourceFingerprint": "76c8767f0eb6682a364e",
-      "parserVersion": "capclair-supaip-parser-3.0.0"
+      "sourceFingerprint": "66446ed3444be1418389",
+      "parserVersion": "capclair-supaip-parser-3.0.1"
     },
     {
       "supAip": "153/26",
@@ -352,26 +473,31 @@
       "expectedNamedGeometryCount": 1,
       "declaredZoneCount": 1,
       "missingVerticalCount": 0,
-      "partial": true,
+      "status": "conservative",
+      "partial": false,
+      "conservative": true,
+      "safetyFallbackFeatureCount": 0,
+      "safetyFallbackFeatureNames": [],
+      "ignoredReferenceObjectCount": 0,
       "sourcePdf": "https://www.sia.aviation-civile.gouv.fr/documents/download/f/d/15060790/",
-      "sourceFingerprint": "38c9411e23bf70ed4ec4",
-      "parserVersion": "capclair-supaip-parser-3.0.0"
+      "sourceFingerprint": "7fd45bce4c1de585c9b7",
+      "parserVersion": "capclair-supaip-parser-3.0.1"
     },
     {
       "supAip": "152/26",
       "title": "Modification des postes de stationnement avion aux aires Juliett",
       "spatial": false,
       "sourcePdf": "https://www.sia.aviation-civile.gouv.fr/documents/download/f/d/15060788/",
-      "sourceFingerprint": "27759aab97b23cddaa59",
-      "parserVersion": "capclair-supaip-parser-3.0.0"
+      "sourceFingerprint": "0fb484ce9334339a4602",
+      "parserVersion": "capclair-supaip-parser-3.0.1"
     },
     {
       "supAip": "151/26",
       "title": "Travaux de réhabilitation d'une partie des taxiways A et B",
       "spatial": false,
       "sourcePdf": "https://www.sia.aviation-civile.gouv.fr/documents/download/f/d/15060786/",
-      "sourceFingerprint": "3698593997fb6ffd80cf",
-      "parserVersion": "capclair-supaip-parser-3.0.0"
+      "sourceFingerprint": "3f912c4fd1a0ca545612",
+      "parserVersion": "capclair-supaip-parser-3.0.1"
     },
     {
       "supAip": "150/26",
@@ -381,10 +507,15 @@
       "expectedNamedGeometryCount": 2,
       "declaredZoneCount": 2,
       "missingVerticalCount": 0,
+      "status": "complete",
       "partial": false,
+      "conservative": false,
+      "safetyFallbackFeatureCount": 0,
+      "safetyFallbackFeatureNames": [],
+      "ignoredReferenceObjectCount": 0,
       "sourcePdf": "https://www.sia.aviation-civile.gouv.fr/documents/download/f/d/15060784/",
-      "sourceFingerprint": "a52f53f5a34ccf43db1d",
-      "parserVersion": "capclair-supaip-parser-3.0.0"
+      "sourceFingerprint": "6db3653587f1bbf30692",
+      "parserVersion": "capclair-supaip-parser-3.0.1"
     },
     {
       "supAip": "150/25",
@@ -394,10 +525,17 @@
       "expectedNamedGeometryCount": 2,
       "declaredZoneCount": 2,
       "missingVerticalCount": 0,
+      "status": "partial",
       "partial": true,
+      "conservative": false,
+      "safetyFallbackFeatureCount": 1,
+      "safetyFallbackFeatureNames": [
+        "ZRT SOTAME BRAVO"
+      ],
+      "ignoredReferenceObjectCount": 1,
       "sourcePdf": "https://www.sia.aviation-civile.gouv.fr/documents/download/f/d/14967477/",
-      "sourceFingerprint": "b44d916418ad83de99c7",
-      "parserVersion": "capclair-supaip-parser-3.0.0"
+      "sourceFingerprint": "112461e802648f19532f",
+      "parserVersion": "capclair-supaip-parser-3.0.1"
     },
     {
       "supAip": "149/26",
@@ -407,10 +545,15 @@
       "expectedNamedGeometryCount": 2,
       "declaredZoneCount": 2,
       "missingVerticalCount": 0,
-      "partial": true,
+      "status": "unmapped",
+      "partial": false,
+      "conservative": false,
+      "safetyFallbackFeatureCount": 0,
+      "safetyFallbackFeatureNames": [],
+      "ignoredReferenceObjectCount": 0,
       "sourcePdf": "https://www.sia.aviation-civile.gouv.fr/documents/download/f/d/15060780/",
-      "sourceFingerprint": "ff4f4f387cb058646bc5",
-      "parserVersion": "capclair-supaip-parser-3.0.0"
+      "sourceFingerprint": "c982d5ea1476f16374ac",
+      "parserVersion": "capclair-supaip-parser-3.0.1"
     },
     {
       "supAip": "148/26",
@@ -420,18 +563,23 @@
       "expectedNamedGeometryCount": 1,
       "declaredZoneCount": 1,
       "missingVerticalCount": 0,
-      "partial": true,
+      "status": "unmapped",
+      "partial": false,
+      "conservative": false,
+      "safetyFallbackFeatureCount": 0,
+      "safetyFallbackFeatureNames": [],
+      "ignoredReferenceObjectCount": 0,
       "sourcePdf": "https://www.sia.aviation-civile.gouv.fr/documents/download/f/d/15060778/",
-      "sourceFingerprint": "1f28459172ebbf0da0a6",
-      "parserVersion": "capclair-supaip-parser-3.0.0"
+      "sourceFingerprint": "a54e9b8e20faaa5a2e7c",
+      "parserVersion": "capclair-supaip-parser-3.0.1"
     },
     {
       "supAip": "147/26",
       "title": "AD LFPO - Restriction d’utilisation de l'AD Paris-Orly cause travaux sur piste 06/24",
       "spatial": false,
       "sourcePdf": "https://www.sia.aviation-civile.gouv.fr/documents/download/f/d/15060782/",
-      "sourceFingerprint": "43ae0203cc223245f4eb",
-      "parserVersion": "capclair-supaip-parser-3.0.0"
+      "sourceFingerprint": "922d5cb8b1fce9844c99",
+      "parserVersion": "capclair-supaip-parser-3.0.1"
     },
     {
       "supAip": "147/25",
@@ -441,10 +589,15 @@
       "expectedNamedGeometryCount": 2,
       "declaredZoneCount": 2,
       "missingVerticalCount": 0,
-      "partial": true,
+      "status": "unmapped",
+      "partial": false,
+      "conservative": false,
+      "safetyFallbackFeatureCount": 0,
+      "safetyFallbackFeatureNames": [],
+      "ignoredReferenceObjectCount": 0,
       "sourcePdf": "https://www.sia.aviation-civile.gouv.fr/documents/download/f/d/14967459/",
-      "sourceFingerprint": "24f686bc59d2f8644be8",
-      "parserVersion": "capclair-supaip-parser-3.0.0"
+      "sourceFingerprint": "b2a91ea8e2b3e1694cab",
+      "parserVersion": "capclair-supaip-parser-3.0.1"
     },
     {
       "supAip": "146/26",
@@ -454,52 +607,67 @@
       "expectedNamedGeometryCount": 12,
       "declaredZoneCount": 12,
       "missingVerticalCount": 0,
-      "partial": true,
+      "status": "conservative",
+      "partial": false,
+      "conservative": true,
+      "safetyFallbackFeatureCount": 0,
+      "safetyFallbackFeatureNames": [],
+      "ignoredReferenceObjectCount": 0,
       "sourcePdf": "https://www.sia.aviation-civile.gouv.fr/documents/download/f/d/15060776/",
-      "sourceFingerprint": "9c5d707abbaef337e113",
-      "parserVersion": "capclair-supaip-parser-3.0.0"
+      "sourceFingerprint": "0a19638ecbd4e2306c66",
+      "parserVersion": "capclair-supaip-parser-3.0.1"
     },
     {
       "supAip": "145/26",
       "title": "Création d’une zone réglementée temporaire ZRT BARCARES pour l’organisation d’un spectacle aérien public",
       "spatial": true,
       "mappedGeometryCount": 2,
-      "expectedNamedGeometryCount": 1,
+      "expectedNamedGeometryCount": 2,
       "declaredZoneCount": 1,
       "missingVerticalCount": 0,
+      "status": "complete",
       "partial": false,
+      "conservative": false,
+      "safetyFallbackFeatureCount": 0,
+      "safetyFallbackFeatureNames": [],
+      "ignoredReferenceObjectCount": 0,
       "sourcePdf": "https://www.sia.aviation-civile.gouv.fr/documents/download/f/d/15060774/",
-      "sourceFingerprint": "b79672a0d7cbf3341fa9",
-      "parserVersion": "capclair-supaip-parser-3.0.0"
+      "sourceFingerprint": "a986057c1b83061a14f1",
+      "parserVersion": "capclair-supaip-parser-3.0.1"
     },
     {
       "supAip": "144/26",
       "title": "Création de trois zones réglementées temporaires au profit du championnat régional de vol à voile Grand Est",
       "spatial": true,
-      "mappedGeometryCount": 4,
-      "expectedNamedGeometryCount": 4,
+      "mappedGeometryCount": 3,
+      "expectedNamedGeometryCount": 3,
       "declaredZoneCount": 3,
       "missingVerticalCount": 0,
-      "partial": true,
+      "status": "conservative",
+      "partial": false,
+      "conservative": true,
+      "safetyFallbackFeatureCount": 0,
+      "safetyFallbackFeatureNames": [],
+      "ignoredReferenceObjectCount": 1,
       "sourcePdf": "https://www.sia.aviation-civile.gouv.fr/documents/download/f/d/15060772/",
-      "sourceFingerprint": "c54bcdac0d9cc42fa104",
-      "parserVersion": "capclair-supaip-parser-3.0.0"
+      "sourceFingerprint": "27180ef1e93136156f9d",
+      "parserVersion": "capclair-supaip-parser-3.0.1"
     },
     {
       "supAip": "143/26",
       "title": "Evaluation de deux SID RNP et d'un départ PinS de Bâle-Mulhouse vers le LFN Jura Suisse.",
       "spatial": false,
       "sourcePdf": "https://www.sia.aviation-civile.gouv.fr/documents/download/f/d/15060770/",
-      "sourceFingerprint": "3822030062fb60363019",
-      "parserVersion": "capclair-supaip-parser-3.0.0"
+      "sourceFingerprint": "76a0a6a24c1fcda8a97c",
+      "parserVersion": "capclair-supaip-parser-3.0.1"
     },
     {
       "supAip": "143/25",
       "title": "Travaux de refonte des postes de stationnement BRAVO sur l’aéroport de BORDEAUX-MERIGNAC (LFBD)",
       "spatial": false,
       "sourcePdf": "https://www.sia.aviation-civile.gouv.fr/documents/download/f/d/14967451/",
-      "sourceFingerprint": "b34d2cfbea5d3602917c",
-      "parserVersion": "capclair-supaip-parser-3.0.0"
+      "sourceFingerprint": "42db8948108a426e2217",
+      "parserVersion": "capclair-supaip-parser-3.0.1"
     },
     {
       "supAip": "142/26",
@@ -509,10 +677,15 @@
       "expectedNamedGeometryCount": 7,
       "declaredZoneCount": 7,
       "missingVerticalCount": 0,
-      "partial": true,
+      "status": "conservative",
+      "partial": false,
+      "conservative": true,
+      "safetyFallbackFeatureCount": 0,
+      "safetyFallbackFeatureNames": [],
+      "ignoredReferenceObjectCount": 0,
       "sourcePdf": "https://www.sia.aviation-civile.gouv.fr/documents/download/f/d/15060768/",
-      "sourceFingerprint": "68cce012811dd67f82a0",
-      "parserVersion": "capclair-supaip-parser-3.0.0"
+      "sourceFingerprint": "ca7dc95c9c800e2569e4",
+      "parserVersion": "capclair-supaip-parser-3.0.1"
     },
     {
       "supAip": "141/26",
@@ -522,10 +695,15 @@
       "expectedNamedGeometryCount": 3,
       "declaredZoneCount": 3,
       "missingVerticalCount": 0,
-      "partial": true,
+      "status": "unmapped",
+      "partial": false,
+      "conservative": false,
+      "safetyFallbackFeatureCount": 0,
+      "safetyFallbackFeatureNames": [],
+      "ignoredReferenceObjectCount": 0,
       "sourcePdf": "https://www.sia.aviation-civile.gouv.fr/documents/download/f/d/15060766/",
-      "sourceFingerprint": "162eccac6d2eca822a0c",
-      "parserVersion": "capclair-supaip-parser-3.0.0"
+      "sourceFingerprint": "738bf8f45b02086be412",
+      "parserVersion": "capclair-supaip-parser-3.0.1"
     },
     {
       "supAip": "140/26",
@@ -535,18 +713,23 @@
       "expectedNamedGeometryCount": 3,
       "declaredZoneCount": 3,
       "missingVerticalCount": 0,
-      "partial": true,
+      "status": "unmapped",
+      "partial": false,
+      "conservative": false,
+      "safetyFallbackFeatureCount": 0,
+      "safetyFallbackFeatureNames": [],
+      "ignoredReferenceObjectCount": 0,
       "sourcePdf": "https://www.sia.aviation-civile.gouv.fr/documents/download/f/d/15060764/",
-      "sourceFingerprint": "c446c72757d36cb323f4",
-      "parserVersion": "capclair-supaip-parser-3.0.0"
+      "sourceFingerprint": "a75354fc61692dab37e5",
+      "parserVersion": "capclair-supaip-parser-3.0.1"
     },
     {
       "supAip": "140/25",
       "title": "LFSB : évaluation IAF optionnel ZONPE RWY 15",
       "spatial": false,
       "sourcePdf": "https://www.sia.aviation-civile.gouv.fr/documents/download/f/d/14945884/",
-      "sourceFingerprint": "50f02ccfb039ae12b1a0",
-      "parserVersion": "capclair-supaip-parser-3.0.0"
+      "sourceFingerprint": "93e78a96920ff4237616",
+      "parserVersion": "capclair-supaip-parser-3.0.1"
     },
     {
       "supAip": "139/26",
@@ -556,10 +739,15 @@
       "expectedNamedGeometryCount": 3,
       "declaredZoneCount": 3,
       "missingVerticalCount": 0,
-      "partial": true,
+      "status": "unmapped",
+      "partial": false,
+      "conservative": false,
+      "safetyFallbackFeatureCount": 0,
+      "safetyFallbackFeatureNames": [],
+      "ignoredReferenceObjectCount": 0,
       "sourcePdf": "https://www.sia.aviation-civile.gouv.fr/documents/download/f/d/15060762/",
-      "sourceFingerprint": "4b2b6b42ab1d29d6cc06",
-      "parserVersion": "capclair-supaip-parser-3.0.0"
+      "sourceFingerprint": "3e12875c07983595a4c7",
+      "parserVersion": "capclair-supaip-parser-3.0.1"
     },
     {
       "supAip": "138/25",
@@ -569,10 +757,15 @@
       "expectedNamedGeometryCount": 4,
       "declaredZoneCount": 4,
       "missingVerticalCount": 0,
+      "status": "partial",
       "partial": true,
+      "conservative": false,
+      "safetyFallbackFeatureCount": 0,
+      "safetyFallbackFeatureNames": [],
+      "ignoredReferenceObjectCount": 0,
       "sourcePdf": "https://www.sia.aviation-civile.gouv.fr/documents/download/f/d/14945880/",
-      "sourceFingerprint": "1b9592947923de05669e",
-      "parserVersion": "capclair-supaip-parser-3.0.0"
+      "sourceFingerprint": "2380b38200c7bb2fe01d",
+      "parserVersion": "capclair-supaip-parser-3.0.1"
     },
     {
       "supAip": "137/26",
@@ -582,10 +775,15 @@
       "expectedNamedGeometryCount": 1,
       "declaredZoneCount": 1,
       "missingVerticalCount": 0,
-      "partial": true,
+      "status": "conservative",
+      "partial": false,
+      "conservative": true,
+      "safetyFallbackFeatureCount": 0,
+      "safetyFallbackFeatureNames": [],
+      "ignoredReferenceObjectCount": 0,
       "sourcePdf": "https://www.sia.aviation-civile.gouv.fr/documents/download/f/d/15060758/",
-      "sourceFingerprint": "dce73d21d6964fb36ee2",
-      "parserVersion": "capclair-supaip-parser-3.0.0"
+      "sourceFingerprint": "3feed650862b286ac563",
+      "parserVersion": "capclair-supaip-parser-3.0.1"
     },
     {
       "supAip": "135/26",
@@ -595,10 +793,15 @@
       "expectedNamedGeometryCount": 1,
       "declaredZoneCount": 1,
       "missingVerticalCount": 0,
-      "partial": true,
+      "status": "unmapped",
+      "partial": false,
+      "conservative": false,
+      "safetyFallbackFeatureCount": 0,
+      "safetyFallbackFeatureNames": [],
+      "ignoredReferenceObjectCount": 0,
       "sourcePdf": "https://www.sia.aviation-civile.gouv.fr/documents/download/f/d/15060754/",
-      "sourceFingerprint": "6f94b132b792fc582a31",
-      "parserVersion": "capclair-supaip-parser-3.0.0"
+      "sourceFingerprint": "50d40aad96f5a23b8f37",
+      "parserVersion": "capclair-supaip-parser-3.0.1"
     },
     {
       "supAip": "133/26",
@@ -608,18 +811,23 @@
       "expectedNamedGeometryCount": 1,
       "declaredZoneCount": 1,
       "missingVerticalCount": 0,
-      "partial": true,
+      "status": "conservative",
+      "partial": false,
+      "conservative": true,
+      "safetyFallbackFeatureCount": 0,
+      "safetyFallbackFeatureNames": [],
+      "ignoredReferenceObjectCount": 0,
       "sourcePdf": "https://www.sia.aviation-civile.gouv.fr/documents/download/f/d/15055172/",
-      "sourceFingerprint": "48e86b9004664a4adad3",
-      "parserVersion": "capclair-supaip-parser-3.0.0"
+      "sourceFingerprint": "b7e378172483183d6ca2",
+      "parserVersion": "capclair-supaip-parser-3.0.1"
     },
     {
       "supAip": "129/26",
       "title": "Érection de grues sous la trouée 118° de l’hélistation du CH Marseille La Timone pour la Construction du bâtiment BFPE",
       "spatial": false,
       "sourcePdf": "https://www.sia.aviation-civile.gouv.fr/documents/download/f/d/15055164/",
-      "sourceFingerprint": "f862d1bc85b4ab1f9fed",
-      "parserVersion": "capclair-supaip-parser-3.0.0"
+      "sourceFingerprint": "d8fb117526a0edc87fae",
+      "parserVersion": "capclair-supaip-parser-3.0.1"
     },
     {
       "supAip": "128/26",
@@ -629,18 +837,23 @@
       "expectedNamedGeometryCount": 1,
       "declaredZoneCount": null,
       "missingVerticalCount": 0,
-      "partial": true,
+      "status": "unmapped",
+      "partial": false,
+      "conservative": false,
+      "safetyFallbackFeatureCount": 0,
+      "safetyFallbackFeatureNames": [],
+      "ignoredReferenceObjectCount": 0,
       "sourcePdf": "https://www.sia.aviation-civile.gouv.fr/documents/download/f/d/15055162/",
-      "sourceFingerprint": "329d54c5e9e51d0a19dc",
-      "parserVersion": "capclair-supaip-parser-3.0.0"
+      "sourceFingerprint": "9bd5278c8643fa73fd5a",
+      "parserVersion": "capclair-supaip-parser-3.0.1"
     },
     {
       "supAip": "124/26",
       "title": "Réhabilitation d'une partie de la voie TANGO avec fermeture d'une partie de la voie ainsi que des dégagements à grande vitesse W4 et W5 en H24",
       "spatial": false,
       "sourcePdf": "https://www.sia.aviation-civile.gouv.fr/documents/download/f/d/15055142/",
-      "sourceFingerprint": "13bd0d268c1f1d015a27",
-      "parserVersion": "capclair-supaip-parser-3.0.0"
+      "sourceFingerprint": "83ae3bf6de34b5c698f8",
+      "parserVersion": "capclair-supaip-parser-3.0.1"
     },
     {
       "supAip": "120/26",
@@ -650,39 +863,51 @@
       "expectedNamedGeometryCount": 1,
       "declaredZoneCount": 1,
       "missingVerticalCount": 0,
+      "status": "complete",
       "partial": false,
+      "conservative": false,
+      "safetyFallbackFeatureCount": 0,
+      "safetyFallbackFeatureNames": [],
+      "ignoredReferenceObjectCount": 0,
       "sourcePdf": "https://www.sia.aviation-civile.gouv.fr/documents/download/f/d/15055134/",
-      "sourceFingerprint": "1033b8b56fd66dc513d3",
-      "parserVersion": "capclair-supaip-parser-3.0.0"
+      "sourceFingerprint": "bf00f3284360fac20c10",
+      "parserVersion": "capclair-supaip-parser-3.0.1"
     },
     {
       "supAip": "119/26",
       "title": "Création d’une Zone Réglementée Temporaire (ZRT) « DEFILE » pour le baptême de la promotion 2025 de l’école de l’air et de l’espace",
       "spatial": true,
-      "mappedGeometryCount": 2,
+      "mappedGeometryCount": 1,
       "expectedNamedGeometryCount": 1,
       "declaredZoneCount": 1,
       "missingVerticalCount": 0,
+      "status": "partial",
       "partial": true,
+      "conservative": false,
+      "safetyFallbackFeatureCount": 1,
+      "safetyFallbackFeatureNames": [
+        "ZRT DEFILE"
+      ],
+      "ignoredReferenceObjectCount": 1,
       "sourcePdf": "https://www.sia.aviation-civile.gouv.fr/documents/download/f/d/15055132/",
-      "sourceFingerprint": "cf1ef020a752320b2e67",
-      "parserVersion": "capclair-supaip-parser-3.0.0"
+      "sourceFingerprint": "7af70afc2fe82a5ae274",
+      "parserVersion": "capclair-supaip-parser-3.0.1"
     },
     {
       "supAip": "118/26",
       "title": "Création d'itinéraires de vol VFR de nuit au départ et à l’arrivée de l’aérodrome d'Aix les Milles - LFMA",
       "spatial": false,
       "sourcePdf": "https://www.sia.aviation-civile.gouv.fr/documents/download/f/d/15055130/",
-      "sourceFingerprint": "b8343c6f3686d379c678",
-      "parserVersion": "capclair-supaip-parser-3.0.0"
+      "sourceFingerprint": "459563cffd5c412b783c",
+      "parserVersion": "capclair-supaip-parser-3.0.1"
     },
     {
       "supAip": "116/26",
       "title": "PAU-Pyrénées LFBP : pentes dans la bande de piste au seuil 13 non conformes",
       "spatial": false,
       "sourcePdf": "https://www.sia.aviation-civile.gouv.fr/documents/download/f/d/15055126/",
-      "sourceFingerprint": "ccc78af26de028949ef6",
-      "parserVersion": "capclair-supaip-parser-3.0.0"
+      "sourceFingerprint": "ec3037c491de477248fa",
+      "parserVersion": "capclair-supaip-parser-3.0.1"
     },
     {
       "supAip": "115/26",
@@ -692,18 +917,23 @@
       "expectedNamedGeometryCount": 1,
       "declaredZoneCount": 1,
       "missingVerticalCount": 0,
-      "partial": true,
+      "status": "conservative",
+      "partial": false,
+      "conservative": true,
+      "safetyFallbackFeatureCount": 0,
+      "safetyFallbackFeatureNames": [],
+      "ignoredReferenceObjectCount": 0,
       "sourcePdf": "https://www.sia.aviation-civile.gouv.fr/documents/download/f/d/15055124/",
-      "sourceFingerprint": "6c5ba52aa6a8a6e75c2a",
-      "parserVersion": "capclair-supaip-parser-3.0.0"
+      "sourceFingerprint": "4784b257c7b50fbc00a4",
+      "parserVersion": "capclair-supaip-parser-3.0.1"
     },
     {
       "supAip": "113/26",
       "title": "Restrictions d’utilisation de l ’A/D Saint-Cyr (LFPZ) en l ’absence des services ATS cause fermeture de la piste 11L/29R pour travaux de réfection",
       "spatial": false,
       "sourcePdf": "https://www.sia.aviation-civile.gouv.fr/documents/download/f/d/15055120/",
-      "sourceFingerprint": "86344f47dfad7890d9fa",
-      "parserVersion": "capclair-supaip-parser-3.0.0"
+      "sourceFingerprint": "8aeb04a2e7f4177ba8d2",
+      "parserVersion": "capclair-supaip-parser-3.0.1"
     },
     {
       "supAip": "112/26",
@@ -713,10 +943,15 @@
       "expectedNamedGeometryCount": 3,
       "declaredZoneCount": 3,
       "missingVerticalCount": 0,
+      "status": "complete",
       "partial": false,
+      "conservative": false,
+      "safetyFallbackFeatureCount": 0,
+      "safetyFallbackFeatureNames": [],
+      "ignoredReferenceObjectCount": 0,
       "sourcePdf": "https://www.sia.aviation-civile.gouv.fr/documents/download/f/d/15055118/",
-      "sourceFingerprint": "7a8be87af1d495924707",
-      "parserVersion": "capclair-supaip-parser-3.0.0"
+      "sourceFingerprint": "de007716c280881acd11",
+      "parserVersion": "capclair-supaip-parser-3.0.1"
     },
     {
       "supAip": "111/26",
@@ -726,10 +961,15 @@
       "expectedNamedGeometryCount": 1,
       "declaredZoneCount": 1,
       "missingVerticalCount": 0,
-      "partial": true,
+      "status": "conservative",
+      "partial": false,
+      "conservative": true,
+      "safetyFallbackFeatureCount": 0,
+      "safetyFallbackFeatureNames": [],
+      "ignoredReferenceObjectCount": 0,
       "sourcePdf": "https://www.sia.aviation-civile.gouv.fr/documents/download/f/d/15055116/",
-      "sourceFingerprint": "4e69c5cbfa2eee34e130",
-      "parserVersion": "capclair-supaip-parser-3.0.0"
+      "sourceFingerprint": "ebd17a4c579023358b69",
+      "parserVersion": "capclair-supaip-parser-3.0.1"
     },
     {
       "supAip": "109/26",
@@ -739,31 +979,41 @@
       "expectedNamedGeometryCount": 2,
       "declaredZoneCount": 2,
       "missingVerticalCount": 0,
-      "partial": true,
+      "status": "conservative",
+      "partial": false,
+      "conservative": true,
+      "safetyFallbackFeatureCount": 0,
+      "safetyFallbackFeatureNames": [],
+      "ignoredReferenceObjectCount": 0,
       "sourcePdf": "https://www.sia.aviation-civile.gouv.fr/documents/download/f/d/15049550/",
-      "sourceFingerprint": "66e2da44b07496969aff",
-      "parserVersion": "capclair-supaip-parser-3.0.0"
+      "sourceFingerprint": "a13ad5af04c98bac6c5e",
+      "parserVersion": "capclair-supaip-parser-3.0.1"
     },
     {
       "supAip": "101/26",
       "title": "Création de 16 Zones Réglementées Temporaires (ZRT) et 4 Zones Dangereuses Temporaires (ZDT), au profit de vols hors vue d'aéronefs sans équipage à bord dans la Manche orientale et le Détroit de la Manche",
       "spatial": true,
-      "mappedGeometryCount": 20,
+      "mappedGeometryCount": 4,
       "expectedNamedGeometryCount": 20,
       "declaredZoneCount": 20,
       "missingVerticalCount": 0,
-      "partial": false,
+      "status": "partial",
+      "partial": true,
+      "conservative": false,
+      "safetyFallbackFeatureCount": 0,
+      "safetyFallbackFeatureNames": [],
+      "ignoredReferenceObjectCount": 16,
       "sourcePdf": "https://www.sia.aviation-civile.gouv.fr/documents/download/f/d/15049532/",
-      "sourceFingerprint": "59178261b2383fbbdc07",
-      "parserVersion": "capclair-supaip-parser-3.0.0"
+      "sourceFingerprint": "243b6a411ce934568660",
+      "parserVersion": "capclair-supaip-parser-3.0.1"
     },
     {
       "supAip": "096/26",
       "title": "Réhabilitation en phase de la voie M",
       "spatial": false,
       "sourcePdf": "https://www.sia.aviation-civile.gouv.fr/documents/download/f/d/15049522/",
-      "sourceFingerprint": "a28449ced49b4fb62874",
-      "parserVersion": "capclair-supaip-parser-3.0.0"
+      "sourceFingerprint": "51710c9e1588e5de2b8f",
+      "parserVersion": "capclair-supaip-parser-3.0.1"
     },
     {
       "supAip": "095/26",
@@ -773,10 +1023,15 @@
       "expectedNamedGeometryCount": 2,
       "declaredZoneCount": 2,
       "missingVerticalCount": 0,
+      "status": "complete",
       "partial": false,
+      "conservative": false,
+      "safetyFallbackFeatureCount": 0,
+      "safetyFallbackFeatureNames": [],
+      "ignoredReferenceObjectCount": 0,
       "sourcePdf": "https://www.sia.aviation-civile.gouv.fr/documents/download/f/d/15049520/",
-      "sourceFingerprint": "4df7ff66acb2242a4b26",
-      "parserVersion": "capclair-supaip-parser-3.0.0"
+      "sourceFingerprint": "5311df8e93abbf124531",
+      "parserVersion": "capclair-supaip-parser-3.0.1"
     },
     {
       "supAip": "094/25",
@@ -786,10 +1041,15 @@
       "expectedNamedGeometryCount": 4,
       "declaredZoneCount": 4,
       "missingVerticalCount": 0,
-      "partial": true,
+      "status": "conservative",
+      "partial": false,
+      "conservative": true,
+      "safetyFallbackFeatureCount": 0,
+      "safetyFallbackFeatureNames": [],
+      "ignoredReferenceObjectCount": 0,
       "sourcePdf": "https://www.sia.aviation-civile.gouv.fr/documents/download/f/d/14934800/",
-      "sourceFingerprint": "fff9c0e977063b430309",
-      "parserVersion": "capclair-supaip-parser-3.0.0"
+      "sourceFingerprint": "89da2d8c7207eb4cca2c",
+      "parserVersion": "capclair-supaip-parser-3.0.1"
     },
     {
       "supAip": "093/26",
@@ -799,26 +1059,31 @@
       "expectedNamedGeometryCount": 1,
       "declaredZoneCount": 1,
       "missingVerticalCount": 0,
-      "partial": true,
+      "status": "conservative",
+      "partial": false,
+      "conservative": true,
+      "safetyFallbackFeatureCount": 0,
+      "safetyFallbackFeatureNames": [],
+      "ignoredReferenceObjectCount": 0,
       "sourcePdf": "https://www.sia.aviation-civile.gouv.fr/documents/download/f/d/15049516/",
-      "sourceFingerprint": "e5c8ad77ac11bbdb2421",
-      "parserVersion": "capclair-supaip-parser-3.0.0"
+      "sourceFingerprint": "6a241c1c56935d004f98",
+      "parserVersion": "capclair-supaip-parser-3.0.1"
     },
     {
       "supAip": "090/26",
       "title": "Modification AIP France AD 3 LFWF : Création d'une seconde FATO",
       "spatial": false,
       "sourcePdf": "https://www.sia.aviation-civile.gouv.fr/documents/download/f/d/15049510/",
-      "sourceFingerprint": "b5d17c5b61f1be02a98b",
-      "parserVersion": "capclair-supaip-parser-3.0.0"
+      "sourceFingerprint": "a5bb5bb6239f525c87c1",
+      "parserVersion": "capclair-supaip-parser-3.0.1"
     },
     {
       "supAip": "089/26",
       "title": "Travaux de réfection de la voie TL sur l’AD Lyon Saint-Exupéry (LFLL)",
       "spatial": false,
       "sourcePdf": "https://www.sia.aviation-civile.gouv.fr/documents/download/f/d/15049508/",
-      "sourceFingerprint": "a88589435b5cedc20a09",
-      "parserVersion": "capclair-supaip-parser-3.0.0"
+      "sourceFingerprint": "14e3f4a8bf7789761938",
+      "parserVersion": "capclair-supaip-parser-3.0.1"
     },
     {
       "supAip": "088/25",
@@ -828,18 +1093,23 @@
       "expectedNamedGeometryCount": 5,
       "declaredZoneCount": 5,
       "missingVerticalCount": 0,
+      "status": "complete",
       "partial": false,
+      "conservative": false,
+      "safetyFallbackFeatureCount": 0,
+      "safetyFallbackFeatureNames": [],
+      "ignoredReferenceObjectCount": 0,
       "sourcePdf": "https://www.sia.aviation-civile.gouv.fr/documents/download/f/d/14912157/",
-      "sourceFingerprint": "0a5d579ba82c640370ea",
-      "parserVersion": "capclair-supaip-parser-3.0.0"
+      "sourceFingerprint": "6d6bb2fe7635cde71c30",
+      "parserVersion": "capclair-supaip-parser-3.0.1"
     },
     {
       "supAip": "085/26",
       "title": "AD PARIS ORLY (LFPO) : En raison de la fermeture de la piste 06/24 du 10 août au 17 décembre, des procédures temporaires d'approche en piste 25 et de départ en piste 20 sont mise en œuvres.",
       "spatial": false,
       "sourcePdf": "https://www.sia.aviation-civile.gouv.fr/documents/download/f/d/15049504/",
-      "sourceFingerprint": "e7d37bf5e7bd77b84299",
-      "parserVersion": "capclair-supaip-parser-3.0.0"
+      "sourceFingerprint": "e378f02146945739a3ea",
+      "parserVersion": "capclair-supaip-parser-3.0.1"
     },
     {
       "supAip": "084/26",
@@ -849,23 +1119,33 @@
       "expectedNamedGeometryCount": 1,
       "declaredZoneCount": 1,
       "missingVerticalCount": 0,
-      "partial": true,
+      "status": "conservative",
+      "partial": false,
+      "conservative": true,
+      "safetyFallbackFeatureCount": 0,
+      "safetyFallbackFeatureNames": [],
+      "ignoredReferenceObjectCount": 0,
       "sourcePdf": "https://www.sia.aviation-civile.gouv.fr/documents/download/f/d/15049494/",
-      "sourceFingerprint": "2ca6e721b657b5beb0a7",
-      "parserVersion": "capclair-supaip-parser-3.0.0"
+      "sourceFingerprint": "4fad85814cd99a2ef780",
+      "parserVersion": "capclair-supaip-parser-3.0.1"
     },
     {
       "supAip": "077/26",
       "title": "Expérimentation : création de 7 Zones Réglementées Temporaires (ZRT) au proﬁt d’activités spéciﬁques défense, mise en sommeil des zones LF-D18 A1 et A2 et modiﬁcation des zones LFD18 A3 et A5 en FIR Brest et Bordeaux",
       "spatial": true,
-      "mappedGeometryCount": 12,
-      "expectedNamedGeometryCount": 12,
+      "mappedGeometryCount": 0,
+      "expectedNamedGeometryCount": 7,
       "declaredZoneCount": 7,
       "missingVerticalCount": 0,
-      "partial": true,
+      "status": "unmapped",
+      "partial": false,
+      "conservative": false,
+      "safetyFallbackFeatureCount": 0,
+      "safetyFallbackFeatureNames": [],
+      "ignoredReferenceObjectCount": 12,
       "sourcePdf": "https://www.sia.aviation-civile.gouv.fr/documents/download/f/d/15043925/",
-      "sourceFingerprint": "b40f94c4152d287fdf5e",
-      "parserVersion": "capclair-supaip-parser-3.0.0"
+      "sourceFingerprint": "50fda1d3e8ad6545cb43",
+      "parserVersion": "capclair-supaip-parser-3.0.1"
     },
     {
       "supAip": "076/26",
@@ -875,18 +1155,23 @@
       "expectedNamedGeometryCount": 17,
       "declaredZoneCount": 17,
       "missingVerticalCount": 0,
+      "status": "partial",
       "partial": true,
+      "conservative": false,
+      "safetyFallbackFeatureCount": 0,
+      "safetyFallbackFeatureNames": [],
+      "ignoredReferenceObjectCount": 0,
       "sourcePdf": "https://www.sia.aviation-civile.gouv.fr/documents/download/f/d/15043923/",
-      "sourceFingerprint": "1bdf45a9192da61fef4d",
-      "parserVersion": "capclair-supaip-parser-3.0.0"
+      "sourceFingerprint": "fc6825e1419be80d7516",
+      "parserVersion": "capclair-supaip-parser-3.0.1"
     },
     {
       "supAip": "075/26",
       "title": "Modiﬁcation temporaire de l'itinéraire hélicoptères en CTR Paris entre LFPI et IH3 (Gentilly)",
       "spatial": false,
       "sourcePdf": "https://www.sia.aviation-civile.gouv.fr/documents/download/f/d/15043921/",
-      "sourceFingerprint": "6f109147c4460c365f1a",
-      "parserVersion": "capclair-supaip-parser-3.0.0"
+      "sourceFingerprint": "414d580b45312a9297a7",
+      "parserVersion": "capclair-supaip-parser-3.0.1"
     },
     {
       "supAip": "074/26",
@@ -896,31 +1181,41 @@
       "expectedNamedGeometryCount": 2,
       "declaredZoneCount": 2,
       "missingVerticalCount": 0,
+      "status": "complete",
       "partial": false,
+      "conservative": false,
+      "safetyFallbackFeatureCount": 0,
+      "safetyFallbackFeatureNames": [],
+      "ignoredReferenceObjectCount": 0,
       "sourcePdf": "https://www.sia.aviation-civile.gouv.fr/documents/download/f/d/15043919/",
-      "sourceFingerprint": "c973bd459d378a934f49",
-      "parserVersion": "capclair-supaip-parser-3.0.0"
+      "sourceFingerprint": "c0412593b21bd066a11f",
+      "parserVersion": "capclair-supaip-parser-3.0.1"
     },
     {
       "supAip": "070/26",
       "title": "Création de 5 ZRT au proﬁt de l’aérodrome de Phalsbourg-Bourscheid (57)",
       "spatial": true,
       "mappedGeometryCount": 3,
-      "expectedNamedGeometryCount": 6,
+      "expectedNamedGeometryCount": 5,
       "declaredZoneCount": 5,
       "missingVerticalCount": 0,
+      "status": "partial",
       "partial": true,
+      "conservative": false,
+      "safetyFallbackFeatureCount": 0,
+      "safetyFallbackFeatureNames": [],
+      "ignoredReferenceObjectCount": 1,
       "sourcePdf": "https://www.sia.aviation-civile.gouv.fr/documents/download/f/d/15043915/",
-      "sourceFingerprint": "6a93bec39d607bd652ce",
-      "parserVersion": "capclair-supaip-parser-3.0.0"
+      "sourceFingerprint": "a9ea7d0414ea67802b1e",
+      "parserVersion": "capclair-supaip-parser-3.0.1"
     },
     {
       "supAip": "069/26",
       "title": "Hélistation LF397 BORDEAUX-HAUT-LEVEQUE : trouées d'atterrissage et de décollage modiﬁées cause grues",
       "spatial": false,
       "sourcePdf": "https://www.sia.aviation-civile.gouv.fr/documents/download/f/d/15043913/",
-      "sourceFingerprint": "3a951c711a94b55658c8",
-      "parserVersion": "capclair-supaip-parser-3.0.0"
+      "sourceFingerprint": "d2818a4441dca1197c4b",
+      "parserVersion": "capclair-supaip-parser-3.0.1"
     },
     {
       "supAip": "067/26",
@@ -930,10 +1225,15 @@
       "expectedNamedGeometryCount": 2,
       "declaredZoneCount": 2,
       "missingVerticalCount": 0,
+      "status": "complete",
       "partial": false,
+      "conservative": false,
+      "safetyFallbackFeatureCount": 0,
+      "safetyFallbackFeatureNames": [],
+      "ignoredReferenceObjectCount": 0,
       "sourcePdf": "https://www.sia.aviation-civile.gouv.fr/documents/download/f/d/15038362/",
-      "sourceFingerprint": "786edb42bc30bbf8a972",
-      "parserVersion": "capclair-supaip-parser-3.0.0"
+      "sourceFingerprint": "b4f8227166f31ce5b8bc",
+      "parserVersion": "capclair-supaip-parser-3.0.1"
     },
     {
       "supAip": "065/25",
@@ -943,10 +1243,15 @@
       "expectedNamedGeometryCount": 2,
       "declaredZoneCount": 2,
       "missingVerticalCount": 0,
+      "status": "partial",
       "partial": true,
+      "conservative": false,
+      "safetyFallbackFeatureCount": 0,
+      "safetyFallbackFeatureNames": [],
+      "ignoredReferenceObjectCount": 0,
       "sourcePdf": "https://www.sia.aviation-civile.gouv.fr/documents/download/f/d/14634691/",
-      "sourceFingerprint": "e9bdd45b9531fde3e2dd",
-      "parserVersion": "capclair-supaip-parser-3.0.0"
+      "sourceFingerprint": "cc7a2ebbea72f953f603",
+      "parserVersion": "capclair-supaip-parser-3.0.1"
     },
     {
       "supAip": "063/26",
@@ -956,10 +1261,15 @@
       "expectedNamedGeometryCount": 1,
       "declaredZoneCount": null,
       "missingVerticalCount": 0,
+      "status": "complete",
       "partial": false,
+      "conservative": false,
+      "safetyFallbackFeatureCount": 0,
+      "safetyFallbackFeatureNames": [],
+      "ignoredReferenceObjectCount": 0,
       "sourcePdf": "https://www.sia.aviation-civile.gouv.fr/documents/download/f/d/15038354/",
-      "sourceFingerprint": "fd98da9ac287c271b497",
-      "parserVersion": "capclair-supaip-parser-3.0.0"
+      "sourceFingerprint": "63cc65b50d1f8be42ed4",
+      "parserVersion": "capclair-supaip-parser-3.0.1"
     },
     {
       "supAip": "062/26",
@@ -969,23 +1279,35 @@
       "expectedNamedGeometryCount": 3,
       "declaredZoneCount": 3,
       "missingVerticalCount": 0,
+      "status": "complete",
       "partial": false,
+      "conservative": false,
+      "safetyFallbackFeatureCount": 0,
+      "safetyFallbackFeatureNames": [],
+      "ignoredReferenceObjectCount": 0,
       "sourcePdf": "https://www.sia.aviation-civile.gouv.fr/documents/download/f/d/15038352/",
-      "sourceFingerprint": "ea5fdef8d1b77c708e78",
-      "parserVersion": "capclair-supaip-parser-3.0.0"
+      "sourceFingerprint": "795eb0dfd4bc616e9704",
+      "parserVersion": "capclair-supaip-parser-3.0.1"
     },
     {
       "supAip": "060/26",
       "title": "Création à titre expérimental d'une Zone Réglementée Temporaire (ZRT) au proﬁt d'entraînements militaires dans la région de Chenevières.",
       "spatial": true,
-      "mappedGeometryCount": 2,
+      "mappedGeometryCount": 1,
       "expectedNamedGeometryCount": 1,
       "declaredZoneCount": 1,
       "missingVerticalCount": 0,
+      "status": "partial",
       "partial": true,
+      "conservative": false,
+      "safetyFallbackFeatureCount": 1,
+      "safetyFallbackFeatureNames": [
+        "ZRT CHENEVIERES"
+      ],
+      "ignoredReferenceObjectCount": 1,
       "sourcePdf": "https://www.sia.aviation-civile.gouv.fr/documents/download/f/d/15038346/",
-      "sourceFingerprint": "0165fd3e26b16169876f",
-      "parserVersion": "capclair-supaip-parser-3.0.0"
+      "sourceFingerprint": "fbb7994539ac415a8d0b",
+      "parserVersion": "capclair-supaip-parser-3.0.1"
     },
     {
       "supAip": "055/26",
@@ -995,10 +1317,15 @@
       "expectedNamedGeometryCount": 99,
       "declaredZoneCount": 99,
       "missingVerticalCount": 0,
+      "status": "partial",
       "partial": true,
+      "conservative": false,
+      "safetyFallbackFeatureCount": 0,
+      "safetyFallbackFeatureNames": [],
+      "ignoredReferenceObjectCount": 0,
       "sourcePdf": "https://www.sia.aviation-civile.gouv.fr/documents/download/f/d/15038336/",
-      "sourceFingerprint": "fb6fd71a22400f9a5f61",
-      "parserVersion": "capclair-supaip-parser-3.0.0"
+      "sourceFingerprint": "3fccaaba6e3a165ef354",
+      "parserVersion": "capclair-supaip-parser-3.0.1"
     },
     {
       "supAip": "054/26",
@@ -1008,10 +1335,15 @@
       "expectedNamedGeometryCount": 1,
       "declaredZoneCount": 1,
       "missingVerticalCount": 0,
-      "partial": true,
+      "status": "conservative",
+      "partial": false,
+      "conservative": true,
+      "safetyFallbackFeatureCount": 0,
+      "safetyFallbackFeatureNames": [],
+      "ignoredReferenceObjectCount": 0,
       "sourcePdf": "https://www.sia.aviation-civile.gouv.fr/documents/download/f/d/15038334/",
-      "sourceFingerprint": "84a1788714ae8a65fda4",
-      "parserVersion": "capclair-supaip-parser-3.0.0"
+      "sourceFingerprint": "459ce9489efd39971bf8",
+      "parserVersion": "capclair-supaip-parser-3.0.1"
     },
     {
       "supAip": "053/26",
@@ -1021,10 +1353,15 @@
       "expectedNamedGeometryCount": 99,
       "declaredZoneCount": 99,
       "missingVerticalCount": 0,
+      "status": "partial",
       "partial": true,
+      "conservative": false,
+      "safetyFallbackFeatureCount": 0,
+      "safetyFallbackFeatureNames": [],
+      "ignoredReferenceObjectCount": 0,
       "sourcePdf": "https://www.sia.aviation-civile.gouv.fr/documents/download/f/d/15038332/",
-      "sourceFingerprint": "08862d261ed266e4860d",
-      "parserVersion": "capclair-supaip-parser-3.0.0"
+      "sourceFingerprint": "80c1f255f7463d852377",
+      "parserVersion": "capclair-supaip-parser-3.0.1"
     },
     {
       "supAip": "052/26",
@@ -1034,23 +1371,35 @@
       "expectedNamedGeometryCount": 16,
       "declaredZoneCount": 16,
       "missingVerticalCount": 0,
+      "status": "partial",
       "partial": true,
+      "conservative": false,
+      "safetyFallbackFeatureCount": 0,
+      "safetyFallbackFeatureNames": [],
+      "ignoredReferenceObjectCount": 0,
       "sourcePdf": "https://www.sia.aviation-civile.gouv.fr/documents/download/f/d/15038330/",
-      "sourceFingerprint": "c6e358e2188e60f3712b",
-      "parserVersion": "capclair-supaip-parser-3.0.0"
+      "sourceFingerprint": "48803e452439a041781e",
+      "parserVersion": "capclair-supaip-parser-3.0.1"
     },
     {
       "supAip": "051/26",
       "title": "Création d'une zone réglementée temporaire au profit de vols d'aéronefs sans équipage à bord dans la région de VALENCE (26)",
       "spatial": true,
-      "mappedGeometryCount": 2,
+      "mappedGeometryCount": 1,
       "expectedNamedGeometryCount": 1,
       "declaredZoneCount": 1,
       "missingVerticalCount": 0,
+      "status": "partial",
       "partial": true,
+      "conservative": false,
+      "safetyFallbackFeatureCount": 1,
+      "safetyFallbackFeatureNames": [
+        "ZRT SPAHIS"
+      ],
+      "ignoredReferenceObjectCount": 1,
       "sourcePdf": "https://www.sia.aviation-civile.gouv.fr/documents/download/f/d/15038326/",
-      "sourceFingerprint": "f1a50910bb5baa55dbe8",
-      "parserVersion": "capclair-supaip-parser-3.0.0"
+      "sourceFingerprint": "da569db8e4914aa018f7",
+      "parserVersion": "capclair-supaip-parser-3.0.1"
     },
     {
       "supAip": "050/26",
@@ -1060,10 +1409,15 @@
       "expectedNamedGeometryCount": 1,
       "declaredZoneCount": 1,
       "missingVerticalCount": 0,
-      "partial": true,
+      "status": "conservative",
+      "partial": false,
+      "conservative": true,
+      "safetyFallbackFeatureCount": 0,
+      "safetyFallbackFeatureNames": [],
+      "ignoredReferenceObjectCount": 0,
       "sourcePdf": "https://www.sia.aviation-civile.gouv.fr/documents/download/f/d/15032778/",
-      "sourceFingerprint": "099a31a0852d05189cf0",
-      "parserVersion": "capclair-supaip-parser-3.0.0"
+      "sourceFingerprint": "664c3187054f777fb4e2",
+      "parserVersion": "capclair-supaip-parser-3.0.1"
     },
     {
       "supAip": "047/26",
@@ -1073,10 +1427,15 @@
       "expectedNamedGeometryCount": 2,
       "declaredZoneCount": 2,
       "missingVerticalCount": 0,
+      "status": "partial",
       "partial": true,
+      "conservative": false,
+      "safetyFallbackFeatureCount": 0,
+      "safetyFallbackFeatureNames": [],
+      "ignoredReferenceObjectCount": 0,
       "sourcePdf": "https://www.sia.aviation-civile.gouv.fr/documents/download/f/d/15032772/",
-      "sourceFingerprint": "f8355c00cebbce990bcd",
-      "parserVersion": "capclair-supaip-parser-3.0.0"
+      "sourceFingerprint": "afb114f7ab9381c336b2",
+      "parserVersion": "capclair-supaip-parser-3.0.1"
     },
     {
       "supAip": "045/26",
@@ -1086,18 +1445,23 @@
       "expectedNamedGeometryCount": 4,
       "declaredZoneCount": 4,
       "missingVerticalCount": 0,
+      "status": "complete",
       "partial": false,
+      "conservative": false,
+      "safetyFallbackFeatureCount": 0,
+      "safetyFallbackFeatureNames": [],
+      "ignoredReferenceObjectCount": 0,
       "sourcePdf": "https://www.sia.aviation-civile.gouv.fr/documents/download/f/d/15032768/",
-      "sourceFingerprint": "59e74f22f3e4a04dec7d",
-      "parserVersion": "capclair-supaip-parser-3.0.0"
+      "sourceFingerprint": "91cef179248e370ef808",
+      "parserVersion": "capclair-supaip-parser-3.0.1"
     },
     {
       "supAip": "043/26",
       "title": "Création d’un seuil décalé sur la piste 34 en raison de la présence d’arbre.",
       "spatial": false,
       "sourcePdf": "https://www.sia.aviation-civile.gouv.fr/documents/download/f/d/15032764/",
-      "sourceFingerprint": "c9e76842853ea571224f",
-      "parserVersion": "capclair-supaip-parser-3.0.0"
+      "sourceFingerprint": "04c5e2e4211b7c8b37fb",
+      "parserVersion": "capclair-supaip-parser-3.0.1"
     },
     {
       "supAip": "042/26",
@@ -1107,10 +1471,15 @@
       "expectedNamedGeometryCount": 3,
       "declaredZoneCount": 3,
       "missingVerticalCount": 0,
-      "partial": true,
+      "status": "unmapped",
+      "partial": false,
+      "conservative": false,
+      "safetyFallbackFeatureCount": 0,
+      "safetyFallbackFeatureNames": [],
+      "ignoredReferenceObjectCount": 0,
       "sourcePdf": "https://www.sia.aviation-civile.gouv.fr/documents/download/f/d/15032762/",
-      "sourceFingerprint": "d8301874de70bc195ba2",
-      "parserVersion": "capclair-supaip-parser-3.0.0"
+      "sourceFingerprint": "0e32d0f3368eac4d88b1",
+      "parserVersion": "capclair-supaip-parser-3.0.1"
     },
     {
       "supAip": "041/26",
@@ -1120,10 +1489,15 @@
       "expectedNamedGeometryCount": 2,
       "declaredZoneCount": 2,
       "missingVerticalCount": 0,
-      "partial": true,
+      "status": "conservative",
+      "partial": false,
+      "conservative": true,
+      "safetyFallbackFeatureCount": 0,
+      "safetyFallbackFeatureNames": [],
+      "ignoredReferenceObjectCount": 0,
       "sourcePdf": "https://www.sia.aviation-civile.gouv.fr/documents/download/f/d/15032760/",
-      "sourceFingerprint": "5b9f2505a5b678b35772",
-      "parserVersion": "capclair-supaip-parser-3.0.0"
+      "sourceFingerprint": "6d4b319ed4f4828f3d97",
+      "parserVersion": "capclair-supaip-parser-3.0.1"
     },
     {
       "supAip": "038/26",
@@ -1133,10 +1507,15 @@
       "expectedNamedGeometryCount": 2,
       "declaredZoneCount": 2,
       "missingVerticalCount": 0,
+      "status": "complete",
       "partial": false,
+      "conservative": false,
+      "safetyFallbackFeatureCount": 0,
+      "safetyFallbackFeatureNames": [],
+      "ignoredReferenceObjectCount": 0,
       "sourcePdf": "https://www.sia.aviation-civile.gouv.fr/documents/download/f/d/15032754/",
-      "sourceFingerprint": "7b8d911d866e00f5fcc7",
-      "parserVersion": "capclair-supaip-parser-3.0.0"
+      "sourceFingerprint": "893286be412b8f1cde4b",
+      "parserVersion": "capclair-supaip-parser-3.0.1"
     },
     {
       "supAip": "037/26",
@@ -1146,10 +1525,15 @@
       "expectedNamedGeometryCount": 3,
       "declaredZoneCount": null,
       "missingVerticalCount": 0,
+      "status": "complete",
       "partial": false,
+      "conservative": false,
+      "safetyFallbackFeatureCount": 0,
+      "safetyFallbackFeatureNames": [],
+      "ignoredReferenceObjectCount": 0,
       "sourcePdf": "https://www.sia.aviation-civile.gouv.fr/documents/download/f/d/15032752/",
-      "sourceFingerprint": "294fc1339b446d4409da",
-      "parserVersion": "capclair-supaip-parser-3.0.0"
+      "sourceFingerprint": "1399b512bff7126dcdb1",
+      "parserVersion": "capclair-supaip-parser-3.0.1"
     },
     {
       "supAip": "035/26",
@@ -1159,10 +1543,15 @@
       "expectedNamedGeometryCount": 2,
       "declaredZoneCount": 2,
       "missingVerticalCount": 0,
+      "status": "complete",
       "partial": false,
+      "conservative": false,
+      "safetyFallbackFeatureCount": 0,
+      "safetyFallbackFeatureNames": [],
+      "ignoredReferenceObjectCount": 0,
       "sourcePdf": "https://www.sia.aviation-civile.gouv.fr/documents/download/f/d/15032748/",
-      "sourceFingerprint": "609d7ec6a329a9f6d2a5",
-      "parserVersion": "capclair-supaip-parser-3.0.0"
+      "sourceFingerprint": "4784236c209b5338c1f7",
+      "parserVersion": "capclair-supaip-parser-3.0.1"
     },
     {
       "supAip": "024/26",
@@ -1172,10 +1561,15 @@
       "expectedNamedGeometryCount": 3,
       "declaredZoneCount": 3,
       "missingVerticalCount": 0,
+      "status": "complete",
       "partial": false,
+      "conservative": false,
+      "safetyFallbackFeatureCount": 0,
+      "safetyFallbackFeatureNames": [],
+      "ignoredReferenceObjectCount": 0,
       "sourcePdf": "https://www.sia.aviation-civile.gouv.fr/documents/download/f/d/15027175/",
-      "sourceFingerprint": "edc348f609b37b9a68bd",
-      "parserVersion": "capclair-supaip-parser-3.0.0"
+      "sourceFingerprint": "43a7ab6cb64f63679bfb",
+      "parserVersion": "capclair-supaip-parser-3.0.1"
     },
     {
       "supAip": "023/26",
@@ -1185,10 +1579,15 @@
       "expectedNamedGeometryCount": 2,
       "declaredZoneCount": 2,
       "missingVerticalCount": 0,
+      "status": "complete",
       "partial": false,
+      "conservative": false,
+      "safetyFallbackFeatureCount": 0,
+      "safetyFallbackFeatureNames": [],
+      "ignoredReferenceObjectCount": 0,
       "sourcePdf": "https://www.sia.aviation-civile.gouv.fr/documents/download/f/d/15027173/",
-      "sourceFingerprint": "ecd5963fd694eb5b71a4",
-      "parserVersion": "capclair-supaip-parser-3.0.0"
+      "sourceFingerprint": "7ce2fd58981c0f230bba",
+      "parserVersion": "capclair-supaip-parser-3.0.1"
     },
     {
       "supAip": "022/26",
@@ -1198,10 +1597,15 @@
       "expectedNamedGeometryCount": 1,
       "declaredZoneCount": 1,
       "missingVerticalCount": 0,
-      "partial": true,
+      "status": "conservative",
+      "partial": false,
+      "conservative": true,
+      "safetyFallbackFeatureCount": 0,
+      "safetyFallbackFeatureNames": [],
+      "ignoredReferenceObjectCount": 0,
       "sourcePdf": "https://www.sia.aviation-civile.gouv.fr/documents/download/f/d/15027171/",
-      "sourceFingerprint": "d4141177d5b92fe9fd6b",
-      "parserVersion": "capclair-supaip-parser-3.0.0"
+      "sourceFingerprint": "176f07fb3b93194c04c8",
+      "parserVersion": "capclair-supaip-parser-3.0.1"
     },
     {
       "supAip": "021/26",
@@ -1211,10 +1615,15 @@
       "expectedNamedGeometryCount": 1,
       "declaredZoneCount": 1,
       "missingVerticalCount": 1,
+      "status": "partial",
       "partial": true,
+      "conservative": false,
+      "safetyFallbackFeatureCount": 0,
+      "safetyFallbackFeatureNames": [],
+      "ignoredReferenceObjectCount": 0,
       "sourcePdf": "https://www.sia.aviation-civile.gouv.fr/documents/download/f/d/15027169/",
-      "sourceFingerprint": "ed90763fa14ecca29727",
-      "parserVersion": "capclair-supaip-parser-3.0.0"
+      "sourceFingerprint": "9332abe8864e077a76c2",
+      "parserVersion": "capclair-supaip-parser-3.0.1"
     },
     {
       "supAip": "020/26",
@@ -1224,10 +1633,15 @@
       "expectedNamedGeometryCount": 3,
       "declaredZoneCount": 3,
       "missingVerticalCount": 0,
+      "status": "complete",
       "partial": false,
+      "conservative": false,
+      "safetyFallbackFeatureCount": 0,
+      "safetyFallbackFeatureNames": [],
+      "ignoredReferenceObjectCount": 0,
       "sourcePdf": "https://www.sia.aviation-civile.gouv.fr/documents/download/f/d/15027167/",
-      "sourceFingerprint": "08b7d5ac3214b0617cad",
-      "parserVersion": "capclair-supaip-parser-3.0.0"
+      "sourceFingerprint": "b9fa3bed362f08c05e0a",
+      "parserVersion": "capclair-supaip-parser-3.0.1"
     },
     {
       "supAip": "018/26",
@@ -1237,10 +1651,17 @@
       "expectedNamedGeometryCount": 2,
       "declaredZoneCount": 1,
       "missingVerticalCount": 1,
+      "status": "partial",
       "partial": true,
+      "conservative": false,
+      "safetyFallbackFeatureCount": 1,
+      "safetyFallbackFeatureNames": [
+        "ZRT 'PUITS LA LANDE' et 'PUITS LA FONTENNELLE'"
+      ],
+      "ignoredReferenceObjectCount": 0,
       "sourcePdf": "https://www.sia.aviation-civile.gouv.fr/documents/download/f/d/15027163/",
-      "sourceFingerprint": "c0fa594eedc9f63bdc13",
-      "parserVersion": "capclair-supaip-parser-3.0.0"
+      "sourceFingerprint": "fc647416a4a3bf73e033",
+      "parserVersion": "capclair-supaip-parser-3.0.1"
     },
     {
       "supAip": "017/26",
@@ -1250,39 +1671,49 @@
       "expectedNamedGeometryCount": 1,
       "declaredZoneCount": null,
       "missingVerticalCount": 0,
-      "partial": true,
+      "status": "unmapped",
+      "partial": false,
+      "conservative": false,
+      "safetyFallbackFeatureCount": 0,
+      "safetyFallbackFeatureNames": [],
+      "ignoredReferenceObjectCount": 0,
       "sourcePdf": "https://www.sia.aviation-civile.gouv.fr/documents/download/f/d/15027161/",
-      "sourceFingerprint": "a957b54369509c14c1da",
-      "parserVersion": "capclair-supaip-parser-3.0.0"
+      "sourceFingerprint": "adda0a295ac89c8f700f",
+      "parserVersion": "capclair-supaip-parser-3.0.1"
     },
     {
       "supAip": "015/26",
       "title": "PARIS-SACLAY-VERSAILLES - Restriction et modification d'exploitation cause travaux de réhabilitation de la piste 07R/25L",
       "spatial": false,
       "sourcePdf": "https://www.sia.aviation-civile.gouv.fr/documents/download/f/d/15027157/",
-      "sourceFingerprint": "fe0422516cd7d710e4bc",
-      "parserVersion": "capclair-supaip-parser-3.0.0"
+      "sourceFingerprint": "b60c4bdc50714869529a",
+      "parserVersion": "capclair-supaip-parser-3.0.1"
     },
     {
       "supAip": "014/26",
       "title": "Modification de la zone de stationnement de l’AD LFML (Marseille-Provence) avec création de trois postes avions sur l’ancienne aire de stationnement de la Sécurité Civile",
       "spatial": false,
       "sourcePdf": "https://www.sia.aviation-civile.gouv.fr/documents/download/f/d/15027155/",
-      "sourceFingerprint": "efb37815258e2826d322",
-      "parserVersion": "capclair-supaip-parser-3.0.0"
+      "sourceFingerprint": "17955714b63c63afb1da",
+      "parserVersion": "capclair-supaip-parser-3.0.1"
     },
     {
       "supAip": "013/26",
       "title": "Création d'une zone interdite temporaire (ZIT) ORANGE (84)",
       "spatial": true,
-      "mappedGeometryCount": 1,
+      "mappedGeometryCount": 0,
       "expectedNamedGeometryCount": 1,
       "declaredZoneCount": 1,
       "missingVerticalCount": 0,
+      "status": "unmapped",
       "partial": false,
+      "conservative": false,
+      "safetyFallbackFeatureCount": 0,
+      "safetyFallbackFeatureNames": [],
+      "ignoredReferenceObjectCount": 1,
       "sourcePdf": "https://www.sia.aviation-civile.gouv.fr/documents/download/f/d/15027153/",
-      "sourceFingerprint": "2fb75e7d2ea3488a36d1",
-      "parserVersion": "capclair-supaip-parser-3.0.0"
+      "sourceFingerprint": "c3943c52c7ad5ec5f77b",
+      "parserVersion": "capclair-supaip-parser-3.0.1"
     },
     {
       "supAip": "012/26",
@@ -1292,10 +1723,15 @@
       "expectedNamedGeometryCount": 1,
       "declaredZoneCount": 1,
       "missingVerticalCount": 0,
-      "partial": true,
+      "status": "conservative",
+      "partial": false,
+      "conservative": true,
+      "safetyFallbackFeatureCount": 0,
+      "safetyFallbackFeatureNames": [],
+      "ignoredReferenceObjectCount": 0,
       "sourcePdf": "https://www.sia.aviation-civile.gouv.fr/documents/download/f/d/15027151/",
-      "sourceFingerprint": "521607f923b36dd50672",
-      "parserVersion": "capclair-supaip-parser-3.0.0"
+      "sourceFingerprint": "396890aa45055e5b3260",
+      "parserVersion": "capclair-supaip-parser-3.0.1"
     },
     {
       "supAip": "005/26",
@@ -1305,10 +1741,15 @@
       "expectedNamedGeometryCount": 1,
       "declaredZoneCount": 1,
       "missingVerticalCount": 0,
-      "partial": true,
+      "status": "conservative",
+      "partial": false,
+      "conservative": true,
+      "safetyFallbackFeatureCount": 0,
+      "safetyFallbackFeatureNames": [],
+      "ignoredReferenceObjectCount": 0,
       "sourcePdf": "https://www.sia.aviation-civile.gouv.fr/documents/download/f/d/15021717/",
-      "sourceFingerprint": "fdd8ee60fd2acfa47cc1",
-      "parserVersion": "capclair-supaip-parser-3.0.0"
+      "sourceFingerprint": "5de299574990f21c1f15",
+      "parserVersion": "capclair-supaip-parser-3.0.1"
     }
   ]
 }

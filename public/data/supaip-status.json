@@ -2,35 +2,98 @@
   "schemaVersion": 2,
   "mode": "automatic",
   "beta": true,
-  "generatedAt": "2026-07-15T16:09:24Z",
+  "generatedAt": "2026-07-15T16:36:37Z",
   "sourceUpdatedAt": "2026-07-09T00:00:00Z",
   "sourceUrl": "https://www.sia.aviation-civile.gouv.fr/documents/supaip/aip/id/6",
-  "parserVersion": "capclair-supaip-parser-3.0.0",
-  "datasetRevision": "79c15e1ac72f9224ed6a42919e7ef1f919f576a03d30f056fb5b0964851417a4",
+  "parserVersion": "capclair-supaip-parser-3.0.1",
+  "datasetRevision": "750cdf46cb9d678c04edd0d1e20fbaa8dad5a997dc733deb785abb8e70bfe9fc",
   "overrideRevision": "092a0d66c8ab300d198ad01eeb48da5d5bf812164cc9eca1e9236d0ece81b73f",
   "listingPublicationCount": 110,
   "processedPublicationCount": 110,
   "nonSpatialPublicationCount": 25,
   "zonalPublicationCount": 85,
-  "mappedPublicationCount": 73,
-  "fullyMappedPublicationCount": 26,
-  "featureCount": 418,
-  "expectedNamedGeometryCount": 455,
+  "mappedPublicationCount": 71,
+  "fullyMappedPublicationCount": 24,
+  "conservativelyMappedPublicationCount": 25,
+  "featureCount": 381,
+  "expectedNamedGeometryCount": 449,
   "declaredZoneCount": 421,
-  "verticalCompleteFeatureCount": 415,
-  "missingVerticalFeatureCount": 3,
-  "unmappedPublicationCount": 59,
-  "completeUnmappedPublicationCount": 12,
-  "partialPublicationCount": 47,
+  "verticalCompleteFeatureCount": 379,
+  "missingVerticalFeatureCount": 2,
+  "unmappedPublicationCount": 61,
+  "reviewPublicationCount": 61,
+  "completeUnmappedPublicationCount": 14,
+  "partialPublicationCount": 22,
+  "conservativePublicationCount": 25,
   "reusedPublicationCount": 0,
   "downloadedPublicationCount": 110,
   "safetyFallbackPublicationCount": 8,
+  "safetyFallbackFeatureCount": 8,
+  "safetyFallbackDetails": [
+    {
+      "supAip": "216/25",
+      "featureCount": 1,
+      "featureNames": [
+        "ZRT METZ - THIONVILLE"
+      ]
+    },
+    {
+      "supAip": "210/25",
+      "featureCount": 1,
+      "featureNames": [
+        "ZRT L'AIGLE - VERNEUIL D'AVRE"
+      ]
+    },
+    {
+      "supAip": "167/25",
+      "featureCount": 1,
+      "featureNames": [
+        "ZRT OCHEY"
+      ]
+    },
+    {
+      "supAip": "150/25",
+      "featureCount": 1,
+      "featureNames": [
+        "ZRT SOTAME BRAVO"
+      ]
+    },
+    {
+      "supAip": "119/26",
+      "featureCount": 1,
+      "featureNames": [
+        "ZRT DEFILE"
+      ]
+    },
+    {
+      "supAip": "060/26",
+      "featureCount": 1,
+      "featureNames": [
+        "ZRT CHENEVIERES"
+      ]
+    },
+    {
+      "supAip": "051/26",
+      "featureCount": 1,
+      "featureNames": [
+        "ZRT SPAHIS"
+      ]
+    },
+    {
+      "supAip": "018/26",
+      "featureCount": 1,
+      "featureNames": [
+        "ZRT 'PUITS LA LANDE' et 'PUITS LA FONTENNELLE'"
+      ]
+    }
+  ],
+  "ignoredReferenceObjectCount": 40,
   "incompleteCausePublicationCounts": {
     "zone-block-not-detected": 0,
-    "lateral-boundary-not-extracted": 20,
-    "internal-exclusion-not-cut": 37,
-    "named-geometry-missing": 25,
-    "vertical-limit-not-extracted": 3,
+    "lateral-boundary-not-extracted": 18,
+    "internal-exclusion-not-cut": 31,
+    "named-geometry-missing": 27,
+    "vertical-limit-not-extracted": 2,
     "safety-fallback": 8,
     "other": 0
   },
@@ -44,5 +107,5 @@
     "other": "Autre format à contrôler"
   },
   "staleAfterHours": 36,
-  "message": "Parser V3: toutes les publications SIA listées sont contrôlées, les tableaux multi-colonnes sont renforcés et les régressions partielles sont protégées. Vérifier le PDF, SOFIA et les NOTAM avant le vol."
+  "message": "Parser V3.1: les zones temporaires sont séparées des espaces permanents cités, les contours prudents sont distingués des géométries manquantes et chaque repli de sécurité est auditable. Vérifier le PDF, SOFIA et les NOTAM avant le vol."
 }
