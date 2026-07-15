@@ -1,8 +1,8 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-07-15T08:38:29Z",
+  "generatedAt": "2026-07-15T14:14:23Z",
   "sourceUrl": "https://www.sia.aviation-civile.gouv.fr/documents/supaip/aip/id/6",
-  "parserVersion": "capclair-supaip-parser-2.0.1",
+  "parserVersion": "capclair-supaip-parser-2.0.2",
   "publications": [
     {
       "supAip": "234/24",
@@ -16,8 +16,8 @@
       "mappedGeometryCount": 0,
       "declaredZoneCount": 2,
       "missingVerticalCount": 0,
-      "sourceFingerprint": "8fc44ae331d4383f7045",
-      "parserVersion": "capclair-supaip-parser-2.0.1"
+      "sourceFingerprint": "c96a5e25532e6b1454da",
+      "parserVersion": "capclair-supaip-parser-2.0.2"
     },
     {
       "supAip": "233/24",
@@ -31,8 +31,8 @@
       "mappedGeometryCount": 0,
       "declaredZoneCount": 1,
       "missingVerticalCount": 0,
-      "sourceFingerprint": "7416d94845da0c3c8ea6",
-      "parserVersion": "capclair-supaip-parser-2.0.1"
+      "sourceFingerprint": "aad9267472feb7ab6f5e",
+      "parserVersion": "capclair-supaip-parser-2.0.2"
     },
     {
       "supAip": "211/25",
@@ -46,8 +46,8 @@
       "mappedGeometryCount": 0,
       "declaredZoneCount": 2,
       "missingVerticalCount": 0,
-      "sourceFingerprint": "c7e1c24fd7bb754a9061",
-      "parserVersion": "capclair-supaip-parser-2.0.1"
+      "sourceFingerprint": "90a44a7c5bc0da4abc4e",
+      "parserVersion": "capclair-supaip-parser-2.0.2"
     },
     {
       "supAip": "207/25",
@@ -55,14 +55,14 @@
       "validFrom": "2026-01-22",
       "validTo": "2027-01-21",
       "sourcePdf": "https://www.sia.aviation-civile.gouv.fr/documents/download/f/d/15016226/",
-      "reason": "1 zone(s) sans limites verticales extraites.",
+      "reason": "",
       "partial": true,
-      "expectedNamedGeometryCount": 1,
-      "mappedGeometryCount": 1,
+      "expectedNamedGeometryCount": 16,
+      "mappedGeometryCount": 16,
       "declaredZoneCount": null,
-      "missingVerticalCount": 1,
-      "sourceFingerprint": "3ba789278dbae3797037",
-      "parserVersion": "capclair-supaip-parser-2.0.1"
+      "missingVerticalCount": 0,
+      "sourceFingerprint": "f7e2de3c9b7a19401ef1",
+      "parserVersion": "capclair-supaip-parser-2.0.2"
     },
     {
       "supAip": "206/25",
@@ -76,8 +76,8 @@
       "mappedGeometryCount": 1,
       "declaredZoneCount": 3,
       "missingVerticalCount": 1,
-      "sourceFingerprint": "a88eac2a3ed7604e553f",
-      "parserVersion": "capclair-supaip-parser-2.0.1"
+      "sourceFingerprint": "fc84a42a9442b4d06593",
+      "parserVersion": "capclair-supaip-parser-2.0.2"
     },
     {
       "supAip": "192/25",
@@ -91,8 +91,8 @@
       "mappedGeometryCount": 0,
       "declaredZoneCount": 1,
       "missingVerticalCount": 0,
-      "sourceFingerprint": "fe6f6cd6b13003a70997",
-      "parserVersion": "capclair-supaip-parser-2.0.1"
+      "sourceFingerprint": "581cb7283600514ad8a8",
+      "parserVersion": "capclair-supaip-parser-2.0.2"
     },
     {
       "supAip": "188/25",
@@ -102,12 +102,12 @@
       "sourcePdf": "https://www.sia.aviation-civile.gouv.fr/documents/download/f/d/15000061/",
       "reason": "",
       "partial": true,
-      "expectedNamedGeometryCount": 6,
-      "mappedGeometryCount": 6,
+      "expectedNamedGeometryCount": 7,
+      "mappedGeometryCount": 7,
       "declaredZoneCount": 9,
       "missingVerticalCount": 0,
-      "sourceFingerprint": "bdf80522f770a062d5e3",
-      "parserVersion": "capclair-supaip-parser-2.0.1"
+      "sourceFingerprint": "04ed614e2e7df9f9cfbb",
+      "parserVersion": "capclair-supaip-parser-2.0.2"
     },
     {
       "supAip": "187/25",
@@ -121,8 +121,8 @@
       "mappedGeometryCount": 0,
       "declaredZoneCount": 2,
       "missingVerticalCount": 0,
-      "sourceFingerprint": "42d69d5b3d94c0d901ba",
-      "parserVersion": "capclair-supaip-parser-2.0.1"
+      "sourceFingerprint": "022f54be62b8b050c60c",
+      "parserVersion": "capclair-supaip-parser-2.0.2"
     },
     {
       "supAip": "172/25",
@@ -136,8 +136,8 @@
       "mappedGeometryCount": 0,
       "declaredZoneCount": 4,
       "missingVerticalCount": 0,
-      "sourceFingerprint": "e10632e74bc75966c971",
-      "parserVersion": "capclair-supaip-parser-2.0.1"
+      "sourceFingerprint": "94164d2e965a8fdf3072",
+      "parserVersion": "capclair-supaip-parser-2.0.2"
     },
     {
       "supAip": "167/25",
@@ -151,8 +151,8 @@
       "mappedGeometryCount": 1,
       "declaredZoneCount": 1,
       "missingVerticalCount": 0,
-      "sourceFingerprint": "4c870b83e69ca99581cb",
-      "parserVersion": "capclair-supaip-parser-2.0.1"
+      "sourceFingerprint": "d6da4886eb81458bb545",
+      "parserVersion": "capclair-supaip-parser-2.0.2"
     },
     {
       "supAip": "159/25",
@@ -166,8 +166,8 @@
       "mappedGeometryCount": 0,
       "declaredZoneCount": 3,
       "missingVerticalCount": 0,
-      "sourceFingerprint": "29936c35c42d634ef7ac",
-      "parserVersion": "capclair-supaip-parser-2.0.1"
+      "sourceFingerprint": "fb59525654c093995ada",
+      "parserVersion": "capclair-supaip-parser-2.0.2"
     },
     {
       "supAip": "157/26",
@@ -181,8 +181,8 @@
       "mappedGeometryCount": 3,
       "declaredZoneCount": 3,
       "missingVerticalCount": 0,
-      "sourceFingerprint": "00f7e99815a30075245b",
-      "parserVersion": "capclair-supaip-parser-2.0.1"
+      "sourceFingerprint": "c04448d388b1da6b9a0a",
+      "parserVersion": "capclair-supaip-parser-2.0.2"
     },
     {
       "supAip": "156/26",
@@ -196,8 +196,8 @@
       "mappedGeometryCount": 0,
       "declaredZoneCount": 1,
       "missingVerticalCount": 0,
-      "sourceFingerprint": "ed4a26f452618d336451",
-      "parserVersion": "capclair-supaip-parser-2.0.1"
+      "sourceFingerprint": "e9988972bf9fe0bc389b",
+      "parserVersion": "capclair-supaip-parser-2.0.2"
     },
     {
       "supAip": "155/26",
@@ -211,8 +211,8 @@
       "mappedGeometryCount": 0,
       "declaredZoneCount": 1,
       "missingVerticalCount": 0,
-      "sourceFingerprint": "c6df592eae03e4958489",
-      "parserVersion": "capclair-supaip-parser-2.0.1"
+      "sourceFingerprint": "21068d23896958a4d8b7",
+      "parserVersion": "capclair-supaip-parser-2.0.2"
     },
     {
       "supAip": "150/25",
@@ -226,8 +226,8 @@
       "mappedGeometryCount": 1,
       "declaredZoneCount": 2,
       "missingVerticalCount": 0,
-      "sourceFingerprint": "fa69766dfe10d7b1d2a7",
-      "parserVersion": "capclair-supaip-parser-2.0.1"
+      "sourceFingerprint": "93df6e2816e1ccbf818c",
+      "parserVersion": "capclair-supaip-parser-2.0.2"
     },
     {
       "supAip": "149/26",
@@ -241,8 +241,8 @@
       "mappedGeometryCount": 0,
       "declaredZoneCount": 2,
       "missingVerticalCount": 0,
-      "sourceFingerprint": "91d490ccdb19239f5d8c",
-      "parserVersion": "capclair-supaip-parser-2.0.1"
+      "sourceFingerprint": "bd0fdd8b261b3dfad5b7",
+      "parserVersion": "capclair-supaip-parser-2.0.2"
     },
     {
       "supAip": "148/26",
@@ -256,8 +256,8 @@
       "mappedGeometryCount": 0,
       "declaredZoneCount": 1,
       "missingVerticalCount": 0,
-      "sourceFingerprint": "dccb5d21f1b0526407e0",
-      "parserVersion": "capclair-supaip-parser-2.0.1"
+      "sourceFingerprint": "a4f9d86e0b7d978ac88b",
+      "parserVersion": "capclair-supaip-parser-2.0.2"
     },
     {
       "supAip": "147/25",
@@ -271,8 +271,8 @@
       "mappedGeometryCount": 0,
       "declaredZoneCount": 2,
       "missingVerticalCount": 0,
-      "sourceFingerprint": "8bf963176eabcab251e4",
-      "parserVersion": "capclair-supaip-parser-2.0.1"
+      "sourceFingerprint": "86745d08fa64349ab1f7",
+      "parserVersion": "capclair-supaip-parser-2.0.2"
     },
     {
       "supAip": "146/26",
@@ -286,8 +286,8 @@
       "mappedGeometryCount": 12,
       "declaredZoneCount": 12,
       "missingVerticalCount": 0,
-      "sourceFingerprint": "ccc2ecb9205102aa825e",
-      "parserVersion": "capclair-supaip-parser-2.0.1"
+      "sourceFingerprint": "6d6ff2f423320041313e",
+      "parserVersion": "capclair-supaip-parser-2.0.2"
     },
     {
       "supAip": "144/26",
@@ -301,8 +301,8 @@
       "mappedGeometryCount": 3,
       "declaredZoneCount": 3,
       "missingVerticalCount": 0,
-      "sourceFingerprint": "1349d009ac0e6e675c1e",
-      "parserVersion": "capclair-supaip-parser-2.0.1"
+      "sourceFingerprint": "3d6f0ef64f71a1a972d4",
+      "parserVersion": "capclair-supaip-parser-2.0.2"
     },
     {
       "supAip": "142/26",
@@ -316,8 +316,8 @@
       "mappedGeometryCount": 7,
       "declaredZoneCount": 7,
       "missingVerticalCount": 0,
-      "sourceFingerprint": "73a4be73dab5d3033974",
-      "parserVersion": "capclair-supaip-parser-2.0.1"
+      "sourceFingerprint": "c3f4923e69e6eb394209",
+      "parserVersion": "capclair-supaip-parser-2.0.2"
     },
     {
       "supAip": "141/26",
@@ -331,8 +331,8 @@
       "mappedGeometryCount": 0,
       "declaredZoneCount": 3,
       "missingVerticalCount": 0,
-      "sourceFingerprint": "c1d25529376e77a94029",
-      "parserVersion": "capclair-supaip-parser-2.0.1"
+      "sourceFingerprint": "b17a465db884d935e0fa",
+      "parserVersion": "capclair-supaip-parser-2.0.2"
     },
     {
       "supAip": "140/26",
@@ -346,8 +346,8 @@
       "mappedGeometryCount": 0,
       "declaredZoneCount": 3,
       "missingVerticalCount": 0,
-      "sourceFingerprint": "199db05595b6c44886b8",
-      "parserVersion": "capclair-supaip-parser-2.0.1"
+      "sourceFingerprint": "d8dbed719aee6d1e3001",
+      "parserVersion": "capclair-supaip-parser-2.0.2"
     },
     {
       "supAip": "139/26",
@@ -361,8 +361,8 @@
       "mappedGeometryCount": 0,
       "declaredZoneCount": 3,
       "missingVerticalCount": 0,
-      "sourceFingerprint": "bb3d84551e20259e886b",
-      "parserVersion": "capclair-supaip-parser-2.0.1"
+      "sourceFingerprint": "99ef1fb409aaaacc18d2",
+      "parserVersion": "capclair-supaip-parser-2.0.2"
     },
     {
       "supAip": "138/25",
@@ -376,8 +376,8 @@
       "mappedGeometryCount": 0,
       "declaredZoneCount": 4,
       "missingVerticalCount": 0,
-      "sourceFingerprint": "96a430d0bec670950cf2",
-      "parserVersion": "capclair-supaip-parser-2.0.1"
+      "sourceFingerprint": "3600ca61c202e089d7e1",
+      "parserVersion": "capclair-supaip-parser-2.0.2"
     },
     {
       "supAip": "135/26",
@@ -391,8 +391,8 @@
       "mappedGeometryCount": 0,
       "declaredZoneCount": 1,
       "missingVerticalCount": 0,
-      "sourceFingerprint": "bc15ee419d4d30b6e4d7",
-      "parserVersion": "capclair-supaip-parser-2.0.1"
+      "sourceFingerprint": "87c34f85a442f6d1cb9e",
+      "parserVersion": "capclair-supaip-parser-2.0.2"
     },
     {
       "supAip": "128/26",
@@ -406,8 +406,8 @@
       "mappedGeometryCount": 0,
       "declaredZoneCount": null,
       "missingVerticalCount": 0,
-      "sourceFingerprint": "f5257f5844dcc0599fc1",
-      "parserVersion": "capclair-supaip-parser-2.0.1"
+      "sourceFingerprint": "88a5a2ad59f0d71dfe5c",
+      "parserVersion": "capclair-supaip-parser-2.0.2"
     },
     {
       "supAip": "109/26",
@@ -421,8 +421,8 @@
       "mappedGeometryCount": 2,
       "declaredZoneCount": 2,
       "missingVerticalCount": 0,
-      "sourceFingerprint": "c9c4fff4f874bd397c4b",
-      "parserVersion": "capclair-supaip-parser-2.0.1"
+      "sourceFingerprint": "c6b7814d0b5b3e37557e",
+      "parserVersion": "capclair-supaip-parser-2.0.2"
     },
     {
       "supAip": "094/25",
@@ -436,8 +436,8 @@
       "mappedGeometryCount": 0,
       "declaredZoneCount": 4,
       "missingVerticalCount": 0,
-      "sourceFingerprint": "46eae12549f92ec1baea",
-      "parserVersion": "capclair-supaip-parser-2.0.1"
+      "sourceFingerprint": "3b3129cc8731efadae42",
+      "parserVersion": "capclair-supaip-parser-2.0.2"
     },
     {
       "supAip": "077/26",
@@ -451,8 +451,8 @@
       "mappedGeometryCount": 12,
       "declaredZoneCount": 7,
       "missingVerticalCount": 1,
-      "sourceFingerprint": "ccffcc7937eba0100e71",
-      "parserVersion": "capclair-supaip-parser-2.0.1"
+      "sourceFingerprint": "2f7e88ffd5c0792abb96",
+      "parserVersion": "capclair-supaip-parser-2.0.2"
     },
     {
       "supAip": "075/26",
@@ -466,8 +466,8 @@
       "mappedGeometryCount": 0,
       "declaredZoneCount": null,
       "missingVerticalCount": 0,
-      "sourceFingerprint": "9db3400935f799e7819e",
-      "parserVersion": "capclair-supaip-parser-2.0.1"
+      "sourceFingerprint": "d28d13bccb63db18a00c",
+      "parserVersion": "capclair-supaip-parser-2.0.2"
     },
     {
       "supAip": "070/26",
@@ -481,8 +481,8 @@
       "mappedGeometryCount": 3,
       "declaredZoneCount": 5,
       "missingVerticalCount": 0,
-      "sourceFingerprint": "bf727391701bf47eb55d",
-      "parserVersion": "capclair-supaip-parser-2.0.1"
+      "sourceFingerprint": "c257eddf258e7e4782d9",
+      "parserVersion": "capclair-supaip-parser-2.0.2"
     },
     {
       "supAip": "065/25",
@@ -496,8 +496,8 @@
       "mappedGeometryCount": 0,
       "declaredZoneCount": 2,
       "missingVerticalCount": 0,
-      "sourceFingerprint": "0e6d1c2d843b23d29863",
-      "parserVersion": "capclair-supaip-parser-2.0.1"
+      "sourceFingerprint": "73b25cbbec204af804c3",
+      "parserVersion": "capclair-supaip-parser-2.0.2"
     },
     {
       "supAip": "062/26",
@@ -511,8 +511,8 @@
       "mappedGeometryCount": 0,
       "declaredZoneCount": 3,
       "missingVerticalCount": 0,
-      "sourceFingerprint": "43c4c879f695315037f6",
-      "parserVersion": "capclair-supaip-parser-2.0.1"
+      "sourceFingerprint": "a6ee6c8e5df1779bf0de",
+      "parserVersion": "capclair-supaip-parser-2.0.2"
     },
     {
       "supAip": "060/26",
@@ -526,8 +526,8 @@
       "mappedGeometryCount": 1,
       "declaredZoneCount": 1,
       "missingVerticalCount": 0,
-      "sourceFingerprint": "9e95015509c12c80a36a",
-      "parserVersion": "capclair-supaip-parser-2.0.1"
+      "sourceFingerprint": "2567e6737cc1d5a942a5",
+      "parserVersion": "capclair-supaip-parser-2.0.2"
     },
     {
       "supAip": "055/26",
@@ -541,8 +541,8 @@
       "mappedGeometryCount": 97,
       "declaredZoneCount": 99,
       "missingVerticalCount": 0,
-      "sourceFingerprint": "53024e978e4ccc22e29d",
-      "parserVersion": "capclair-supaip-parser-2.0.1"
+      "sourceFingerprint": "e15ce308159d5dc21c46",
+      "parserVersion": "capclair-supaip-parser-2.0.2"
     },
     {
       "supAip": "053/26",
@@ -556,8 +556,8 @@
       "mappedGeometryCount": 94,
       "declaredZoneCount": 99,
       "missingVerticalCount": 0,
-      "sourceFingerprint": "5888700e3e93f2ae0528",
-      "parserVersion": "capclair-supaip-parser-2.0.1"
+      "sourceFingerprint": "12246e6988fde8166d89",
+      "parserVersion": "capclair-supaip-parser-2.0.2"
     },
     {
       "supAip": "052/26",
@@ -571,8 +571,8 @@
       "mappedGeometryCount": 15,
       "declaredZoneCount": 16,
       "missingVerticalCount": 0,
-      "sourceFingerprint": "5dff881087abc4078ac4",
-      "parserVersion": "capclair-supaip-parser-2.0.1"
+      "sourceFingerprint": "beb5a4199adfb26b0b7e",
+      "parserVersion": "capclair-supaip-parser-2.0.2"
     },
     {
       "supAip": "047/26",
@@ -586,8 +586,8 @@
       "mappedGeometryCount": 1,
       "declaredZoneCount": 2,
       "missingVerticalCount": 0,
-      "sourceFingerprint": "888715746e6b5163123e",
-      "parserVersion": "capclair-supaip-parser-2.0.1"
+      "sourceFingerprint": "7726fb0ca09c85005e15",
+      "parserVersion": "capclair-supaip-parser-2.0.2"
     },
     {
       "supAip": "042/26",
@@ -601,8 +601,8 @@
       "mappedGeometryCount": 0,
       "declaredZoneCount": 3,
       "missingVerticalCount": 0,
-      "sourceFingerprint": "abbd774e5d20fc033994",
-      "parserVersion": "capclair-supaip-parser-2.0.1"
+      "sourceFingerprint": "0e4760ef910bf20604f3",
+      "parserVersion": "capclair-supaip-parser-2.0.2"
     },
     {
       "supAip": "041/26",
@@ -616,8 +616,8 @@
       "mappedGeometryCount": 2,
       "declaredZoneCount": 2,
       "missingVerticalCount": 0,
-      "sourceFingerprint": "1d7698126e0fa46944d3",
-      "parserVersion": "capclair-supaip-parser-2.0.1"
+      "sourceFingerprint": "848e3c9ccd6e48808ea3",
+      "parserVersion": "capclair-supaip-parser-2.0.2"
     },
     {
       "supAip": "022/26",
@@ -631,8 +631,8 @@
       "mappedGeometryCount": 1,
       "declaredZoneCount": 1,
       "missingVerticalCount": 0,
-      "sourceFingerprint": "f2720300546546f5f9c6",
-      "parserVersion": "capclair-supaip-parser-2.0.1"
+      "sourceFingerprint": "975e6b4547707328c7b6",
+      "parserVersion": "capclair-supaip-parser-2.0.2"
     },
     {
       "supAip": "021/26",
@@ -646,8 +646,8 @@
       "mappedGeometryCount": 1,
       "declaredZoneCount": 1,
       "missingVerticalCount": 1,
-      "sourceFingerprint": "16b3180feadcbc66be59",
-      "parserVersion": "capclair-supaip-parser-2.0.1"
+      "sourceFingerprint": "20fdd5141af9ea0dff34",
+      "parserVersion": "capclair-supaip-parser-2.0.2"
     },
     {
       "supAip": "018/26",
@@ -655,14 +655,14 @@
       "validFrom": "2026-03-03",
       "validTo": "2026-12-31",
       "sourcePdf": "https://www.sia.aviation-civile.gouv.fr/documents/download/f/d/15027163/",
-      "reason": "",
+      "reason": "1 zone(s) sans limites verticales extraites.",
       "partial": true,
-      "expectedNamedGeometryCount": 1,
-      "mappedGeometryCount": 1,
+      "expectedNamedGeometryCount": 2,
+      "mappedGeometryCount": 2,
       "declaredZoneCount": 1,
-      "missingVerticalCount": 0,
-      "sourceFingerprint": "7448cb1ced6d0a5c4a2a",
-      "parserVersion": "capclair-supaip-parser-2.0.1"
+      "missingVerticalCount": 1,
+      "sourceFingerprint": "8b0223342fc029eb692c",
+      "parserVersion": "capclair-supaip-parser-2.0.2"
     },
     {
       "supAip": "017/26",
@@ -676,8 +676,8 @@
       "mappedGeometryCount": 0,
       "declaredZoneCount": null,
       "missingVerticalCount": 0,
-      "sourceFingerprint": "94c32a330918260c5528",
-      "parserVersion": "capclair-supaip-parser-2.0.1"
+      "sourceFingerprint": "8e62b73edc1cbfe2749a",
+      "parserVersion": "capclair-supaip-parser-2.0.2"
     },
     {
       "supAip": "013/26",
@@ -691,8 +691,8 @@
       "mappedGeometryCount": 0,
       "declaredZoneCount": 1,
       "missingVerticalCount": 0,
-      "sourceFingerprint": "5b06acce30e9772c5943",
-      "parserVersion": "capclair-supaip-parser-2.0.1"
+      "sourceFingerprint": "1310cb0245f64ab2485a",
+      "parserVersion": "capclair-supaip-parser-2.0.2"
     },
     {
       "supAip": "005/26",
@@ -706,8 +706,8 @@
       "mappedGeometryCount": 1,
       "declaredZoneCount": 1,
       "missingVerticalCount": 0,
-      "sourceFingerprint": "51b4f11fd53e9bee500b",
-      "parserVersion": "capclair-supaip-parser-2.0.1"
+      "sourceFingerprint": "3d4b15ae9771bb3ae1fc",
+      "parserVersion": "capclair-supaip-parser-2.0.2"
     }
   ]
 }
