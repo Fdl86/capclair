@@ -738,7 +738,7 @@
 .map-layer-toggle .map-overlay-toggle.mode-all.active { background: #FF9B4A; }
 @media (max-width: 520px) { .map-layer-toggle .map-overlay-toggle em { display: none; } }
 
-/* WEB13.27.0 - fraîcheur SUP AIP */
+/* WEB13.27.1 - fraîcheur SUP AIP */
 .supaip-beta-notice.stale:not(.error) {
   border-color: rgba(255, 146, 69, 0.76);
   background: rgba(55, 24, 5, 0.9);

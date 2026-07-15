@@ -177,10 +177,12 @@ export function MoreScreen({
                     <div><dt>SUP partiels</dt><dd>{supAipDatasetStatus.partialPublicationCount}</dd></div>
                     <div><dt>SUP non cartographiés</dt><dd>{supAipDatasetStatus.completeUnmappedPublicationCount}</dd></div>
                     <div><dt>Verticales manquantes</dt><dd>{supAipDatasetStatus.missingVerticalFeatureCount ?? 0}</dd></div>
+                    {(supAipDatasetStatus.safetyFallbackPublicationCount ?? 0) > 0 && <div><dt>Replis de sécurité</dt><dd>{supAipDatasetStatus.safetyFallbackPublicationCount}</dd></div>}
                   </dl>
                   {supAipDatasetStatus.mode === 'bootstrap' && <p className="supaip-dataset-alert">Le premier lancement du workflow GitHub est nécessaire pour remplacer la base initiale par la couverture automatique.</p>}
                   {(supAipDatasetStatus.completeUnmappedPublicationCount > 0 || supAipDatasetStatus.partialPublicationCount > 0) && <p className="supaip-dataset-alert">Les publications incomplètes restent signalées. Elles ne sont jamais considérées comme absentes: consulter leur PDF officiel avant le vol.</p>}
                   {(supAipDatasetStatus.missingVerticalFeatureCount ?? 0) > 0 && <p className="supaip-dataset-alert">Certaines zones n'ont pas de limites verticales extraites. La fiche l'indique explicitement et renvoie vers le PDF SIA.</p>}
+                  {(supAipDatasetStatus.safetyFallbackPublicationCount ?? 0) > 0 && <p className="supaip-dataset-alert">Une ancienne géométrie valide a été conservée après une régression complète du parseur. Le PDF SIA reste la référence.</p>}
                 </>
               ) : <p>Lecture du statut...</p>}
               <a href="https://www.sia.aviation-civile.gouv.fr/documents/supaip/aip/id/6" target="_blank" rel="noreferrer">Ouvrir la liste officielle SIA</a>

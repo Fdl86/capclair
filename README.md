@@ -1,8 +1,19 @@
-# CAP CLAIR WEB13.27.0 - SUP AIP PARSER V2 BETA
+# CAP CLAIR WEB13.27.1 - SUP AIP TRA HOTFIX BETA
 
 CAP CLAIR est une application VFR mobile-first en Vite, React, TypeScript et OpenLayers, déployée comme PWA sur Cloudflare Pages.
 
 Cette livraison remplace le premier extracteur par un Parser V2 layout-aware, tout en conservant l'actualisation automatique gratuite des SUP AIP Métropole depuis les publications officielles du SIA. Elle ne contient aucun service Android natif, Capacitor, plugin natif, signature APK ou workflow Android.
+
+
+## WEB13.27.1 - SUP AIP TRA HOTFIX BETA
+
+- correction des codes TRA et TSA compacts comme `TRA90NL`, `TRA90NH` et `TRA90NLZ` ;
+- lecture des tableaux SIA à deux colonnes lorsque les deux noms de zones sont réunis dans le même bloc de titre ;
+- restauration du SUP AIP 023/26 avec les deux zones `TRA90NL` et `TRA90NH` ;
+- limites verticales associées correctement : `FL195 - FL275` et `FL305 - FL335` ;
+- exclusion des FBZ utilisées uniquement pour le dépôt de plan de vol afin de ne pas les afficher comme des zones opérationnelles ;
+- ajout de deux tests de non-régression dédiés à ce format ;
+- aucun filtrage vertical : les TRA restent visibles sur la route même si elles sont situées très au-dessus de l'altitude prévue.
 
 ## WEB13.27.0 - SUP AIP PARSER V2 BETA
 
@@ -176,7 +187,7 @@ La couche est un prototype de validation d'interface et de géométrie. Elle n'e
 2. Vider le dossier local en conservant uniquement `.git`.
 3. Copier le contenu complet du ZIP dans le dossier.
 4. Commit et push via GitHub Desktop sur `main`.
-5. Vérifier `WEB13.27.0` dans la chip et `CAP CLAIR WEB13.27.0 - SUP AIP PARSER V2 BETA` dans le titre de l'onglet.
+5. Vérifier `WEB13.27.1` dans la chip et `CAP CLAIR WEB13.27.1 - SUP AIP TRA HOTFIX BETA` dans le titre de l'onglet.
 
 Commit recommandé :
 

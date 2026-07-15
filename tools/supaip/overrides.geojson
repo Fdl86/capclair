@@ -1067,6 +1067,178 @@
           ]
         ]
       }
+    },
+    {
+      "type": "Feature",
+      "id": "023-26-tra90nl",
+      "properties": {
+        "beta": true,
+        "supAip": "023/26",
+        "title": "Création de deux zones réservées temporaires (TRA), en UIR, TRA90NL et TRA90NH, et FBZ associées",
+        "validFrom": "2026-03-19T00:00:00Z",
+        "validTo": "2027-03-17T23:59:59Z",
+        "activationMode": "notam",
+        "activationText": "Du 19 mars 2026 à 0000 au 17 mars 2027 à 2359 - TRA90NL et TRA90NH activables H24 selon les modalités définies dans un protocole expérimental spécifique à l'exploitation de ces TRA et des espaces associés.",
+        "verticalLimitsExtracted": true,
+        "verticalLimitNotice": null,
+        "sourcePdf": "https://www.sia.aviation-civile.gouv.fr/media/store/documents/file/l/f/lf_sup_a_2026_023_fr.pdf",
+        "sourcePage": "https://www.sia.aviation-civile.gouv.fr/documents/supaip/aip/id/6",
+        "sourcePageNumber": 2,
+        "dataScope": "manual-override",
+        "geometrySource": "manual-override",
+        "geometryConfidence": "high",
+        "geometryWarnings": [
+          "Géométrie officielle de secours intégrée pour éviter toute disparition lors d’une régression du parseur."
+        ],
+        "parserVersion": "manual-override-023-26",
+        "sourceFingerprint": "manual-override",
+        "id": "023-26-tra90nl",
+        "name": "TRA90NL",
+        "zoneType": "TRA",
+        "lowerLimit": "FL 195",
+        "upperLimit": "FL 275"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -1.055,
+              47.2558333
+            ],
+            [
+              -0.9105556,
+              47.2625
+            ],
+            [
+              0.2769444,
+              47.2922222
+            ],
+            [
+              0.3222222,
+              47.0833333
+            ],
+            [
+              0.1905556,
+              46.6338889
+            ],
+            [
+              0.1005556,
+              46.5
+            ],
+            [
+              -0.57,
+              46.5
+            ],
+            [
+              -0.5805556,
+              46.6666667
+            ],
+            [
+              -0.805,
+              46.6666667
+            ],
+            [
+              -1.2458333,
+              47.0063889
+            ],
+            [
+              -1.2405556,
+              47.1030556
+            ],
+            [
+              -1.055,
+              47.2558333
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "023-26-tra90nh",
+      "properties": {
+        "beta": true,
+        "supAip": "023/26",
+        "title": "Création de deux zones réservées temporaires (TRA), en UIR, TRA90NL et TRA90NH, et FBZ associées",
+        "validFrom": "2026-03-19T00:00:00Z",
+        "validTo": "2027-03-17T23:59:59Z",
+        "activationMode": "notam",
+        "activationText": "Du 19 mars 2026 à 0000 au 17 mars 2027 à 2359 - TRA90NL et TRA90NH activables H24 selon les modalités définies dans un protocole expérimental spécifique à l'exploitation de ces TRA et des espaces associés.",
+        "verticalLimitsExtracted": true,
+        "verticalLimitNotice": null,
+        "sourcePdf": "https://www.sia.aviation-civile.gouv.fr/media/store/documents/file/l/f/lf_sup_a_2026_023_fr.pdf",
+        "sourcePage": "https://www.sia.aviation-civile.gouv.fr/documents/supaip/aip/id/6",
+        "sourcePageNumber": 2,
+        "dataScope": "manual-override",
+        "geometrySource": "manual-override",
+        "geometryConfidence": "high",
+        "geometryWarnings": [
+          "Géométrie officielle de secours intégrée pour éviter toute disparition lors d’une régression du parseur."
+        ],
+        "parserVersion": "manual-override-023-26",
+        "sourceFingerprint": "manual-override",
+        "id": "023-26-tra90nh",
+        "name": "TRA90NH",
+        "zoneType": "TRA",
+        "lowerLimit": "FL 305",
+        "upperLimit": "FL 335"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -1.055,
+              47.2558333
+            ],
+            [
+              -0.9105556,
+              47.2625
+            ],
+            [
+              0.2769444,
+              47.2922222
+            ],
+            [
+              0.3222222,
+              47.0833333
+            ],
+            [
+              0.1905556,
+              46.6338889
+            ],
+            [
+              0.1005556,
+              46.5
+            ],
+            [
+              -0.57,
+              46.5
+            ],
+            [
+              -0.5922222,
+              46.5
+            ],
+            [
+              -0.805,
+              46.6666667
+            ],
+            [
+              -1.2458333,
+              47.0063889
+            ],
+            [
+              -1.2405556,
+              47.1030556
+            ],
+            [
+              -1.055,
+              47.2558333
+            ]
+          ]
+        ]
+      }
     }
   ]
 }

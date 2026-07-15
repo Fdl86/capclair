@@ -32,15 +32,15 @@ from requests.adapters import HTTPAdapter
 from urllib3.util.retry import Retry
 
 SOURCE_URL = "https://www.sia.aviation-civile.gouv.fr/documents/supaip/aip/id/6"
-PARSER_VERSION = "capclair-supaip-parser-2.0.0"
-USER_AGENT = "CAP-CLAIR-SUPAIP-BETA/2.0 (+automatic SIA public-document reader)"
+PARSER_VERSION = "capclair-supaip-parser-2.0.1"
+USER_AGENT = "CAP-CLAIR-SUPAIP-BETA/2.0.1 (+automatic SIA public-document reader)"
 ZONE_TITLE_RE = re.compile(
     r"\b(?:ZRT|ZDT|ZIT|TRA|TSA|zone(?:s)?\s+(?:r[eé]glement[eé]e|dangereuse|interdite|r[eé]serv[eé]e)(?:s)?\s+temporaire(?:s)?|CTR\s+temporaire|TMA\s+temporaire)\b",
     re.IGNORECASE,
 )
 ZONE_TOKEN_RE = re.compile(r"\b(ZRT|ZDT|ZIT|TRA|TSA|CTR|TMA|RMZ|TMZ|FBZ)\b", re.IGNORECASE)
 ZONE_START_RE = re.compile(
-    r"(?<![A-Z0-9/])(?:ZRT/ZDT|ZRT|ZDT|ZIT|TRA|TSA|CTR(?:\s+TEMPORAIRE)?|TMA(?:\s+TEMPORAIRE)?|RMZ|TMZ|FBZ)\b",
+    r"(?<![A-Z0-9/])(?:ZRT/ZDT\b|ZRT\b|ZDT\b|ZIT\b|TRA(?=\b|\d)|TSA(?=\b|\d)|CTR(?:\s+TEMPORAIRE)?\b|TMA(?:\s+TEMPORAIRE)?\b|RMZ\b|TMZ\b|FBZ\b)",
     re.IGNORECASE,
 )
 VALIDITY_RE = re.compile(r"Valide\s+du\s+(\d{4}-\d{2}-\d{2})\s+au\s+(\d{4}-\d{2}-\d{2})", re.IGNORECASE)
@@ -81,6 +81,10 @@ EXTERNAL_BOUNDARY_RE = re.compile(
     re.IGNORECASE,
 )
 EXCLUSION_RE = re.compile(r"\b(?:[àa]\s+l['’]exclusion|hors\s+la\s+partie|se\s+substitue)\b", re.IGNORECASE)
+FBZ_SECTION_RE = re.compile(
+    r"(?:ZONES?\s+TAMPON\s+ASSOCI[EÉ]ES?|FBZ\s*-\s*FLIGHT\s+BUFFER\s+ZONE)",
+    re.IGNORECASE,
+)
 
 
 @dataclass(frozen=True)
@@ -483,7 +487,13 @@ def leading_zone_name(value: str) -> str:
 
 
 def starts_with_zone(value: str) -> bool:
-    return bool(re.match(r"^\s*(?:ZRT/ZDT|ZRT|ZDT|ZIT|TRA|TSA|CTR|TMA|RMZ|TMZ|FBZ)\b", clean_space(value), re.IGNORECASE))
+    return bool(
+        re.match(
+            r"^\s*(?:ZRT/ZDT\b|ZRT\b|ZDT\b|ZIT\b|TRA(?=\b|\d)|TSA(?=\b|\d)|CTR\b|TMA\b|RMZ\b|TMZ\b|FBZ\b)",
+            clean_space(value),
+            re.IGNORECASE,
+        )
+    )
 
 
 def is_zone_heading_block(block: PdfBlock) -> bool:
@@ -498,7 +508,11 @@ def is_zone_heading_block(block: PdfBlock) -> bool:
 
 
 def zone_type_from_name(name: str, title: str) -> str:
-    match = re.match(r"^\s*(ZRT/ZDT|ZRT|ZDT|ZIT|TRA|TSA|CTR|TMA|RMZ|TMZ|FBZ)\b", name, re.IGNORECASE)
+    match = re.match(
+        r"^\s*(ZRT/ZDT|ZRT|ZDT|ZIT|TRA(?=\b|\d)|TSA(?=\b|\d)|CTR|TMA|RMZ|TMZ|FBZ)",
+        name,
+        re.IGNORECASE,
+    )
     if match:
         return match.group(1).upper()
     match = ZONE_TOKEN_RE.search(title)
@@ -965,7 +979,10 @@ def is_spatial_document(entry: ListingEntry, document: PdfDocumentLayout) -> boo
 def parse_spatial_document(entry: ListingEntry, document: PdfDocumentLayout) -> ParseResult:
     layout_zones: list[ParsedZone] = []
     grid_count = 0
+    in_fbz_section = False
     for page in document.pages:
+        if in_fbz_section:
+            continue
         self_zones = self_contained_zones(page)
         grid_page_zones = grid_zones(page)
         row_zones = row_table_zones(page)
@@ -974,7 +991,12 @@ def parse_spatial_document(entry: ListingEntry, document: PdfDocumentLayout) -> 
         if not grid_page_zones:
             layout_zones.extend(row_zones)
         grid_count += len(grid_page_zones)
-    fallback_zones = text_fallback_zones(document.text, entry.title)
+        page_text = "\n".join(block.text for block in page.blocks)
+        if FBZ_SECTION_RE.search(page_text):
+            in_fbz_section = True
+
+    operational_text = FBZ_SECTION_RE.split(document.text, maxsplit=1)[0]
+    fallback_zones = text_fallback_zones(operational_text, entry.title)
     zones = layout_zones + fallback_zones
     if grid_count == 0:
         zones = select_authoritative_row_zones(document, zones)
@@ -1140,6 +1162,39 @@ def can_reuse_non_spatial(item: dict[str, Any] | None, entry: ListingEntry) -> b
     return bool(item) and not item.get("spatial") and item.get("sourceFingerprint") == entry.fingerprint and item.get("parserVersion") == PARSER_VERSION
 
 
+def preserve_cached_features_on_complete_regression(
+    entry: ListingEntry,
+    parsed_features: list[dict[str, Any]],
+    cached_features: list[dict[str, Any]],
+    cached_manifest: dict[str, Any] | None,
+) -> tuple[list[dict[str, Any]], bool]:
+    """Keep a previously mapped publication if a new parser returns zero geometry.
+
+    This guard only applies when the official listing identity is unchanged. It
+    prevents a parser upgrade from making an existing SUP AIP disappear silently.
+    """
+    if parsed_features or not cached_features or not cached_manifest:
+        return parsed_features, False
+    if cached_manifest.get("title") != entry.title or cached_manifest.get("sourcePdf") != entry.pdf_url:
+        return parsed_features, False
+
+    recovered: list[dict[str, Any]] = []
+    for feature in cached_features:
+        feature_copy = copy.deepcopy(feature)
+        properties = feature_copy.setdefault("properties", {})
+        properties["sourceFingerprint"] = entry.fingerprint
+        properties["parserVersion"] = PARSER_VERSION
+        properties["geometrySource"] = "previous-parser-safety-fallback"
+        properties["geometryConfidence"] = "medium"
+        geometry_warnings = list(properties.get("geometryWarnings") or [])
+        warning = "Géométrie conservée depuis la dernière base valide après une régression complète du parseur."
+        if warning not in geometry_warnings:
+            geometry_warnings.append(warning)
+        properties["geometryWarnings"] = geometry_warnings
+        recovered.append(feature_copy)
+    return recovered, True
+
+
 def load_manual_overrides(path: Path) -> dict[str, list[dict[str, Any]]]:
     data = load_json(path, {"features": []})
     groups: dict[str, list[dict[str, Any]]] = {}
@@ -1225,6 +1280,7 @@ def build_dataset(output_dir: Path, override_path: Path, polite_delay: float = 0
     expected_named_total = 0
     missing_vertical_total = 0
     download_failures: list[str] = []
+    safety_fallback_publications = 0
 
     for entry in entries:
         cached_features = previous_features.get(entry.sup_aip, [])
@@ -1279,6 +1335,26 @@ def build_dataset(output_dir: Path, override_path: Path, polite_delay: float = 0
 
         if download_failures:
             continue
+
+        if spatial:
+            parsed_features, used_safety_fallback = preserve_cached_features_on_complete_regression(
+                entry, parsed_features, cached_features, cached_manifest
+            )
+            if used_safety_fallback:
+                safety_fallback_publications += 1
+                warnings.append(
+                    "Régression complète du parseur détectée: dernière géométrie valide conservée par sécurité."
+                )
+                expected_named_count = max(
+                    expected_named_count,
+                    int((cached_manifest or {}).get("expectedNamedGeometryCount") or len(parsed_features)),
+                )
+                missing_vertical_count = sum(
+                    1
+                    for feature in parsed_features
+                    if not feature.get("properties", {}).get("verticalLimitsExtracted", False)
+                )
+                previous_partial = True
 
         if not spatial:
             manifest.append({
@@ -1375,7 +1451,7 @@ def build_dataset(output_dir: Path, override_path: Path, polite_delay: float = 0
     generated_at = datetime.now(timezone.utc).replace(microsecond=0).isoformat().replace("+00:00", "Z")
     collection = {
         "type": "FeatureCollection",
-        "name": "CAP CLAIR SUP AIP AUTO BETA - Parser V2",
+        "name": "CAP CLAIR SUP AIP AUTO BETA - Parser V2.1",
         "generatedAt": generated_at,
         "source": "SIA France - liste et PDF officiels SUP AIP Métropole",
         "sourceUrl": SOURCE_URL,
@@ -1411,8 +1487,9 @@ def build_dataset(output_dir: Path, override_path: Path, polite_delay: float = 0
         "partialPublicationCount": partial_count,
         "reusedPublicationCount": reused_publications,
         "downloadedPublicationCount": downloaded_publications,
+        "safetyFallbackPublicationCount": safety_fallback_publications,
         "staleAfterHours": 36,
-        "message": "Parser V2: toutes les publications SIA listées sont contrôlées. Vérifier le PDF, SOFIA et les NOTAM avant le vol.",
+        "message": "Parser V2.1: toutes les publications SIA listées sont contrôlées. Vérifier le PDF, SOFIA et les NOTAM avant le vol.",
     }
     unmapped_payload = {
         "schemaVersion": 2,

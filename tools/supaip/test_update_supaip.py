@@ -3,6 +3,7 @@ import unittest
 from tools.supaip.update_supaip import (
     ListingEntry,
     PdfBlock,
+    PdfDocumentLayout,
     PdfPageLayout,
     clean_listing_title,
     coordinate_matches,
@@ -11,6 +12,8 @@ from tools.supaip.update_supaip import (
     grid_zones,
     make_unique_feature_id,
     parse_listing,
+    parse_spatial_document,
+    preserve_cached_features_on_complete_regression,
     parse_spatial_pdf,
 )
 
@@ -110,6 +113,106 @@ class SupAipParserTests(unittest.TestCase):
         self.assertEqual(zones[0].name, "ZRT ALPHA")
         self.assertEqual((zones[0].lower_limit, zones[0].upper_limit), ("SFC", "FL 065"))
         self.assertEqual((zones[1].lower_limit, zones[1].upper_limit), ("2500 ft AMSL", "FL 095"))
+
+
+    def test_compact_tra_codes_in_two_column_table(self):
+        page = PdfPageLayout(
+            page_index=1,
+            width=600,
+            height=800,
+            blocks=(
+                PdfBlock(1, 140, 50, 460, 70, "TRA90NL\nTRA90NH"),
+                PdfBlock(1, 90, 90, 220, 110, "LIMITES LATÉRALES"),
+                PdfBlock(1, 370, 90, 500, 110, "LIMITES LATÉRALES"),
+                PdfBlock(1, 90, 115, 250, 250, "47°00'00'' N, 001°00'00'' W\n47°10'00'' N, 001°00'00'' W\n47°00'00'' N, 001°10'00'' W"),
+                PdfBlock(1, 350, 115, 520, 250, "47°00'00'' N, 001°00'00'' W\n47°10'00'' N, 001°00'00'' W\n47°00'00'' N, 001°10'00'' W"),
+                PdfBlock(1, 100, 260, 230, 280, "FL195 / FL275"),
+                PdfBlock(1, 370, 260, 500, 280, "FL305 / FL335"),
+            ),
+        )
+        zones = grid_zones(page)
+        self.assertEqual([zone.name for zone in zones], ["TRA90NL", "TRA90NH"])
+        self.assertEqual((zones[0].lower_limit, zones[0].upper_limit), ("FL 195", "FL 275"))
+        self.assertEqual((zones[1].lower_limit, zones[1].upper_limit), ("FL 305", "FL 335"))
+
+    def test_fbz_pages_are_not_published_as_operational_tra(self):
+        operational_page = PdfPageLayout(
+            page_index=0,
+            width=600,
+            height=800,
+            blocks=(
+                PdfBlock(0, 140, 50, 460, 70, "TRA90NL\nTRA90NH"),
+                PdfBlock(0, 90, 90, 220, 110, "LIMITES LATÉRALES"),
+                PdfBlock(0, 370, 90, 500, 110, "LIMITES LATÉRALES"),
+                PdfBlock(0, 90, 115, 250, 250, "47°00'00'' N, 001°00'00'' W\n47°10'00'' N, 001°00'00'' W\n47°00'00'' N, 001°10'00'' W"),
+                PdfBlock(0, 350, 115, 520, 250, "47°00'00'' N, 001°00'00'' W\n47°10'00'' N, 001°00'00'' W\n47°00'00'' N, 001°10'00'' W"),
+                PdfBlock(0, 100, 260, 230, 280, "FL195 / FL275"),
+                PdfBlock(0, 370, 260, 500, 280, "FL305 / FL335"),
+            ),
+        )
+        fbz_heading_page = PdfPageLayout(
+            page_index=1,
+            width=600,
+            height=800,
+            blocks=(PdfBlock(1, 40, 50, 560, 80, "ZONES TAMPON ASSOCIÉES (FBZ - FLIGHT BUFFER ZONE)"),),
+        )
+        fbz_page = PdfPageLayout(
+            page_index=2,
+            width=600,
+            height=800,
+            blocks=(
+                PdfBlock(2, 40, 50, 200, 300, "TRA90NLZ\n47°00'00'' N, 001°00'00'' W\n47°10'00'' N, 001°00'00'' W\n47°00'00'' N, 001°10'00'' W\nFL195 / FL275"),
+            ),
+        )
+        document = PdfDocumentLayout(
+            text="TRA90NL\nTRA90NH\nZONES TAMPON ASSOCIÉES (FBZ - FLIGHT BUFFER ZONE)\nTRA90NLZ",
+            pages=(operational_page, fbz_heading_page, fbz_page),
+        )
+        entry = ListingEntry("023/26", "Création de deux TRA et FBZ associées", "2026-03-19", "2027-03-17", "https://example.invalid", True, "023")
+        result = parse_spatial_document(entry, document)
+        self.assertEqual({feature["properties"]["name"] for feature in result.features}, {"TRA90NL", "TRA90NH"})
+
+
+    def test_previous_valid_geometry_is_preserved_on_complete_parser_regression(self):
+        entry = ListingEntry(
+            "023/26",
+            "Création de deux TRA",
+            "2026-03-19",
+            "2027-03-17",
+            "https://example.invalid/023.pdf",
+            True,
+            "new-fingerprint",
+        )
+        cached = [{
+            "type": "Feature",
+            "id": "023-26-tra90nl",
+            "properties": {
+                "id": "023-26-tra90nl",
+                "name": "TRA90NL",
+                "supAip": "023/26",
+                "sourceFingerprint": "old",
+                "parserVersion": "old-parser",
+                "geometryWarnings": [],
+                "verticalLimitsExtracted": True,
+                "lowerLimit": "FL 195",
+                "upperLimit": "FL 275",
+            },
+            "geometry": {
+                "type": "Polygon",
+                "coordinates": [[[-1.0, 47.0], [-0.8, 47.0], [-0.9, 46.8], [-1.0, 47.0]]],
+            },
+        }]
+        manifest = {
+            "title": entry.title,
+            "sourcePdf": entry.pdf_url,
+            "expectedNamedGeometryCount": 1,
+        }
+        recovered, used = preserve_cached_features_on_complete_regression(entry, [], cached, manifest)
+        self.assertTrue(used)
+        self.assertEqual(len(recovered), 1)
+        self.assertEqual(recovered[0]["properties"]["sourceFingerprint"], "new-fingerprint")
+        self.assertEqual(recovered[0]["properties"]["geometrySource"], "previous-parser-safety-fallback")
+        self.assertEqual(cached[0]["properties"]["sourceFingerprint"], "old")
 
     def test_duplicate_truncated_zone_names_receive_unique_ids(self):
         used_ids: set[str] = set()

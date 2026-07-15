@@ -22,6 +22,7 @@ export interface SupAipDatasetStatus {
   partialPublicationCount: number;
   reusedPublicationCount: number;
   downloadedPublicationCount: number;
+  safetyFallbackPublicationCount?: number;
   staleAfterHours: number;
   message: string;
 }
