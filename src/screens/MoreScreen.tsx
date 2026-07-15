@@ -1,3 +1,4 @@
+import { useEffect, useState } from 'react';
 import type { ScreenId } from '../app/routes';
 import type { AircraftProfile } from '../domain/aircraft.types';
 import type { SupAipDisplayMode } from '../domain/supaip.types';
@@ -13,6 +14,12 @@ import {
   SUP_AIP_ENDPOINT_MIN_NM,
   type SupAipVisibilitySettings
 } from '../services/supaip/supAipVisibility';
+import {
+  fetchSupAipDatasetStatus,
+  formatSupAipDatasetTimestamp,
+  isSupAipDatasetStale,
+  type SupAipDatasetStatus
+} from '../services/supaip/supAipDataset';
 
 interface MoreScreenProps {
   onNavigate: (screen: ScreenId) => void;
@@ -41,6 +48,20 @@ export function MoreScreen({
   supAipSettings,
   onUpdateSupAipSettings
 }: MoreScreenProps) {
+  const [supAipDatasetStatus, setSupAipDatasetStatus] = useState<SupAipDatasetStatus | null>(null);
+  const [supAipDatasetError, setSupAipDatasetError] = useState(false);
+
+  useEffect(() => {
+    const controller = new AbortController();
+    void fetchSupAipDatasetStatus(controller.signal)
+      .then((status) => {
+        setSupAipDatasetStatus(status);
+        setSupAipDatasetError(false);
+      })
+      .catch(() => setSupAipDatasetError(true));
+    return () => controller.abort();
+  }, []);
+
   return (
     <Page title="Plus" subtitle="Accès rapide aux outils de préparation.">
       <div className="more-grid">
@@ -136,7 +157,31 @@ export function MoreScreen({
               </div>
             </div>
 
-            <p className="supaip-settings-warning">Couverture pilote partielle. Vérifier systématiquement le SIA, SOFIA et les NOTAM avant le vol.</p>
+            <div className={`supaip-dataset-status ${isSupAipDatasetStale(supAipDatasetStatus) ? 'stale' : ''}`}>
+              <div className="supaip-dataset-status-heading">
+                <strong>Mise à jour automatique</strong>
+                <span>{supAipDatasetStatus?.mode === 'automatic' ? 'ACTIVE' : 'À INITIALISER'}</span>
+              </div>
+              {supAipDatasetError ? (
+                <p>Le statut distant est indisponible. La dernière base chargée reste utilisable.</p>
+              ) : supAipDatasetStatus ? (
+                <>
+                  <p>
+                    <b>{supAipDatasetStatus.featureCount}</b> zones cartographiées depuis <b>{supAipDatasetStatus.mappedPublicationCount}</b> publications spatiales.
+                  </p>
+                  <dl>
+                    <div><dt>Base générée</dt><dd>{formatSupAipDatasetTimestamp(supAipDatasetStatus.generatedAt)}</dd></div>
+                    <div><dt>Liste SIA</dt><dd>{formatSupAipDatasetTimestamp(supAipDatasetStatus.sourceUpdatedAt)}</dd></div>
+                    <div><dt>SUP non cartographiés</dt><dd>{supAipDatasetStatus.completeUnmappedPublicationCount}</dd></div>
+                  </dl>
+                  {supAipDatasetStatus.mode === 'bootstrap' && <p className="supaip-dataset-alert">Le premier lancement du workflow GitHub est nécessaire pour remplacer la base initiale par la couverture automatique.</p>}
+                  {supAipDatasetStatus.completeUnmappedPublicationCount > 0 && <p className="supaip-dataset-alert">Ces publications sont signalées et non masquées silencieusement. Consulter la liste officielle du SIA avant le vol.</p>}
+                </>
+              ) : <p>Lecture du statut...</p>}
+              <a href="https://www.sia.aviation-civile.gouv.fr/documents/supaip/aip/id/6" target="_blank" rel="noreferrer">Ouvrir la liste officielle SIA</a>
+            </div>
+
+            <p className="supaip-settings-warning">Surimpression automatique BETA. Vérifier systématiquement le SIA, SOFIA et les NOTAM avant le vol.</p>
           </div>
         </Accordion>
 
@@ -152,7 +197,7 @@ export function MoreScreen({
         </Card>
         <Card className="safety-card">
           <strong>Limites</strong>
-          <p>Prototype non réglementaire. SUP AIP BETA à couverture pilote partielle, pas de NOTAM automatiques et pas de GPS en arrière-plan.</p>
+          <p>Prototype non réglementaire. SUP AIP AUTO BETA avec contrôle obligatoire des publications non cartographiées, pas de NOTAM automatiques et pas de GPS en arrière-plan.</p>
         </Card>
       </div>
     </Page>

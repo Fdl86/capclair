@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "mode": "bootstrap",
+  "beta": true,
+  "generatedAt": "2026-07-14T18:00:00Z",
+  "sourceUpdatedAt": "2026-07-09T00:00:00Z",
+  "sourceUrl": "https://www.sia.aviation-civile.gouv.fr/documents/supaip/aip/id/6",
+  "parserVersion": "bootstrap-manual-1",
+  "listingPublicationCount": 0,
+  "zonalPublicationCount": 3,
+  "mappedPublicationCount": 3,
+  "featureCount": 4,
+  "unmappedPublicationCount": 0,
+  "completeUnmappedPublicationCount": 0,
+  "partialPublicationCount": 0,
+  "reusedPublicationCount": 0,
+  "downloadedPublicationCount": 0,
+  "staleAfterHours": 36,
+  "message": "Base initiale. Lancer une première fois le workflow GitHub Update SUP AIP data pour générer la couverture automatique."
+}

@@ -1,8 +1,24 @@
-# CAP CLAIR WEB13.25.0 - SUP AIP ROUTE BETA
+# CAP CLAIR WEB13.26.0 - SUP AIP AUTO BETA
 
 CAP CLAIR est une application VFR mobile-first en Vite, React, TypeScript et OpenLayers, déployée comme PWA sur Cloudflare Pages.
 
-Cette livraison reprend la base WEB13.21.0 avec import GPX et intègre les évolutions web-compatibles de DEV15.2.4. Elle ne contient aucun service Android natif, Capacitor, plugin natif, signature APK ou workflow Android.
+Cette livraison ajoute l'actualisation automatique gratuite des SUP AIP Métropole depuis les publications officielles du SIA. Elle ne contient aucun service Android natif, Capacitor, plugin natif, signature APK ou workflow Android.
+
+## WEB13.26.0 - SUP AIP AUTO BETA
+
+- workflow GitHub automatique toutes les 6 heures et lancement manuel de contrôle disponible ;
+- lecture de la liste officielle SIA et téléchargement uniquement des publications spatiales nouvelles ou modifiées ;
+- extraction conservatrice des coordonnées contenues dans les PDF et génération GeoJSON ;
+- conservation de la dernière base valide si la source est vide, inaccessible ou si le nombre de zones chute anormalement ;
+- fichier de statut avec date de génération, nombre de publications, nombre de zones et nombre de SUP non cartographiés ;
+- signalement explicite des publications dont la géométrie ne peut pas être reconstruite avec une confiance suffisante ;
+- recharge des données au lancement de la couche, au retour au premier plan et toutes les 30 minutes ;
+- cache PWA `NetworkFirst` pour obtenir la nouvelle base tout en conservant un repli hors ligne ;
+- modes `OFF`, `ROUTE` et `TOUS`, avec distances réglables dans `Plus > SUP AIP` ;
+- aucun SUP AIP n'est jamais masqué selon l'altitude prévue ou GPS ;
+- base initiale de 4 zones incluse jusqu'au premier lancement réussi du workflow.
+
+La génération automatique reste en BETA. Les publications non cartographiées sont indiquées dans l'application et ne sont jamais considérées comme absentes. Le PDF officiel SIA, SOFIA et les NOTAM restent les références avant le vol.
 
 ## WEB13.25.0 - SUP AIP ROUTE BETA
 
@@ -149,12 +165,24 @@ La couche est un prototype de validation d'interface et de géométrie. Elle n'e
 1. Sélectionner la branche web/PWA concernée.
 2. Vider le dossier local en conservant uniquement `.git`.
 3. Copier le contenu complet du ZIP dans le dossier.
-4. Vérifier `WEB13.25.0` dans la chip.
-5. Vérifier `CAP CLAIR WEB13.25.0 - SUP AIP ROUTE BETA` dans le titre de l'onglet.
-6. Commit et push via GitHub Desktop.
+4. Commit et push via GitHub Desktop sur `main`.
+5. Vérifier `WEB13.26.0` dans la chip et `CAP CLAIR WEB13.26.0 - SUP AIP AUTO BETA` dans le titre de l'onglet.
 
 Commit recommandé :
 
 ```text
-main: add SUP AIP route filtering and settings
+main: add automatic SUP AIP updates
 ```
+
+## Activation GitHub Actions - une seule fois
+
+1. Ouvrir le dépôt dans le navigateur sur GitHub.
+2. Aller dans `Settings > Actions > General`.
+3. Dans `Workflow permissions`, sélectionner `Read and write permissions`, puis enregistrer.
+4. Ouvrir l'onglet `Actions` du dépôt.
+5. Sélectionner `Update SUP AIP data`.
+6. Cliquer `Run workflow`, choisir la branche `main`, puis confirmer.
+7. Attendre que le run passe au vert.
+8. GitHub crée alors automatiquement un commit `data: actualisation automatique SUP AIP`, ce qui déclenche le redéploiement Cloudflare Pages.
+
+Après ce premier lancement, le workflow s'exécute seul toutes les 6 heures. Dans `Plus > SUP AIP`, le statut doit passer de `À INITIALISER` à `ACTIVE` après le redéploiement.

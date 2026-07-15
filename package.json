@@ -1,7 +1,7 @@
 {
-  "name": "cap-clair-web13-25-0-sup-aip-route-beta",
+  "name": "cap-clair-web13-26-0-sup-aip-auto-beta",
   "private": true,
-  "version": "0.13.25-0",
+  "version": "0.13.26-0",
   "type": "module",
   "scripts": {
     "dev": "vite",

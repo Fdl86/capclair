@@ -34,6 +34,11 @@ import {
 import { MapControls } from './MapControls';
 import { MapFallbackNotice } from './MapFallbackNotice';
 import { SupAipPopup } from './SupAipPopup';
+import {
+  fetchSupAipDatasetStatus,
+  isSupAipDatasetStale,
+  type SupAipDatasetStatus
+} from '../../services/supaip/supAipDataset';
 import { closestEquivalentRotation, reliableTrackDeg, viewRotationForTrack } from '../../services/map/mapOrientation';
 
 interface OpenLayersMapProps {
@@ -123,6 +128,7 @@ export function OpenLayersMap({
   const [supAipFeatureCount, setSupAipFeatureCount] = useState(0);
   const [supAipVisibleCount, setSupAipVisibleCount] = useState(0);
   const [selectedSupAip, setSelectedSupAip] = useState<SupAipSelection | null>(null);
+  const [supAipDatasetStatus, setSupAipDatasetStatus] = useState<SupAipDatasetStatus | null>(null);
 
   const normalizedSupAipSettings = normalizeSupAipVisibilitySettings(supAipSettings);
   const showSupAip = normalizedSupAipSettings.mode !== 'off';
@@ -248,8 +254,35 @@ export function OpenLayersMap({
 
   useEffect(() => {
     if (!showSupAip) return undefined;
-    const interval = window.setInterval(() => supAipLayerRef.current?.changed(), 60_000);
-    return () => window.clearInterval(interval);
+
+    const refreshDataset = () => {
+      const layer = supAipLayerRef.current;
+      if (!layer) return;
+      void layer.refreshData().catch(() => undefined);
+      void fetchSupAipDatasetStatus()
+        .then(setSupAipDatasetStatus)
+        .catch(() => undefined);
+    };
+    const refreshIfNeeded = () => {
+      const loadedAt = supAipLayerRef.current?.lastLoadedAt();
+      if (!loadedAt || Date.now() - loadedAt > 5 * 60_000) refreshDataset();
+    };
+    const handleVisibility = () => {
+      if (document.visibilityState === 'visible') refreshIfNeeded();
+    };
+
+    refreshIfNeeded();
+    const dataInterval = window.setInterval(refreshDataset, 30 * 60_000);
+    const statusInterval = window.setInterval(() => supAipLayerRef.current?.changed(), 60_000);
+    document.addEventListener('visibilitychange', handleVisibility);
+    window.addEventListener('online', refreshDataset);
+
+    return () => {
+      window.clearInterval(dataInterval);
+      window.clearInterval(statusInterval);
+      document.removeEventListener('visibilitychange', handleVisibility);
+      window.removeEventListener('online', refreshDataset);
+    };
   }, [showSupAip]);
 
   useEffect(() => {
@@ -506,12 +539,14 @@ export function OpenLayersMap({
         recordingDisabled={recordingControlDisabled}
       />
       {showSupAip && (
-        <div className={`supaip-beta-notice ${supAipLoadState === 'error' ? 'error' : ''}`}>
+        <div className={`supaip-beta-notice ${supAipLoadState === 'error' ? 'error' : ''} ${isSupAipDatasetStale(supAipDatasetStatus) ? 'stale' : ''}`}>
           {supAipLoadState === 'error'
-            ? 'SUP AIP BETA - données indisponibles'
-            : normalizedSupAipSettings.mode === 'route'
-              ? `SUP AIP BETA - ROUTE ${normalizedSupAipSettings.routeCorridorNm} NM - ${supAipVisibleCount}/${supAipFeatureCount} zones`
-              : `SUP AIP BETA - TOUS - ${supAipFeatureCount} zones`}
+            ? 'SUP AIP AUTO BETA - dernière base locale conservée'
+            : supAipLoadState === 'loading' && supAipFeatureCount === 0
+              ? 'SUP AIP AUTO BETA - chargement...'
+              : normalizedSupAipSettings.mode === 'route'
+                ? `SUP AIP AUTO BETA - ROUTE ${normalizedSupAipSettings.routeCorridorNm} NM - ${supAipVisibleCount}/${supAipFeatureCount} zones${supAipDatasetStatus?.completeUnmappedPublicationCount ? ` - ${supAipDatasetStatus.completeUnmappedPublicationCount} SUP à vérifier` : ''}`
+                : `SUP AIP AUTO BETA - TOUS - ${supAipFeatureCount} zones${supAipDatasetStatus?.completeUnmappedPublicationCount ? ` - ${supAipDatasetStatus.completeUnmappedPublicationCount} SUP à vérifier` : ''}`}
         </div>
       )}
       {selectedSupAip && <SupAipPopup selection={selectedSupAip} onClose={() => setSelectedSupAip(null)} />}

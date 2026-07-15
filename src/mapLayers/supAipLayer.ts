@@ -7,8 +7,12 @@ import { Fill, Stroke, Style, Text } from 'ol/style';
 import type { SupAipProperties, SupAipSelection, SupAipVisualStatus } from '../domain/supaip.types';
 import { getSupAipVisualStatus } from '../services/supaip/supAipStatus';
 import { isSupAipFeatureVisible } from '../services/supaip/supAipVisibility';
+import { SUP_AIP_DATASET_URL } from '../services/supaip/supAipDataset';
 
-export type SupAipLayer = VectorLayer<VectorSource<Feature<Geometry>>>;
+export type SupAipLayer = VectorLayer<VectorSource<Feature<Geometry>>> & {
+  refreshData: () => Promise<number>;
+  lastLoadedAt: () => number | null;
+};
 
 interface CreateSupAipLayerOptions {
   visible?: boolean;
@@ -70,28 +74,62 @@ export function createSupAipLayer({
   onLoadEnd,
   onLoadError
 }: CreateSupAipLayerOptions = {}): SupAipLayer {
-  const source = new VectorSource<Feature<Geometry>>({
-    url: '/data/supaip-beta.geojson',
-    format: new GeoJSON({ featureProjection: 'EPSG:3857' })
-  });
+  const format = new GeoJSON({ featureProjection: 'EPSG:3857' });
+  const source = new VectorSource<Feature<Geometry>>();
+  let activeRequest = 0;
+  let loadedAt: number | null = null;
 
-  source.on('featuresloadstart', () => onLoadStart?.());
-  source.on('featuresloadend', () => onLoadEnd?.(source.getFeatures().length));
-  source.on('featuresloaderror', () => onLoadError?.());
-
-  return new VectorLayer({
+  const layer = new VectorLayer({
     source,
     visible,
     style: styleFor,
     properties: {
-      name: 'supaip-beta-overlay',
-      capclairLayerType: 'supaip-beta'
+      name: 'supaip-auto-beta-overlay',
+      capclairLayerType: 'supaip-auto-beta'
     },
     renderBuffer: 160,
     updateWhileAnimating: false,
     updateWhileInteracting: false,
     zIndex: 16
-  });
+  }) as SupAipLayer;
+
+  const fetchFeatures = async (url: string, cache: RequestCache) => {
+    const response = await fetch(url, {
+      cache,
+      headers: { Accept: 'application/geo+json, application/json' }
+    });
+    if (!response.ok) throw new Error(`HTTP ${response.status}`);
+    const payload = await response.json();
+    const features = format.readFeatures(payload) as Feature<Geometry>[];
+    if (features.length === 0) throw new Error('Base SUP AIP vide');
+    return features;
+  };
+
+  layer.refreshData = async () => {
+    const requestId = ++activeRequest;
+    onLoadStart?.();
+    try {
+      let features: Feature<Geometry>[];
+      try {
+        features = await fetchFeatures(`${SUP_AIP_DATASET_URL}?v=${Date.now()}`, 'no-store');
+      } catch (networkError) {
+        if (source.getFeatures().length > 0) throw networkError;
+        features = await fetchFeatures('/data/supaip-bootstrap.geojson', 'force-cache');
+      }
+      if (requestId !== activeRequest) return source.getFeatures().length;
+      source.clear(true);
+      source.addFeatures(features);
+      loadedAt = Date.now();
+      layer.changed();
+      onLoadEnd?.(features.length);
+      return features.length;
+    } catch (error) {
+      if (requestId === activeRequest) onLoadError?.();
+      throw error;
+    }
+  };
+  layer.lastLoadedAt = () => loadedAt;
+  return layer;
 }
 
 export function supAipSelectionFromFeature(feature: Feature<Geometry>): SupAipSelection | null {
@@ -117,6 +155,10 @@ export function supAipSelectionFromFeature(feature: Feature<Geometry>): SupAipSe
     sourcePage: properties.sourcePage,
     beta: Boolean(properties.beta),
     dataScope: properties.dataScope,
+    geometrySource: properties.geometrySource,
+    geometryConfidence: properties.geometryConfidence,
+    sourceFingerprint: properties.sourceFingerprint,
+    parserVersion: properties.parserVersion,
     visualStatus: getSupAipVisualStatus(properties)
   };
 }

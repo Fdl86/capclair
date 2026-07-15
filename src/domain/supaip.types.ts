@@ -25,6 +25,10 @@ export interface SupAipProperties {
   sourcePage?: string;
   beta?: boolean;
   dataScope?: string;
+  geometrySource?: 'automatic' | 'manual-override';
+  geometryConfidence?: 'high' | 'medium';
+  sourceFingerprint?: string;
+  parserVersion?: string;
 }
 
 export type SupAipVisualStatus = 'active' | 'conditional' | 'published' | 'upcoming' | 'expired' | 'unknown';

@@ -10,7 +10,7 @@ export default defineConfig({
       manifest: {
         name: 'CAP CLAIR - Navigation VFR',
         short_name: 'CAP CLAIR',
-        description: 'PWA de navigation VFR : planification, couche SUP AIP BETA, log de nav PDF, suivi GPS navigateur, traces locales, import GPX et Replay synchronisé.',
+        description: 'PWA de navigation VFR : planification, couche SUP AIP AUTO BETA, log de nav PDF, suivi GPS navigateur, traces locales, import GPX et Replay synchronisé.',
         theme_color: '#050B12',
         background_color: '#050B12',
         display: 'standalone',
@@ -38,9 +38,21 @@ export default defineConfig({
           '**/airspaceCatalog-*.js',
           '**/TraceReplayScreen-*.js',
           '**/TraceReplayScreen-*.css',
-          '**/pdf-engine-*.js'
+          '**/pdf-engine-*.js',
+          '**/data/supaip-current.geojson',
+          '**/data/supaip-status.json',
+          '**/data/supaip-unmapped.json'
         ],
         runtimeCaching: [
+          {
+            urlPattern: /\/data\/supaip-(?:current\.geojson|status\.json|unmapped\.json)(?:\?.*)?$/,
+            handler: 'NetworkFirst',
+            options: {
+              cacheName: 'capclair-supaip-live-data',
+              networkTimeoutSeconds: 8,
+              expiration: { maxEntries: 6, maxAgeSeconds: 7 * 24 * 60 * 60 }
+            }
+          },
           {
             urlPattern: /\/assets\/airspaceCatalog-.*\.js$/,
             handler: 'CacheFirst',
