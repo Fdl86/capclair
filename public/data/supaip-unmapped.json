@@ -1,8 +1,8 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-07-15T05:25:02Z",
+  "generatedAt": "2026-07-15T08:38:29Z",
   "sourceUrl": "https://www.sia.aviation-civile.gouv.fr/documents/supaip/aip/id/6",
-  "parserVersion": "capclair-supaip-parser-2.0.0",
+  "parserVersion": "capclair-supaip-parser-2.0.1",
   "publications": [
     {
       "supAip": "234/24",
@@ -16,8 +16,8 @@
       "mappedGeometryCount": 0,
       "declaredZoneCount": 2,
       "missingVerticalCount": 0,
-      "sourceFingerprint": "d4519b31e33cb6cef540",
-      "parserVersion": "capclair-supaip-parser-2.0.0"
+      "sourceFingerprint": "8fc44ae331d4383f7045",
+      "parserVersion": "capclair-supaip-parser-2.0.1"
     },
     {
       "supAip": "233/24",
@@ -31,8 +31,8 @@
       "mappedGeometryCount": 0,
       "declaredZoneCount": 1,
       "missingVerticalCount": 0,
-      "sourceFingerprint": "96ff5beffd353061bd3a",
-      "parserVersion": "capclair-supaip-parser-2.0.0"
+      "sourceFingerprint": "7416d94845da0c3c8ea6",
+      "parserVersion": "capclair-supaip-parser-2.0.1"
     },
     {
       "supAip": "211/25",
@@ -46,8 +46,8 @@
       "mappedGeometryCount": 0,
       "declaredZoneCount": 2,
       "missingVerticalCount": 0,
-      "sourceFingerprint": "c34c902bdc2b5ab0bc16",
-      "parserVersion": "capclair-supaip-parser-2.0.0"
+      "sourceFingerprint": "c7e1c24fd7bb754a9061",
+      "parserVersion": "capclair-supaip-parser-2.0.1"
     },
     {
       "supAip": "207/25",
@@ -55,14 +55,14 @@
       "validFrom": "2026-01-22",
       "validTo": "2027-01-21",
       "sourcePdf": "https://www.sia.aviation-civile.gouv.fr/documents/download/f/d/15016226/",
-      "reason": "1 zone(s) cartographiée(s) sans limites verticales extraites. 1 zone(s) sans limites verticales extraites.",
+      "reason": "1 zone(s) sans limites verticales extraites.",
       "partial": true,
       "expectedNamedGeometryCount": 1,
       "mappedGeometryCount": 1,
       "declaredZoneCount": null,
       "missingVerticalCount": 1,
-      "sourceFingerprint": "6ef8e2ef8c12e20e5823",
-      "parserVersion": "capclair-supaip-parser-2.0.0"
+      "sourceFingerprint": "3ba789278dbae3797037",
+      "parserVersion": "capclair-supaip-parser-2.0.1"
     },
     {
       "supAip": "206/25",
@@ -70,14 +70,14 @@
       "validFrom": "2026-01-01",
       "validTo": "2027-12-31",
       "sourcePdf": "https://www.sia.aviation-civile.gouv.fr/documents/download/f/d/15016224/",
-      "reason": "1 zone(s) cartographiée(s) sans limites verticales extraites. 1 zone(s) sans limites verticales extraites.",
+      "reason": "1 zone(s) sans limites verticales extraites.",
       "partial": true,
       "expectedNamedGeometryCount": 1,
       "mappedGeometryCount": 1,
       "declaredZoneCount": 3,
       "missingVerticalCount": 1,
-      "sourceFingerprint": "1ab5193412c40503bfba",
-      "parserVersion": "capclair-supaip-parser-2.0.0"
+      "sourceFingerprint": "a88eac2a3ed7604e553f",
+      "parserVersion": "capclair-supaip-parser-2.0.1"
     },
     {
       "supAip": "192/25",
@@ -91,8 +91,8 @@
       "mappedGeometryCount": 0,
       "declaredZoneCount": 1,
       "missingVerticalCount": 0,
-      "sourceFingerprint": "bc5ec11142948d1c9db3",
-      "parserVersion": "capclair-supaip-parser-2.0.0"
+      "sourceFingerprint": "fe6f6cd6b13003a70997",
+      "parserVersion": "capclair-supaip-parser-2.0.1"
     },
     {
       "supAip": "188/25",
@@ -100,14 +100,14 @@
       "validFrom": "2025-11-13",
       "validTo": "2026-11-10",
       "sourcePdf": "https://www.sia.aviation-civile.gouv.fr/documents/download/f/d/15000061/",
-      "reason": "ZRT CESA COULOIR HOURTIN PLAGE: Exclusion interne non découpée: contour extérieur affiché par prudence. ZRT CESA COULOIR NAUJAC: Exclusion interne non découpée: contour extérieur affiché par prudence.",
+      "reason": "",
       "partial": true,
       "expectedNamedGeometryCount": 6,
       "mappedGeometryCount": 6,
       "declaredZoneCount": 9,
       "missingVerticalCount": 0,
-      "sourceFingerprint": "03b8ca44f3d555b79f21",
-      "parserVersion": "capclair-supaip-parser-2.0.0"
+      "sourceFingerprint": "bdf80522f770a062d5e3",
+      "parserVersion": "capclair-supaip-parser-2.0.1"
     },
     {
       "supAip": "187/25",
@@ -121,8 +121,8 @@
       "mappedGeometryCount": 0,
       "declaredZoneCount": 2,
       "missingVerticalCount": 0,
-      "sourceFingerprint": "24e82c623ecd695ff333",
-      "parserVersion": "capclair-supaip-parser-2.0.0"
+      "sourceFingerprint": "42d69d5b3d94c0d901ba",
+      "parserVersion": "capclair-supaip-parser-2.0.1"
     },
     {
       "supAip": "172/25",
@@ -136,8 +136,8 @@
       "mappedGeometryCount": 0,
       "declaredZoneCount": 4,
       "missingVerticalCount": 0,
-      "sourceFingerprint": "6ab0c412c1d83343d664",
-      "parserVersion": "capclair-supaip-parser-2.0.0"
+      "sourceFingerprint": "e10632e74bc75966c971",
+      "parserVersion": "capclair-supaip-parser-2.0.1"
     },
     {
       "supAip": "167/25",
@@ -145,14 +145,14 @@
       "validFrom": "2025-09-29",
       "validTo": "2026-12-31",
       "sourcePdf": "https://www.sia.aviation-civile.gouv.fr/documents/download/f/d/14983716/",
-      "reason": "ZRT OCHEY: Exclusion interne non découpée: contour extérieur affiché par prudence.",
+      "reason": "",
       "partial": true,
       "expectedNamedGeometryCount": 1,
       "mappedGeometryCount": 1,
       "declaredZoneCount": 1,
       "missingVerticalCount": 0,
-      "sourceFingerprint": "934d352fea0ddf729cbb",
-      "parserVersion": "capclair-supaip-parser-2.0.0"
+      "sourceFingerprint": "4c870b83e69ca99581cb",
+      "parserVersion": "capclair-supaip-parser-2.0.1"
     },
     {
       "supAip": "159/25",
@@ -166,8 +166,8 @@
       "mappedGeometryCount": 0,
       "declaredZoneCount": 3,
       "missingVerticalCount": 0,
-      "sourceFingerprint": "248d704fe8176405f057",
-      "parserVersion": "capclair-supaip-parser-2.0.0"
+      "sourceFingerprint": "29936c35c42d634ef7ac",
+      "parserVersion": "capclair-supaip-parser-2.0.1"
     },
     {
       "supAip": "157/26",
@@ -175,14 +175,14 @@
       "validFrom": "2026-07-25",
       "validTo": "2027-07-24",
       "sourcePdf": "https://www.sia.aviation-civile.gouv.fr/documents/download/f/d/15060798/",
-      "reason": "ZRT DAX ALPHA: Exclusion interne non découpée: contour extérieur affiché par prudence. ZRT DAX BRAVO: Exclusion interne non découpée: contour extérieur affiché par prudence. ZRT SEYRESSE: Exclusion interne non découpée: contour extérieur affiché par prudence. TMA 6 BIARRITZ: limites latérales non extraites. 3/4 géométries nommées extraites.",
+      "reason": "3/4 géométries nommées extraites.",
       "partial": true,
       "expectedNamedGeometryCount": 4,
       "mappedGeometryCount": 3,
       "declaredZoneCount": 3,
       "missingVerticalCount": 0,
-      "sourceFingerprint": "e5e9a0027a8778cb3e91",
-      "parserVersion": "capclair-supaip-parser-2.0.0"
+      "sourceFingerprint": "00f7e99815a30075245b",
+      "parserVersion": "capclair-supaip-parser-2.0.1"
     },
     {
       "supAip": "156/26",
@@ -190,14 +190,14 @@
       "validFrom": "2026-07-24",
       "validTo": "2026-08-01",
       "sourcePdf": "https://www.sia.aviation-civile.gouv.fr/documents/download/f/d/15060796/",
-      "reason": "ZRT CHAMPIONNAT VOL EN PLANEUR: limites latérales non extraites. 0/1 géométries nommées extraites. Aucune géométrie fiable extraite.",
+      "reason": "ZRT CHAMPIONNAT VOL EN PLANEUR: limites latérales non extraites. 0/1 géométries nommées extraites. Aucune géométrie fiable extraite. 0/1 géométries nommées extraites. Aucune géométrie fiable extraite.",
       "partial": false,
       "expectedNamedGeometryCount": 1,
       "mappedGeometryCount": 0,
       "declaredZoneCount": 1,
       "missingVerticalCount": 0,
-      "sourceFingerprint": "96aa83ba0e847e1ecaf5",
-      "parserVersion": "capclair-supaip-parser-2.0.0"
+      "sourceFingerprint": "ed4a26f452618d336451",
+      "parserVersion": "capclair-supaip-parser-2.0.1"
     },
     {
       "supAip": "155/26",
@@ -205,14 +205,29 @@
       "validFrom": "2026-07-26",
       "validTo": "2026-08-01",
       "sourcePdf": "https://www.sia.aviation-civile.gouv.fr/documents/download/f/d/15060794/",
-      "reason": "ZRT CRARA Ardèche: limites latérales non extraites. 0/1 géométries nommées extraites. Aucune géométrie fiable extraite.",
+      "reason": "ZRT CRARA Ardèche: limites latérales non extraites. 0/1 géométries nommées extraites. Aucune géométrie fiable extraite. 0/1 géométries nommées extraites. Aucune géométrie fiable extraite.",
       "partial": false,
       "expectedNamedGeometryCount": 1,
       "mappedGeometryCount": 0,
       "declaredZoneCount": 1,
       "missingVerticalCount": 0,
-      "sourceFingerprint": "d62f1a21cd5460d0b598",
-      "parserVersion": "capclair-supaip-parser-2.0.0"
+      "sourceFingerprint": "c6df592eae03e4958489",
+      "parserVersion": "capclair-supaip-parser-2.0.1"
+    },
+    {
+      "supAip": "150/25",
+      "title": "Création de 2 Zones Réglementées Temporaires (ZRT) dans la région de COGNAC pour l’entrainement LRE REAPER 2025-2026",
+      "validFrom": "2025-09-11",
+      "validTo": "2026-08-05",
+      "sourcePdf": "https://www.sia.aviation-civile.gouv.fr/documents/download/f/d/14967477/",
+      "reason": "",
+      "partial": true,
+      "expectedNamedGeometryCount": 1,
+      "mappedGeometryCount": 1,
+      "declaredZoneCount": 2,
+      "missingVerticalCount": 0,
+      "sourceFingerprint": "fa69766dfe10d7b1d2a7",
+      "parserVersion": "capclair-supaip-parser-2.0.1"
     },
     {
       "supAip": "149/26",
@@ -220,14 +235,14 @@
       "validFrom": "2026-07-09",
       "validTo": "2026-07-09",
       "sourcePdf": "https://www.sia.aviation-civile.gouv.fr/documents/download/f/d/15060780/",
-      "reason": "ZRT ARREAU - COL DU TOURMALET: limites latérales non extraites. ZRT COL DU TOURMALET - GAVARNIE: limites latérales non extraites. 0/2 géométries nommées extraites. Aucune géométrie fiable extraite.",
+      "reason": "ZRT ARREAU - COL DU TOURMALET: limites latérales non extraites. ZRT COL DU TOURMALET - GAVARNIE: limites latérales non extraites. 0/2 géométries nommées extraites. Aucune géométrie fiable extraite. 0/2 géométries nommées extraites. Aucune géométrie fiable extraite.",
       "partial": false,
       "expectedNamedGeometryCount": 2,
       "mappedGeometryCount": 0,
       "declaredZoneCount": 2,
       "missingVerticalCount": 0,
-      "sourceFingerprint": "aaaf8c95c3dc41440f37",
-      "parserVersion": "capclair-supaip-parser-2.0.0"
+      "sourceFingerprint": "91d490ccdb19239f5d8c",
+      "parserVersion": "capclair-supaip-parser-2.0.1"
     },
     {
       "supAip": "148/26",
@@ -235,14 +250,14 @@
       "validFrom": "2026-07-22",
       "validTo": "2026-07-22",
       "sourcePdf": "https://www.sia.aviation-civile.gouv.fr/documents/download/f/d/15060778/",
-      "reason": "ZRT CHAMBÉRY - CHAMBÉRY: limites latérales non extraites. 0/1 géométries nommées extraites. Aucune géométrie fiable extraite.",
+      "reason": "ZRT CHAMBÉRY - CHAMBÉRY: limites latérales non extraites. 0/1 géométries nommées extraites. Aucune géométrie fiable extraite. 0/1 géométries nommées extraites. Aucune géométrie fiable extraite.",
       "partial": false,
       "expectedNamedGeometryCount": 1,
       "mappedGeometryCount": 0,
       "declaredZoneCount": 1,
       "missingVerticalCount": 0,
-      "sourceFingerprint": "667f2e4da828d9a03989",
-      "parserVersion": "capclair-supaip-parser-2.0.0"
+      "sourceFingerprint": "dccb5d21f1b0526407e0",
+      "parserVersion": "capclair-supaip-parser-2.0.1"
     },
     {
       "supAip": "147/25",
@@ -250,14 +265,14 @@
       "validFrom": "2025-09-04",
       "validTo": "2026-11-25",
       "sourcePdf": "https://www.sia.aviation-civile.gouv.fr/documents/download/f/d/14967459/",
-      "reason": "ZRT 'High' Coulommiers: limites latérales non extraites. ZRT 'Low' Coulommiers: limites latérales non extraites. 0/2 géométries nommées extraites. Aucune géométrie fiable extraite.",
+      "reason": "ZRT 'High' Coulommiers: limites latérales non extraites. ZRT 'Low' Coulommiers: limites latérales non extraites. 0/2 géométries nommées extraites. Aucune géométrie fiable extraite. 0/2 géométries nommées extraites. Aucune géométrie fiable extraite.",
       "partial": false,
       "expectedNamedGeometryCount": 2,
       "mappedGeometryCount": 0,
       "declaredZoneCount": 2,
       "missingVerticalCount": 0,
-      "sourceFingerprint": "411d6a260ec8d8c4552d",
-      "parserVersion": "capclair-supaip-parser-2.0.0"
+      "sourceFingerprint": "8bf963176eabcab251e4",
+      "parserVersion": "capclair-supaip-parser-2.0.1"
     },
     {
       "supAip": "146/26",
@@ -265,14 +280,14 @@
       "validFrom": "2026-07-09",
       "validTo": "2027-05-01",
       "sourcePdf": "https://www.sia.aviation-civile.gouv.fr/documents/download/f/d/15060776/",
-      "reason": "ZRT Vald'Yerre: Exclusion interne non découpée: contour extérieur affiché par prudence. ZRT évolution est: Exclusion interne non découpée: contour extérieur affiché par prudence. ZRT Puits Bricy: Exclusion interne non découpée: contour extérieur affiché par prudence. ZRT Corridor NE: Exclusion interne non découpée: contour extérieur affiché par prudence. ZRT Corridor SW1: Exclusion interne non découpée: contour extérieur affiché par prudence. ZRT Corridor SW2: Exclusion interne non découpée: contour extérieur affiché par prudence.",
+      "reason": "",
       "partial": true,
       "expectedNamedGeometryCount": 12,
       "mappedGeometryCount": 12,
       "declaredZoneCount": 12,
       "missingVerticalCount": 0,
-      "sourceFingerprint": "0e72548c124c0d475de1",
-      "parserVersion": "capclair-supaip-parser-2.0.0"
+      "sourceFingerprint": "ccc2ecb9205102aa825e",
+      "parserVersion": "capclair-supaip-parser-2.0.1"
     },
     {
       "supAip": "144/26",
@@ -280,14 +295,14 @@
       "validFrom": "2026-07-10",
       "validTo": "2026-07-18",
       "sourcePdf": "https://www.sia.aviation-civile.gouv.fr/documents/download/f/d/15060772/",
-      "reason": "ZRT 1 CRVVGE: Exclusion interne non découpée: contour extérieur affiché par prudence.",
+      "reason": "",
       "partial": true,
       "expectedNamedGeometryCount": 3,
       "mappedGeometryCount": 3,
       "declaredZoneCount": 3,
       "missingVerticalCount": 0,
-      "sourceFingerprint": "23be71657f929e0dda33",
-      "parserVersion": "capclair-supaip-parser-2.0.0"
+      "sourceFingerprint": "1349d009ac0e6e675c1e",
+      "parserVersion": "capclair-supaip-parser-2.0.1"
     },
     {
       "supAip": "142/26",
@@ -295,14 +310,14 @@
       "validFrom": "2026-07-09",
       "validTo": "2026-07-14",
       "sourcePdf": "https://www.sia.aviation-civile.gouv.fr/documents/download/f/d/15060768/",
-      "reason": "ZRT PARA: Exclusion interne non découpée: contour extérieur affiché par prudence. ZIT CONCORDE: Exclusion interne non découpée: contour extérieur affiché par prudence. ZRT 1: Exclusion interne non découpée: contour extérieur affiché par prudence. ZRT 2: Exclusion interne non découpée: contour extérieur affiché par prudence.",
+      "reason": "",
       "partial": true,
       "expectedNamedGeometryCount": 7,
       "mappedGeometryCount": 7,
       "declaredZoneCount": 7,
       "missingVerticalCount": 0,
-      "sourceFingerprint": "a2c43060d37f9dd13307",
-      "parserVersion": "capclair-supaip-parser-2.0.0"
+      "sourceFingerprint": "73a4be73dab5d3033974",
+      "parserVersion": "capclair-supaip-parser-2.0.1"
     },
     {
       "supAip": "141/26",
@@ -310,14 +325,14 @@
       "validFrom": "2026-07-25",
       "validTo": "2026-07-25",
       "sourcePdf": "https://www.sia.aviation-civile.gouv.fr/documents/download/f/d/15060766/",
-      "reason": "ZRT COL DU GALIBIER - ALPE: limites latérales non extraites. ZRT LE BOURG D'OISANS - LES: limites latérales non extraites. ZRT LES OULLES - COL DU: limites latérales non extraites. 0/3 géométries nommées extraites. Aucune géométrie fiable extraite.",
+      "reason": "ZRT COL DU GALIBIER - ALPE: limites latérales non extraites. ZRT LE BOURG D'OISANS - LES: limites latérales non extraites. ZRT LES OULLES - COL DU: limites latérales non extraites. 0/3 géométries nommées extraites. Aucune géométrie fiable extraite. 0/3 géométries nommées extraites. Aucune géométrie fiable extraite.",
       "partial": false,
       "expectedNamedGeometryCount": 3,
       "mappedGeometryCount": 0,
       "declaredZoneCount": 3,
       "missingVerticalCount": 0,
-      "sourceFingerprint": "ab4fcdbcc4123c7c768d",
-      "parserVersion": "capclair-supaip-parser-2.0.0"
+      "sourceFingerprint": "c1d25529376e77a94029",
+      "parserVersion": "capclair-supaip-parser-2.0.1"
     },
     {
       "supAip": "140/26",
@@ -325,14 +340,14 @@
       "validFrom": "2026-07-24",
       "validTo": "2026-07-24",
       "sourcePdf": "https://www.sia.aviation-civile.gouv.fr/documents/download/f/d/15060764/",
-      "reason": "ZRT COL D'ORNON - ALPE D'HUEZ: limites latérales non extraites. ZRT GAP - LES PAYAS: limites latérales non extraites. ZRT LES PAYAS - COL D'ORNON: limites latérales non extraites. 0/3 géométries nommées extraites. Aucune géométrie fiable extraite.",
+      "reason": "ZRT COL D'ORNON - ALPE D'HUEZ: limites latérales non extraites. ZRT GAP - LES PAYAS: limites latérales non extraites. ZRT LES PAYAS - COL D'ORNON: limites latérales non extraites. 0/3 géométries nommées extraites. Aucune géométrie fiable extraite. 0/3 géométries nommées extraites. Aucune géométrie fiable extraite.",
       "partial": false,
       "expectedNamedGeometryCount": 3,
       "mappedGeometryCount": 0,
       "declaredZoneCount": 3,
       "missingVerticalCount": 0,
-      "sourceFingerprint": "54587c892d0b5065a43d",
-      "parserVersion": "capclair-supaip-parser-2.0.0"
+      "sourceFingerprint": "199db05595b6c44886b8",
+      "parserVersion": "capclair-supaip-parser-2.0.1"
     },
     {
       "supAip": "139/26",
@@ -340,14 +355,14 @@
       "validFrom": "2026-07-23",
       "validTo": "2026-07-23",
       "sourcePdf": "https://www.sia.aviation-civile.gouv.fr/documents/download/f/d/15060762/",
-      "reason": "ZRT CARREFOUR D114 - D944: limites latérales non extraites. ZRT MONTEYNARD - CARREFOUR: limites latérales non extraites. ZRT SASSENAGE - MONTEYNARD: limites latérales non extraites. 0/3 géométries nommées extraites. Aucune géométrie fiable extraite.",
+      "reason": "ZRT CARREFOUR D114 - D944: limites latérales non extraites. ZRT MONTEYNARD - CARREFOUR: limites latérales non extraites. ZRT SASSENAGE - MONTEYNARD: limites latérales non extraites. 0/3 géométries nommées extraites. Aucune géométrie fiable extraite. 0/3 géométries nommées extraites. Aucune géométrie fiable extraite.",
       "partial": false,
       "expectedNamedGeometryCount": 3,
       "mappedGeometryCount": 0,
       "declaredZoneCount": 3,
       "missingVerticalCount": 0,
-      "sourceFingerprint": "cf332deb06cd3c6c11f1",
-      "parserVersion": "capclair-supaip-parser-2.0.0"
+      "sourceFingerprint": "bb3d84551e20259e886b",
+      "parserVersion": "capclair-supaip-parser-2.0.1"
     },
     {
       "supAip": "138/25",
@@ -361,8 +376,8 @@
       "mappedGeometryCount": 0,
       "declaredZoneCount": 4,
       "missingVerticalCount": 0,
-      "sourceFingerprint": "62cec11cc74c5bdbc89b",
-      "parserVersion": "capclair-supaip-parser-2.0.0"
+      "sourceFingerprint": "96a430d0bec670950cf2",
+      "parserVersion": "capclair-supaip-parser-2.0.1"
     },
     {
       "supAip": "135/26",
@@ -370,14 +385,14 @@
       "validFrom": "2026-07-06",
       "validTo": "2026-07-31",
       "sourcePdf": "https://www.sia.aviation-civile.gouv.fr/documents/download/f/d/15060754/",
-      "reason": "ZRT 34: limites latérales non extraites. 0/1 géométries nommées extraites. Aucune géométrie fiable extraite.",
+      "reason": "ZRT 34: limites latérales non extraites. 0/1 géométries nommées extraites. Aucune géométrie fiable extraite. 0/1 géométries nommées extraites. Aucune géométrie fiable extraite.",
       "partial": false,
       "expectedNamedGeometryCount": 1,
       "mappedGeometryCount": 0,
       "declaredZoneCount": 1,
       "missingVerticalCount": 0,
-      "sourceFingerprint": "e516596bcf0e11c4faab",
-      "parserVersion": "capclair-supaip-parser-2.0.0"
+      "sourceFingerprint": "bc15ee419d4d30b6e4d7",
+      "parserVersion": "capclair-supaip-parser-2.0.1"
     },
     {
       "supAip": "128/26",
@@ -385,14 +400,14 @@
       "validFrom": "2026-07-01",
       "validTo": "2027-12-31",
       "sourcePdf": "https://www.sia.aviation-civile.gouv.fr/documents/download/f/d/15055162/",
-      "reason": "ZRT ROUEN: limites latérales non extraites. 0/1 géométries nommées extraites. Aucune géométrie fiable extraite.",
+      "reason": "ZRT ROUEN: limites latérales non extraites. 0/1 géométries nommées extraites. Aucune géométrie fiable extraite. 0/1 géométries nommées extraites. Aucune géométrie fiable extraite.",
       "partial": false,
       "expectedNamedGeometryCount": 1,
       "mappedGeometryCount": 0,
       "declaredZoneCount": null,
       "missingVerticalCount": 0,
-      "sourceFingerprint": "2a728f5ce3cca9312d66",
-      "parserVersion": "capclair-supaip-parser-2.0.0"
+      "sourceFingerprint": "f5257f5844dcc0599fc1",
+      "parserVersion": "capclair-supaip-parser-2.0.1"
     },
     {
       "supAip": "109/26",
@@ -400,14 +415,14 @@
       "validFrom": "2026-06-01",
       "validTo": "2027-05-31",
       "sourcePdf": "https://www.sia.aviation-civile.gouv.fr/documents/download/f/d/15049550/",
-      "reason": "ZRT DISPLAY 1: Exclusion interne non découpée: contour extérieur affiché par prudence. ZRT DISPLAY 2: Exclusion interne non découpée: contour extérieur affiché par prudence.",
+      "reason": "",
       "partial": true,
       "expectedNamedGeometryCount": 2,
       "mappedGeometryCount": 2,
       "declaredZoneCount": 2,
       "missingVerticalCount": 0,
-      "sourceFingerprint": "3d48ee44e2c0da291103",
-      "parserVersion": "capclair-supaip-parser-2.0.0"
+      "sourceFingerprint": "c9c4fff4f874bd397c4b",
+      "parserVersion": "capclair-supaip-parser-2.0.1"
     },
     {
       "supAip": "094/25",
@@ -421,8 +436,8 @@
       "mappedGeometryCount": 0,
       "declaredZoneCount": 4,
       "missingVerticalCount": 0,
-      "sourceFingerprint": "31527cf94a4ca83b15bc",
-      "parserVersion": "capclair-supaip-parser-2.0.0"
+      "sourceFingerprint": "46eae12549f92ec1baea",
+      "parserVersion": "capclair-supaip-parser-2.0.1"
     },
     {
       "supAip": "077/26",
@@ -430,14 +445,14 @@
       "validFrom": "2026-05-01",
       "validTo": "2027-04-30",
       "sourcePdf": "https://www.sia.aviation-civile.gouv.fr/documents/download/f/d/15043925/",
-      "reason": "ZRT AVEL LF-R17 A1: Exclusion interne non découpée: contour extérieur affiché par prudence. ZRT AVEL LF-R17 A2: Exclusion interne non découpée: contour extérieur affiché par prudence. ZRT BATZ LF-R17 B1: Exclusion interne non découpée: contour extérieur affiché par prudence. ZRT BATZ LF-R17 B2: Exclusion interne non découpée: contour extérieur affiché par prudence. ZRT CORSEN LF-R17 C1: Exclusion interne non découpée: contour extérieur affiché par prudence. ZRT CORSEN LF-R17 C2: Exclusion interne non découpée: contour extérieur affiché par prudence. ZRT DOLMEN LF-R17 D1: Exclusion interne non découpée: contour extérieur affiché par prudence. ZRT DOLMEN LF-R17 D2: Exclusion interne non découpée: contour extérieur affiché par prudence. ZRT ECKMUHL LF-R17 E1: Exclusion interne non découpée: contour extérieur affiché par prudence. ZRT ECKMUHL LF-R17 E2: Exclusion interne non découpée: contour extérieur affiché par prudence. ZRT FOUESNANT LF-R17: Exclusion interne non découpée: contour extérieur affiché par prudence. 1 zone(s) cartographiée(s) sans limites verticales extraites. 1 zone(s) sans limites verticales extraites.",
+      "reason": "1 zone(s) sans limites verticales extraites.",
       "partial": true,
       "expectedNamedGeometryCount": 12,
       "mappedGeometryCount": 12,
       "declaredZoneCount": 7,
       "missingVerticalCount": 1,
-      "sourceFingerprint": "16817664b5126f0547c8",
-      "parserVersion": "capclair-supaip-parser-2.0.0"
+      "sourceFingerprint": "ccffcc7937eba0100e71",
+      "parserVersion": "capclair-supaip-parser-2.0.1"
     },
     {
       "supAip": "075/26",
@@ -451,8 +466,8 @@
       "mappedGeometryCount": 0,
       "declaredZoneCount": null,
       "missingVerticalCount": 0,
-      "sourceFingerprint": "6b4969883402628a1bf7",
-      "parserVersion": "capclair-supaip-parser-2.0.0"
+      "sourceFingerprint": "9db3400935f799e7819e",
+      "parserVersion": "capclair-supaip-parser-2.0.1"
     },
     {
       "supAip": "070/26",
@@ -460,14 +475,14 @@
       "validFrom": "2026-04-23",
       "validTo": "2027-04-15",
       "sourcePdf": "https://www.sia.aviation-civile.gouv.fr/documents/download/f/d/15043915/",
-      "reason": "ZRT 1 PHALSBOURG: Exclusion interne non découpée: contour extérieur affiché par prudence. ZRT 2 PHALSBOURG: Exclusion interne non découpée: contour extérieur affiché par prudence. ZRT 4 PHALSBOURG: limites latérales non extraites. ZRT 5 PHALSBOURG: limites latérales non extraites. 3/5 géométries nommées extraites.",
+      "reason": "3/5 géométries nommées extraites.",
       "partial": true,
       "expectedNamedGeometryCount": 5,
       "mappedGeometryCount": 3,
       "declaredZoneCount": 5,
       "missingVerticalCount": 0,
-      "sourceFingerprint": "9213a708f08d6ec9eab3",
-      "parserVersion": "capclair-supaip-parser-2.0.0"
+      "sourceFingerprint": "bf727391701bf47eb55d",
+      "parserVersion": "capclair-supaip-parser-2.0.1"
     },
     {
       "supAip": "065/25",
@@ -481,8 +496,8 @@
       "mappedGeometryCount": 0,
       "declaredZoneCount": 2,
       "missingVerticalCount": 0,
-      "sourceFingerprint": "8b8cfaca9b9fc1a8d575",
-      "parserVersion": "capclair-supaip-parser-2.0.0"
+      "sourceFingerprint": "0e6d1c2d843b23d29863",
+      "parserVersion": "capclair-supaip-parser-2.0.1"
     },
     {
       "supAip": "062/26",
@@ -496,8 +511,8 @@
       "mappedGeometryCount": 0,
       "declaredZoneCount": 3,
       "missingVerticalCount": 0,
-      "sourceFingerprint": "a15fff282802bb5d8d64",
-      "parserVersion": "capclair-supaip-parser-2.0.0"
+      "sourceFingerprint": "43c4c879f695315037f6",
+      "parserVersion": "capclair-supaip-parser-2.0.1"
     },
     {
       "supAip": "060/26",
@@ -505,14 +520,14 @@
       "validFrom": "2026-04-16",
       "validTo": "2028-04-12",
       "sourcePdf": "https://www.sia.aviation-civile.gouv.fr/documents/download/f/d/15038346/",
-      "reason": "ZRT CHENEVIERES: Exclusion interne non découpée: contour extérieur affiché par prudence.",
+      "reason": "",
       "partial": true,
       "expectedNamedGeometryCount": 1,
       "mappedGeometryCount": 1,
       "declaredZoneCount": 1,
       "missingVerticalCount": 0,
-      "sourceFingerprint": "dab1164d8cee0fcc3e03",
-      "parserVersion": "capclair-supaip-parser-2.0.0"
+      "sourceFingerprint": "9e95015509c12c80a36a",
+      "parserVersion": "capclair-supaip-parser-2.0.1"
     },
     {
       "supAip": "055/26",
@@ -520,14 +535,14 @@
       "validFrom": "2026-04-16",
       "validTo": "2028-04-12",
       "sourcePdf": "https://www.sia.aviation-civile.gouv.fr/documents/download/f/d/15038336/",
-      "reason": "ZRT BOTTA HIGH: limites latérales non extraites. ZRT BOTTA LOW: limites latérales non extraites. 97/99 géométries nommées extraites.",
+      "reason": "97/99 géométries nommées extraites.",
       "partial": true,
       "expectedNamedGeometryCount": 99,
       "mappedGeometryCount": 97,
       "declaredZoneCount": 99,
       "missingVerticalCount": 0,
-      "sourceFingerprint": "94a7adb91012910f5a4c",
-      "parserVersion": "capclair-supaip-parser-2.0.0"
+      "sourceFingerprint": "53024e978e4ccc22e29d",
+      "parserVersion": "capclair-supaip-parser-2.0.1"
     },
     {
       "supAip": "053/26",
@@ -535,14 +550,14 @@
       "validFrom": "2026-04-16",
       "validTo": "2028-04-12",
       "sourcePdf": "https://www.sia.aviation-civile.gouv.fr/documents/download/f/d/15038332/",
-      "reason": "ZRT VIRE HIGH: Exclusion interne non découpée: contour extérieur affiché par prudence.",
+      "reason": "",
       "partial": true,
       "expectedNamedGeometryCount": 94,
       "mappedGeometryCount": 94,
       "declaredZoneCount": 99,
       "missingVerticalCount": 0,
-      "sourceFingerprint": "619d2de9b20ae27edb07",
-      "parserVersion": "capclair-supaip-parser-2.0.0"
+      "sourceFingerprint": "5888700e3e93f2ae0528",
+      "parserVersion": "capclair-supaip-parser-2.0.1"
     },
     {
       "supAip": "052/26",
@@ -550,14 +565,14 @@
       "validFrom": "2026-04-16",
       "validTo": "2027-11-24",
       "sourcePdf": "https://www.sia.aviation-civile.gouv.fr/documents/download/f/d/15038330/",
-      "reason": "ZIT ALISTRO: limites latérales non extraites. 15/16 géométries nommées extraites.",
+      "reason": "15/16 géométries nommées extraites.",
       "partial": true,
       "expectedNamedGeometryCount": 16,
       "mappedGeometryCount": 15,
       "declaredZoneCount": 16,
       "missingVerticalCount": 0,
-      "sourceFingerprint": "6938b691fec237af0525",
-      "parserVersion": "capclair-supaip-parser-2.0.0"
+      "sourceFingerprint": "5dff881087abc4078ac4",
+      "parserVersion": "capclair-supaip-parser-2.0.1"
     },
     {
       "supAip": "047/26",
@@ -565,14 +580,14 @@
       "validFrom": "2026-04-04",
       "validTo": "2026-09-27",
       "sourcePdf": "https://www.sia.aviation-civile.gouv.fr/documents/download/f/d/15032772/",
-      "reason": "ZRT WING SUIT 2: limites latérales non extraites. 1/2 géométries nommées extraites.",
+      "reason": "1/2 géométries nommées extraites.",
       "partial": true,
       "expectedNamedGeometryCount": 2,
       "mappedGeometryCount": 1,
       "declaredZoneCount": 2,
       "missingVerticalCount": 0,
-      "sourceFingerprint": "dfa8bc2257e9ef6d5f4c",
-      "parserVersion": "capclair-supaip-parser-2.0.0"
+      "sourceFingerprint": "888715746e6b5163123e",
+      "parserVersion": "capclair-supaip-parser-2.0.1"
     },
     {
       "supAip": "042/26",
@@ -586,8 +601,8 @@
       "mappedGeometryCount": 0,
       "declaredZoneCount": 3,
       "missingVerticalCount": 0,
-      "sourceFingerprint": "0663035836dc589ea910",
-      "parserVersion": "capclair-supaip-parser-2.0.0"
+      "sourceFingerprint": "abbd774e5d20fc033994",
+      "parserVersion": "capclair-supaip-parser-2.0.1"
     },
     {
       "supAip": "041/26",
@@ -595,29 +610,14 @@
       "validFrom": "2026-04-01",
       "validTo": "2027-03-30",
       "sourcePdf": "https://www.sia.aviation-civile.gouv.fr/documents/download/f/d/15032760/",
-      "reason": "ZRT CINTEGABELLE BRAVO: Exclusion interne non découpée: contour extérieur affiché par prudence.",
+      "reason": "",
       "partial": true,
       "expectedNamedGeometryCount": 2,
       "mappedGeometryCount": 2,
       "declaredZoneCount": 2,
       "missingVerticalCount": 0,
-      "sourceFingerprint": "176bd9577f90c7cdd5a8",
-      "parserVersion": "capclair-supaip-parser-2.0.0"
-    },
-    {
-      "supAip": "023/26",
-      "title": "Création de deux zones réservées temporaires (TRA), en UIR, TRA90NL et TRA90NH, et FBZ associées",
-      "validFrom": "2026-03-19",
-      "validTo": "2027-03-17",
-      "sourcePdf": "https://www.sia.aviation-civile.gouv.fr/documents/download/f/d/15027173/",
-      "reason": "Aucune géométrie fiable extraite.",
-      "partial": false,
-      "expectedNamedGeometryCount": 0,
-      "mappedGeometryCount": 0,
-      "declaredZoneCount": 2,
-      "missingVerticalCount": 0,
-      "sourceFingerprint": "b07506f56793e8e61919",
-      "parserVersion": "capclair-supaip-parser-2.0.0"
+      "sourceFingerprint": "1d7698126e0fa46944d3",
+      "parserVersion": "capclair-supaip-parser-2.0.1"
     },
     {
       "supAip": "022/26",
@@ -625,14 +625,14 @@
       "validFrom": "2026-03-02",
       "validTo": "2027-11-30",
       "sourcePdf": "https://www.sia.aviation-civile.gouv.fr/documents/download/f/d/15027171/",
-      "reason": "ZRT CUIRASSIER: Exclusion interne non découpée: contour extérieur affiché par prudence.",
+      "reason": "",
       "partial": true,
       "expectedNamedGeometryCount": 1,
       "mappedGeometryCount": 1,
       "declaredZoneCount": 1,
       "missingVerticalCount": 0,
-      "sourceFingerprint": "b48f93bc3ca24b525527",
-      "parserVersion": "capclair-supaip-parser-2.0.0"
+      "sourceFingerprint": "f2720300546546f5f9c6",
+      "parserVersion": "capclair-supaip-parser-2.0.1"
     },
     {
       "supAip": "021/26",
@@ -640,14 +640,14 @@
       "validFrom": "2026-02-26",
       "validTo": "2026-08-26",
       "sourcePdf": "https://www.sia.aviation-civile.gouv.fr/documents/download/f/d/15027169/",
-      "reason": "1 zone(s) cartographiée(s) sans limites verticales extraites. 1 zone(s) sans limites verticales extraites.",
+      "reason": "1 zone(s) sans limites verticales extraites.",
       "partial": true,
       "expectedNamedGeometryCount": 1,
       "mappedGeometryCount": 1,
       "declaredZoneCount": 1,
       "missingVerticalCount": 1,
-      "sourceFingerprint": "3baec35b54ace3a1417a",
-      "parserVersion": "capclair-supaip-parser-2.0.0"
+      "sourceFingerprint": "16b3180feadcbc66be59",
+      "parserVersion": "capclair-supaip-parser-2.0.1"
     },
     {
       "supAip": "018/26",
@@ -655,14 +655,14 @@
       "validFrom": "2026-03-03",
       "validTo": "2026-12-31",
       "sourcePdf": "https://www.sia.aviation-civile.gouv.fr/documents/download/f/d/15027163/",
-      "reason": "ZRT DRONE COURTALAIN: Exclusion interne non découpée: contour extérieur affiché par prudence.",
+      "reason": "",
       "partial": true,
       "expectedNamedGeometryCount": 1,
       "mappedGeometryCount": 1,
       "declaredZoneCount": 1,
       "missingVerticalCount": 0,
-      "sourceFingerprint": "8f87998c0d49bcad9038",
-      "parserVersion": "capclair-supaip-parser-2.0.0"
+      "sourceFingerprint": "7448cb1ced6d0a5c4a2a",
+      "parserVersion": "capclair-supaip-parser-2.0.1"
     },
     {
       "supAip": "017/26",
@@ -670,14 +670,14 @@
       "validFrom": "2026-02-19",
       "validTo": "2027-01-16",
       "sourcePdf": "https://www.sia.aviation-civile.gouv.fr/documents/download/f/d/15027161/",
-      "reason": "ZRT PARA CUERS: limites latérales non extraites. 0/1 géométries nommées extraites. Aucune géométrie fiable extraite.",
+      "reason": "ZRT PARA CUERS: limites latérales non extraites. 0/1 géométries nommées extraites. Aucune géométrie fiable extraite. 0/1 géométries nommées extraites. Aucune géométrie fiable extraite.",
       "partial": false,
       "expectedNamedGeometryCount": 1,
       "mappedGeometryCount": 0,
       "declaredZoneCount": null,
       "missingVerticalCount": 0,
-      "sourceFingerprint": "25a9a8bc60d2a294045c",
-      "parserVersion": "capclair-supaip-parser-2.0.0"
+      "sourceFingerprint": "94c32a330918260c5528",
+      "parserVersion": "capclair-supaip-parser-2.0.1"
     },
     {
       "supAip": "013/26",
@@ -691,8 +691,8 @@
       "mappedGeometryCount": 0,
       "declaredZoneCount": 1,
       "missingVerticalCount": 0,
-      "sourceFingerprint": "8c08e481735d34ca3e41",
-      "parserVersion": "capclair-supaip-parser-2.0.0"
+      "sourceFingerprint": "5b06acce30e9772c5943",
+      "parserVersion": "capclair-supaip-parser-2.0.1"
     },
     {
       "supAip": "005/26",
@@ -700,14 +700,14 @@
       "validFrom": "2026-01-27",
       "validTo": "2027-01-21",
       "sourcePdf": "https://www.sia.aviation-civile.gouv.fr/documents/download/f/d/15021717/",
-      "reason": "ZRT « PLOUHARNEL »: Exclusion interne non découpée: contour extérieur affiché par prudence.",
+      "reason": "",
       "partial": true,
       "expectedNamedGeometryCount": 1,
       "mappedGeometryCount": 1,
       "declaredZoneCount": 1,
       "missingVerticalCount": 0,
-      "sourceFingerprint": "d336305850adba117cec",
-      "parserVersion": "capclair-supaip-parser-2.0.0"
+      "sourceFingerprint": "51b4f11fd53e9bee500b",
+      "parserVersion": "capclair-supaip-parser-2.0.1"
     }
   ]
 }
