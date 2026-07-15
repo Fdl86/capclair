@@ -2,7 +2,7 @@
   "schemaVersion": 2,
   "mode": "automatic",
   "beta": true,
-  "generatedAt": "2026-07-15T13:45:44Z",
+  "generatedAt": "2026-07-15T14:14:23Z",
   "sourceUpdatedAt": "2026-07-09T00:00:00Z",
   "sourceUrl": "https://www.sia.aviation-civile.gouv.fr/documents/supaip/aip/id/6",
   "parserVersion": "capclair-supaip-parser-2.0.2",
@@ -20,9 +20,9 @@
   "unmappedPublicationCount": 47,
   "completeUnmappedPublicationCount": 25,
   "partialPublicationCount": 22,
-  "reusedPublicationCount": 0,
-  "downloadedPublicationCount": 110,
-  "safetyFallbackPublicationCount": 1,
+  "reusedPublicationCount": 108,
+  "downloadedPublicationCount": 2,
+  "safetyFallbackPublicationCount": 0,
   "staleAfterHours": 36,
   "message": "Parser V2.1: toutes les publications SIA listées sont contrôlées. Vérifier le PDF, SOFIA et les NOTAM avant le vol."
 }

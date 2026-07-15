@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-07-15T13:45:44Z",
+  "generatedAt": "2026-07-15T14:14:23Z",
   "sourceUrl": "https://www.sia.aviation-civile.gouv.fr/documents/supaip/aip/id/6",
   "parserVersion": "capclair-supaip-parser-2.0.2",
   "publications": [
@@ -168,7 +168,7 @@
       "title": "Modification des points de compte-rendu et trajectoires hélicoptères à l’approche de l’AD de Courchevel LFLJ",
       "spatial": false,
       "sourcePdf": "https://www.sia.aviation-civile.gouv.fr/documents/download/f/d/15005561/",
-      "sourceFingerprint": "2563ce826e52e8cafb0d",
+      "sourceFingerprint": "42b14d4a63fe53a9b1ba",
       "parserVersion": "capclair-supaip-parser-2.0.2"
     },
     {
@@ -285,10 +285,10 @@
     },
     {
       "supAip": "158/26",
-      "title": "Modification des points de compte-rendu et trajectoires hélicoptères à l’approche de l’AD de Courchevel LFLJ",
+      "title": "Annulé le 15/07/2026 Modification des points de compte-rendu et trajectoires hélicoptères à l’approche de l’AD de Courchevel LFLJ",
       "spatial": false,
       "sourcePdf": "https://www.sia.aviation-civile.gouv.fr/documents/download/f/d/15060800/",
-      "sourceFingerprint": "a2ff485dd2f2b23623c3",
+      "sourceFingerprint": "9ee24c7845596542f548",
       "parserVersion": "capclair-supaip-parser-2.0.2"
     },
     {
