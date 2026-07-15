@@ -1,7 +1,217 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-07-14T18:00:00Z",
+  "generatedAt": "2026-07-15T04:40:07Z",
   "sourceUrl": "https://www.sia.aviation-civile.gouv.fr/documents/supaip/aip/id/6",
-  "parserVersion": "bootstrap-manual-1",
-  "publications": []
+  "parserVersion": "capclair-supaip-parser-1.0.1",
+  "publications": [
+    {
+      "supAip": "233/24",
+      "title": "<p>Création d’une zone dangereuse temporaire (ZDT) et de zones réglementées temporaires (ZRT) pour le transit d’un drone en UIR France</p>",
+      "validFrom": "2025-01-16",
+      "validTo": "2027-01-13",
+      "sourcePdf": "https://www.sia.aviation-civile.gouv.fr/documents/download/f/d/13791052/",
+      "reason": "Limite complexe (arc, frontière ou côte) non reconstruite automatiquement. Aucune géométrie fiable extraite du PDF.",
+      "partial": false,
+      "sourceFingerprint": "63f67b03c48c322313bc",
+      "parserVersion": "capclair-supaip-parser-1.0.1"
+    },
+    {
+      "supAip": "188/25",
+      "title": "Création de neuf Zones Réglementées Temporaires (ZRT) au profit de vols en vue et hors vue d’aéronefs sans équipage à bord sur la côte Atlantique en Gironde",
+      "validFrom": "2025-11-13",
+      "validTo": "2026-11-10",
+      "sourcePdf": "https://www.sia.aviation-civile.gouv.fr/documents/download/f/d/15000061/",
+      "reason": "1 zone(s) nommée(s) sans géométrie fiable.",
+      "partial": true,
+      "sourceFingerprint": "78c6f767d2f7c8b24ff8",
+      "parserVersion": "capclair-supaip-parser-1.0.1"
+    },
+    {
+      "supAip": "156/26",
+      "title": "Création d’une zone réglementée temporaire (ZRT) dans le cadre du championnat de France de vol en planeur dans la région de Saint Yan (71).",
+      "validFrom": "2026-07-24",
+      "validTo": "2026-08-01",
+      "sourcePdf": "https://www.sia.aviation-civile.gouv.fr/documents/download/f/d/15060796/",
+      "reason": "Aucune géométrie fiable extraite du PDF.",
+      "partial": false,
+      "sourceFingerprint": "4f795e6cbc59594efe0d",
+      "parserVersion": "capclair-supaip-parser-1.0.1"
+    },
+    {
+      "supAip": "149/26",
+      "title": "Création de deux Zones Réglementées Temporaires (ZRT) pour la 6eme étape du Tour de France cycliste 2026",
+      "validFrom": "2026-07-09",
+      "validTo": "2026-07-09",
+      "sourcePdf": "https://www.sia.aviation-civile.gouv.fr/documents/download/f/d/15060780/",
+      "reason": "Aucune géométrie fiable extraite du PDF.",
+      "partial": false,
+      "sourceFingerprint": "f5636d2bc405d6fe42c8",
+      "parserVersion": "capclair-supaip-parser-1.0.1"
+    },
+    {
+      "supAip": "148/26",
+      "title": "Création d'une zone réglementée temporaire (ZRT) pour la 17ème étape du Tour de France cycliste 2026",
+      "validFrom": "2026-07-22",
+      "validTo": "2026-07-22",
+      "sourcePdf": "https://www.sia.aviation-civile.gouv.fr/documents/download/f/d/15060778/",
+      "reason": "Aucune géométrie fiable extraite du PDF.",
+      "partial": false,
+      "sourceFingerprint": "91e6f221f5bac5f60403",
+      "parserVersion": "capclair-supaip-parser-1.0.1"
+    },
+    {
+      "supAip": "147/25",
+      "title": "Création de deux Zones Réglementées Temporaires (ZRT) pour des activités spécifiques aux abords de l’aérodrome de Coulommiers Voisins (77) - LFPK",
+      "validFrom": "2025-09-04",
+      "validTo": "2026-11-25",
+      "sourcePdf": "https://www.sia.aviation-civile.gouv.fr/documents/download/f/d/14967459/",
+      "reason": "1 zone(s) nommée(s) sans géométrie fiable.",
+      "partial": true,
+      "sourceFingerprint": "20428b22f148b63c7548",
+      "parserVersion": "capclair-supaip-parser-1.0.1"
+    },
+    {
+      "supAip": "146/26",
+      "title": "Création de 12 zones réglementées temporaires (ZRT) dans la région des aérodromes de Châteaudun et d'Orléans-Bricy",
+      "validFrom": "2026-07-09",
+      "validTo": "2027-05-01",
+      "sourcePdf": "https://www.sia.aviation-civile.gouv.fr/documents/download/f/d/15060776/",
+      "reason": "1 zone(s) nommée(s) sans géométrie fiable.",
+      "partial": true,
+      "sourceFingerprint": "a561cc00b438471a0fae",
+      "parserVersion": "capclair-supaip-parser-1.0.1"
+    },
+    {
+      "supAip": "142/26",
+      "title": "Création d’une zone interdite temporaire (ZIT) et de cinq zones réglementées temporaires (ZRT) pour le dispositif de sûreté aérienne et le défilé aérien liés aux cérémonies du 14 juillet 2026 à Paris ; et d'une ZRT pour des activités de parachutage connexes.",
+      "validFrom": "2026-07-09",
+      "validTo": "2026-07-14",
+      "sourcePdf": "https://www.sia.aviation-civile.gouv.fr/documents/download/f/d/15060768/",
+      "reason": "Aucune géométrie fiable extraite du PDF.",
+      "partial": false,
+      "sourceFingerprint": "37a89777ccb687cb1003",
+      "parserVersion": "capclair-supaip-parser-1.0.1"
+    },
+    {
+      "supAip": "141/26",
+      "title": "création de 3 Zones Réglementées Temporaires (ZRT) pour la 20ème étape du Tour de France cycliste 2026",
+      "validFrom": "2026-07-25",
+      "validTo": "2026-07-25",
+      "sourcePdf": "https://www.sia.aviation-civile.gouv.fr/documents/download/f/d/15060766/",
+      "reason": "Aucune géométrie fiable extraite du PDF.",
+      "partial": false,
+      "sourceFingerprint": "e174080833221e8d7f9a",
+      "parserVersion": "capclair-supaip-parser-1.0.1"
+    },
+    {
+      "supAip": "140/26",
+      "title": "Création de 3 Zones Réglementées Temporaires (ZRT) pour la 19ème étape du Tour de France cycliste 2026",
+      "validFrom": "2026-07-24",
+      "validTo": "2026-07-24",
+      "sourcePdf": "https://www.sia.aviation-civile.gouv.fr/documents/download/f/d/15060764/",
+      "reason": "Aucune géométrie fiable extraite du PDF.",
+      "partial": false,
+      "sourceFingerprint": "fd029b37b28c30619454",
+      "parserVersion": "capclair-supaip-parser-1.0.1"
+    },
+    {
+      "supAip": "139/26",
+      "title": "Création de 3 Zones Réglementées Temporaires (ZRT) pour la 18ème étape du Tour de France cycliste 2026",
+      "validFrom": "2026-07-23",
+      "validTo": "2026-07-23",
+      "sourcePdf": "https://www.sia.aviation-civile.gouv.fr/documents/download/f/d/15060762/",
+      "reason": "Aucune géométrie fiable extraite du PDF.",
+      "partial": false,
+      "sourceFingerprint": "a9d1ff2d6c06cba4eb17",
+      "parserVersion": "capclair-supaip-parser-1.0.1"
+    },
+    {
+      "supAip": "101/26",
+      "title": "Création de 16 Zones Réglementées Temporaires (ZRT) et 4 Zones Dangereuses Temporaires (ZDT), au profit de vols hors vue d'aéronefs sans équipage à bord dans la Manche orientale et le Détroit de la Manche",
+      "validFrom": "2026-05-14",
+      "validTo": "2027-05-14",
+      "sourcePdf": "https://www.sia.aviation-civile.gouv.fr/documents/download/f/d/15049532/",
+      "reason": "3 zone(s) nommée(s) sans géométrie fiable.",
+      "partial": true,
+      "sourceFingerprint": "db482a65d57ef2be5da7",
+      "parserVersion": "capclair-supaip-parser-1.0.1"
+    },
+    {
+      "supAip": "076/26",
+      "title": "Création de Zones Réglementées Temporaires (12 ZRT) et de Zones Dangereuses Temporaires (5 ZDT) au proﬁt de vols hors vue d'aéronefs sans équipage à bord en baie de Seine et Cotentin",
+      "validFrom": "2026-04-27",
+      "validTo": "2027-04-26",
+      "sourcePdf": "https://www.sia.aviation-civile.gouv.fr/documents/download/f/d/15043923/",
+      "reason": "2 zone(s) nommée(s) sans géométrie fiable.",
+      "partial": true,
+      "sourceFingerprint": "7972ab24500aed9ae15b",
+      "parserVersion": "capclair-supaip-parser-1.0.1"
+    },
+    {
+      "supAip": "070/26",
+      "title": "Création de 5 ZRT au proﬁt de l’aérodrome de Phalsbourg-Bourscheid (57)",
+      "validFrom": "2026-04-23",
+      "validTo": "2027-04-15",
+      "sourcePdf": "https://www.sia.aviation-civile.gouv.fr/documents/download/f/d/15043915/",
+      "reason": "Limite complexe (arc, frontière ou côte) non reconstruite automatiquement. Aucune géométrie fiable extraite du PDF.",
+      "partial": false,
+      "sourceFingerprint": "593c4a23720d3f100ebf",
+      "parserVersion": "capclair-supaip-parser-1.0.1"
+    },
+    {
+      "supAip": "055/26",
+      "title": "Création de 99 zones temporaires (ZRT/ZDT) pour les transits et les évolutions d’aéronefs d’Etat sans équipage à bord dans le sud de la France",
+      "validFrom": "2026-04-16",
+      "validTo": "2028-04-12",
+      "sourcePdf": "https://www.sia.aviation-civile.gouv.fr/documents/download/f/d/15038336/",
+      "reason": "Limite complexe (arc, frontière ou côte) non reconstruite automatiquement. 21 zone(s) nommée(s) sans géométrie fiable.",
+      "partial": true,
+      "sourceFingerprint": "62b71fff5e70c4fa9099",
+      "parserVersion": "capclair-supaip-parser-1.0.1"
+    },
+    {
+      "supAip": "053/26",
+      "title": "Création de 95 zones réglementées temporaires (ZRT) et 4 zones dangereuses temporaires (ZDT) en moyenne et haute altitude, pour le transit et les évolutions de drones d\\'État vers une zone de travail",
+      "validFrom": "2026-04-16",
+      "validTo": "2028-04-12",
+      "sourcePdf": "https://www.sia.aviation-civile.gouv.fr/documents/download/f/d/15038332/",
+      "reason": "Aucune géométrie fiable extraite du PDF.",
+      "partial": false,
+      "sourceFingerprint": "8462b081707d98c07615",
+      "parserVersion": "capclair-supaip-parser-1.0.1"
+    },
+    {
+      "supAip": "037/26",
+      "title": "Expérimentation de modification des espaces aériens d’ORANGE (LFMO) : Création de deux CTR temporaires et d’une TMA temporaire",
+      "validFrom": "2026-04-16",
+      "validTo": "2027-04-14",
+      "sourcePdf": "https://www.sia.aviation-civile.gouv.fr/documents/download/f/d/15032752/",
+      "reason": "1 zone(s) nommée(s) sans géométrie fiable.",
+      "partial": true,
+      "sourceFingerprint": "dedafdb72ada1f0de1ed",
+      "parserVersion": "capclair-supaip-parser-1.0.1"
+    },
+    {
+      "supAip": "017/26",
+      "title": "Prolongation d’une zone règlementée temporaire (ZRT) « PARA CUERS » pour du parachutage de nuit.",
+      "validFrom": "2026-02-19",
+      "validTo": "2027-01-16",
+      "sourcePdf": "https://www.sia.aviation-civile.gouv.fr/documents/download/f/d/15027161/",
+      "reason": "Aucune géométrie fiable extraite du PDF.",
+      "partial": false,
+      "sourceFingerprint": "38640ac9cbead5d82cff",
+      "parserVersion": "capclair-supaip-parser-1.0.1"
+    },
+    {
+      "supAip": "005/26",
+      "title": "Création d\\'une Zone Réglementée Temporaire (ZRT) à proximité de l’AD Lorient Lann Bihoué (LFRH) au profit d’évolutions d’aéronefs sans équipage à bord",
+      "validFrom": "2026-01-27",
+      "validTo": "2027-01-21",
+      "sourcePdf": "https://www.sia.aviation-civile.gouv.fr/documents/download/f/d/15021717/",
+      "reason": "1 zone(s) nommée(s) sans géométrie fiable.",
+      "partial": true,
+      "sourceFingerprint": "35bf158fe8e83067edac",
+      "parserVersion": "capclair-supaip-parser-1.0.1"
+    }
+  ]
 }
