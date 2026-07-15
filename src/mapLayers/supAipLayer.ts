@@ -10,8 +10,9 @@ import { isSupAipFeatureVisible } from '../services/supaip/supAipVisibility';
 import { SUP_AIP_DATASET_URL } from '../services/supaip/supAipDataset';
 
 export type SupAipLayer = VectorLayer<VectorSource<Feature<Geometry>>> & {
-  refreshData: () => Promise<number>;
+  refreshData: (datasetVersion?: string | null) => Promise<number>;
   lastLoadedAt: () => number | null;
+  loadedDatasetVersion: () => string | null;
 };
 
 interface CreateSupAipLayerOptions {
@@ -78,6 +79,7 @@ export function createSupAipLayer({
   const source = new VectorSource<Feature<Geometry>>();
   let activeRequest = 0;
   let loadedAt: number | null = null;
+  let loadedVersion: string | null = null;
 
   const layer = new VectorLayer({
     source,
@@ -105,13 +107,13 @@ export function createSupAipLayer({
     return features;
   };
 
-  layer.refreshData = async () => {
+  layer.refreshData = async (datasetVersion = null) => {
     const requestId = ++activeRequest;
     onLoadStart?.();
     try {
       let features: Feature<Geometry>[];
       try {
-        features = await fetchFeatures(`${SUP_AIP_DATASET_URL}?v=${Date.now()}`, 'no-store');
+        features = await fetchFeatures(SUP_AIP_DATASET_URL, 'no-cache');
       } catch (networkError) {
         if (source.getFeatures().length > 0) throw networkError;
         features = await fetchFeatures('/data/supaip-bootstrap.geojson', 'force-cache');
@@ -120,6 +122,7 @@ export function createSupAipLayer({
       source.clear(true);
       source.addFeatures(features);
       loadedAt = Date.now();
+      loadedVersion = datasetVersion;
       layer.changed();
       onLoadEnd?.(features.length);
       return features.length;
@@ -129,6 +132,7 @@ export function createSupAipLayer({
     }
   };
   layer.lastLoadedAt = () => loadedAt;
+  layer.loadedDatasetVersion = () => loadedVersion;
   return layer;
 }
 

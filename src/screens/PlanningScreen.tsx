@@ -213,6 +213,7 @@ export function PlanningScreen({
             selectedPointId={selectedPointId}
             baseLayer={mapBaseLayer}
             supAipSettings={supAipSettings}
+            viewStateKey="planning"
             addWaypointMode={addWaypointMode}
             onMapAddWaypoint={handleAddWaypoint}
             allowUserRotation={false}

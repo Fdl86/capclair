@@ -41,6 +41,7 @@ import {
   type SupAipDatasetStatus
 } from '../../services/supaip/supAipDataset';
 import { closestEquivalentRotation, reliableTrackDeg, viewRotationForTrack } from '../../services/map/mapOrientation';
+import { readMapViewState, writeMapViewState } from '../../services/map/mapViewState';
 
 interface OpenLayersMapProps {
   route: NavRoute;
@@ -66,6 +67,7 @@ interface OpenLayersMapProps {
   onRecordingControl?: () => void;
   recordingControlDisabled?: boolean;
   supAipSettings?: SupAipVisibilitySettings;
+  viewStateKey?: string;
 }
 
 function replaceLayer(map: Map, previousLayer: BaseLayer | null, nextLayer: BaseLayer | null): BaseLayer | null {
@@ -100,7 +102,8 @@ export function OpenLayersMap({
   recordingControlState,
   onRecordingControl,
   recordingControlDisabled = false,
-  supAipSettings = DEFAULT_SUP_AIP_VISIBILITY_SETTINGS
+  supAipSettings = DEFAULT_SUP_AIP_VISIBILITY_SETTINGS,
+  viewStateKey
 }: OpenLayersMapProps) {
   const mapElementRef = useRef<HTMLDivElement | null>(null);
   const mapRef = useRef<Map | null>(null);
@@ -124,16 +127,22 @@ export function OpenLayersMap({
   const pinchRotateRef = useRef<PinchRotate | null>(null);
   const previousOrientationModeRef = useRef<MapOrientationMode>(orientationMode);
   const lastFollowUpdateAtRef = useRef(0);
+  const restoredViewStateRef = useRef(readMapViewState(viewStateKey));
+  const skipInitialRouteFitRef = useRef(Boolean(restoredViewStateRef.current));
+  const routeSignatureRef = useRef('');
   const [sourceStatus, setSourceStatus] = useState<MapSourceStatus>('free');
   const [supAipLoadState, setSupAipLoadState] = useState<'idle' | 'loading' | 'ready' | 'error'>('idle');
   const [supAipFeatureCount, setSupAipFeatureCount] = useState(0);
   const [supAipVisibleCount, setSupAipVisibleCount] = useState(0);
-  const [selectedSupAip, setSelectedSupAip] = useState<SupAipSelection | null>(null);
+  const [selectedSupAips, setSelectedSupAips] = useState<SupAipSelection[]>([]);
+  const [selectedSupAipIndex, setSelectedSupAipIndex] = useState(0);
   const [supAipDatasetStatus, setSupAipDatasetStatus] = useState<SupAipDatasetStatus | null>(null);
 
   const normalizedSupAipSettings = normalizeSupAipVisibilitySettings(supAipSettings);
   const showSupAip = normalizedSupAipSettings.mode !== 'off';
 
+  const routeSignature = useMemo(() => route.points.map((point) => `${point.id}:${point.longitude.toFixed(5)}:${point.latitude.toFixed(5)}`).join('|'), [route.points]);
+  routeSignatureRef.current = routeSignature;
   const routeCoordinates = useMemo(() => route.points.map((point) => fromLonLat([point.longitude, point.latitude])), [route.points]);
   const routeExtent = useMemo(() => routeCoordinates.length > 0 ? boundingExtent(routeCoordinates) : null, [routeCoordinates]);
 
@@ -197,8 +206,9 @@ export function OpenLayersMap({
       interactions,
       layers: [freeMapLayer, oaciLayer, openAipRasterLayer, supAipLayer, traceLayer, aircraftLayer],
       view: new View({
-        center: initialMapCenter,
-        zoom: initialMapZoom,
+        center: restoredViewStateRef.current ? fromLonLat(restoredViewStateRef.current.centerLonLat) : initialMapCenter,
+        zoom: restoredViewStateRef.current?.zoom ?? initialMapZoom,
+        rotation: restoredViewStateRef.current?.rotation ?? 0,
         minZoom: 6,
         maxZoom: 14,
         smoothExtentConstraint: false,
@@ -207,6 +217,20 @@ export function OpenLayersMap({
     });
 
     mapRef.current = map;
+    const persistView = () => {
+      const view = map.getView();
+      const center = view.getCenter();
+      const zoom = view.getZoom();
+      if (!center || zoom === undefined) return;
+      const [longitude, latitude] = toLonLat(center);
+      writeMapViewState(viewStateKey, {
+        centerLonLat: [longitude, latitude],
+        zoom,
+        rotation: view.getRotation() ?? 0,
+        routeSignature: routeSignatureRef.current
+      });
+    };
+    map.on('moveend', persistView);
     setSourceStatus('free');
     onSourceStatusChangeRef.current?.('free');
 
@@ -217,6 +241,8 @@ export function OpenLayersMap({
       oaciLayerRef.current?.dispose();
       traceLayerRef.current?.dispose();
       aircraftLayerRef.current?.dispose();
+      persistView();
+      map.un('moveend', persistView);
       supAipLayerRef.current?.dispose();
       map.setTarget(undefined);
       mapRef.current = null;
@@ -250,39 +276,48 @@ export function OpenLayersMap({
     supAipRoutePointsRef.current = route.points;
     const layer = supAipLayerRef.current;
     if (layer) setSupAipVisibleCount(applySupAipVisibility(layer, route.points, settings));
-    setSelectedSupAip(null);
+    setSelectedSupAips([]);
+    setSelectedSupAipIndex(0);
   }, [route.points, supAipSettings]);
 
   useEffect(() => {
     if (!showSupAip) return undefined;
+    let cancelled = false;
 
-    const refreshDataset = () => {
+    const refreshIfChanged = async (force = false) => {
       const layer = supAipLayerRef.current;
       if (!layer) return;
-      void layer.refreshData().catch(() => undefined);
-      void fetchSupAipDatasetStatus()
-        .then(setSupAipDatasetStatus)
-        .catch(() => undefined);
-    };
-    const refreshIfNeeded = () => {
-      const loadedAt = supAipLayerRef.current?.lastLoadedAt();
-      if (!loadedAt || Date.now() - loadedAt > 5 * 60_000) refreshDataset();
+      try {
+        const status = await fetchSupAipDatasetStatus();
+        if (cancelled) return;
+        setSupAipDatasetStatus(status);
+        const version = status.datasetRevision || status.generatedAt || status.sourceUpdatedAt || null;
+        const empty = (layer.getSource()?.getFeatures().length ?? 0) === 0;
+        if (force || empty || layer.loadedDatasetVersion() !== version) {
+          await layer.refreshData(version);
+        }
+      } catch {
+        const empty = (layer.getSource()?.getFeatures().length ?? 0) === 0;
+        if (empty) await layer.refreshData(null).catch(() => undefined);
+      }
     };
     const handleVisibility = () => {
-      if (document.visibilityState === 'visible') refreshIfNeeded();
+      if (document.visibilityState === 'visible') void refreshIfChanged();
     };
+    const handleOnline = () => void refreshIfChanged(true);
 
-    refreshIfNeeded();
-    const dataInterval = window.setInterval(refreshDataset, 30 * 60_000);
+    void refreshIfChanged();
+    const dataInterval = window.setInterval(() => void refreshIfChanged(), 30 * 60_000);
     const statusInterval = window.setInterval(() => supAipLayerRef.current?.changed(), 60_000);
     document.addEventListener('visibilitychange', handleVisibility);
-    window.addEventListener('online', refreshDataset);
+    window.addEventListener('online', handleOnline);
 
     return () => {
+      cancelled = true;
       window.clearInterval(dataInterval);
       window.clearInterval(statusInterval);
       document.removeEventListener('visibilitychange', handleVisibility);
-      window.removeEventListener('online', refreshDataset);
+      window.removeEventListener('online', handleOnline);
     };
   }, [showSupAip]);
 
@@ -405,6 +440,12 @@ export function OpenLayersMap({
     lastRoutePointCountRef.current = currentPointCount;
     lastRouteEndpointsKeyRef.current = currentEndpointsKey;
 
+    if (skipInitialRouteFitRef.current) {
+      skipInitialRouteFitRef.current = false;
+      const restoredSignature = restoredViewStateRef.current?.routeSignature;
+      if (!restoredSignature || restoredSignature === routeSignature) return;
+    }
+
     if (compact && aircraft) {
       map.getView().setCenter(fromLonLat([aircraft.longitude, aircraft.latitude]));
       return;
@@ -428,7 +469,7 @@ export function OpenLayersMap({
     }
 
     map.getView().fit(routeExtent, { padding: compact ? [48, 48, 48, 48] : [72, 58, 92, 58], duration: 0, maxZoom: 10 });
-  }, [routeExtent, routeCoordinates, compact, route.points]);
+  }, [routeExtent, routeCoordinates, compact, route.points, routeSignature]);
 
   useEffect(() => {
     const map = mapRef.current;
@@ -454,12 +495,22 @@ export function OpenLayersMap({
       const layer = supAipLayerRef.current;
       if (!layer) return;
 
-      const selected = map.forEachFeatureAtPixel(
+      const selections: SupAipSelection[] = [];
+      const seen = new Set<string>();
+      map.forEachFeatureAtPixel(
         event.pixel,
-        (feature) => supAipSelectionFromFeature(feature as Feature<Geometry>),
+        (feature) => {
+          const selection = supAipSelectionFromFeature(feature as Feature<Geometry>);
+          if (selection && !seen.has(selection.id)) {
+            seen.add(selection.id);
+            selections.push(selection);
+          }
+          return undefined;
+        },
         { hitTolerance: 8, layerFilter: (candidate) => candidate === layer }
       );
-      setSelectedSupAip(selected ?? null);
+      setSelectedSupAips(selections);
+      setSelectedSupAipIndex(0);
     };
 
     map.on('singleclick', handleSupAipClick);
@@ -550,7 +601,14 @@ export function OpenLayersMap({
                 : `SUP AIP AUTO BETA - TOUS - ${formatSupAipAltitudeCeiling(normalizedSupAipSettings.maxDisplayFlightLevel)} - ${supAipVisibleCount}/${supAipFeatureCount} zones${supAipDatasetStatus && (supAipDatasetStatus.completeUnmappedPublicationCount + supAipDatasetStatus.partialPublicationCount) > 0 ? ` - ${supAipDatasetStatus.completeUnmappedPublicationCount + supAipDatasetStatus.partialPublicationCount} SUP à contrôler` : ''}`}
         </div>
       )}
-      {selectedSupAip && <SupAipPopup selection={selectedSupAip} onClose={() => setSelectedSupAip(null)} />}
+      {selectedSupAips.length > 0 && (
+        <SupAipPopup
+          selections={selectedSupAips}
+          selectedIndex={selectedSupAipIndex}
+          onSelectIndex={setSelectedSupAipIndex}
+          onClose={() => setSelectedSupAips([])}
+        />
+      )}
       {locationError && <div className="map-location-notice">{locationError}</div>}
       {(sourceStatus === 'fallback' || sourceStatus === 'error') && <MapFallbackNotice mode={sourceStatus === 'error' ? 'oaci' : 'openaip'} />}
     </div>

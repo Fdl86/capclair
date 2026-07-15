@@ -25,7 +25,14 @@ export interface SupAipProperties {
   sourcePage?: string;
   beta?: boolean;
   dataScope?: string;
-  geometrySource?: 'automatic' | 'automatic-layout-v2' | 'automatic-text-v2' | 'manual-override';
+  geometrySource?:
+    | 'automatic'
+    | 'automatic-layout-v2'
+    | 'automatic-layout-v3'
+    | 'automatic-text-v2'
+    | 'manual-override'
+    | 'previous-parser-safety-fallback'
+    | 'previous-parser-partial-safety-fallback';
   geometryConfidence?: 'high' | 'medium';
   geometryWarnings?: string[];
   verticalLimitsExtracted?: boolean;

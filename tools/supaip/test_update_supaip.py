@@ -11,11 +11,16 @@ from tools.supaip.update_supaip import (
     declared_zone_count,
     extract_vertical_pair,
     embedded_column_zones,
+    column_cluster_zones,
     grid_zones,
     make_unique_feature_id,
     parse_listing,
     parse_spatial_document,
     preserve_cached_features_on_complete_regression,
+    preserve_cached_features_on_partial_regression,
+    is_spatial_document,
+    ParsedZone,
+    resolve_permanent_airspace_references,
     parse_spatial_pdf,
 )
 
@@ -155,6 +160,26 @@ class SupAipParserTests(unittest.TestCase):
         self.assertEqual((zones[0].lower_limit, zones[0].upper_limit), ("FL 195", "FL 275"))
         self.assertEqual((zones[1].lower_limit, zones[1].upper_limit), ("FL 305", "FL 335"))
 
+    def test_temporary_lfr_codes_in_three_column_table(self):
+        page = PdfPageLayout(
+            page_index=2,
+            width=600,
+            height=800,
+            blocks=(
+                PdfBlock(2, 100, 70, 500, 90, "LFR343L\nLFR343M\nLFR343H"),
+                PdfBlock(2, 50, 100, 190, 240, "LIMITES LATÉRALES\n45°00'00'' N,001°00'00'' E\n45°10'00'' N,001°00'00'' E\n45°00'00'' N,001°10'00'' E"),
+                PdfBlock(2, 230, 100, 370, 240, "LIMITES LATÉRALES\n46°00'00'' N,001°00'00'' E\n46°10'00'' N,001°00'00'' E\n46°00'00'' N,001°10'00'' E"),
+                PdfBlock(2, 410, 100, 550, 240, "LIMITES LATÉRALES\n47°00'00'' N,001°00'00'' E\n47°10'00'' N,001°00'00'' E\n47°00'00'' N,001°10'00'' E"),
+                PdfBlock(2, 80, 250, 170, 270, "FL165 / FL195"),
+                PdfBlock(2, 260, 250, 350, 270, "FL195 / FL245"),
+                PdfBlock(2, 440, 250, 520, 270, "FL395 / UNL"),
+            ),
+        )
+        zones = column_cluster_zones(page)
+        self.assertEqual([zone.name for zone in zones], ["LFR343L", "LFR343M", "LFR343H"])
+        self.assertTrue(all(zone.geometry for zone in zones))
+        self.assertTrue(all(zone.zone_type == "ZRT" for zone in zones))
+
     def test_fbz_pages_are_not_published_as_operational_tra(self):
         operational_page = PdfPageLayout(
             page_index=0,
@@ -233,6 +258,43 @@ class SupAipParserTests(unittest.TestCase):
         self.assertEqual(recovered[0]["properties"]["sourceFingerprint"], "new-fingerprint")
         self.assertEqual(recovered[0]["properties"]["geometrySource"], "previous-parser-safety-fallback")
         self.assertEqual(cached[0]["properties"]["sourceFingerprint"], "old")
+
+    def test_previous_individual_geometry_is_preserved_on_partial_parser_regression(self):
+        entry = ListingEntry("207/25", "Création de zones LFDB", "2025-01-01", "2027-01-01", "https://example.invalid/207.pdf", True, "new")
+        geometry = {"type": "Polygon", "coordinates": [[[-2.0, 47.0], [-1.9, 47.0], [-1.9, 47.1], [-2.0, 47.0]]]}
+        cached = [
+            {"type": "Feature", "id": "a", "properties": {"name": "ZRT LFDB21", "geometryWarnings": []}, "geometry": geometry},
+            {"type": "Feature", "id": "b", "properties": {"name": "ZRT LFDB22", "geometryWarnings": []}, "geometry": geometry},
+        ]
+        parsed = [{"type": "Feature", "id": "a", "properties": {"name": "ZRT LFDB21"}, "geometry": geometry}]
+        manifest = {"title": entry.title, "sourcePdf": entry.pdf_url}
+        recovered, count = preserve_cached_features_on_partial_regression(entry, parsed, cached, manifest)
+        self.assertEqual(count, 1)
+        self.assertEqual(len(recovered), 2)
+        self.assertEqual(recovered[1]["properties"]["geometrySource"], "previous-parser-partial-safety-fallback")
+
+    def test_helicopter_route_document_is_not_classified_as_spatial_zone(self):
+        entry = ListingEntry(
+            "075/26",
+            "Modification temporaire de l'itinéraire hélicoptères en CTR Paris entre LFPI et IH3",
+            "2026-01-01",
+            "2026-12-31",
+            "https://example.invalid/075.pdf",
+            True,
+            "x",
+        )
+        document = PdfDocumentLayout("CTR PARIS LIMITES LATERALES", tuple())
+        self.assertFalse(is_spatial_document(entry, document))
+
+    def test_reference_to_permanent_airspace_uses_cap_clair_catalog(self):
+        zone = ParsedZone(name="ZRT TEST", zone_type="ZRT", geometry=None)
+        resolve_permanent_airspace_references(
+            [zone],
+            "Les limites latérales sont identiques à celles de la zone LF-R 260.",
+        )
+        self.assertIsNotNone(zone.geometry)
+        self.assertEqual(zone.geometry["type"], "Polygon")
+        self.assertTrue(any("LF-R260" in warning for warning in zone.warnings))
 
     def test_duplicate_truncated_zone_names_receive_unique_ids(self):
         used_ids: set[str] = set()

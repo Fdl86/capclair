@@ -143,6 +143,7 @@ export function TraceReplayScreen({
           baseLayer={mapBaseLayer}
           followAircraft={followAircraft}
           supAipSettings={supAipSettings}
+          viewStateKey={`replay:${trace.id}`}
         />
         {crossTrack && (
           <div className="replay-cross-track-map">

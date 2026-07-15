@@ -1,11 +1,12 @@
 #!/usr/bin/env python3
 """Build CAP CLAIR's SUP AIP overlay from the official French SIA listing.
 
-Parser V2 is layout-aware. It reads PyMuPDF text blocks so multi-column tables,
-row tables, circles and common arc descriptions remain associated with the
-correct named zone and vertical limits. It remains conservative: a boundary
-that depends on an external coastline, frontier or another airspace is reported
-instead of being silently approximated.
+Parser V3 is layout-aware and regression-safe. It reads PyMuPDF text blocks,
+rebuilds common multi-column SIA tables, recognises temporary LFR designators,
+and keeps previously valid individual geometries if a parser upgrade loses only
+part of a publication. It remains conservative: a boundary that depends on an
+external coastline, frontier or another airspace is reported instead of being
+silently approximated.
 """
 
 from __future__ import annotations
@@ -32,13 +33,14 @@ from requests.adapters import HTTPAdapter
 from urllib3.util.retry import Retry
 
 SOURCE_URL = "https://www.sia.aviation-civile.gouv.fr/documents/supaip/aip/id/6"
-PARSER_VERSION = "capclair-supaip-parser-2.1.0"
-USER_AGENT = "CAP-CLAIR-SUPAIP-BETA/2.1.0 (+automatic SIA public-document reader)"
+PARSER_VERSION = "capclair-supaip-parser-3.0.0"
+USER_AGENT = "CAP-CLAIR-SUPAIP-BETA/3.0.0 (+automatic SIA public-document reader)"
 ZONE_TITLE_RE = re.compile(
     r"\b(?:ZRT|ZDT|ZIT|TRA|TSA|zone(?:s)?\s+(?:r[eé]glement[eé]e|dangereuse|interdite|r[eé]serv[eé]e)(?:s)?\s+temporaire(?:s)?|CTR\s+temporaire|TMA\s+temporaire)\b",
     re.IGNORECASE,
 )
 ZONE_TOKEN_RE = re.compile(r"\b(ZRT|ZDT|ZIT|TRA|TSA|CTR|TMA|RMZ|TMZ|FBZ)\b", re.IGNORECASE)
+TEMPORARY_LFR_CODE_RE = re.compile(r"\bLF\s*-?\s*R\s*(?P<number>\d{2,3})(?P<suffix>[A-Z0-9]{0,3})\b", re.IGNORECASE)
 ZONE_START_RE = re.compile(
     r"(?<![A-Z0-9/])(?:ZRT/ZDT\b|ZRT\b|ZDT\b|ZIT\b|TRA(?=\b|\d)|TSA(?=\b|\d)|CTR(?:\s+TEMPORAIRE)?\b|TMA(?:\s+TEMPORAIRE)?\b|RMZ\b|TMZ\b|FBZ\b)",
     re.IGNORECASE,
@@ -81,8 +83,19 @@ EXTERNAL_BOUNDARY_RE = re.compile(
     re.IGNORECASE,
 )
 EXCLUSION_RE = re.compile(r"\b(?:[àa]\s+l['’]exclusion|hors\s+la\s+partie|se\s+substitue)\b", re.IGNORECASE)
+AIRSPACE_REFERENCE_RE = re.compile(
+    r"(?:limites?\s+(?:lat[eé]rales?\s+)?(?:sont\s+)?(?:identiques?|correspondant(?:es)?|reprises?)\s+[àa]\s+celles?\s+(?:de\s+)?|"
+    r"reprend(?:re|ant)?\s+les\s+limites?\s+(?:lat[eé]rales?\s+)?(?:de\s+)?)"
+    r"(?:la\s+zone\s+)?LF\s*-?\s*(?P<type>[RPD])\s*(?P<name>\d+[A-Z0-9]*)",
+    re.IGNORECASE,
+)
 FBZ_SECTION_RE = re.compile(
     r"(?:ZONES?\s+TAMPON\s+ASSOCI[EÉ]ES?|FBZ\s*-\s*FLIGHT\s+BUFFER\s+ZONE)",
+    re.IGNORECASE,
+)
+NON_SPATIAL_TITLE_RE = re.compile(
+    r"\b(?:modification\s+temporaire\s+de\s+l['’]itin[eé]raire\s+h[eé]licopt[eè]res?|"
+    r"itin[eé]raire\s+h[eé]licopt[eè]res?)\b",
     re.IGNORECASE,
 )
 
@@ -159,6 +172,9 @@ class ParseResult:
     expected_named_geometry_count: int
     declared_zone_count: int | None
     missing_vertical_count: int
+
+
+_AIRSPACE_CATALOG_CACHE: list[dict[str, Any]] | None = None
 
 
 def clean_space(value: str) -> str:
@@ -416,7 +432,7 @@ def extract_vertical_limits(text: str) -> list[tuple[str, str]]:
 
 
 ZONE_NAME_STOP_RE = re.compile(
-    r"\b(?:LIMITES?\s+(?:LAT[EÉ]RALES?|VERTICALES?)|DATES?\s+ET\s+HEURES?|ACTIVIT[EÉ]|STATUT|GESTIONNAIRE(?:S)?|INFORMATION\s+DES\s+USAGERS)\b",
+    r"\b(?:LIMITES?\s+(?:LAT[EÉ]RALES?|VERTICALES?)|DATES?\s+ET\s+HEURES?|ACTIVIT[EÉ]|STATUT|GESTIONNAIRE(?:S)?|INFORMATION\s+DES\s+USAGERS|ERNIP\s+identification)\b",
     re.IGNORECASE,
 )
 SERVICE_SUFFIX_RE = re.compile(
@@ -443,7 +459,7 @@ def clean_zone_name(value: str) -> str:
     vertical = VERTICAL_SLASH_RE.search(name) or VERTICAL_DASH_RE.search(name)
     if vertical:
         name = name[: vertical.start()]
-    name = clean_space(name).strip(" /,;:-")
+    name = clean_space(name).strip(" /,;:-(")
     name = re.sub(r"\s+[NSEW]$", "", name, flags=re.IGNORECASE).strip()
     if re.fullmatch(r"(?:ZRT/ZDT|ZRT|ZDT|ZIT|TRA|TSA|CTR|TMA|RMZ|TMZ|FBZ)(?:\s+(?:ILES?\s+DE|ILE\s+DE))?", name, re.IGNORECASE):
         return ""
@@ -456,6 +472,22 @@ def zone_identity_key(name: str) -> str:
     normalized = unicodedata.normalize("NFKD", cleaned).encode("ascii", "ignore").decode("ascii").upper()
     normalized = re.sub(r"[^A-Z0-9/]+", " ", normalized)
     return clean_space(normalized)
+
+
+def normalize_temporary_lfr_code(value: str) -> str:
+    match = TEMPORARY_LFR_CODE_RE.search(value)
+    if not match:
+        return ""
+    return f"LFR{match.group('number')}{match.group('suffix').upper()}"
+
+
+def temporary_lfr_names(value: str) -> list[str]:
+    names: list[str] = []
+    for match in TEMPORARY_LFR_CODE_RE.finditer(clean_space(value)):
+        name = f"LFR{match.group('number')}{match.group('suffix').upper()}"
+        if name not in names:
+            names.append(name)
+    return names
 
 
 def split_zone_names(value: str) -> list[str]:
@@ -473,6 +505,8 @@ def split_zone_names(value: str) -> list[str]:
             continue
         if name and name not in names:
             names.append(name)
+    if not names:
+        names.extend(temporary_lfr_names(text))
     return names
 
 
@@ -480,17 +514,20 @@ def leading_zone_name(value: str) -> str:
     text = clean_space(value)
     match = ZONE_START_RE.match(text)
     if not match:
-        return ""
+        return normalize_temporary_lfr_code(text) if TEMPORARY_LFR_CODE_RE.fullmatch(text.strip()) else ""
     stop = ZONE_NAME_STOP_RE.search(text, match.end())
     candidate = text[: stop.start()] if stop else text
     return clean_zone_name(candidate)
 
 
 def starts_with_zone(value: str) -> bool:
+    cleaned = clean_space(value)
+    if TEMPORARY_LFR_CODE_RE.match(cleaned):
+        return True
     return bool(
         re.match(
             r"^\s*(?:ZRT/ZDT\b|ZRT\b|ZDT\b|ZIT\b|TRA(?=\b|\d)|TSA(?=\b|\d)|CTR\b|TMA\b|RMZ\b|TMZ\b|FBZ\b)",
-            clean_space(value),
+            cleaned,
             re.IGNORECASE,
         )
     )
@@ -502,7 +539,11 @@ def is_zone_heading_block(block: PdfBlock) -> bool:
         return False
     if len(text) > 320:
         return False
-    if re.search(r"\b(?:LIMITES|ACTIVIT[EÉ]|STATUT|CONDITIONS|INFORMATION|GESTIONNAIRE|SERVICES|TOUTES\s+LES\s+ZONES)\b", text, re.IGNORECASE):
+    if re.search(r"\b(?:ACTIVIT[EÉ]|STATUT|CONDITIONS|INFORMATION|GESTIONNAIRE|SERVICES|TOUTES\s+LES\s+ZONES)\b", text, re.IGNORECASE):
+        return False
+    # A heading can include the shared table title "LIMITES ..." followed by
+    # the actual zone name. Do not reject it when one unambiguous name follows.
+    if re.search(r"\bLIMITES\b", text, re.IGNORECASE) and len(split_zone_names(text)) != 1:
         return False
     return bool(split_zone_names(text))
 
@@ -515,6 +556,8 @@ def zone_type_from_name(name: str, title: str) -> str:
     )
     if match:
         return match.group(1).upper()
+    if TEMPORARY_LFR_CODE_RE.search(name):
+        return "ZRT"
     match = ZONE_TOKEN_RE.search(title)
     return match.group(1).upper() if match else "Zone temporaire"
 
@@ -582,6 +625,70 @@ def geometry_from_text(text: str) -> tuple[dict[str, Any] | None, str, list[str]
         confidence = "medium"
         warnings.append("Exclusion interne non découpée: contour extérieur affiché par prudence.")
     return {"type": "Polygon", "coordinates": [ring]}, confidence, warnings
+
+
+def load_airspace_catalog(path: Path = Path("src/data/airspaceCatalog.ts")) -> list[dict[str, Any]]:
+    global _AIRSPACE_CATALOG_CACHE
+    if _AIRSPACE_CATALOG_CACHE is not None:
+        return _AIRSPACE_CATALOG_CACHE
+    try:
+        raw = path.read_text(encoding="utf-8")
+        prefix = "export const AIRSPACE_CATALOG = "
+        start = raw.index(prefix) + len(prefix)
+        end = raw.rindex(" as AirspaceCatalogItem[];")
+        payload = json.loads(raw[start:end])
+        _AIRSPACE_CATALOG_CACHE = payload if isinstance(payload, list) else []
+    except (OSError, ValueError, json.JSONDecodeError):
+        _AIRSPACE_CATALOG_CACHE = []
+    return _AIRSPACE_CATALOG_CACHE
+
+
+def catalog_reference_geometry(reference_type: str, reference_name: str) -> dict[str, Any] | None:
+    target_type = reference_type.upper()
+    target_name = re.sub(r"[^A-Z0-9]", "", reference_name.upper())
+    for item in load_airspace_catalog():
+        item_type = re.sub(r"[^A-Z]", "", str(item.get("type") or "").upper())
+        item_name = re.sub(r"[^A-Z0-9]", "", str(item.get("name") or "").upper())
+        if item_type != target_type or item_name != target_name:
+            continue
+        polygons: list[list[list[float]]] = []
+        for part in item.get("parts", []):
+            points = part.get("points") or []
+            ring = close_ring([(float(point[1]), float(point[0])) for point in points if len(point) >= 2])
+            if len(ring) >= 4:
+                polygons.append(ring)
+        if not polygons:
+            return None
+        if len(polygons) == 1:
+            return {"type": "Polygon", "coordinates": [polygons[0]]}
+        return {"type": "MultiPolygon", "coordinates": [[[point for point in ring]] for ring in polygons]}
+    return None
+
+
+def resolve_permanent_airspace_references(zones: list[ParsedZone], document_text: str) -> None:
+    references: list[tuple[str, str, dict[str, Any]]] = []
+    for match in AIRSPACE_REFERENCE_RE.finditer(normalize_text(document_text)):
+        geometry = catalog_reference_geometry(match.group("type"), match.group("name"))
+        if geometry:
+            key = (match.group("type").upper(), match.group("name").upper())
+            if not any(existing[0:2] == key for existing in references):
+                references.append((key[0], key[1], geometry))
+    missing = [zone for zone in zones if zone.geometry is None]
+    if not missing or not references:
+        return
+    if len(references) == 1:
+        assignments = [(zone, references[0]) for zone in missing]
+    elif len(references) == len(missing):
+        assignments = list(zip(missing, references))
+    else:
+        return
+    for zone, (reference_type, reference_name, geometry) in assignments:
+        zone.geometry = copy.deepcopy(geometry)
+        zone.confidence = "high"
+        zone.warnings = [warning for warning in zone.warnings if "Limite dépendant" not in warning]
+        zone.warnings.append(
+            f"Limites latérales reprises du catalogue CAP CLAIR LF-{reference_type}{reference_name}, conformément au PDF SIA."
+        )
 
 
 def block_distance_to_y(block: PdfBlock, y: float) -> float:
@@ -812,6 +919,204 @@ def grid_zones(page: PdfPageLayout) -> list[ParsedZone]:
     return zones
 
 
+TABLE_STOP_RE = re.compile(
+    r"^(?:DISPOSITIONS?|ORGANISMES?|GESTIONNAIRE|CONDITIONS|SERVICES|DATES?\s+ET\s+HEURES?|INFORMATION\s+DES\s+USAGERS)\b",
+    re.IGNORECASE,
+)
+ZONE_SUFFIX_RE = re.compile(r"^(ALPHA|BRAVO|CHARLIE|DELTA|ECHO|FOXTROT|GOLF|HOTEL)\b", re.IGNORECASE)
+
+
+@dataclass(frozen=True)
+class ColumnHeading:
+    name: str
+    center_x: float
+    y: float
+
+
+def reconstructed_column_headings(page: PdfPageLayout) -> list[ColumnHeading]:
+    """Return zone headings with an approximate column centre.
+
+    SIA tables often expose one visual row as several unrelated PDF blocks.
+    This helper handles both a block containing several designators and the
+    Romorantin pattern where a shared prefix is followed by ALPHA/BRAVO/etc.
+    """
+    headings: list[ColumnHeading] = []
+    suffix_blocks: list[PdfBlock] = []
+    consumed_base_ids: set[int] = set()
+
+    for block in page.blocks:
+        suffix_match = ZONE_SUFFIX_RE.match(clean_space(block.text))
+        if suffix_match and len(clean_space(block.text)) < 100:
+            suffix_blocks.append(block)
+
+    for suffix in suffix_blocks:
+        suffix_name = ZONE_SUFFIX_RE.match(clean_space(suffix.text))
+        if not suffix_name:
+            continue
+        candidates: list[PdfBlock] = []
+        for block in page.blocks:
+            names = split_zone_names(block.text)
+            if len(names) != 1 or block.y0 > suffix.y0 + 2.0:
+                continue
+            if suffix.y0 - block.y1 > 45.0:
+                continue
+            horizontal_overlap = min(block.x1, suffix.x1) - max(block.x0, suffix.x0)
+            if horizontal_overlap >= -8.0:
+                candidates.append(block)
+        if not candidates:
+            continue
+        base = min(candidates, key=lambda item: (max(0.0, suffix.y0 - item.y1), abs(item.center_x - suffix.center_x)))
+        base_name = split_zone_names(base.text)[0]
+        full_name = clean_zone_name(f"{base_name} {suffix_name.group(1).upper()}")
+        if full_name:
+            headings.append(ColumnHeading(full_name, suffix.center_x, min(base.y0, suffix.y0)))
+            consumed_base_ids.add(id(base))
+
+    for block in page.blocks:
+        names = split_zone_names(block.text)
+        if not names or id(block) in consumed_base_ids:
+            continue
+        text = clean_space(block.text)
+        if len(text) > 340 or "°" in text:
+            continue
+        if re.search(r"\b(?:ACTIVIT[EÉ]|STATUT|CONDITIONS|INFORMATION|GESTIONNAIRE|SERVICES|TOUTES\s+LES\s+ZONES)\b", text, re.IGNORECASE):
+            continue
+        if len(names) == 1:
+            headings.append(ColumnHeading(names[0], block.center_x, block.y0))
+            continue
+        width = max(1.0, block.x1 - block.x0)
+        for index, name in enumerate(names):
+            center = block.x0 + width * ((index + 0.5) / len(names))
+            headings.append(ColumnHeading(name, center, block.y0))
+
+    unique: dict[str, ColumnHeading] = {}
+    for heading in headings:
+        key = zone_identity_key(heading.name)
+        current = unique.get(key)
+        if not key:
+            continue
+        if current is None or heading.y > current.y:
+            unique[key] = heading
+    return sorted(unique.values(), key=lambda item: item.center_x)
+
+
+def column_cluster_zones(page: PdfPageLayout) -> list[ParsedZone]:
+    """Parse visually aligned columns even when PDF blocks are split oddly."""
+    coordinate_blocks = [block for block in page.blocks if len(coordinate_matches(block.text)) >= 3]
+    if not coordinate_blocks:
+        return []
+    headings = reconstructed_column_headings(page)
+    if not headings:
+        return []
+
+    coord_min_y = min(block.y0 for block in coordinate_blocks)
+    relevant = [heading for heading in headings if heading.y <= coord_min_y + 35.0 and coord_min_y - heading.y <= 220.0]
+    if not relevant:
+        return []
+
+    centers = [heading.center_x for heading in relevant]
+    boundaries = [0.0]
+    boundaries.extend((centers[index] + centers[index + 1]) / 2.0 for index in range(len(centers) - 1))
+    boundaries.append(page.width)
+    table_start = min(heading.y for heading in relevant)
+    stop_candidates = [
+        block.y0
+        for block in page.blocks
+        if block.y0 > coord_min_y and TABLE_STOP_RE.match(clean_space(block.text))
+    ]
+    table_end = min(stop_candidates) if stop_candidates else page.height - 20.0
+
+    page_verticals = [pair for block in page.blocks if table_start <= block.y0 < table_end if (pair := extract_vertical_pair(block.text))]
+    shared_vertical = page_verticals[0] if page_verticals and len(set(page_verticals)) == 1 else None
+
+    zones: list[ParsedZone] = []
+    for index, heading in enumerate(relevant):
+        column_blocks = [
+            block
+            for block in page.blocks
+            if table_start - 4.0 <= block.y0 < table_end
+            and boundaries[index] <= block.center_x < boundaries[index + 1]
+        ]
+        column_blocks.sort(key=lambda item: (item.y0, item.x0))
+        column_text = "\n".join(block.text for block in column_blocks)
+        geometry, confidence, warnings = geometry_from_text(column_text)
+        coordinate_column_blocks = [block for block in column_blocks if coordinate_matches(block.text)]
+        vertical = None
+        if coordinate_column_blocks:
+            coordinate_end = max(block.y1 for block in coordinate_column_blocks)
+            vertical_candidates = [
+                (block, pair)
+                for block in page.blocks
+                if (pair := extract_vertical_pair(block.text))
+                and coordinate_end - 4.0 <= block.y0 <= coordinate_end + 80.0
+            ]
+            if vertical_candidates:
+                _, vertical = min(
+                    vertical_candidates,
+                    key=lambda item: (
+                        abs(item[0].y0 - coordinate_end),
+                        0 if item[0].x0 <= heading.center_x <= item[0].x1 else abs(item[0].center_x - heading.center_x),
+                    ),
+                )
+        vertical = vertical or extract_vertical_pair(column_text) or shared_vertical
+        if geometry or vertical:
+            zones.append(
+                ParsedZone(
+                    name=heading.name,
+                    zone_type=zone_type_from_name(heading.name, ""),
+                    geometry=geometry,
+                    lower_limit=vertical[0] if vertical else "",
+                    upper_limit=vertical[1] if vertical else "",
+                    vertical_extracted=bool(vertical),
+                    confidence=confidence,
+                    page_index=page.page_index,
+                    position_y=heading.y,
+                    warnings=warnings,
+                )
+            )
+    return zones
+
+
+def single_zone_layout_fallback(document: PdfDocumentLayout, title: str) -> list[ParsedZone]:
+    """Recover a one-zone publication whose limits table omits the zone name."""
+    if declared_zone_count(title) != 1:
+        return []
+    candidate_names: list[str] = []
+    for page in document.pages:
+        for block in page.blocks:
+            for name in split_zone_names(block.text):
+                if name not in candidate_names and name.upper() not in {"ZRT", "ZDT", "ZIT"}:
+                    candidate_names.append(name)
+    if not candidate_names:
+        return []
+    # Prefer the shortest explicit designation. It is usually the map label,
+    # whereas longer occurrences often include prose from the title.
+    name = min(candidate_names, key=lambda item: (len(item), item))
+    for page in document.pages:
+        blocks_with_coordinates = [block for block in page.blocks if len(coordinate_matches(block.text)) >= 3]
+        if not blocks_with_coordinates:
+            continue
+        page_text = "\n".join(block.text for block in sorted(page.blocks, key=lambda item: (item.y0, item.x0)))
+        geometry, confidence, warnings = geometry_from_text(page_text)
+        vertical = extract_vertical_pair(page_text)
+        if geometry or vertical:
+            return [
+                ParsedZone(
+                    name=name,
+                    zone_type=zone_type_from_name(name, title),
+                    geometry=geometry,
+                    lower_limit=vertical[0] if vertical else "",
+                    upper_limit=vertical[1] if vertical else "",
+                    vertical_extracted=bool(vertical),
+                    confidence=confidence,
+                    page_index=page.page_index,
+                    position_y=min(block.y0 for block in blocks_with_coordinates),
+                    warnings=warnings,
+                )
+            ]
+    return []
+
+
 def text_fallback_zones(text: str, title: str) -> list[ParsedZone]:
     section_match = re.search(r"LIMITES\s+LAT[EÉ]RALES(?:\s+ET\s+VERTICALES)?", text, re.IGNORECASE)
     section = text[section_match.end() :] if section_match else text
@@ -1040,10 +1345,15 @@ def make_unique_feature_id(
 
 
 def is_spatial_document(entry: ListingEntry, document: PdfDocumentLayout) -> bool:
+    if NON_SPATIAL_TITLE_RE.search(entry.title):
+        return False
     if ZONE_TITLE_RE.search(entry.title):
         return True
     normalized = document.text.upper()
-    return bool(ZONE_TOKEN_RE.search(normalized) and re.search(r"LIMITES\s+LAT[EÉ]RALES(?:\s+ET\s+VERTICALES)?", normalized))
+    return bool(
+        (ZONE_TOKEN_RE.search(normalized) or TEMPORARY_LFR_CODE_RE.search(normalized))
+        and re.search(r"LIMITES\s+LAT[EÉ]RALES(?:\s+ET\s+VERTICALES)?", normalized)
+    )
 
 
 def parse_spatial_document(entry: ListingEntry, document: PdfDocumentLayout) -> ParseResult:
@@ -1051,34 +1361,45 @@ def parse_spatial_document(entry: ListingEntry, document: PdfDocumentLayout) -> 
     grid_count = 0
     in_fbz_section = False
     for page in document.pages:
-        if in_fbz_section:
+        page_text = "\n".join(block.text for block in page.blocks)
+        fbz_heading = next((block for block in page.blocks if FBZ_SECTION_RE.search(block.text)), None)
+        if in_fbz_section or (fbz_heading is not None and fbz_heading.y0 < page.height * 0.30):
+            in_fbz_section = True
             continue
         self_zones = self_contained_zones(page)
         grid_page_zones = grid_zones(page)
         embedded_page_zones = embedded_column_zones(page)
+        clustered_page_zones = column_cluster_zones(page)
         row_zones = row_table_zones(page)
         layout_zones.extend(self_zones)
         layout_zones.extend(grid_page_zones)
         layout_zones.extend(embedded_page_zones)
+        layout_zones.extend(clustered_page_zones)
         if not grid_page_zones and not embedded_page_zones:
             layout_zones.extend(row_zones)
-        grid_count += len(grid_page_zones) + len(embedded_page_zones)
-        page_text = "\n".join(block.text for block in page.blocks)
+        grid_count += len(grid_page_zones) + len(embedded_page_zones) + len(clustered_page_zones)
         if FBZ_SECTION_RE.search(page_text):
             in_fbz_section = True
 
     operational_text = FBZ_SECTION_RE.split(document.text, maxsplit=1)[0]
     fallback_zones = text_fallback_zones(operational_text, entry.title)
     zones = layout_zones + fallback_zones
+    declared_count = declared_zone_count(entry.title)
+    if declared_count == 1:
+        single_fallback = single_zone_layout_fallback(document, entry.title)
+        if single_fallback and single_fallback[0].geometry:
+            zones = single_fallback
+    elif not any(zone.geometry for zone in zones):
+        zones.extend(single_zone_layout_fallback(document, entry.title))
     if grid_count == 0:
         zones = select_authoritative_row_zones(document, zones)
     zones = deduplicate_zones(zones)
     inherit_shared_geometries(zones)
+    resolve_permanent_airspace_references(zones, operational_text)
     zones = deduplicate_zones(zones)
 
     expected_names = [zone.name for zone in zones]
-    expected_named_geometry_count = len(expected_names)
-    declared_count = declared_zone_count(entry.title)
+    expected_named_geometry_count = max(len(expected_names), int(declared_count or 0))
     activation_text = extract_activation_text(document.text)
     activation_mode = infer_activation_mode(activation_text, document.text)
     frequency = extract_frequencies(document.text)
@@ -1112,7 +1433,7 @@ def parse_spatial_document(entry: ListingEntry, document: PdfDocumentLayout) -> 
             "sourcePage": SOURCE_URL,
             "sourcePageNumber": (zone.page_index + 1) if zone.page_index is not None else None,
             "dataScope": "auto-sia",
-            "geometrySource": "automatic-layout-v2",
+            "geometrySource": "automatic-layout-v3",
             "geometryConfidence": zone.confidence,
             "geometryWarnings": zone.warnings,
             "sourceFingerprint": entry.fingerprint,
@@ -1267,6 +1588,50 @@ def preserve_cached_features_on_complete_regression(
     return recovered, True
 
 
+def preserve_cached_features_on_partial_regression(
+    entry: ListingEntry,
+    parsed_features: list[dict[str, Any]],
+    cached_features: list[dict[str, Any]],
+    cached_manifest: dict[str, Any] | None,
+) -> tuple[list[dict[str, Any]], int]:
+    """Restore individual zones lost by a parser upgrade.
+
+    The official publication identity must be unchanged. New V3 geometries win;
+    only cached names that disappeared completely are appended as medium
+    confidence safety fallbacks.
+    """
+    if not parsed_features or not cached_features or not cached_manifest:
+        return parsed_features, 0
+    if cached_manifest.get("title") != entry.title or cached_manifest.get("sourcePdf") != entry.pdf_url:
+        return parsed_features, 0
+
+    current_keys = {
+        zone_identity_key(str(feature.get("properties", {}).get("name") or ""))
+        for feature in parsed_features
+    }
+    recovered: list[dict[str, Any]] = []
+    for feature in cached_features:
+        properties = feature.get("properties", {})
+        key = zone_identity_key(str(properties.get("name") or ""))
+        if not key or key in current_keys:
+            continue
+        feature_copy = copy.deepcopy(feature)
+        copied_properties = feature_copy.setdefault("properties", {})
+        copied_properties["sourceFingerprint"] = entry.fingerprint
+        copied_properties["parserVersion"] = PARSER_VERSION
+        copied_properties["geometrySource"] = "previous-parser-partial-safety-fallback"
+        copied_properties["geometryConfidence"] = "medium"
+        geometry_warnings = list(copied_properties.get("geometryWarnings") or [])
+        warning = "Zone conservée depuis la dernière base valide après une régression partielle du parseur."
+        if warning not in geometry_warnings:
+            geometry_warnings.append(warning)
+        copied_properties["geometryWarnings"] = geometry_warnings
+        recovered.append(feature_copy)
+        current_keys.add(key)
+
+    return parsed_features + recovered, len(recovered)
+
+
 def load_manual_overrides(path: Path) -> dict[str, list[dict[str, Any]]]:
     data = load_json(path, {"features": []})
     groups: dict[str, list[dict[str, Any]]] = {}
@@ -1315,6 +1680,11 @@ def write_json_atomic(path: Path, payload: Any) -> None:
     temporary = path.with_suffix(path.suffix + ".tmp")
     temporary.write_text(json.dumps(payload, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
     temporary.replace(path)
+
+
+def stable_payload_hash(payload: Any) -> str:
+    raw = json.dumps(payload, ensure_ascii=False, sort_keys=True, separators=(",", ":"))
+    return hashlib.sha256(raw.encode("utf-8")).hexdigest()
 
 
 def is_critical_parse_warning(value: str) -> bool:
@@ -1373,6 +1743,26 @@ def build_dataset(output_dir: Path, override_path: Path, polite_delay: float = 0
     previous_features, previous_unmapped, previous_manifest = existing_cache(output_dir)
     overrides = load_manual_overrides(override_path)
     previous_count = sum(len(items) for items in previous_features.values())
+    previous_status = load_json(output_dir / "supaip-status.json", {})
+    override_revision = stable_payload_hash(overrides)
+    required_outputs = (
+        output_dir / "supaip-current.geojson",
+        output_dir / "supaip-status.json",
+        output_dir / "supaip-unmapped.json",
+        output_dir / "supaip-manifest.json",
+    )
+    manifest_is_current = len(previous_manifest) == len(entries) and all(
+        (previous_manifest.get(entry.sup_aip) or {}).get("sourceFingerprint") == entry.fingerprint
+        and (previous_manifest.get(entry.sup_aip) or {}).get("parserVersion") == PARSER_VERSION
+        for entry in entries
+    )
+    if (
+        previous_status.get("parserVersion") == PARSER_VERSION
+        and previous_status.get("overrideRevision") == override_revision
+        and manifest_is_current
+        and all(path.exists() for path in required_outputs)
+    ):
+        return previous_status
 
     all_features: list[dict[str, Any]] = []
     unmapped: list[dict[str, Any]] = []
@@ -1401,6 +1791,7 @@ def build_dataset(output_dir: Path, override_path: Path, polite_delay: float = 0
         previous_partial = False
         spatial = False
         used_safety_fallback = False
+        partial_fallback_count = 0
 
         if can_reuse_features(cached_features, entry):
             parsed_features = cached_features
@@ -1463,6 +1854,26 @@ def build_dataset(output_dir: Path, override_path: Path, polite_delay: float = 0
                     if not feature.get("properties", {}).get("verticalLimitsExtracted", False)
                 )
                 previous_partial = True
+            elif parsed_features:
+                parsed_features, partial_fallback_count = preserve_cached_features_on_partial_regression(
+                    entry, parsed_features, cached_features, cached_manifest
+                )
+                if partial_fallback_count:
+                    used_safety_fallback = True
+                    safety_fallback_publications += 1
+                    warnings.append(
+                        f"Régression partielle du parseur détectée: {partial_fallback_count} ancienne(s) zone(s) conservée(s) par sécurité."
+                    )
+                    expected_named_count = max(
+                        expected_named_count,
+                        int((cached_manifest or {}).get("expectedNamedGeometryCount") or len(parsed_features)),
+                    )
+                    missing_vertical_count = sum(
+                        1
+                        for feature in parsed_features
+                        if not feature.get("properties", {}).get("verticalLimitsExtracted", False)
+                    )
+                    previous_partial = True
 
         if not spatial:
             manifest.append({
@@ -1561,18 +1972,16 @@ def build_dataset(output_dir: Path, override_path: Path, polite_delay: float = 0
     missing_vertical_total = sum(
         1 for feature in all_features if not feature.get("properties", {}).get("verticalLimitsExtracted", False)
     )
-    generated_at = datetime.now(timezone.utc).replace(microsecond=0).isoformat().replace("+00:00", "Z")
-    collection = {
+    collection_base = {
         "type": "FeatureCollection",
-        "name": "CAP CLAIR SUP AIP AUTO BETA - Parser V2.2",
-        "generatedAt": generated_at,
+        "name": "CAP CLAIR SUP AIP AUTO BETA - Parser V3",
         "source": "SIA France - liste et PDF officiels SUP AIP Métropole",
         "sourceUrl": SOURCE_URL,
-        "coverage": "Analyse de toutes les publications listées. Extraction layout-aware conservatrice; les limites non reconstructibles restent signalées.",
+        "coverage": "Analyse de toutes les publications listées. Extraction multi-colonnes conservatrice et protection contre les régressions partielles.",
         "parserVersion": PARSER_VERSION,
         "features": all_features,
     }
-    validate_feature_collection(collection, previous_count)
+    validate_feature_collection(collection_base, previous_count)
 
     complete_unmapped_count = sum(1 for item in unmapped if not item.get("partial"))
     partial_count = sum(1 for item in unmapped if item.get("partial"))
@@ -1580,6 +1989,21 @@ def build_dataset(output_dir: Path, override_path: Path, polite_delay: float = 0
     for item in unmapped:
         for code in item.get("causeCodes", []):
             cause_counts[code] = cause_counts.get(code, 0) + 1
+
+    sorted_unmapped = sorted(unmapped, key=lambda item: item.get("supAip", ""), reverse=True)
+    sorted_manifest = sorted(manifest, key=lambda item: item.get("supAip", ""), reverse=True)
+    dataset_revision = stable_payload_hash({
+        "sourceUpdatedAt": source_updated_at,
+        "overrideRevision": override_revision,
+        "collection": collection_base,
+        "unmapped": sorted_unmapped,
+        "manifest": sorted_manifest,
+    })
+    if previous_status.get("datasetRevision") == dataset_revision and all(path.exists() for path in required_outputs):
+        return previous_status
+
+    generated_at = datetime.now(timezone.utc).replace(microsecond=0).isoformat().replace("+00:00", "Z")
+    collection = {**collection_base, "generatedAt": generated_at, "datasetRevision": dataset_revision}
     status = {
         "schemaVersion": 2,
         "mode": "automatic",
@@ -1588,6 +2012,8 @@ def build_dataset(output_dir: Path, override_path: Path, polite_delay: float = 0
         "sourceUpdatedAt": source_updated_at,
         "sourceUrl": SOURCE_URL,
         "parserVersion": PARSER_VERSION,
+        "datasetRevision": dataset_revision,
+        "overrideRevision": override_revision,
         "listingPublicationCount": len(entries),
         "processedPublicationCount": downloaded_publications + reused_publications,
         "nonSpatialPublicationCount": non_spatial_publications,
@@ -1608,21 +2034,23 @@ def build_dataset(output_dir: Path, override_path: Path, polite_delay: float = 0
         "incompleteCausePublicationCounts": cause_counts,
         "incompleteCauseLabels": INCOMPLETE_CAUSE_LABELS,
         "staleAfterHours": 36,
-        "message": "Parser V2.2: toutes les publications SIA listées sont contrôlées et les causes d’incomplétude sont classées. Vérifier le PDF, SOFIA et les NOTAM avant le vol.",
+        "message": "Parser V3: toutes les publications SIA listées sont contrôlées, les tableaux multi-colonnes sont renforcés et les régressions partielles sont protégées. Vérifier le PDF, SOFIA et les NOTAM avant le vol.",
     }
     unmapped_payload = {
         "schemaVersion": 2,
         "generatedAt": generated_at,
+        "datasetRevision": dataset_revision,
         "sourceUrl": SOURCE_URL,
         "parserVersion": PARSER_VERSION,
-        "publications": sorted(unmapped, key=lambda item: item.get("supAip", ""), reverse=True),
+        "publications": sorted_unmapped,
     }
     manifest_payload = {
         "schemaVersion": 1,
         "generatedAt": generated_at,
+        "datasetRevision": dataset_revision,
         "sourceUrl": SOURCE_URL,
         "parserVersion": PARSER_VERSION,
-        "publications": sorted(manifest, key=lambda item: item.get("supAip", ""), reverse=True),
+        "publications": sorted_manifest,
     }
 
     write_json_atomic(output_dir / "supaip-current.geojson", collection)

@@ -2,7 +2,9 @@ import type { SupAipSelection } from '../../domain/supaip.types';
 import { formatSupAipDateRange, supAipStatusLabel } from '../../services/supaip/supAipStatus';
 
 interface SupAipPopupProps {
-  selection: SupAipSelection;
+  selections: SupAipSelection[];
+  selectedIndex: number;
+  onSelectIndex: (index: number) => void;
   onClose: () => void;
 }
 
@@ -13,7 +15,9 @@ function hasExtractedVerticalLimits(selection: SupAipSelection): boolean {
   return Boolean(lower && upper && lower.toLocaleLowerCase('fr-FR') !== 'à vérifier' && upper.toLocaleLowerCase('fr-FR') !== 'à vérifier');
 }
 
-export function SupAipPopup({ selection, onClose }: SupAipPopupProps) {
+export function SupAipPopup({ selections, selectedIndex, onSelectIndex, onClose }: SupAipPopupProps) {
+  const selection = selections[Math.max(0, Math.min(selectedIndex, selections.length - 1))];
+  if (!selection) return null;
   const automaticGeometry = selection.geometrySource?.startsWith('automatic') ?? false;
   const verticalLimitsExtracted = hasExtractedVerticalLimits(selection);
   const geometryWarning = selection.geometryWarnings?.[0];
@@ -27,6 +31,17 @@ export function SupAipPopup({ selection, onClose }: SupAipPopupProps) {
         </div>
         <button type="button" onClick={onClose} aria-label="Fermer le détail SUP AIP">×</button>
       </div>
+
+      {selections.length > 1 && (
+        <label className="supaip-popup-overlap-selector">
+          <span>{selections.length} zones à cet endroit</span>
+          <select value={selectedIndex} onChange={(event) => onSelectIndex(Number(event.target.value))}>
+            {selections.map((item, index) => (
+              <option value={index} key={item.id}>{item.name} - {item.lowerLimit || '?'} / {item.upperLimit || '?'}</option>
+            ))}
+          </select>
+        </label>
+      )}
 
       <div className="supaip-popup-status">
         <i aria-hidden="true" />

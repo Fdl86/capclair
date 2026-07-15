@@ -1,8 +1,26 @@
-# CAP CLAIR WEB13.28.0 - SUP AIP ALTITUDE FILTER BETA
+# CAP CLAIR WEB13.29.0 - SUP AIP PARSER V3 ROBUSTESSE BETA
 
 CAP CLAIR est une application VFR mobile-first en Vite, React, TypeScript et OpenLayers, déployée comme PWA sur Cloudflare Pages.
 
-Cette livraison ajoute un plafond d'affichage vertical volontairement conservateur et rend visibles les causes principales des publications SUP AIP incomplètes. Elle conserve les correctifs Parser V2.1, TRA et tableaux en colonnes.
+Cette livraison renforce l'extraction automatique des SUP AIP, protège la base contre les régressions partielles et conserve indépendamment les vues cartographiques de Planifier, Suivi et Replay.
+
+## WEB13.29.0 - SUP AIP PARSER V3 ROBUSTESSE BETA
+
+- nouvel assembleur de tableaux PDF multi-colonnes, même lorsque les titres, coordonnées et verticales sont séparés en plusieurs blocs ;
+- prise en charge des désignations temporaires compactes `LFR343L`, `LFR343M`, `LFR343H` ;
+- reconstruction des titres partagés avec suffixes `ALPHA`, `BRAVO`, `CHARLIE`, `DELTA` ;
+- récupération du nom depuis le document pour les publications à zone unique dont le tableau omet le titre ;
+- compteur attendu croisé avec le nombre de zones déclaré dans le titre ;
+- résolution prudente des limites explicitement identiques à un espace permanent présent dans le catalogue CAP CLAIR ;
+- conservation individuelle d'une ancienne géométrie si une nouvelle version du parseur perd seulement une partie d'un SUP AIP ;
+- fichiers de données déterministes : aucun commit GitHub et aucun redéploiement Cloudflare si les données officielles n'ont pas réellement changé ;
+- chargement effectif de la couche SUP AIP dans Replay ;
+- cache SUP AIP à URL stable et relecture du GeoJSON uniquement lorsque la révision de la base change ;
+- sélection d'une zone lorsque plusieurs SUP AIP se superposent au même point ;
+- reclassement des publications modifiant uniquement un itinéraire hélicoptère comme non spatiales ;
+- mémorisation indépendante du centre, du zoom et de la rotation dans Planifier, Suivi et chaque Replay ;
+- suppression du reset de zoom lors d'un passage vers Log de nav, Plus ou une autre section ;
+- un nouvel itinéraire ou une nouvelle trace déclenche encore un cadrage automatique volontaire.
 
 ## WEB13.28.0 - SUP AIP ALTITUDE FILTER BETA
 
@@ -208,12 +226,12 @@ La couche est un prototype de validation d'interface et de géométrie. Elle n'e
 2. Vider le dossier local en conservant uniquement `.git`.
 3. Copier le contenu complet du ZIP dans le dossier.
 4. Commit et push via GitHub Desktop sur `main`.
-5. Vérifier `WEB13.28.0` dans la chip et `CAP CLAIR WEB13.28.0 - SUP AIP ALTITUDE FILTER BETA` dans le titre de l'onglet.
+5. Vérifier `WEB13.29.0` dans la chip et `CAP CLAIR WEB13.29.0 - SUP AIP PARSER V3 ROBUSTESSE BETA` dans le titre de l'onglet.
 
 Commit recommandé :
 
 ```text
-main: add SUP AIP Parser V2
+main: add SUP AIP Parser V3 robustness
 ```
 
 ## Activation GitHub Actions - une seule fois
@@ -225,6 +243,6 @@ main: add SUP AIP Parser V2
 5. Sélectionner `Update SUP AIP data`.
 6. Cliquer `Run workflow`, choisir la branche `main`, puis confirmer.
 7. Attendre que le run passe au vert.
-8. GitHub crée alors automatiquement un commit `data: actualisation automatique SUP AIP Parser V2`, ce qui déclenche le redéploiement Cloudflare Pages.
+8. GitHub crée alors automatiquement un commit `data: actualisation automatique SUP AIP Parser V3`, ce qui déclenche le redéploiement Cloudflare Pages.
 
 Après ce premier lancement, le workflow s'exécute seul toutes les 6 heures. Dans `Plus > SUP AIP`, le statut doit passer de `À INITIALISER` à `ACTIVE` après le redéploiement.

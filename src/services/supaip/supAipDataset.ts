@@ -6,6 +6,7 @@ export interface SupAipDatasetStatus {
   sourceUpdatedAt?: string | null;
   sourceUrl: string;
   parserVersion: string;
+  datasetRevision?: string;
   listingPublicationCount: number;
   processedPublicationCount?: number;
   nonSpatialPublicationCount?: number;
@@ -33,8 +34,8 @@ export const SUP_AIP_DATASET_URL = '/data/supaip-current.geojson';
 export const SUP_AIP_STATUS_URL = '/data/supaip-status.json';
 
 export async function fetchSupAipDatasetStatus(signal?: AbortSignal): Promise<SupAipDatasetStatus> {
-  const response = await fetch(`${SUP_AIP_STATUS_URL}?v=${Date.now()}`, {
-    cache: 'no-store',
+  const response = await fetch(SUP_AIP_STATUS_URL, {
+    cache: 'no-cache',
     signal,
     headers: { Accept: 'application/json' }
   });

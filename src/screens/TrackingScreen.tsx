@@ -265,6 +265,7 @@ export function TrackingScreen({
           compact
           baseLayer={mapBaseLayer}
           supAipSettings={supAipSettings}
+          viewStateKey="tracking"
           followAircraft={isRecording}
           orientationMode={orientationMode}
           onToggleOrientation={toggleOrientation}
