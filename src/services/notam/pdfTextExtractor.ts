@@ -52,7 +52,7 @@ export async function extractTextFromPdf(file: File): Promise<{ text: string; pa
   pdfjs.GlobalWorkerOptions.workerSrc = workerUrl;
   const data = new Uint8Array(await file.arrayBuffer());
   const fingerprint = await fingerprintBytes(data);
-  const loadingTask = pdfjs.getDocument({ data, useWorkerFetch: false, isEvalSupported: false });
+  const loadingTask = pdfjs.getDocument({ data, useWorkerFetch: false });
   const document = await loadingTask.promise;
   const pages: string[] = [];
   try {

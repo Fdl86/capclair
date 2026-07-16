@@ -1,5 +1,5 @@
 ARCHIVE HISTORIQUE WEB13.29.2
-Pour la livraison actuelle, utiliser INSTALLATION-13.30.0.txt.
+Pour la livraison actuelle, utiliser INSTALLATION-13.30.1.txt.
 
 CAP CLAIR WEB13.29.2 - SUP AIP ANTI-REGRESSION BETA
 
