@@ -1,6 +1,26 @@
-# CAP CLAIR WEB13.29.2 - SUP AIP ANTI-RÉGRESSION BETA
+# CAP CLAIR WEB13.30.0 - NOTAM PIB BETA
 
 CAP CLAIR est une application VFR mobile-first en Vite, React, TypeScript et OpenLayers, déployée comme PWA sur Cloudflare Pages.
+
+
+## WEB13.30.0 - NOTAM PIB BETA
+
+- nouvelle section `Plus > NOTAM / PIB` avec import local d'un PDF SOFIA ou collage du contenu textuel ;
+- extraction PDF locale avec PDF.js, sans envoi vers un serveur et sans OCR automatique ;
+- détection du trajet, des dégagements, de la date, de l'heure, des niveaux et du corridor indiqués dans le PIB ;
+- analyse autorisée avec ou sans trajet CAP CLAIR, avec avertissement en cas de trajet différent et aucune fusion silencieuse ;
+- possibilité d'utiliser le départ, l'arrivée, l'heure et le premier dégagement détectés pour créer le trajet CAP CLAIR ;
+- parsing des champs Q, A, B/C ou DU/AU, D, E, F et G, conservation du texte brut et prise en charge des champs multilignes ;
+- détection et normalisation des références SUP AIP, puis contrôle croisé avec le manifest, les statuts, les publications non cartographiées et le GeoJSON CAP CLAIR ;
+- couche cartographique `NOTAM / PIB BETA` distincte et désactivée par défaut ;
+- priorité aux géométries SUP AIP de la base CAP CLAIR, puis aux polygones et points explicitement extraits du champ E ;
+- cercles Q affichés uniquement comme `Zone d'influence NOTAM approximative`, avec contour pointillé et avertissement ;
+- stockage local du dernier briefing uniquement, avec empreinte SHA-256, remplacement automatique et suppression immédiate ;
+- chargement dynamique du moteur PDF et mise en cache PWA après le premier usage ;
+- fixture réelle SOFIA LFBI > LFOU avec dégagements LFJB/LFCT : 9 pages, 36 NOTAM et 3 références SUP AIP ;
+- 42 tests Vitest, 27 tests Python SUP AIP et build de production validés.
+
+Cette fonction reste une aide visuelle BETA. Un PIB n'est jamais présenté comme exhaustif et CAP CLAIR ne remplace ni SOFIA, ni le SIA, ni la préparation réglementaire.
 
 ## WEB13.29.2 - SUP AIP ANTI-RÉGRESSION BETA
 
@@ -16,7 +36,7 @@ CAP CLAIR est une application VFR mobile-first en Vite, React, TypeScript et Ope
 - nouveau statut `complet avec repli`, séparé des publications réellement partielles ;
 - bilan GitHub avec régressions compensées, zones restaurées et compteur obligatoire de régressions non résolues à zéro ;
 - affichage de ces compteurs dans `Plus > SUP AIP` ;
-- passage aux actions GitHub Node 24 actuelles `actions/checkout@v7` et `actions/setup-python@v7` ;
+- passage aux actions GitHub Node 24 actuelles `actions/checkout@v6` et `actions/setup-python@v6` ;
 - les fonctions de la WEB13.29.1, la persistance du zoom et le filtre d'altitude sont conservés.
 
 Le parseur reste BETA et ne remplace jamais la consultation du SIA, de SOFIA et des NOTAM.
@@ -221,20 +241,20 @@ La couche est un prototype de validation d'interface et de géométrie. Elle n'e
 
 ## Installation avec GitHub Desktop
 
-Cette livraison est un patch à appliquer sur WEB13.29.1 après récupération du dernier commit automatique SUP AIP.
+Cette livraison est un zip complet WEB13.30.0.
 
-1. Dans GitHub Desktop, utiliser `Pull origin` s'il est proposé.
-2. Ne pas vider le dossier local et conserver `.git`.
-3. Copier tout le contenu du patch à la racine du dépôt et accepter les remplacements.
-4. Vérifier que les fichiers `public/data/supaip-*` ne sont ni supprimés ni remplacés.
-5. Commit puis `Push origin` sur `main`.
-6. Vérifier `WEB13.29.2` dans la chip et le titre de l'onglet.
-7. Lancer une fois `Actions > Update SUP AIP data > Run workflow` sur `main`.
-8. Le run doit afficher `Régressions non résolues : 0` avant le commit automatique.
-9. Après le commit du robot, faire `Pull origin` dans GitHub Desktop.
+1. Dans GitHub Desktop, ouvrir la branche web `main` et utiliser `Pull origin` s'il est proposé.
+2. Fermer CAP CLAIR dans le navigateur pendant le remplacement local.
+3. Dans le dossier local du dépôt, supprimer tout le contenu en conservant uniquement le dossier caché `.git`.
+4. Copier tout le contenu du zip WEB13.30.0 à la racine du dépôt.
+5. Dans GitHub Desktop, vérifier les changements, créer le commit puis utiliser `Push origin` sur `main`.
+6. Après le déploiement Cloudflare Pages, vérifier `WEB13.30.0` dans la chip visible et dans le titre de l'onglet.
+7. Contrôler dans `Plus > NOTAM / PIB` l'import du PDF SOFIA et laisser la couche cartographique désactivée avant le premier choix explicite.
+8. Le workflow SUP AIP existant est conservé avec `actions/checkout@v6` et `actions/setup-python@v6`.
+9. Lors du prochain commit automatique du robot SUP AIP, utiliser ensuite `Pull origin` dans GitHub Desktop.
 
 Commit recommandé :
 
 ```text
-main: add SUP AIP Parser V3.2 anti-regression guard
+main: add WEB13.30.0 NOTAM PIB beta
 ```

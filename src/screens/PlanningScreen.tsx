@@ -11,6 +11,7 @@ import { MapLayerToggle } from '../components/map/MapLayerToggle';
 import { RoutePointList } from '../components/navigation/RoutePointList';
 import { isRouteReady, routeMissingMessage } from '../services/navigation/routeValidation';
 import type { SupAipVisibilitySettings } from '../services/supaip/supAipVisibility';
+import type { NotamLayerSettings, PibAnalysis } from '../domain/notam.types';
 
 interface PlanningScreenProps {
   route: NavRoute;
@@ -30,6 +31,9 @@ interface PlanningScreenProps {
   onMapBaseLayerChange: (value: MapBaseLayer) => void;
   supAipSettings: SupAipVisibilitySettings;
   onCycleSupAipMode: () => void;
+  notamPibAnalysis: PibAnalysis | null;
+  notamLayerSettings: NotamLayerSettings;
+  onToggleNotamLayer: () => void;
   aircraftPosition?: GpsPosition | null;
   onRequestPosition?: () => Promise<GpsPosition | null>;
   locating?: boolean;
@@ -78,6 +82,9 @@ export function PlanningScreen({
   onMapBaseLayerChange,
   supAipSettings,
   onCycleSupAipMode,
+  notamPibAnalysis,
+  notamLayerSettings,
+  onToggleNotamLayer,
   aircraftPosition = null,
   onRequestPosition,
   locating = false,
@@ -205,6 +212,9 @@ export function PlanningScreen({
             onChange={onMapBaseLayerChange}
             supAipMode={supAipSettings.mode}
             onCycleSupAipMode={onCycleSupAipMode}
+            notamAvailable={Boolean(notamPibAnalysis)}
+            notamEnabled={notamLayerSettings.enabled}
+            onToggleNotam={onToggleNotamLayer}
           />
           <OpenLayersMap
             route={route}
@@ -213,6 +223,8 @@ export function PlanningScreen({
             selectedPointId={selectedPointId}
             baseLayer={mapBaseLayer}
             supAipSettings={supAipSettings}
+            notamPibAnalysis={notamPibAnalysis}
+            notamLayerSettings={notamLayerSettings}
             viewStateKey="planning"
             addWaypointMode={addWaypointMode}
             onMapAddWaypoint={handleAddWaypoint}

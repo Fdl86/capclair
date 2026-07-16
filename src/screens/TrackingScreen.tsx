@@ -16,6 +16,7 @@ import { useLocalStorageState } from '../hooks/useLocalStorageState';
 import { useOneShotPosition } from '../hooks/useOneShotPosition';
 import { getGpsPositionUiState, getRecordingUiState } from '../services/gps/gpsUiState';
 import type { SupAipVisibilitySettings } from '../services/supaip/supAipVisibility';
+import type { NotamLayerSettings, PibAnalysis } from '../domain/notam.types';
 
 interface TrackingScreenProps {
   route: NavRoute;
@@ -24,6 +25,9 @@ interface TrackingScreenProps {
   onMapBaseLayerChange: (value: MapBaseLayer) => void;
   supAipSettings: SupAipVisibilitySettings;
   onCycleSupAipMode: () => void;
+  notamPibAnalysis: PibAnalysis | null;
+  notamLayerSettings: NotamLayerSettings;
+  onToggleNotamLayer: () => void;
   onRecordingStateChange?: (hasUnsavedTrace: boolean) => void;
 }
 
@@ -112,6 +116,9 @@ export function TrackingScreen({
   onMapBaseLayerChange,
   supAipSettings,
   onCycleSupAipMode,
+  notamPibAnalysis,
+  notamLayerSettings,
+  onToggleNotamLayer,
   onRecordingStateChange
 }: TrackingScreenProps) {
   const [confirmStop, setConfirmStop] = useState(false);
@@ -249,6 +256,9 @@ export function TrackingScreen({
           onChange={onMapBaseLayerChange}
           supAipMode={supAipSettings.mode}
           onCycleSupAipMode={onCycleSupAipMode}
+          notamAvailable={Boolean(notamPibAnalysis)}
+          notamEnabled={notamLayerSettings.enabled}
+          onToggleNotam={onToggleNotamLayer}
         />
         {!fullscreen && (
           <div className={`tracking-gps-map-status ${gpsMap.tone}`} title={gpsMap.detail} aria-label={`${gpsMap.label}. ${gpsMap.detail}`}>
@@ -265,6 +275,8 @@ export function TrackingScreen({
           compact
           baseLayer={mapBaseLayer}
           supAipSettings={supAipSettings}
+          notamPibAnalysis={notamPibAnalysis}
+          notamLayerSettings={notamLayerSettings}
           viewStateKey="tracking"
           followAircraft={isRecording}
           orientationMode={orientationMode}

@@ -19,6 +19,8 @@ import type { MapBaseLayer } from '../mapEngine/mapTypes';
 import type { SupAipDisplayMode } from '../domain/supaip.types';
 import { isRouteReady, routeMissingMessage } from '../services/navigation/routeValidation';
 import { useOneShotPosition } from '../hooks/useOneShotPosition';
+import { usePibBriefing } from '../hooks/usePibBriefing';
+import type { PibRouteContext } from '../domain/notam.types';
 import { importGpxFile } from '../services/import/gpxImport';
 import type { TraceSaveResult } from '../services/storage/traceStorage';
 import { exportNavLogPdf } from '../services/export/navLogExport';
@@ -78,6 +80,7 @@ export function App() {
   const departureCode = routeEndpointCode(routeState.route, 'depart');
   const destinationCode = routeEndpointCode(routeState.route, 'destination');
   const safeAlternateCode = safeAerodromeCode(alternateCode);
+  const notamState = usePibBriefing(routeState.route, safeAlternateCode ? [safeAlternateCode] : []);
   const aerodromeWeatherState = useAerodromeWeather([departureCode, destinationCode, safeAlternateCode].filter(Boolean));
 
   useEffect(() => {
@@ -151,6 +154,22 @@ export function App() {
     setAppNotice(null);
   };
 
+  const toggleNotamLayer = () => {
+    notamState.setLayerSettings({ enabled: !notamState.layerSettings.enabled });
+  };
+
+  const useDetectedBriefingRoute = (context: PibRouteContext) => {
+    if (!context.departure || !context.destination) return;
+    const applied = routeState.applyBriefingRoute(context.departure, context.destination, context.departureTimeIso);
+    if (!applied) {
+      setAppNotice('Le trajet détecté ne peut pas être appliqué automatiquement. Vérifiez les codes aérodrome.');
+      return;
+    }
+    const firstAlternate = context.alternates.map(safeAerodromeCode).find(Boolean) ?? '';
+    setAlternateCode(firstAlternate);
+    setAppNotice(`Trajet ${context.departure} > ${context.destination} importé depuis le briefing. Réévaluez ensuite l’analyse NOTAM.`);
+  };
+
   const updateFuelPlanConfig = (patch: Partial<typeof DEFAULT_FUEL_PLAN_CONFIG>) => {
     setFuelPlanConfig((current) => ({
       ...current,
@@ -201,6 +220,9 @@ export function App() {
           onMapBaseLayerChange={setMapBaseLayer}
           supAipSettings={supAipSettings}
           onCycleSupAipMode={cycleSupAipMode}
+          notamPibAnalysis={notamState.analysis}
+          notamLayerSettings={notamState.layerSettings}
+          onToggleNotamLayer={toggleNotamLayer}
           aircraftPosition={oneShotPosition.position}
           onRequestPosition={oneShotPosition.requestPosition}
           locating={oneShotPosition.locating}
@@ -244,6 +266,9 @@ export function App() {
           onMapBaseLayerChange={setMapBaseLayer}
           supAipSettings={supAipSettings}
           onCycleSupAipMode={cycleSupAipMode}
+          notamPibAnalysis={notamState.analysis}
+          notamLayerSettings={notamState.layerSettings}
+          onToggleNotamLayer={toggleNotamLayer}
           onRecordingStateChange={setTrackingUnsavedTrace}
         />
       )}
@@ -292,6 +317,19 @@ export function App() {
           onCreateAircraft={createAircraft}
           supAipSettings={supAipSettings}
           onUpdateSupAipSettings={updateSupAipSettings}
+          notamAnalysis={notamState.analysis}
+          currentRouteSnapshot={notamState.currentRouteSnapshot}
+          notamRouteChanged={notamState.routeChangedSinceAnalysis}
+          notamLoadingStored={notamState.loadingStored}
+          notamAnalyzing={notamState.analyzing}
+          notamError={notamState.error}
+          notamLayerSettings={notamState.layerSettings}
+          onUpdateNotamLayerSettings={notamState.setLayerSettings}
+          onAnalyzeNotamPdf={notamState.analyzePdf}
+          onAnalyzeNotamText={notamState.analyzeText}
+          onReanalyzeNotam={notamState.reanalyze}
+          onClearNotam={notamState.clear}
+          onUseDetectedRoute={useDetectedBriefingRoute}
         />
       )}
 

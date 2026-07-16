@@ -167,6 +167,24 @@ export function useActiveRoute() {
     return true;
   };
 
+  const applyBriefingRoute = (departureCode: string, destinationCode: string, departureTimeIso?: string | null): boolean => {
+    const departure = createAerodromePoint(departureCode.trim().toUpperCase(), 'depart');
+    const destination = createAerodromePoint(destinationCode.trim().toUpperCase(), 'destination');
+    if (!departure || !destination) {
+      setRouteMessage('Le trajet détecté contient un aérodrome inconnu dans CAP CLAIR.');
+      return false;
+    }
+    invalidateWeather();
+    const profile = {
+      ...normalizedRoute.profile,
+      ...(departureTimeIso ? { departureTimeIso } : {})
+    };
+    const nextRoute = rebuild([departure, destination], profile, {}, {}, `Trajet ${departure.code} > ${destination.code} importé depuis le PIB`, null);
+    setWeatherStatus('Vent à rafraîchir');
+    setSelectedPointId(nextRoute.points[0]?.id ?? null);
+    return true;
+  };
+
   const addWaypointAt = (longitude: number, latitude: number) => {
     if (!isRouteReady(normalizedRoute)) {
       setRouteMessage('Définir un départ et une arrivée avant d’ajouter un point');
@@ -324,6 +342,7 @@ export function useActiveRoute() {
     setSelectedPointId,
     setDepartureCode,
     setDestinationCode,
+    applyBriefingRoute,
     addWaypointAt,
     removePoint,
     reverseRoute,

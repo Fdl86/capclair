@@ -789,3 +789,154 @@
   padding: 7px 9px;
   font: inherit;
 }
+
+/* WEB13.30.0 - NOTAM / PIB BETA map layer */
+.map-layer-toggle .notam-overlay-toggle.active {
+  border-color: rgba(206, 112, 255, 0.78);
+  background: #ce70ff;
+  color: #17051f;
+}
+
+.map-layer-toggle .notam-overlay-toggle:disabled {
+  opacity: 0.42;
+  cursor: not-allowed;
+}
+
+.notam-pib-map-notice {
+  position: absolute;
+  left: 50%;
+  top: 48px;
+  z-index: 22;
+  max-width: calc(100% - 120px);
+  transform: translateX(-50%);
+  border: 1px solid rgba(206, 112, 255, 0.52);
+  border-radius: 999px;
+  padding: 6px 10px;
+  background: rgba(30, 9, 39, 0.9);
+  color: #efcaff;
+  font-size: 0.62rem;
+  font-weight: 900;
+  letter-spacing: 0.04em;
+  text-align: center;
+  text-transform: uppercase;
+  pointer-events: none;
+}
+
+.notam-map-popup {
+  position: absolute;
+  left: 12px;
+  bottom: 14px;
+  z-index: 42;
+  width: min(390px, calc(100% - 24px));
+  max-height: min(62vh, 520px);
+  overflow: auto;
+  border: 1px solid rgba(206, 112, 255, 0.55);
+  border-radius: 15px;
+  padding: 13px;
+  background: rgba(6, 12, 20, 0.97);
+  box-shadow: 0 18px 44px rgba(0, 0, 0, 0.48);
+}
+
+.notam-map-popup-close {
+  position: absolute;
+  top: 8px;
+  right: 9px;
+  width: 30px;
+  height: 30px;
+  border: 1px solid var(--border);
+  border-radius: 50%;
+  background: rgba(17, 28, 42, 0.95);
+  color: var(--text);
+  cursor: pointer;
+}
+
+.notam-map-popup-tabs {
+  display: flex;
+  gap: 5px;
+  margin: 0 36px 8px 0;
+}
+
+.notam-map-popup-tabs button {
+  min-width: 28px;
+  height: 28px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: rgba(17, 28, 42, 0.9);
+  color: var(--text-2);
+}
+
+.notam-map-popup-tabs button.active {
+  border-color: rgba(206, 112, 255, 0.75);
+  background: rgba(206, 112, 255, 0.22);
+  color: #f2d6ff;
+}
+
+.notam-map-popup-beta {
+  display: inline-block;
+  margin-right: 34px;
+  color: #dfa2f8;
+  font-size: 0.64rem;
+  font-weight: 900;
+  letter-spacing: 0.08em;
+}
+
+.notam-map-popup h3 {
+  margin: 6px 32px 3px 0;
+  font-size: 1rem;
+}
+
+.notam-map-popup > strong {
+  color: var(--cyan-soft);
+  font-size: 0.78rem;
+}
+
+.notam-map-popup p {
+  margin: 8px 0 0;
+  color: var(--text-2);
+  font-size: 0.78rem;
+  line-height: 1.4;
+}
+
+.notam-map-popup-warning {
+  border-left: 3px solid #ffb84d;
+  padding-left: 8px;
+  color: #ffe0a6 !important;
+}
+
+.notam-map-popup details {
+  margin-top: 10px;
+}
+
+.notam-map-popup summary {
+  color: var(--cyan-soft);
+  font-size: 0.76rem;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.notam-map-popup pre {
+  margin: 8px 0 0;
+  border: 1px solid var(--border);
+  border-radius: 9px;
+  padding: 8px;
+  background: #040a11;
+  color: var(--text-2);
+  font: 500 0.66rem/1.42 ui-monospace, SFMono-Regular, Consolas, monospace;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+@media (max-width: 640px) {
+  .notam-pib-map-notice {
+    top: 44px;
+    max-width: calc(100% - 80px);
+    font-size: 0.55rem;
+  }
+
+  .notam-map-popup {
+    left: 8px;
+    bottom: 10px;
+    width: calc(100% - 16px);
+    max-height: 56vh;
+  }
+}

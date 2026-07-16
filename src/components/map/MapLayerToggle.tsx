@@ -6,6 +6,9 @@ interface MapLayerToggleProps {
   onChange: (value: MapBaseLayer) => void;
   supAipMode?: SupAipDisplayMode;
   onCycleSupAipMode?: () => void;
+  notamAvailable?: boolean;
+  notamEnabled?: boolean;
+  onToggleNotam?: () => void;
 }
 
 const modeLabel: Record<SupAipDisplayMode, string> = {
@@ -14,7 +17,7 @@ const modeLabel: Record<SupAipDisplayMode, string> = {
   all: 'TOUS'
 };
 
-export function MapLayerToggle({ baseLayer, onChange, supAipMode = 'off', onCycleSupAipMode }: MapLayerToggleProps) {
+export function MapLayerToggle({ baseLayer, onChange, supAipMode = 'off', onCycleSupAipMode, notamAvailable = false, notamEnabled = false, onToggleNotam }: MapLayerToggleProps) {
   const supAipActive = supAipMode !== 'off';
 
   return (
@@ -35,6 +38,18 @@ export function MapLayerToggle({ baseLayer, onChange, supAipMode = 'off', onCycl
           title={`SUP AIP BETA: ${modeLabel[supAipMode]}. Appuyer pour changer de mode.`}
         >
           SUP AIP <em>{modeLabel[supAipMode]}</em> <small>BETA</small>
+        </button>
+      )}
+      {onToggleNotam && (
+        <button
+          type="button"
+          className={`map-overlay-toggle notam-overlay-toggle ${notamEnabled ? 'active' : ''}`}
+          onClick={onToggleNotam}
+          aria-pressed={notamEnabled}
+          disabled={!notamAvailable}
+          title={notamAvailable ? 'Afficher ou masquer le dernier briefing NOTAM / PIB analysé.' : 'Importer d’abord un briefing dans Plus.'}
+        >
+          NOTAM <em>{notamEnabled ? 'ON' : 'OFF'}</em> <small>BETA</small>
         </button>
       )}
     </div>

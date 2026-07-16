@@ -25,6 +25,7 @@ import { createSupAipLayer, supAipSelectionFromFeature, type SupAipLayer } from 
 import type { GpsPosition } from '../../domain/gps.types';
 import type { NavRoute } from '../../domain/navigation.types';
 import type { SupAipSelection } from '../../domain/supaip.types';
+import type { NotamLayerSettings, PibAnalysis } from '../../domain/notam.types';
 import {
   applySupAipVisibility,
   DEFAULT_SUP_AIP_VISIBILITY_SETTINGS,
@@ -35,6 +36,8 @@ import {
 import { MapControls } from './MapControls';
 import { MapFallbackNotice } from './MapFallbackNotice';
 import { SupAipPopup } from './SupAipPopup';
+import { NotamPibPopup } from './NotamPibPopup';
+import { createNotamPibLayer, notamPibSelectionFromFeature, updateNotamPibLayer, type NotamPibLayer, type NotamPibSelection } from '../../mapLayers/notamPibLayer';
 import {
   fetchSupAipDatasetStatus,
   isSupAipDatasetStale,
@@ -67,6 +70,8 @@ interface OpenLayersMapProps {
   onRecordingControl?: () => void;
   recordingControlDisabled?: boolean;
   supAipSettings?: SupAipVisibilitySettings;
+  notamPibAnalysis?: PibAnalysis | null;
+  notamLayerSettings?: NotamLayerSettings;
   viewStateKey?: string;
 }
 
@@ -103,6 +108,8 @@ export function OpenLayersMap({
   onRecordingControl,
   recordingControlDisabled = false,
   supAipSettings = DEFAULT_SUP_AIP_VISIBILITY_SETTINGS,
+  notamPibAnalysis = null,
+  notamLayerSettings = { enabled: false, filter: 'all' },
   viewStateKey
 }: OpenLayersMapProps) {
   const mapElementRef = useRef<HTMLDivElement | null>(null);
@@ -115,6 +122,7 @@ export function OpenLayersMap({
   const traceLayerRef = useRef<ActualTraceLayer | null>(null);
   const aircraftLayerRef = useRef<AircraftLayer | null>(null);
   const supAipLayerRef = useRef<SupAipLayer | null>(null);
+  const notamPibLayerRef = useRef<NotamPibLayer | null>(null);
   const supAipSettingsRef = useRef<SupAipVisibilitySettings>(normalizeSupAipVisibilitySettings(supAipSettings));
   const supAipRoutePointsRef = useRef(route.points);
   const latestAircraftRef = useRef<GpsPosition | null>(null);
@@ -137,6 +145,9 @@ export function OpenLayersMap({
   const [selectedSupAips, setSelectedSupAips] = useState<SupAipSelection[]>([]);
   const [selectedSupAipIndex, setSelectedSupAipIndex] = useState(0);
   const [supAipDatasetStatus, setSupAipDatasetStatus] = useState<SupAipDatasetStatus | null>(null);
+  const [notamFeatureCount, setNotamFeatureCount] = useState(0);
+  const [selectedNotams, setSelectedNotams] = useState<NotamPibSelection[]>([]);
+  const [selectedNotamIndex, setSelectedNotamIndex] = useState(0);
 
   const normalizedSupAipSettings = normalizeSupAipVisibilitySettings(supAipSettings);
   const showSupAip = normalizedSupAipSettings.mode !== 'off';
@@ -176,6 +187,7 @@ export function OpenLayersMap({
     });
     const traceLayer = createActualTraceLayer();
     const aircraftLayer = createAircraftLayer(null, initialMapZoom);
+    const notamPibLayer = createNotamPibLayer();
     const supAipLayer = createSupAipLayer({
       visible: false,
       onLoadStart: () => setSupAipLoadState('loading'),
@@ -193,6 +205,7 @@ export function OpenLayersMap({
     traceLayerRef.current = traceLayer;
     aircraftLayerRef.current = aircraftLayer;
     supAipLayerRef.current = supAipLayer;
+    notamPibLayerRef.current = notamPibLayer;
 
     const interactions = defaultInteractions();
     dragRotateRef.current = interactions.getArray().find((interaction): interaction is DragRotate => interaction instanceof DragRotate) ?? null;
@@ -204,7 +217,7 @@ export function OpenLayersMap({
       target: mapElementRef.current,
       controls: [],
       interactions,
-      layers: [freeMapLayer, oaciLayer, openAipRasterLayer, supAipLayer, traceLayer, aircraftLayer],
+      layers: [freeMapLayer, oaciLayer, openAipRasterLayer, supAipLayer, notamPibLayer, traceLayer, aircraftLayer],
       view: new View({
         center: restoredViewStateRef.current ? fromLonLat(restoredViewStateRef.current.centerLonLat) : initialMapCenter,
         zoom: restoredViewStateRef.current?.zoom ?? initialMapZoom,
@@ -244,6 +257,7 @@ export function OpenLayersMap({
       persistView();
       map.un('moveend', persistView);
       supAipLayerRef.current?.dispose();
+      notamPibLayerRef.current?.dispose();
       map.setTarget(undefined);
       mapRef.current = null;
       baseLayerRef.current = null;
@@ -254,6 +268,7 @@ export function OpenLayersMap({
       traceLayerRef.current = null;
       aircraftLayerRef.current = null;
       supAipLayerRef.current = null;
+      notamPibLayerRef.current = null;
       dragRotateRef.current = null;
       pinchRotateRef.current = null;
     };
@@ -269,6 +284,18 @@ export function OpenLayersMap({
     setSourceStatus(status);
     onSourceStatusChangeRef.current?.(status);
   }, [baseLayer]);
+
+  useEffect(() => {
+    const layer = notamPibLayerRef.current;
+    if (!layer) return;
+    let cancelled = false;
+    setSelectedNotams([]);
+    setSelectedNotamIndex(0);
+    void updateNotamPibLayer(layer, notamPibAnalysis, notamLayerSettings).then((count) => {
+      if (!cancelled) setNotamFeatureCount(count);
+    });
+    return () => { cancelled = true; };
+  }, [notamPibAnalysis, notamLayerSettings]);
 
   useEffect(() => {
     const settings = normalizeSupAipVisibilitySettings(supAipSettings);
@@ -488,6 +515,36 @@ export function OpenLayersMap({
 
   useEffect(() => {
     const map = mapRef.current;
+    if (!map || !notamPibAnalysis || !notamLayerSettings.enabled) return undefined;
+
+    const handleNotamClick = (event: MapBrowserEvent) => {
+      if (addWaypointMode) return;
+      const layer = notamPibLayerRef.current;
+      if (!layer) return;
+      const selections: NotamPibSelection[] = [];
+      const seen = new Set<string>();
+      map.forEachFeatureAtPixel(
+        event.pixel,
+        (feature) => {
+          const selection = notamPibSelectionFromFeature(feature as Feature<Geometry>);
+          if (selection && !seen.has(selection.id)) {
+            seen.add(selection.id);
+            selections.push(selection);
+          }
+          return undefined;
+        },
+        { hitTolerance: 9, layerFilter: (candidate) => candidate === layer }
+      );
+      setSelectedNotams(selections);
+      setSelectedNotamIndex(0);
+    };
+
+    map.on('singleclick', handleNotamClick);
+    return () => map.un('singleclick', handleNotamClick);
+  }, [addWaypointMode, notamPibAnalysis, notamLayerSettings.enabled]);
+
+  useEffect(() => {
+    const map = mapRef.current;
     if (!map || !showSupAip) return undefined;
 
     const handleSupAipClick = (event: MapBrowserEvent) => {
@@ -600,6 +657,17 @@ export function OpenLayersMap({
                 ? `SUP AIP AUTO BETA - ROUTE ${normalizedSupAipSettings.routeCorridorNm} NM - ${formatSupAipAltitudeCeiling(normalizedSupAipSettings.maxDisplayFlightLevel)} - ${supAipVisibleCount}/${supAipFeatureCount} zones${supAipDatasetStatus && (supAipDatasetStatus.completeUnmappedPublicationCount + supAipDatasetStatus.partialPublicationCount) > 0 ? ` - ${supAipDatasetStatus.completeUnmappedPublicationCount + supAipDatasetStatus.partialPublicationCount} SUP à contrôler` : ''}`
                 : `SUP AIP AUTO BETA - TOUS - ${formatSupAipAltitudeCeiling(normalizedSupAipSettings.maxDisplayFlightLevel)} - ${supAipVisibleCount}/${supAipFeatureCount} zones${supAipDatasetStatus && (supAipDatasetStatus.completeUnmappedPublicationCount + supAipDatasetStatus.partialPublicationCount) > 0 ? ` - ${supAipDatasetStatus.completeUnmappedPublicationCount + supAipDatasetStatus.partialPublicationCount} SUP à contrôler` : ''}`}
         </div>
+      )}
+      {notamPibAnalysis && notamLayerSettings.enabled && (
+        <div className="notam-pib-map-notice">NOTAM / PIB BETA - {notamFeatureCount} élément{notamFeatureCount > 1 ? 's' : ''} - {notamLayerSettings.filter.toUpperCase()}</div>
+      )}
+      {selectedNotams.length > 0 && (
+        <NotamPibPopup
+          selections={selectedNotams}
+          selectedIndex={selectedNotamIndex}
+          onSelectIndex={setSelectedNotamIndex}
+          onClose={() => setSelectedNotams([])}
+        />
       )}
       {selectedSupAips.length > 0 && (
         <SupAipPopup

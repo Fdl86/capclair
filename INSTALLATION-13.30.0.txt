@@ -1,0 +1,22 @@
+CAP CLAIR WEB13.30.0 - INSTALLATION AVEC GITHUB DESKTOP
+========================================================
+
+Cette archive est un zip complet de la branche web/PWA.
+
+1. Ouvrir le dépôt web CAP CLAIR dans GitHub Desktop.
+2. Vérifier que la branche sélectionnée est main.
+3. Utiliser Pull origin s'il est proposé.
+4. Ouvrir le dossier local du dépôt.
+5. Supprimer tout son contenu en conservant uniquement le dossier caché .git.
+6. Copier tout le contenu de l'archive WEB13.30.0 dans ce dossier.
+7. Revenir dans GitHub Desktop et contrôler la liste des changements.
+8. Créer le commit : main: add WEB13.30.0 NOTAM PIB beta
+9. Utiliser Push origin.
+10. Attendre le déploiement Cloudflare Pages.
+11. Vérifier dans l'application la chip WEB13.30.0 et le titre d'onglet CAP CLAIR WEB13.30.0 - NOTAM PIB BETA.
+12. Dans Plus > NOTAM / PIB, importer le PDF SOFIA fourni et contrôler les 36 NOTAM.
+13. La couche NOTAM / PIB BETA doit être désactivée lors du premier usage.
+14. L'activer volontairement et vérifier les éléments sur la carte.
+
+Le workflow SUP AIP est conservé avec actions/checkout@v6 et actions/setup-python@v6.
+Aucune commande Git en terminal n'est nécessaire.

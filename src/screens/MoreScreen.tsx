@@ -2,11 +2,13 @@ import { useEffect, useState } from 'react';
 import type { ScreenId } from '../app/routes';
 import type { AircraftProfile } from '../domain/aircraft.types';
 import type { SupAipDisplayMode } from '../domain/supaip.types';
+import type { BriefingRouteSnapshot, NotamLayerSettings, PibAnalysis, PibRouteContext } from '../domain/notam.types';
 import { Page } from '../components/layout/Page';
 import { Button } from '../components/ui/Button';
 import { Card } from '../components/ui/Card';
 import { Accordion } from '../components/ui/Accordion';
 import { AircraftProfilePanel } from '../components/flight/AircraftProfilePanel';
+import { NotamPibPanel } from '../components/notam/NotamPibPanel';
 import {
   SUP_AIP_ALTITUDE_ALL_SLIDER_VALUE,
   SUP_AIP_ALTITUDE_MIN_FL,
@@ -35,6 +37,19 @@ interface MoreScreenProps {
   onCreateAircraft: () => void;
   supAipSettings: SupAipVisibilitySettings;
   onUpdateSupAipSettings: (patch: Partial<SupAipVisibilitySettings>) => void;
+  notamAnalysis: PibAnalysis | null;
+  currentRouteSnapshot: BriefingRouteSnapshot;
+  notamRouteChanged: boolean;
+  notamLoadingStored: boolean;
+  notamAnalyzing: boolean;
+  notamError: string | null;
+  notamLayerSettings: NotamLayerSettings;
+  onUpdateNotamLayerSettings: (patch: Partial<NotamLayerSettings>) => void;
+  onAnalyzeNotamPdf: (file: File) => Promise<unknown>;
+  onAnalyzeNotamText: (text: string) => Promise<unknown>;
+  onReanalyzeNotam: () => Promise<unknown>;
+  onClearNotam: () => Promise<void>;
+  onUseDetectedRoute: (context: PibRouteContext) => void;
 }
 
 const modeLabel: Record<SupAipDisplayMode, string> = {
@@ -51,7 +66,20 @@ export function MoreScreen({
   onUpdateAircraft,
   onCreateAircraft,
   supAipSettings,
-  onUpdateSupAipSettings
+  onUpdateSupAipSettings,
+  notamAnalysis,
+  currentRouteSnapshot,
+  notamRouteChanged,
+  notamLoadingStored,
+  notamAnalyzing,
+  notamError,
+  notamLayerSettings,
+  onUpdateNotamLayerSettings,
+  onAnalyzeNotamPdf,
+  onAnalyzeNotamText,
+  onReanalyzeNotam,
+  onClearNotam,
+  onUseDetectedRoute
 }: MoreScreenProps) {
   const [supAipDatasetStatus, setSupAipDatasetStatus] = useState<SupAipDatasetStatus | null>(null);
   const [supAipDatasetError, setSupAipDatasetError] = useState(false);
@@ -83,6 +111,30 @@ export function MoreScreen({
             onSelectProfile={onSelectAircraft}
             onUpdateProfile={onUpdateAircraft}
             onCreateProfile={onCreateAircraft}
+          />
+        </Accordion>
+
+        <Accordion
+          title="NOTAM / PIB"
+          subtitle={<>{notamAnalysis ? `${notamAnalysis.summary.totalNotams} NOTAM analysés` : 'Importer un briefing'} <span className="supaip-settings-beta">BETA</span></>}
+          className="more-notam-accordion"
+          defaultOpen={false}
+          storageKey="capclair.accordion.more.notamPib.v1"
+        >
+          <NotamPibPanel
+            analysis={notamAnalysis}
+            currentRoute={currentRouteSnapshot}
+            routeChangedSinceAnalysis={notamRouteChanged}
+            loadingStored={notamLoadingStored}
+            analyzing={notamAnalyzing}
+            error={notamError}
+            layerSettings={notamLayerSettings}
+            onLayerSettingsChange={onUpdateNotamLayerSettings}
+            onAnalyzePdf={onAnalyzeNotamPdf}
+            onAnalyzeText={onAnalyzeNotamText}
+            onReanalyze={onReanalyzeNotam}
+            onClear={onClearNotam}
+            onUseDetectedRoute={onUseDetectedRoute}
           />
         </Accordion>
 
@@ -253,7 +305,7 @@ export function MoreScreen({
         </Card>
         <Card className="safety-card">
           <strong>Limites</strong>
-          <p>Prototype non réglementaire. SUP AIP AUTO BETA avec contrôle obligatoire des publications non cartographiées, pas de NOTAM automatiques et pas de GPS en arrière-plan.</p>
+          <p>Prototype non réglementaire. SUP AIP AUTO BETA et import local NOTAM / PIB BETA avec contrôle obligatoire dans SOFIA et le SIA. Pas de GPS en arrière-plan.</p>
         </Card>
       </div>
     </Page>

@@ -10,7 +10,7 @@ export default defineConfig({
       manifest: {
         name: 'CAP CLAIR - Navigation VFR',
         short_name: 'CAP CLAIR',
-        description: 'PWA de navigation VFR : planification, couche SUP AIP AUTO BETA, log de nav PDF, suivi GPS navigateur, traces locales, import GPX et Replay synchronisé.',
+        description: 'PWA de navigation VFR : planification, couche SUP AIP AUTO BETA, import local NOTAM et PIB SOFIA BETA, log de nav PDF, suivi GPS, traces et Replay.',
         theme_color: '#050B12',
         background_color: '#050B12',
         display: 'standalone',
@@ -33,24 +33,26 @@ export default defineConfig({
       },
       workbox: {
         cleanupOutdatedCaches: true,
-        globPatterns: ['**/*.{js,css,html,ico,png,svg,pdf,json,geojson,webmanifest}'],
+        globPatterns: ['**/*.{js,mjs,css,html,ico,png,svg,pdf,json,geojson,webmanifest}'],
         globIgnores: [
           '**/airspaceCatalog-*.js',
           '**/TraceReplayScreen-*.js',
           '**/TraceReplayScreen-*.css',
           '**/pdf-engine-*.js',
+          '**/pdf.worker.min-*.mjs',
           '**/data/supaip-current.geojson',
           '**/data/supaip-status.json',
-          '**/data/supaip-unmapped.json'
+          '**/data/supaip-unmapped.json',
+          '**/data/supaip-manifest.json'
         ],
         runtimeCaching: [
           {
-            urlPattern: /\/data\/supaip-(?:current\.geojson|status\.json|unmapped\.json)(?:\?.*)?$/,
+            urlPattern: /\/data\/supaip-(?:current\.geojson|status\.json|unmapped\.json|manifest\.json)(?:\?.*)?$/,
             handler: 'NetworkFirst',
             options: {
               cacheName: 'capclair-supaip-live-data',
               networkTimeoutSeconds: 8,
-              expiration: { maxEntries: 6, maxAgeSeconds: 7 * 24 * 60 * 60 }
+              expiration: { maxEntries: 8, maxAgeSeconds: 7 * 24 * 60 * 60 }
             }
           },
           {
@@ -75,6 +77,14 @@ export default defineConfig({
             options: {
               cacheName: 'capclair-pdf-engine',
               expiration: { maxEntries: 3, maxAgeSeconds: 30 * 24 * 60 * 60 }
+            }
+          },
+          {
+            urlPattern: /\/assets\/pdf\.worker\.min-.*\.mjs$/,
+            handler: 'CacheFirst',
+            options: {
+              cacheName: 'capclair-pdf-worker',
+              expiration: { maxEntries: 2, maxAgeSeconds: 30 * 24 * 60 * 60 }
             }
           }
         ]
