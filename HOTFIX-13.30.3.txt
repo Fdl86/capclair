@@ -1,0 +1,8 @@
+WEB13.30.3 - NOTAM SELECTION HIGHLIGHT HOTFIX
+
+Résumé rapide
+- badges numérotés sur la carte pour les sélections multiples NOTAM et SUP AIP
+- surbrillance forte de l'élément actif
+- atténuation des autres éléments du groupe
+- nettoyage automatique des repères à la fermeture de la fiche
+- aucune modification de la navigation générale

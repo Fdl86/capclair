@@ -1,7 +1,7 @@
 {
-  "name": "cap-clair-web13-30-2-notam-map-ux-hotfix",
+  "name": "cap-clair-web13-30-3-notam-selection-highlight-hotfix",
   "private": true,
-  "version": "0.13.30-2",
+  "version": "0.13.30-3",
   "type": "module",
   "scripts": {
     "dev": "vite",

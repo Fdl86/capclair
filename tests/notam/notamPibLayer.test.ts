@@ -3,7 +3,7 @@ import { readFile } from 'node:fs/promises';
 import fixture from '../../src/services/notam/__fixtures__/sofia-lfbi-lfou.txt?raw';
 import type { BriefingRouteSnapshot } from '../../src/domain/notam.types';
 import { analyzePibText } from '../../src/services/notam/pibAnalysis';
-import { createNotamPibLayer, notamPibSelectionFromFeature, updateNotamPibLayer } from '../../src/mapLayers/notamPibLayer';
+import { createNotamPibLayer, notamPibSelectionFromFeature, setNotamPibSelectionHighlight, updateNotamPibLayer } from '../../src/mapLayers/notamPibLayer';
 
 const route: BriefingRouteSnapshot = {
   routeId: 'map-test',
@@ -70,4 +70,32 @@ describe('NOTAM PIB OpenLayers layer', () => {
 
     layer.dispose();
   });
+  it('highlights grouped selections with numbered badges on the chosen geometry', async () => {
+    const analysis = await analyzePibText({ text: fixture, sourceKind: 'text', routeSnapshot: route });
+    const layer = createNotamPibLayer();
+    await updateNotamPibLayer(layer, analysis, { enabled: true, filter: 'all' });
+    const features = layer.getSource()?.getFeatures() ?? [];
+    const selections = features
+      .map((feature) => ({ feature, selection: notamPibSelectionFromFeature(feature) }))
+      .filter((item): item is { feature: (typeof features)[number]; selection: NonNullable<ReturnType<typeof notamPibSelectionFromFeature>> } => Boolean(item.selection));
+
+    const targetSelections = selections
+      .filter((item) => item.selection.notamId.startsWith('LFFA-F15'))
+      .slice(0, 3)
+      .map((item) => item.selection);
+
+    setNotamPibSelectionHighlight(layer, targetSelections, 1);
+
+    const highlightedFeature = features.find((feature) => notamPibSelectionFromFeature(feature)?.id === targetSelections[1]?.id);
+    const dimmedFeature = features.find((feature) => notamPibSelectionFromFeature(feature)?.id === targetSelections[0]?.id);
+    const unrelatedFeature = features.find((feature) => notamPibSelectionFromFeature(feature)?.id !== targetSelections[0]?.id && notamPibSelectionFromFeature(feature)?.id !== targetSelections[1]?.id && notamPibSelectionFromFeature(feature)?.id !== targetSelections[2]?.id);
+
+    expect(highlightedFeature?.getStyle()).toBeTruthy();
+    expect(Array.isArray(highlightedFeature?.getStyle())).toBe(true);
+    expect(dimmedFeature?.getStyle()).toBeTruthy();
+    expect(unrelatedFeature?.getStyle()).toBeUndefined();
+
+    layer.dispose();
+  });
+
 });

@@ -31,20 +31,20 @@ const palette: Record<SupAipVisualStatus, { stroke: string; fill: string; text: 
   unknown: { stroke: '#D0D7DF', fill: 'rgba(208, 215, 223, 0.08)', text: '#F2F5F8', dash: [5, 6] }
 };
 
-const styleCache = new Map<string, Style>();
+const styleCache = new Map<string, Style | Style[]>();
 
 function featureProperties(feature: FeatureLike): Partial<SupAipProperties> {
   return feature.getProperties() as Partial<SupAipProperties>;
 }
 
-function styleFor(feature: FeatureLike, resolution: number): Style | undefined {
+function defaultStyleFor(feature: FeatureLike, resolution: number): Style | undefined {
   if (!isSupAipFeatureVisible(feature as Feature<Geometry>)) return undefined;
   const properties = featureProperties(feature);
   const status = getSupAipVisualStatus(properties);
   const showLabel = resolution <= 2500;
   const cacheKey = `${status}:${showLabel ? properties.name ?? properties.zoneType ?? 'SUP AIP' : 'no-label'}`;
   const cached = styleCache.get(cacheKey);
-  if (cached) return cached;
+  if (cached) return cached as Style;
 
   const colors = palette[status];
   const label = showLabel ? String(properties.name ?? properties.zoneType ?? 'SUP AIP') : '';
@@ -69,6 +69,61 @@ function styleFor(feature: FeatureLike, resolution: number): Style | undefined {
   return style;
 }
 
+function highlightStyles(feature: Feature<Geometry>, selectionOrder: number, active: boolean): Style | Style[] {
+  const properties = featureProperties(feature);
+  const status = getSupAipVisualStatus(properties);
+  const colors = palette[status];
+  const cacheKey = `highlight:${properties.id ?? 'unknown'}:${status}:${selectionOrder}:${active ? 'active' : 'dim'}`;
+  const cached = styleCache.get(cacheKey);
+  if (cached) return cached;
+
+  const alpha = active ? 1 : 0.35;
+  const styles: Style[] = [];
+
+  if (active) {
+    styles.push(new Style({
+      stroke: new Stroke({ color: 'rgba(255,255,255,0.92)', width: 7.4, lineDash: colors.dash, lineCap: 'round', lineJoin: 'round' }),
+      fill: new Fill({ color: 'rgba(255,255,255,0.05)' })
+    }));
+  }
+
+  styles.push(new Style({
+    fill: new Fill({ color: colors.fill.replace(/rgba\(([^)]+),\s*([0-9.]+)\)/, (_match, rgb, a) => `rgba(${rgb}, ${Math.min(1, Number(a) * (active ? 1.25 : alpha))})`) }),
+    stroke: new Stroke({
+      color: colors.stroke,
+      width: active ? 4.3 : 2.8,
+      lineDash: colors.dash,
+      lineCap: 'round',
+      lineJoin: 'round'
+    }),
+    text: active ? new Text({
+      text: String(properties.name ?? properties.zoneType ?? 'SUP AIP'),
+      font: '900 12px system-ui',
+      fill: new Fill({ color: colors.text }),
+      stroke: new Stroke({ color: 'rgba(5, 11, 18, 0.98)', width: 4 }),
+      overflow: true,
+      offsetY: -2
+    }) : undefined
+  }));
+
+  styles.push(new Style({
+    text: new Text({
+      text: String(selectionOrder),
+      font: '900 12px system-ui, sans-serif',
+      fill: new Fill({ color: '#F9FBFF' }),
+      backgroundFill: new Fill({ color: active ? 'rgba(83, 132, 255, 0.96)' : 'rgba(19, 34, 52, 0.92)' }),
+      backgroundStroke: new Stroke({ color: active ? 'rgba(255,255,255,0.96)' : 'rgba(152, 198, 255, 0.80)', width: active ? 2 : 1.4 }),
+      padding: [3, 7, 3, 7],
+      overflow: true,
+      offsetY: 16
+    }),
+    zIndex: active ? 1200 : 1100
+  }));
+
+  styleCache.set(cacheKey, styles);
+  return styles;
+}
+
 export function createSupAipLayer({
   visible = false,
   onLoadStart,
@@ -84,7 +139,7 @@ export function createSupAipLayer({
   const layer = new VectorLayer({
     source,
     visible,
-    style: styleFor,
+    style: defaultStyleFor,
     properties: {
       name: 'supaip-auto-beta-overlay',
       capclairLayerType: 'supaip-auto-beta'
@@ -134,6 +189,25 @@ export function createSupAipLayer({
   layer.lastLoadedAt = () => loadedAt;
   layer.loadedDatasetVersion = () => loadedVersion;
   return layer;
+}
+
+export function setSupAipSelectionHighlight(layer: SupAipLayer, selections: SupAipSelection[], selectedIndex: number) {
+  const source = layer.getSource();
+  if (!source) return;
+  const orderById = new Map<string, number>();
+  selections.forEach((selection, index) => orderById.set(selection.id, index + 1));
+  const activeId = selections[Math.max(0, Math.min(selectedIndex, selections.length - 1))]?.id ?? null;
+
+  source.getFeatures().forEach((feature) => {
+    const featureId = String(feature.get('id') ?? '');
+    const order = orderById.get(featureId);
+    if (!order || !isSupAipFeatureVisible(feature)) {
+      feature.setStyle(undefined);
+      return;
+    }
+    feature.setStyle(highlightStyles(feature, order, featureId === activeId));
+  });
+  layer.changed();
 }
 
 export function supAipSelectionFromFeature(feature: Feature<Geometry>): SupAipSelection | null {

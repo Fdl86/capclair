@@ -21,7 +21,7 @@ import { createPlannedRouteLayer } from '../../mapLayers/plannedRouteLayer';
 import { createActualTraceLayer, updateActualTraceLayer, type ActualTraceLayer } from '../../mapLayers/actualTraceLayer';
 import { createWaypointLayer } from '../../mapLayers/waypointLayer';
 import { createAircraftLayer, updateAircraftLayer, type AircraftLayer } from '../../mapLayers/aircraftLayer';
-import { createSupAipLayer, supAipSelectionFromFeature, type SupAipLayer } from '../../mapLayers/supAipLayer';
+import { createSupAipLayer, setSupAipSelectionHighlight, supAipSelectionFromFeature, type SupAipLayer } from '../../mapLayers/supAipLayer';
 import type { GpsPosition } from '../../domain/gps.types';
 import type { NavRoute } from '../../domain/navigation.types';
 import type { SupAipSelection } from '../../domain/supaip.types';
@@ -37,7 +37,7 @@ import { MapControls } from './MapControls';
 import { MapFallbackNotice } from './MapFallbackNotice';
 import { SupAipPopup } from './SupAipPopup';
 import { NotamPibPopup } from './NotamPibPopup';
-import { createNotamPibLayer, notamPibSelectionFromFeature, updateNotamPibLayer, type NotamPibLayer, type NotamPibSelection } from '../../mapLayers/notamPibLayer';
+import { createNotamPibLayer, notamPibSelectionFromFeature, setNotamPibSelectionHighlight, updateNotamPibLayer, type NotamPibLayer, type NotamPibSelection } from '../../mapLayers/notamPibLayer';
 import {
   fetchSupAipDatasetStatus,
   isSupAipDatasetStale,
@@ -296,6 +296,18 @@ export function OpenLayersMap({
     });
     return () => { cancelled = true; };
   }, [notamPibAnalysis, notamLayerSettings]);
+
+  useEffect(() => {
+    const layer = notamPibLayerRef.current;
+    if (!layer) return;
+    setNotamPibSelectionHighlight(layer, selectedNotams, selectedNotamIndex);
+  }, [selectedNotams, selectedNotamIndex]);
+
+  useEffect(() => {
+    const layer = supAipLayerRef.current;
+    if (!layer) return;
+    setSupAipSelectionHighlight(layer, selectedSupAips, selectedSupAipIndex);
+  }, [selectedSupAips, selectedSupAipIndex]);
 
   useEffect(() => {
     const settings = normalizeSupAipVisibilitySettings(supAipSettings);
@@ -666,7 +678,7 @@ export function OpenLayersMap({
           selections={selectedNotams}
           selectedIndex={selectedNotamIndex}
           onSelectIndex={setSelectedNotamIndex}
-          onClose={() => setSelectedNotams([])}
+          onClose={() => { setSelectedNotams([]); setSelectedNotamIndex(0); }}
         />
       )}
       {selectedSupAips.length > 0 && (
@@ -674,7 +686,7 @@ export function OpenLayersMap({
           selections={selectedSupAips}
           selectedIndex={selectedSupAipIndex}
           onSelectIndex={setSelectedSupAipIndex}
-          onClose={() => setSelectedSupAips([])}
+          onClose={() => { setSelectedSupAips([]); setSelectedSupAipIndex(0); }}
         />
       )}
       {locationError && <div className="map-location-notice">{locationError}</div>}

@@ -1,0 +1,48 @@
+CAP CLAIR WEB13.30.3 - NOTAM SELECTION HIGHLIGHT HOTFIX
+
+Base de travail
+- WEB13.30.2 - NOTAM MAP UX HOTFIX
+
+Objectif
+- améliorer la lisibilité des sélections multiples NOTAM / SUP AIP sur la carte
+- faire correspondre clairement les boutons 1, 2, 3... de la fiche avec la géométrie concernée
+- conserver toute la navigation actuelle et le parsing existant
+
+Correctifs livrés
+1. Sélections multiples NOTAM
+- chaque élément sélectionné dans un groupe reçoit désormais un repère numéroté sur la carte
+- l'élément actif est mis en surbrillance forte
+- les autres éléments du groupe restent visibles mais atténués
+- les points extraits du champ E reçoivent aussi un repère numéroté
+
+2. Sélections multiples SUP AIP
+- les zones SUP AIP sélectionnées reçoivent elles aussi un repère numéroté
+- la zone active est mise en avant avec contour renforcé
+- les autres zones du groupe restent visibles avec une intensité réduite
+
+3. Comportement de fermeture
+- à la fermeture de la fiche, la surbrillance et les repères sont retirés
+- retour immédiat à l'affichage cartographique normal
+
+Fichiers principaux modifiés
+- src/mapLayers/notamPibLayer.ts
+- src/mapLayers/supAipLayer.ts
+- src/components/map/OpenLayersMap.tsx
+- src/app/version.ts
+- index.html
+- tests/notam/notamPibLayer.test.ts
+
+Validation réellement exécutée
+- Vitest: 19 fichiers réussis, 44 tests réussis
+- Python SUP AIP: 27 tests réussis
+- TypeScript: réussi
+- Build Vite/PWA: réussi
+
+Résultat attendu en usage
+- si plusieurs objets sont touchés au même endroit, la fiche affiche 1, 2, 3...
+- la carte affiche en même temps les repères 1, 2, 3... sur les géométries correspondantes
+- quand l'utilisateur change d'onglet, la géométrie choisie ressort immédiatement sur la carte
+
+Limites connues
+- aucun recentrage automatique agressif n'a été ajouté pour ne pas déstabiliser la lecture
+- l'amélioration porte uniquement sur la lisibilité de sélection, sans refonte des sections

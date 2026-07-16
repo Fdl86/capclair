@@ -71,7 +71,9 @@ const cancelledStyle = new Style({
   fill: new Fill({ color: 'rgba(100, 110, 120, 0.04)' })
 });
 
-function styleForFeature(feature: Feature<Geometry>) {
+const highlightStyleCache = new Map<string, Style | Style[]>();
+
+function defaultStyleForFeature(feature: Feature<Geometry>) {
   if (feature.get('cancelled')) return cancelledStyle;
   switch (feature.get('kind') as NotamPibGeometryKind) {
     case 'sup-exact': return exactSupStyle;
@@ -82,6 +84,117 @@ function styleForFeature(feature: Feature<Geometry>) {
   }
 }
 
+function colorSet(kind: NotamPibGeometryKind, active: boolean, dimmed: boolean) {
+  const alpha = dimmed ? 0.24 : 1;
+  if (kind === 'sup-exact') {
+    return {
+      stroke: `rgba(43, 207, 255, ${active ? 1 : 0.95 * alpha})`,
+      fill: `rgba(43, 207, 255, ${active ? 0.20 : 0.09 * alpha})`,
+      text: '#DFFBFF'
+    };
+  }
+  if (kind === 'e-polygon') {
+    return {
+      stroke: `rgba(206, 112, 255, ${active ? 1 : 0.95 * alpha})`,
+      fill: `rgba(206, 112, 255, ${active ? 0.22 : 0.10 * alpha})`,
+      text: '#FAE7FF'
+    };
+  }
+  if (kind === 'e-point') {
+    return {
+      stroke: `rgba(255, 224, 112, ${active ? 1 : 0.95 * alpha})`,
+      fill: `rgba(255, 224, 112, ${active ? 1 : 0.88 * alpha})`,
+      text: '#FFF7D8'
+    };
+  }
+  if (kind === 'missing-sup-approximation') {
+    return {
+      stroke: `rgba(255, 93, 93, ${active ? 1 : 0.92 * alpha})`,
+      fill: `rgba(255, 93, 93, ${active ? 0.13 : 0.06 * alpha})`,
+      text: '#FFE8E8'
+    };
+  }
+  return {
+    stroke: `rgba(255, 169, 70, ${active ? 1 : 0.92 * alpha})`,
+    fill: `rgba(255, 169, 70, ${active ? 0.12 : 0.04 * alpha})`,
+    text: '#FFEAD0'
+  };
+}
+
+function highlightStyleForFeature(feature: Feature<Geometry>, order: number, active: boolean): Style | Style[] {
+  const kind = feature.get('kind') as NotamPibGeometryKind;
+  const dimmed = !active;
+  const showApproximationLabel = Boolean(feature.get('showApproximationLabel'));
+  const cacheKey = `${kind}:${active ? 'active' : 'dim'}:${order}:${showApproximationLabel ? 'label' : 'nolabel'}`;
+  const cached = highlightStyleCache.get(cacheKey);
+  if (cached) return cached;
+
+  const colors = colorSet(kind, active, dimmed);
+  const styles: Style[] = [];
+
+  if (kind === 'e-point') {
+    if (active) {
+      styles.push(new Style({
+        image: new CircleStyle({
+          radius: 13,
+          fill: new Fill({ color: 'rgba(255,255,255,0.16)' }),
+          stroke: new Stroke({ color: 'rgba(255,255,255,0.92)', width: 2.6 })
+        })
+      }));
+    }
+    styles.push(new Style({
+      image: new CircleStyle({
+        radius: active ? 9 : 7,
+        fill: new Fill({ color: colors.fill }),
+        stroke: new Stroke({ color: active ? 'rgba(5, 11, 18, 1)' : 'rgba(5, 11, 18, 0.95)', width: active ? 2.6 : 2 })
+      })
+    }));
+  } else {
+    if (active) {
+      styles.push(new Style({
+        stroke: new Stroke({ color: 'rgba(255,255,255,0.90)', width: kind === 'q-approximation' || kind === 'missing-sup-approximation' ? 6.5 : 7.2, lineDash: kind === 'q-approximation' || kind === 'missing-sup-approximation' ? [10, 8] : undefined, lineCap: 'round', lineJoin: 'round' }),
+        fill: new Fill({ color: 'rgba(255,255,255,0.05)' })
+      }));
+    }
+
+    styles.push(new Style({
+      stroke: new Stroke({
+        color: colors.stroke,
+        width: active ? 4.2 : 2.6,
+        lineDash: kind === 'q-approximation' ? [10, 8] : kind === 'missing-sup-approximation' ? [7, 5] : undefined,
+        lineCap: 'round',
+        lineJoin: 'round'
+      }),
+      fill: new Fill({ color: colors.fill }),
+      text: !active && showApproximationLabel ? new Text({
+        text: 'Approximation Q',
+        font: '700 10px system-ui, sans-serif',
+        fill: new Fill({ color: colors.text }),
+        stroke: new Stroke({ color: 'rgba(5, 11, 18, 0.9)', width: 3 }),
+        overflow: true
+      }) : undefined
+    }));
+  }
+
+  styles.push(new Style({
+    text: new Text({
+      text: String(order),
+      font: '900 12px system-ui, sans-serif',
+      fill: new Fill({ color: '#F9FBFF' }),
+      backgroundFill: new Fill({ color: active ? 'rgba(83, 132, 255, 0.96)' : 'rgba(19, 34, 52, 0.92)' }),
+      backgroundStroke: new Stroke({ color: active ? 'rgba(255,255,255,0.96)' : 'rgba(152, 198, 255, 0.80)', width: active ? 2 : 1.4 }),
+      padding: [3, 7, 3, 7],
+      overflow: true,
+      offsetY: kind === 'e-point' ? -20 : 0
+    }),
+    zIndex: active ? 1200 : 1100
+  }));
+
+  const result: Style | Style[] = styles;
+  highlightStyleCache.set(cacheKey, result);
+  return result;
+}
+
 let supGeoJsonPromise: Promise<any> | null = null;
 const updateRevisions = new WeakMap<NotamPibLayer, number>();
 
@@ -90,9 +203,9 @@ function loadSupGeoJson() {
     supGeoJsonPromise = fetch('/data/supaip-current.geojson').then((response) => {
       if (!response.ok) throw new Error('Base SUP AIP indisponible');
       return response.json();
-    }).catch((cause) => {
+    }).catch(() => {
       supGeoJsonPromise = null;
-      throw cause;
+      throw new Error('Base SUP AIP indisponible');
     });
   }
   return supGeoJsonPromise;
@@ -197,8 +310,27 @@ export function createNotamPibLayer(): NotamPibLayer {
     source: new VectorSource(),
     visible: false,
     zIndex: 34,
-    style: (feature) => styleForFeature(feature as Feature<Geometry>)
+    style: (feature) => defaultStyleForFeature(feature as Feature<Geometry>)
   });
+}
+
+export function setNotamPibSelectionHighlight(layer: NotamPibLayer, selections: NotamPibSelection[], selectedIndex: number) {
+  const source = layer.getSource();
+  if (!source) return;
+  const orderById = new Map<string, number>();
+  selections.forEach((selection, index) => orderById.set(selection.id, index + 1));
+  const activeId = selections[Math.max(0, Math.min(selectedIndex, selections.length - 1))]?.id ?? null;
+
+  source.getFeatures().forEach((feature) => {
+    const selection = notamPibSelectionFromFeature(feature);
+    const order = selection ? orderById.get(selection.id) : undefined;
+    if (!selection || !order) {
+      feature.setStyle(undefined);
+      return;
+    }
+    feature.setStyle(highlightStyleForFeature(feature, order, selection.id === activeId));
+  });
+  layer.changed();
 }
 
 export async function updateNotamPibLayer(layer: NotamPibLayer, analysis: PibAnalysis | null, settings: NotamLayerSettings) {

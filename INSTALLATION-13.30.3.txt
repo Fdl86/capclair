@@ -1,0 +1,15 @@
+INSTALLATION - CAP CLAIR WEB13.30.3 - NOTAM SELECTION HIGHLIGHT HOTFIX
+
+1. Ouvrir le dossier local du dépôt CAP CLAIR web/PWA.
+2. Faire Pull origin dans GitHub Desktop s'il est proposé.
+3. Vider le dossier local en conservant uniquement .git.
+4. Copier dans ce dossier le contenu du zip WEB13.30.3.
+5. Vérifier la présence des nouveaux fichiers REPORTING-13.30.3.txt et INSTALLATION-13.30.3.txt.
+6. Commit conseillé:
+   main: add WEB13.30.3 NOTAM selection highlight hotfix
+7. Push origin.
+8. Après déploiement, vérifier dans l'application:
+   - chip version WEB13.30.3
+   - ouverture d'un groupe NOTAM / SUP AIP multiple
+   - présence des badges numérotés sur la carte
+   - surbrillance correcte de l'élément actif
