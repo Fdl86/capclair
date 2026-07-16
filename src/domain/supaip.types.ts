@@ -32,7 +32,8 @@ export interface SupAipProperties {
     | 'automatic-text-v2'
     | 'manual-override'
     | 'previous-parser-safety-fallback'
-    | 'previous-parser-partial-safety-fallback';
+    | 'previous-parser-partial-safety-fallback'
+    | 'previous-parser-regression-fallback';
   geometryConfidence?: 'high' | 'medium';
   geometryWarnings?: string[];
   verticalLimitsExtracted?: boolean;

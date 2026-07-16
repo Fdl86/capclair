@@ -18,10 +18,10 @@ jobs:
     timeout-minutes: 35
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
       - name: Set up Python
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v7
         with:
           python-version: '3.12'
           cache: pip
@@ -56,9 +56,12 @@ jobs:
           assert status['mappedPublicationCount'] == (
               status['fullyMappedPublicationCount']
               + status.get('conservativePublicationCount', 0)
+              + status.get('fallbackPublicationCount', 0)
               + status['partialPublicationCount']
           )
           assert status.get('conservativePublicationCount', 0) == status.get('conservativelyMappedPublicationCount', 0)
+          assert status.get('fallbackPublicationCount', 0) == status.get('fallbackMappedPublicationCount', 0)
+          assert status.get('unresolvedRegressionCount', 0) == 0
           assert len(manifest.get('publications', [])) == status['listingPublicationCount']
 
           ids = [feature.get('id') or feature.get('properties', {}).get('id') for feature in geo['features']]
@@ -79,7 +82,8 @@ jobs:
 
           print(
               f"Validated {status['processedPublicationCount']}/{status['listingPublicationCount']} PDF, "
-              f"{status['featureCount']} geometries and {status['missingVerticalFeatureCount']} missing vertical limits"
+              f"{status['featureCount']} geometries, {status.get('regressionRecoveredFeatureCount', 0)} recovered regression geometries "
+              f"and {status['missingVerticalFeatureCount']} missing vertical limits"
           )
           PY
 
@@ -94,7 +98,7 @@ jobs:
           unmapped = json.loads(Path('public/data/supaip-unmapped.json').read_text(encoding='utf-8')).get('publications', [])
           summary = Path(os.environ['GITHUB_STEP_SUMMARY'])
           lines = [
-              '# CAP CLAIR - bilan SUP AIP Parser V3.1',
+              '# CAP CLAIR - bilan SUP AIP Parser V3.2 anti-régression',
               '',
               f"- Publications SIA listées : {status['listingPublicationCount']}",
               f"- PDF contrôlés : {status['processedPublicationCount']}",
@@ -104,6 +108,7 @@ jobs:
               f"- Publications spatiales : {status['zonalPublicationCount']}",
               f"- Publications entièrement cartographiées : {status['fullyMappedPublicationCount']}",
               f"- Publications affichées avec prudence : {status.get('conservativePublicationCount', 0)}",
+              f"- Publications complètes avec repli : {status.get('fallbackPublicationCount', 0)}",
               f"- Publications réellement partielles : {status['partialPublicationCount']}",
               f"- Publications non cartographiées : {status['completeUnmappedPublicationCount']}",
               f"- Géométries nommées attendues : {status['expectedNamedGeometryCount']}",
@@ -111,6 +116,8 @@ jobs:
               f"- Géométries avec verticales : {status['verticalCompleteFeatureCount']}",
               f"- Géométries sans verticales : {status['missingVerticalFeatureCount']}",
               f"- Replis de sécurité : {status.get('safetyFallbackPublicationCount', 0)} publication(s) / {status.get('safetyFallbackFeatureCount', 0)} zone(s)",
+              f"- Régressions compensées : {status.get('regressionRecoveredPublicationCount', 0)} publication(s) / {status.get('regressionRecoveredFeatureCount', 0)} zone(s)",
+              f"- Régressions non résolues : {status.get('unresolvedRegressionCount', 0)}",
               f"- Références permanentes ignorées : {status.get('ignoredReferenceObjectCount', 0)}",
               '',
               '## Causes des publications incomplètes',
@@ -126,7 +133,12 @@ jobs:
               lines.extend(['## Publications à contrôler', ''])
               for item in unmapped[:60]:
                   item_status = item.get('status')
-                  state = 'affiché avec prudence' if item_status == 'conservative' else 'partiel' if item_status == 'partial' or item.get('partial') else 'non cartographié'
+                  state = (
+                      'affiché avec prudence' if item_status == 'conservative'
+                      else 'complet avec repli' if item_status == 'fallback'
+                      else 'partiel' if item_status == 'partial' or item.get('partial')
+                      else 'non cartographié'
+                  )
                   mapped = item.get('mappedGeometryCount', 0)
                   expected = item.get('expectedNamedGeometryCount', 0)
                   vertical = item.get('missingVerticalCount', 0)
@@ -137,6 +149,15 @@ jobs:
                   reason = item.get('reason')
                   if reason:
                       lines.append(f"  - Diagnostic : {reason}")
+          regression_details = status.get('regressionRecoveredDetails', [])
+          if regression_details:
+              lines.extend(['', '## Régressions compensées avant publication', ''])
+              for item in regression_details:
+                  names = ', '.join(item.get('recoveredFeatureNames', [])) or 'noms indisponibles'
+                  lines.append(
+                      f"- {item.get('supAip')} - candidat {item.get('candidateFeatureCount', 0)} / base précédente {item.get('previousFeatureCount', 0)} - "
+                      f"{item.get('recoveredFeatureCount', 0)} zone(s) restaurée(s) : {names}"
+                  )
           fallback_details = status.get('safetyFallbackDetails', [])
           if fallback_details:
               lines.extend(['', '## Replis de sécurité détaillés', ''])
@@ -155,5 +176,5 @@ jobs:
           git config user.name "CAP CLAIR SUP AIP Bot"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add public/data/supaip-current.geojson public/data/supaip-status.json public/data/supaip-unmapped.json public/data/supaip-manifest.json
-          git commit -m "data: actualisation automatique SUP AIP Parser V3.1"
+          git commit -m "data: actualisation automatique SUP AIP Parser V3.2"
           git push

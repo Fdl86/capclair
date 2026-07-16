@@ -1,35 +1,25 @@
-# CAP CLAIR WEB13.29.1 - SUP AIP PARSER V3.1 FIABILISATION BETA
+# CAP CLAIR WEB13.29.2 - SUP AIP ANTI-RÉGRESSION BETA
 
 CAP CLAIR est une application VFR mobile-first en Vite, React, TypeScript et OpenLayers, déployée comme PWA sur Cloudflare Pages.
 
-Cette livraison renforce l'extraction automatique des SUP AIP, protège la base contre les régressions partielles et conserve indépendamment les vues cartographiques de Planifier, Suivi et Replay.
+## WEB13.29.2 - SUP AIP ANTI-RÉGRESSION BETA
 
-## WEB13.29.1 - SUP AIP PARSER V3.1 FIABILISATION BETA
+- correction de la régression qui classait à tort les zones temporaires nommées `ZRT LF-R...` ou `ZRT ... LF-R17 ...` comme de simples références permanentes ;
+- restauration vérifiée sur les PDF officiels du SUP AIP 101/26 : 20/20 géométries ;
+- restauration vérifiée sur le PDF officiel du SUP AIP 077/26 : 12 géométries opérationnelles ;
+- comparaison publication par publication avec la dernière base valide avant toute écriture ;
+- rapprochement des zones par identifiant, nom canonique, géométrie et limites verticales afin de supporter les changements mineurs de libellé ;
+- restauration automatique de chaque ancienne zone opérationnelle qui disparaît du résultat candidat ;
+- conservation distincte des zones superposées partageant la même géométrie mais pas les mêmes verticales ;
+- blocage complet du workflow si une chute de géométries ne peut pas être compensée ;
+- aucune écriture des fichiers de données et aucun commit dans ce cas ;
+- nouveau statut `complet avec repli`, séparé des publications réellement partielles ;
+- bilan GitHub avec régressions compensées, zones restaurées et compteur obligatoire de régressions non résolues à zéro ;
+- affichage de ces compteurs dans `Plus > SUP AIP` ;
+- passage aux actions GitHub Node 24 actuelles `actions/checkout@v7` et `actions/setup-python@v7` ;
+- les fonctions de la WEB13.29.1, la persistance du zoom et le filtre d'altitude sont conservés.
 
-- séparation stricte entre zones temporaires SUP AIP et espaces permanents cités comme références ou exclusions ;
-- suppression des faux objets issus de libellés tels que `ZRT activable H24`, `ZRT.`, CTR/TMA de référence et codes LF-R permanents non créés par le SUP AIP ;
-- le garde-fou anti-régression ne restaure plus un ancien objet identifié comme simple référence permanente ;
-- distinction dans le bilan entre `entièrement cartographié`, `affiché avec prudence`, `réellement partiel` et `non cartographié` ;
-- une exclusion interne non découpée ne fait plus artificiellement passer un SUP complet dans les publications réellement partielles ;
-- audit détaillé des replis de sécurité avec le numéro du SUP AIP et le nom de chaque zone conservée ;
-- compteur des références permanentes ignorées, visible dans GitHub Actions et dans `Plus > SUP AIP` ;
-- maintien volontaire des zones superposées partageant un même contour mais des verticales différentes, notamment `TRA90NL` et `TRA90NH` ;
-
-- nouvel assembleur de tableaux PDF multi-colonnes, même lorsque les titres, coordonnées et verticales sont séparés en plusieurs blocs ;
-- prise en charge des désignations temporaires compactes `LFR343L`, `LFR343M`, `LFR343H` ;
-- reconstruction des titres partagés avec suffixes `ALPHA`, `BRAVO`, `CHARLIE`, `DELTA` ;
-- récupération du nom depuis le document pour les publications à zone unique dont le tableau omet le titre ;
-- compteur attendu croisé avec le nombre de zones déclaré dans le titre ;
-- résolution prudente des limites explicitement identiques à un espace permanent présent dans le catalogue CAP CLAIR ;
-- conservation individuelle d'une ancienne géométrie si une nouvelle version du parseur perd seulement une partie d'un SUP AIP ;
-- fichiers de données déterministes : aucun commit GitHub et aucun redéploiement Cloudflare si les données officielles n'ont pas réellement changé ;
-- chargement effectif de la couche SUP AIP dans Replay ;
-- cache SUP AIP à URL stable et relecture du GeoJSON uniquement lorsque la révision de la base change ;
-- sélection d'une zone lorsque plusieurs SUP AIP se superposent au même point ;
-- reclassement des publications modifiant uniquement un itinéraire hélicoptère comme non spatiales ;
-- mémorisation indépendante du centre, du zoom et de la rotation dans Planifier, Suivi et chaque Replay ;
-- suppression du reset de zoom lors d'un passage vers Log de nav, Plus ou une autre section ;
-- un nouvel itinéraire ou une nouvelle trace déclenche encore un cadrage automatique volontaire.
+Le parseur reste BETA et ne remplace jamais la consultation du SIA, de SOFIA et des NOTAM.
 
 ## WEB13.28.0 - SUP AIP ALTITUDE FILTER BETA
 
@@ -231,27 +221,20 @@ La couche est un prototype de validation d'interface et de géométrie. Elle n'e
 
 ## Installation avec GitHub Desktop
 
-1. Sélectionner la branche web/PWA concernée.
-2. Vider le dossier local en conservant uniquement `.git`.
-3. Copier le contenu complet du ZIP dans le dossier.
-4. Commit et push via GitHub Desktop sur `main`.
-5. Vérifier `WEB13.29.1` dans la chip et `CAP CLAIR WEB13.29.1 - SUP AIP PARSER V3.1 FIABILISATION BETA` dans le titre de l'onglet.
+Cette livraison est un patch à appliquer sur WEB13.29.1 après récupération du dernier commit automatique SUP AIP.
+
+1. Dans GitHub Desktop, utiliser `Pull origin` s'il est proposé.
+2. Ne pas vider le dossier local et conserver `.git`.
+3. Copier tout le contenu du patch à la racine du dépôt et accepter les remplacements.
+4. Vérifier que les fichiers `public/data/supaip-*` ne sont ni supprimés ni remplacés.
+5. Commit puis `Push origin` sur `main`.
+6. Vérifier `WEB13.29.2` dans la chip et le titre de l'onglet.
+7. Lancer une fois `Actions > Update SUP AIP data > Run workflow` sur `main`.
+8. Le run doit afficher `Régressions non résolues : 0` avant le commit automatique.
+9. Après le commit du robot, faire `Pull origin` dans GitHub Desktop.
 
 Commit recommandé :
 
 ```text
-main: add SUP AIP Parser V3.1 robustness
+main: add SUP AIP Parser V3.2 anti-regression guard
 ```
-
-## Activation GitHub Actions - une seule fois
-
-1. Ouvrir le dépôt dans le navigateur sur GitHub.
-2. Aller dans `Settings > Actions > General`.
-3. Dans `Workflow permissions`, sélectionner `Read and write permissions`, puis enregistrer.
-4. Ouvrir l'onglet `Actions` du dépôt.
-5. Sélectionner `Update SUP AIP data`.
-6. Cliquer `Run workflow`, choisir la branche `main`, puis confirmer.
-7. Attendre que le run passe au vert.
-8. GitHub crée alors automatiquement un commit `data: actualisation automatique SUP AIP Parser V3.1`, ce qui déclenche le redéploiement Cloudflare Pages.
-
-Après ce premier lancement, le workflow s'exécute seul toutes les 6 heures. Dans `Plus > SUP AIP`, le statut doit passer de `À INITIALISER` à `ACTIVE` après le redéploiement.

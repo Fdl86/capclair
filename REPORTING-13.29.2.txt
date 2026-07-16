@@ -1,0 +1,26 @@
+CAP CLAIR WEB13.29.2 - REPORTING ANTI-REGRESSION
+
+CAUSE RACINE CORRIGEE
+Le filtre V3.1 assimilait toute occurrence LF-R dans un nom à une référence permanente. Or plusieurs SUP AIP créent officiellement des zones temporaires dont le nom contient un code LF-R, notamment ZRT LF-R400A et ZRT AVEL LF-R17 A1. Les préfixes temporaires ZRT, ZDT, ZIT, TRA et TSA sont désormais prioritaires. Seuls les codes LF-R nus restent filtrés lorsqu'ils ne sont pas explicitement créés par le SUP AIP.
+
+VERIFICATIONS SUR DOCUMENTS OFFICIELS
+- SUP AIP 101/26 : 20 géométries extraites sur 20 attendues.
+- SUP AIP 077/26 : 12 géométries opérationnelles extraites. Le titre annonce 7 ZRT, mais le tableau officiel contient 12 sous-zones nommées LOW/HIGH qui doivent rester distinctes.
+
+GARDE-FOU V3.2
+- Comparaison de chaque publication présente dans l'ancienne et la nouvelle base.
+- Appariement exact par identifiant, puis nom canonique, puis géométrie et limites verticales, puis similarité forte du libellé.
+- Restauration de chaque ancienne géométrie opérationnelle sans équivalent crédible dans le résultat candidat.
+- Conservation des couches ayant la même géométrie mais des verticales ou noms distincts.
+- Reclassification spatiale vers non spatiale considérée comme régression lorsque la publication officielle est inchangée.
+- Si une chute reste non compensée, le script s'arrête avant toute écriture des quatre fichiers public/data et avant le commit GitHub.
+
+REPORTING
+- regressionRecoveredPublicationCount
+- regressionRecoveredFeatureCount
+- regressionRecoveredDetails
+- unresolvedRegressionCount, obligatoirement égal à zéro pour valider et publier
+- fallbackPublicationCount pour distinguer un SUP complet avec repli d'un SUP réellement partiel
+
+LIMITES CONSERVEES
+Le module reste BETA. Les exclusions internes non découpées, les corridors sans coordonnées et les limites dépendant d'une source externe restent signalés. Le SIA, SOFIA et les NOTAM restent obligatoires avant le vol.

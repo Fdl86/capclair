@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Build CAP CLAIR's SUP AIP overlay from the official French SIA listing.
 
-Parser V3.1 is layout-aware, regression-safe and reference-aware. It reads PyMuPDF text blocks,
+Parser V3.2 is layout-aware, publication-regression-safe and reference-aware. It reads PyMuPDF text blocks,
 rebuilds common multi-column SIA tables, recognises temporary LFR designators,
 and keeps previously valid individual geometries if a parser upgrade loses only
 part of a publication. It remains conservative: a boundary that depends on an
@@ -20,6 +20,7 @@ import re
 import sys
 import time
 import unicodedata
+from difflib import SequenceMatcher
 from dataclasses import dataclass, field
 from datetime import datetime, timezone
 from pathlib import Path
@@ -33,8 +34,8 @@ from requests.adapters import HTTPAdapter
 from urllib3.util.retry import Retry
 
 SOURCE_URL = "https://www.sia.aviation-civile.gouv.fr/documents/supaip/aip/id/6"
-PARSER_VERSION = "capclair-supaip-parser-3.0.1"
-USER_AGENT = "CAP-CLAIR-SUPAIP-BETA/3.0.1 (+automatic SIA public-document reader)"
+PARSER_VERSION = "capclair-supaip-parser-3.0.2"
+USER_AGENT = "CAP-CLAIR-SUPAIP-BETA/3.0.2 (+automatic SIA public-document reader)"
 ZONE_TITLE_RE = re.compile(
     r"\b(?:ZRT|ZDT|ZIT|TRA|TSA|zone(?:s)?\s+(?:r[eé]glement[eé]e|dangereuse|interdite|r[eé]serv[eé]e)(?:s)?\s+temporaire(?:s)?|CTR\s+temporaire|TMA\s+temporaire)\b",
     re.IGNORECASE,
@@ -1222,10 +1223,10 @@ def compact_airspace_code(value: str) -> str:
 def is_target_zone_name(name: str, entry_title: str) -> bool:
     """Return True only for an operational temporary-zone object.
 
-    SIA tables frequently cite permanent CTR/TMA/LF-R spaces as exclusions or
-    references. Those objects may provide a boundary, but they are not an
-    additional SUP AIP zone and must not inflate counts or be restored by the
-    regression guard.
+    A temporary zone may legitimately include a permanent-looking LF-R code in
+    its official name, for example ``ZRT LF-R400A`` or ``ZRT AVEL LF-R17 A1``.
+    Such names must remain operational. Only a *bare* CTR/TMA/RMZ/TMZ/LF-R
+    reference is filtered when the SUP AIP title does not explicitly create it.
     """
     cleaned = clean_zone_name(name)
     if not cleaned or GENERIC_ZONE_NAME_RE.fullmatch(cleaned) or ZONE_METADATA_NAME_RE.search(cleaned):
@@ -1234,11 +1235,17 @@ def is_target_zone_name(name: str, entry_title: str) -> bool:
     if upper.startswith("FBZ"):
         return False
 
-    token = re.match(r"^(ZRT/ZDT|ZRT|ZDT|ZIT|TRA(?=\b|\d)|TSA(?=\b|\d)|CTR|TMA|RMZ|TMZ)", upper)
-    if token and token.group(1) in {"CTR", "TMA", "RMZ", "TMZ"}:
+    explicit_temporary = re.match(
+        r"^(?:ZRT/ZDT|ZRT|ZDT|ZIT|TRA(?=\b|\d)|TSA(?=\b|\d))",
+        upper,
+    )
+    if explicit_temporary:
+        return True
+
+    token = re.match(r"^(CTR|TMA|RMZ|TMZ)\b", upper)
+    if token:
         zone_type = token.group(1)
-        if not re.search(rf"\b{zone_type}\s+TEMPORAIRE(?:S)?\b", entry_title, re.IGNORECASE):
-            return False
+        return bool(re.search(rf"\b{zone_type}\s+TEMPORAIRE(?:S)?\b", entry_title, re.IGNORECASE))
 
     lfr_code = normalize_temporary_lfr_code(cleaned)
     if lfr_code:
@@ -1251,7 +1258,6 @@ def is_target_zone_name(name: str, entry_title: str) -> bool:
             return False
 
     return True
-
 
 def filter_target_zones(zones: list[ParsedZone], entry: ListingEntry) -> tuple[list[ParsedZone], list[str]]:
     """Remove only clearly non-operational labels, never a plausible zone.
@@ -1624,40 +1630,176 @@ def can_reuse_non_spatial(item: dict[str, Any] | None, entry: ListingEntry) -> b
     return bool(item) and not item.get("spatial") and item.get("sourceFingerprint") == entry.fingerprint and item.get("parserVersion") == PARSER_VERSION
 
 
+def same_official_publication(entry: ListingEntry, cached_manifest: dict[str, Any] | None) -> bool:
+    if not cached_manifest:
+        return False
+    cached_title = clean_space(str(cached_manifest.get("title") or ""))
+    cached_pdf = clean_space(str(cached_manifest.get("sourcePdf") or ""))
+    return cached_title == clean_space(entry.title) and cached_pdf == clean_space(entry.pdf_url)
+
+
+def feature_geometry_signature(feature: dict[str, Any]) -> str:
+    geometry = feature.get("geometry") or {}
+    return stable_payload_hash(geometry) if geometry else ""
+
+
+def feature_vertical_signature(feature: dict[str, Any]) -> tuple[str, str]:
+    properties = feature.get("properties", {})
+    return (
+        normalize_vertical_limit(str(properties.get("lowerLimit") or "")),
+        normalize_vertical_limit(str(properties.get("upperLimit") or "")),
+    )
+
+
+def feature_match_score(cached: dict[str, Any], candidate: dict[str, Any]) -> float:
+    cached_properties = cached.get("properties", {})
+    candidate_properties = candidate.get("properties", {})
+    cached_id = str(cached.get("id") or cached_properties.get("id") or "")
+    candidate_id = str(candidate.get("id") or candidate_properties.get("id") or "")
+    cached_name = str(cached_properties.get("name") or "")
+    candidate_name = str(candidate_properties.get("name") or "")
+    cached_key = zone_identity_key(cached_name)
+    candidate_key = zone_identity_key(candidate_name)
+    cached_vertical = feature_vertical_signature(cached)
+    candidate_vertical = feature_vertical_signature(candidate)
+    vertical_compatible = cached_vertical == candidate_vertical or not all(cached_vertical) or not all(candidate_vertical)
+
+    if cached_id and cached_id == candidate_id:
+        return 100.0
+    if cached_key and cached_key == candidate_key:
+        return 96.0
+
+    cached_geometry = feature_geometry_signature(cached)
+    candidate_geometry = feature_geometry_signature(candidate)
+    if cached_geometry and cached_geometry == candidate_geometry:
+        if cached_vertical == candidate_vertical:
+            return 94.0
+        if vertical_compatible and cached_properties.get("zoneType") == candidate_properties.get("zoneType"):
+            return 86.0
+
+    if cached_key and candidate_key and vertical_compatible:
+        similarity = SequenceMatcher(None, cached_key, candidate_key).ratio()
+        if similarity >= 0.94:
+            return 90.0 + similarity
+        cached_tokens = set(cached_key.split())
+        candidate_tokens = set(candidate_key.split())
+        overlap = len(cached_tokens & candidate_tokens) / max(1, len(cached_tokens | candidate_tokens))
+        if overlap >= 0.82:
+            return 84.0 + overlap
+    return 0.0
+
+
+def clone_cached_feature_for_regression_fallback(
+    entry: ListingEntry,
+    feature: dict[str, Any],
+    used_ids: set[str],
+    complete_regression: bool,
+) -> dict[str, Any]:
+    feature_copy = copy.deepcopy(feature)
+    properties = feature_copy.setdefault("properties", {})
+    baseline_parser_version = str(properties.get("parserVersion") or "unknown")
+    name = str(properties.get("name") or "Zone SUP AIP")
+    lower = str(properties.get("lowerLimit") or "")
+    upper = str(properties.get("upperLimit") or "")
+    feature_id = str(feature_copy.get("id") or properties.get("id") or "")
+    if not feature_id or feature_id in used_ids:
+        feature_id = make_unique_feature_id(entry.sup_aip, name, feature_copy.get("geometry") or {}, lower, upper, used_ids)
+    else:
+        used_ids.add(feature_id)
+    feature_copy["id"] = feature_id
+    properties["id"] = feature_id
+    properties["sourceFingerprint"] = entry.fingerprint
+    properties["parserVersion"] = PARSER_VERSION
+    properties["geometrySource"] = "previous-parser-regression-fallback"
+    properties["geometryConfidence"] = "medium"
+    properties["regressionFallback"] = True
+    properties["regressionFallbackKind"] = "complete" if complete_regression else "partial"
+    properties["regressionBaselineParserVersion"] = baseline_parser_version
+    geometry_warnings = list(properties.get("geometryWarnings") or [])
+    warning = (
+        "Géométrie conservée depuis la dernière base valide après une régression complète du parseur."
+        if complete_regression
+        else "Zone conservée depuis la dernière base valide après une régression partielle du parseur."
+    )
+    if warning not in geometry_warnings:
+        geometry_warnings.append(warning)
+    properties["geometryWarnings"] = geometry_warnings
+    return feature_copy
+
+
+def reconcile_cached_features_on_regression(
+    entry: ListingEntry,
+    parsed_features: list[dict[str, Any]],
+    cached_features: list[dict[str, Any]],
+    cached_manifest: dict[str, Any] | None,
+) -> tuple[list[dict[str, Any]], list[str], list[str]]:
+    """Reconcile one unchanged publication against the last committed base.
+
+    Matching uses exact identifiers, canonical names, geometry and vertical
+    limits. Every operational cached feature without a credible new equivalent
+    is restored. The function returns the recovered names and any unresolved
+    previous names; the latter must block publication of the candidate base.
+    """
+    if not cached_features or not same_official_publication(entry, cached_manifest):
+        return parsed_features, [], []
+
+    operational_cached = [
+        feature
+        for feature in cached_features
+        if is_target_zone_name(str(feature.get("properties", {}).get("name") or ""), entry.title)
+    ]
+    if not operational_cached:
+        return parsed_features, [], []
+
+    matched_candidate_indexes: set[int] = set()
+    unmatched_cached: list[dict[str, Any]] = []
+    for cached in operational_cached:
+        scored = [
+            (feature_match_score(cached, candidate), index)
+            for index, candidate in enumerate(parsed_features)
+            if index not in matched_candidate_indexes
+        ]
+        best_score, best_index = max(scored, default=(0.0, -1))
+        if best_score >= 80.0:
+            matched_candidate_indexes.add(best_index)
+        else:
+            unmatched_cached.append(cached)
+
+    if not unmatched_cached:
+        return parsed_features, [], []
+
+    complete_regression = not parsed_features
+    used_ids = {
+        str(feature.get("id") or feature.get("properties", {}).get("id") or "")
+        for feature in parsed_features
+        if feature.get("id") or feature.get("properties", {}).get("id")
+    }
+    recovered: list[dict[str, Any]] = []
+    unresolved: list[str] = []
+    for cached in unmatched_cached:
+        try:
+            recovered.append(
+                clone_cached_feature_for_regression_fallback(entry, cached, used_ids, complete_regression)
+            )
+        except Exception:
+            unresolved.append(str(cached.get("properties", {}).get("name") or "zone sans nom"))
+
+    recovered_names = [str(feature.get("properties", {}).get("name") or "") for feature in recovered]
+    return parsed_features + recovered, recovered_names, unresolved
+
+
 def preserve_cached_features_on_complete_regression(
     entry: ListingEntry,
     parsed_features: list[dict[str, Any]],
     cached_features: list[dict[str, Any]],
     cached_manifest: dict[str, Any] | None,
 ) -> tuple[list[dict[str, Any]], bool]:
-    """Keep a previously mapped publication if a new parser returns zero geometry.
-
-    This guard only applies when the official listing identity is unchanged. It
-    prevents a parser upgrade from making an existing SUP AIP disappear silently.
-    """
-    if parsed_features or not cached_features or not cached_manifest:
+    if parsed_features:
         return parsed_features, False
-    if cached_manifest.get("title") != entry.title or cached_manifest.get("sourcePdf") != entry.pdf_url:
-        return parsed_features, False
-
-    recovered: list[dict[str, Any]] = []
-    for feature in cached_features:
-        cached_name = str(feature.get("properties", {}).get("name") or "")
-        if not is_target_zone_name(cached_name, entry.title):
-            continue
-        feature_copy = copy.deepcopy(feature)
-        properties = feature_copy.setdefault("properties", {})
-        properties["sourceFingerprint"] = entry.fingerprint
-        properties["parserVersion"] = PARSER_VERSION
-        properties["geometrySource"] = "previous-parser-safety-fallback"
-        properties["geometryConfidence"] = "medium"
-        geometry_warnings = list(properties.get("geometryWarnings") or [])
-        warning = "Géométrie conservée depuis la dernière base valide après une régression complète du parseur."
-        if warning not in geometry_warnings:
-            geometry_warnings.append(warning)
-        properties["geometryWarnings"] = geometry_warnings
-        recovered.append(feature_copy)
-    return recovered, bool(recovered)
+    reconciled, recovered_names, _ = reconcile_cached_features_on_regression(
+        entry, parsed_features, cached_features, cached_manifest
+    )
+    return reconciled, bool(recovered_names)
 
 
 def preserve_cached_features_on_partial_regression(
@@ -1666,46 +1808,12 @@ def preserve_cached_features_on_partial_regression(
     cached_features: list[dict[str, Any]],
     cached_manifest: dict[str, Any] | None,
 ) -> tuple[list[dict[str, Any]], int]:
-    """Restore individual zones lost by a parser upgrade.
-
-    The official publication identity must be unchanged. New V3 geometries win;
-    only cached names that disappeared completely are appended as medium
-    confidence safety fallbacks.
-    """
-    if not parsed_features or not cached_features or not cached_manifest:
+    if not parsed_features:
         return parsed_features, 0
-    if cached_manifest.get("title") != entry.title or cached_manifest.get("sourcePdf") != entry.pdf_url:
-        return parsed_features, 0
-
-    current_keys = {
-        zone_identity_key(str(feature.get("properties", {}).get("name") or ""))
-        for feature in parsed_features
-    }
-    recovered: list[dict[str, Any]] = []
-    for feature in cached_features:
-        properties = feature.get("properties", {})
-        cached_name = str(properties.get("name") or "")
-        if not is_target_zone_name(cached_name, entry.title):
-            continue
-        key = zone_identity_key(cached_name)
-        if not key or key in current_keys:
-            continue
-        feature_copy = copy.deepcopy(feature)
-        copied_properties = feature_copy.setdefault("properties", {})
-        copied_properties["sourceFingerprint"] = entry.fingerprint
-        copied_properties["parserVersion"] = PARSER_VERSION
-        copied_properties["geometrySource"] = "previous-parser-partial-safety-fallback"
-        copied_properties["geometryConfidence"] = "medium"
-        geometry_warnings = list(copied_properties.get("geometryWarnings") or [])
-        warning = "Zone conservée depuis la dernière base valide après une régression partielle du parseur."
-        if warning not in geometry_warnings:
-            geometry_warnings.append(warning)
-        copied_properties["geometryWarnings"] = geometry_warnings
-        recovered.append(feature_copy)
-        current_keys.add(key)
-
-    return parsed_features + recovered, len(recovered)
-
+    reconciled, recovered_names, _ = reconcile_cached_features_on_regression(
+        entry, parsed_features, cached_features, cached_manifest
+    )
+    return reconciled, len(recovered_names)
 
 def load_manual_overrides(path: Path) -> dict[str, list[dict[str, Any]]]:
     data = load_json(path, {"features": []})
@@ -1849,6 +1957,7 @@ def build_dataset(output_dir: Path, override_path: Path, polite_delay: float = 0
     mapped_publications = 0
     fully_mapped_publications = 0
     conservatively_mapped_publications = 0
+    fallback_mapped_publications = 0
     reused_publications = 0
     downloaded_publications = 0
     non_spatial_publications = 0
@@ -1860,6 +1969,8 @@ def build_dataset(output_dir: Path, override_path: Path, polite_delay: float = 0
     safety_fallback_features = 0
     safety_fallback_details: list[dict[str, Any]] = []
     ignored_reference_object_total = 0
+    regression_recovered_details: list[dict[str, Any]] = []
+    unresolved_regressions: list[dict[str, Any]] = []
 
     for entry in entries:
         cached_features = previous_features.get(entry.sup_aip, [])
@@ -1874,6 +1985,7 @@ def build_dataset(output_dir: Path, override_path: Path, polite_delay: float = 0
         spatial = False
         used_safety_fallback = False
         partial_fallback_count = 0
+        regression_recovered_names: list[str] = []
         ignored_reference_object_count = 0
 
         if can_reuse_features(cached_features, entry):
@@ -1921,43 +2033,65 @@ def build_dataset(output_dir: Path, override_path: Path, polite_delay: float = 0
         if download_failures:
             continue
 
+        cached_operational_before_classification = sum(
+            1
+            for feature in cached_features
+            if is_target_zone_name(str(feature.get("properties", {}).get("name") or ""), entry.title)
+        )
+        if not spatial and cached_operational_before_classification:
+            if same_official_publication(entry, cached_manifest):
+                spatial = True
+                warnings.append(
+                    "Régression de classification détectée: publication spatiale précédente conservée par sécurité."
+                )
+            else:
+                unresolved_regressions.append({
+                    "supAip": entry.sup_aip,
+                    "reason": "Une publication précédemment spatiale est devenue non spatiale après changement de source.",
+                    "previousFeatureCount": cached_operational_before_classification,
+                    "candidateFeatureCount": 0,
+                    "sourceChanged": True,
+                })
+
         if spatial:
-            parsed_features, used_safety_fallback = preserve_cached_features_on_complete_regression(
+            candidate_count_before_regression = len(parsed_features)
+            previous_operational_count = sum(
+                1
+                for feature in cached_features
+                if is_target_zone_name(str(feature.get("properties", {}).get("name") or ""), entry.title)
+            )
+            parsed_features, regression_recovered_names, unresolved_names = reconcile_cached_features_on_regression(
                 entry, parsed_features, cached_features, cached_manifest
             )
-            if used_safety_fallback:
+            partial_fallback_count = len(regression_recovered_names)
+            used_safety_fallback = bool(regression_recovered_names)
+            if regression_recovered_names:
                 warnings.append(
-                    "Régression complète du parseur détectée: dernière géométrie valide conservée par sécurité."
+                    f"Régression du parseur détectée: {len(regression_recovered_names)} ancienne(s) zone(s) conservée(s) par sécurité."
                 )
                 expected_named_count = max(
                     expected_named_count,
-                    int((cached_manifest or {}).get("expectedNamedGeometryCount") or len(parsed_features)),
+                    int((cached_manifest or {}).get("expectedNamedGeometryCount") or previous_operational_count),
+                    previous_operational_count,
                 )
                 missing_vertical_count = sum(
                     1
                     for feature in parsed_features
                     if not feature.get("properties", {}).get("verticalLimitsExtracted", False)
                 )
-                previous_partial = True
-            elif parsed_features:
-                parsed_features, partial_fallback_count = preserve_cached_features_on_partial_regression(
-                    entry, parsed_features, cached_features, cached_manifest
-                )
-                if partial_fallback_count:
-                    used_safety_fallback = True
-                    warnings.append(
-                        f"Régression partielle du parseur détectée: {partial_fallback_count} ancienne(s) zone(s) conservée(s) par sécurité."
-                    )
-                    expected_named_count = max(
-                        expected_named_count,
-                        int((cached_manifest or {}).get("expectedNamedGeometryCount") or len(parsed_features)),
-                    )
-                    missing_vertical_count = sum(
-                        1
-                        for feature in parsed_features
-                        if not feature.get("properties", {}).get("verticalLimitsExtracted", False)
-                    )
-                    previous_partial = True
+                regression_recovered_details.append({
+                    "supAip": entry.sup_aip,
+                    "candidateFeatureCount": candidate_count_before_regression,
+                    "previousFeatureCount": previous_operational_count,
+                    "recoveredFeatureCount": len(regression_recovered_names),
+                    "recoveredFeatureNames": regression_recovered_names,
+                })
+            if unresolved_names:
+                unresolved_regressions.append({
+                    "supAip": entry.sup_aip,
+                    "reason": "Impossible de restaurer toutes les anciennes géométries opérationnelles.",
+                    "featureNames": unresolved_names,
+                })
 
         if not spatial:
             manifest.append({
@@ -1989,7 +2123,27 @@ def build_dataset(output_dir: Path, override_path: Path, polite_delay: float = 0
                 props.setdefault("geometryWarnings", [])
                 parsed_features.append(override_copy)
 
-        expected_named_count = max(expected_named_count, len(parsed_features))
+        previous_operational_count = sum(
+            1
+            for feature in cached_features
+            if is_target_zone_name(str(feature.get("properties", {}).get("name") or ""), entry.title)
+        )
+        if previous_operational_count and len(parsed_features) < previous_operational_count:
+            unresolved_regressions.append({
+                "supAip": entry.sup_aip,
+                "reason": "Chute publication par publication non compensée avant publication.",
+                "previousFeatureCount": previous_operational_count,
+                "candidateFeatureCount": len(parsed_features),
+                "sourceChanged": not same_official_publication(entry, cached_manifest),
+            })
+
+        expected_named_count = max(
+            expected_named_count,
+            len(parsed_features),
+            int((cached_manifest or {}).get("expectedNamedGeometryCount") or 0)
+            if same_official_publication(entry, cached_manifest)
+            else 0,
+        )
         missing_vertical_count = sum(
             1 for feature in parsed_features if not feature.get("properties", {}).get("verticalLimitsExtracted", False)
         )
@@ -2001,7 +2155,9 @@ def build_dataset(output_dir: Path, override_path: Path, polite_delay: float = 0
         fallback_names = [
             str(feature.get("properties", {}).get("name") or "")
             for feature in parsed_features
-            if "safety-fallback" in str(feature.get("properties", {}).get("geometrySource") or "")
+            if feature.get("properties", {}).get("regressionFallback")
+            or "safety-fallback" in str(feature.get("properties", {}).get("geometrySource") or "")
+            or "regression-fallback" in str(feature.get("properties", {}).get("geometrySource") or "")
         ]
         used_safety_fallback = used_safety_fallback or bool(fallback_names)
         previous_partial = previous_partial or bool(fallback_names)
@@ -2009,9 +2165,16 @@ def build_dataset(output_dir: Path, override_path: Path, polite_delay: float = 0
         critical_warnings = [warning for warning in warnings if is_critical_parse_warning(warning)]
         conservative_warnings = [warning for warning in warnings if is_conservative_parse_warning(warning)]
         geometry_missing = expected_named_count > 0 and len(parsed_features) < expected_named_count
-        partial = previous_partial or bool(critical_warnings) or geometry_missing or missing_vertical_count > 0
-        conservative = bool(parsed_features) and not partial and bool(conservative_warnings)
-        publication_state = "unmapped" if not parsed_features else "partial" if partial else "conservative" if conservative else "complete"
+        partial = bool(critical_warnings) or geometry_missing or missing_vertical_count > 0
+        fallback = bool(parsed_features) and not partial and used_safety_fallback
+        conservative = bool(parsed_features) and not partial and not fallback and bool(conservative_warnings)
+        publication_state = (
+            "unmapped" if not parsed_features
+            else "partial" if partial
+            else "fallback" if fallback
+            else "conservative" if conservative
+            else "complete"
+        )
 
         if fallback_names:
             safety_fallback_features += len(fallback_names)
@@ -2027,6 +2190,8 @@ def build_dataset(output_dir: Path, override_path: Path, polite_delay: float = 0
                 fully_mapped_publications += 1
             elif publication_state == "conservative":
                 conservatively_mapped_publications += 1
+            elif publication_state == "fallback":
+                fallback_mapped_publications += 1
             all_features.extend(parsed_features)
         reason_parts = list(critical_warnings)
         if conservative_warnings:
@@ -2035,6 +2200,10 @@ def build_dataset(output_dir: Path, override_path: Path, polite_delay: float = 0
             reason_parts.append(f"{len(parsed_features)}/{expected_named_count} géométries nommées extraites.")
         if missing_vertical_count:
             reason_parts.append(f"{missing_vertical_count} zone(s) sans limites verticales extraites.")
+        if fallback_names:
+            reason_parts.append(
+                f"{len(fallback_names)} zone(s) conservée(s) depuis la dernière base valide par la protection anti-régression."
+            )
         if not parsed_features:
             reason_parts.append("Aucune géométrie fiable extraite.")
         if publication_state != "complete":
@@ -2051,6 +2220,7 @@ def build_dataset(output_dir: Path, override_path: Path, polite_delay: float = 0
                 "status": publication_state,
                 "partial": publication_state == "partial",
                 "conservative": publication_state == "conservative",
+                "fallback": publication_state == "fallback",
                 "expectedNamedGeometryCount": expected_named_count,
                 "mappedGeometryCount": len(parsed_features),
                 "declaredZoneCount": declared_count,
@@ -2075,6 +2245,7 @@ def build_dataset(output_dir: Path, override_path: Path, polite_delay: float = 0
             "status": publication_state,
             "partial": publication_state == "partial",
             "conservative": publication_state == "conservative",
+            "fallback": publication_state == "fallback",
             "safetyFallbackFeatureCount": len(fallback_names),
             "safetyFallbackFeatureNames": fallback_names,
             "ignoredReferenceObjectCount": ignored_reference_object_count,
@@ -2089,6 +2260,14 @@ def build_dataset(output_dir: Path, override_path: Path, polite_delay: float = 0
         raise RuntimeError(
             f"Protection activée: {downloaded_publications + reused_publications}/{len(entries)} publications seulement ont été traitées."
         )
+    if unresolved_regressions:
+        details = " | ".join(
+            f"{item.get('supAip')}: {item.get('reason')}"
+            for item in unresolved_regressions[:12]
+        )
+        raise RuntimeError(
+            "Protection anti-régression activée: la base candidate ne sera ni écrite ni publiée. " + details
+        )
 
     all_features.sort(
         key=lambda feature: (feature.get("properties", {}).get("supAip", ""), feature.get("properties", {}).get("name", "")),
@@ -2099,7 +2278,7 @@ def build_dataset(output_dir: Path, override_path: Path, polite_delay: float = 0
     )
     collection_base = {
         "type": "FeatureCollection",
-        "name": "CAP CLAIR SUP AIP AUTO BETA - Parser V3.1",
+        "name": "CAP CLAIR SUP AIP AUTO BETA - Parser V3.2",
         "source": "SIA France - liste et PDF officiels SUP AIP Métropole",
         "sourceUrl": SOURCE_URL,
         "coverage": "Analyse de toutes les publications listées. Les espaces permanents cités comme références sont séparés des zones SUP AIP et les contours prudents sont distingués des zones réellement manquantes.",
@@ -2111,6 +2290,7 @@ def build_dataset(output_dir: Path, override_path: Path, polite_delay: float = 0
     complete_unmapped_count = sum(1 for item in unmapped if item.get("status") == "unmapped")
     partial_count = sum(1 for item in unmapped if item.get("status") == "partial")
     conservative_count = sum(1 for item in unmapped if item.get("status") == "conservative")
+    fallback_count = sum(1 for item in unmapped if item.get("status") == "fallback")
     cause_counts = {code: 0 for code in INCOMPLETE_CAUSE_LABELS}
     for item in unmapped:
         for code in item.get("causeCodes", []):
@@ -2147,6 +2327,7 @@ def build_dataset(output_dir: Path, override_path: Path, polite_delay: float = 0
         "mappedPublicationCount": mapped_publications,
         "fullyMappedPublicationCount": fully_mapped_publications,
         "conservativelyMappedPublicationCount": conservatively_mapped_publications,
+        "fallbackMappedPublicationCount": fallback_mapped_publications,
         "featureCount": len(all_features),
         "expectedNamedGeometryCount": expected_named_total,
         "declaredZoneCount": declared_zone_total,
@@ -2157,16 +2338,21 @@ def build_dataset(output_dir: Path, override_path: Path, polite_delay: float = 0
         "completeUnmappedPublicationCount": complete_unmapped_count,
         "partialPublicationCount": partial_count,
         "conservativePublicationCount": conservative_count,
+        "fallbackPublicationCount": fallback_count,
         "reusedPublicationCount": reused_publications,
         "downloadedPublicationCount": downloaded_publications,
         "safetyFallbackPublicationCount": len(safety_fallback_details),
         "safetyFallbackFeatureCount": safety_fallback_features,
         "safetyFallbackDetails": safety_fallback_details,
+        "regressionRecoveredPublicationCount": len(regression_recovered_details),
+        "regressionRecoveredFeatureCount": sum(item.get("recoveredFeatureCount", 0) for item in regression_recovered_details),
+        "regressionRecoveredDetails": regression_recovered_details,
+        "unresolvedRegressionCount": 0,
         "ignoredReferenceObjectCount": ignored_reference_object_total,
         "incompleteCausePublicationCounts": cause_counts,
         "incompleteCauseLabels": INCOMPLETE_CAUSE_LABELS,
         "staleAfterHours": 36,
-        "message": "Parser V3.1: les zones temporaires sont séparées des espaces permanents cités, les contours prudents sont distingués des géométries manquantes et chaque repli de sécurité est auditable. Vérifier le PDF, SOFIA et les NOTAM avant le vol.",
+        "message": "Parser V3.2: chaque publication est comparée à la dernière base valide. Toute chute non restaurée bloque le workflow avant écriture; les ZRT portant un code LF-R restent reconnues comme zones temporaires. Vérifier le PDF, SOFIA et les NOTAM avant le vol.",
     }
     unmapped_payload = {
         "schemaVersion": 2,

@@ -22,6 +22,7 @@ from tools.supaip.update_supaip import (
     parse_spatial_document,
     preserve_cached_features_on_complete_regression,
     preserve_cached_features_on_partial_regression,
+    reconcile_cached_features_on_regression,
     is_spatial_document,
     ParsedZone,
     resolve_permanent_airspace_references,
@@ -260,7 +261,7 @@ class SupAipParserTests(unittest.TestCase):
         self.assertTrue(used)
         self.assertEqual(len(recovered), 1)
         self.assertEqual(recovered[0]["properties"]["sourceFingerprint"], "new-fingerprint")
-        self.assertEqual(recovered[0]["properties"]["geometrySource"], "previous-parser-safety-fallback")
+        self.assertEqual(recovered[0]["properties"]["geometrySource"], "previous-parser-regression-fallback")
         self.assertEqual(cached[0]["properties"]["sourceFingerprint"], "old")
 
     def test_previous_individual_geometry_is_preserved_on_partial_parser_regression(self):
@@ -275,7 +276,7 @@ class SupAipParserTests(unittest.TestCase):
         recovered, count = preserve_cached_features_on_partial_regression(entry, parsed, cached, manifest)
         self.assertEqual(count, 1)
         self.assertEqual(len(recovered), 2)
-        self.assertEqual(recovered[1]["properties"]["geometrySource"], "previous-parser-partial-safety-fallback")
+        self.assertEqual(recovered[1]["properties"]["geometrySource"], "previous-parser-regression-fallback")
 
     def test_helicopter_route_document_is_not_classified_as_spatial_zone(self):
         entry = ListingEntry(
@@ -393,6 +394,51 @@ class SupAipParserTests(unittest.TestCase):
         )
         self.assertEqual(recovered, [])
         self.assertFalse(used)
+
+
+    def test_prefixed_temporary_lfr_names_are_operational(self):
+        title_101 = "Création de 16 ZRT et 4 ZDT dans la Manche"
+        title_077 = "Expérimentation : création de 7 ZRT au profit d'activités spécifiques défense"
+        self.assertTrue(is_target_zone_name('ZRT LF-R400A "DEP Dunkerque"', title_101))
+        self.assertTrue(is_target_zone_name('ZRT AVEL LF-R17 A1', title_077))
+        self.assertTrue(is_target_zone_name('ZDT LF-D398A "Picardie Sud"', title_101))
+        self.assertFalse(is_target_zone_name('LFR110', "Création d'une ZRT OCHEY"))
+
+    def test_regression_reconciliation_matches_renamed_equivalent_zone(self):
+        entry = ListingEntry("101/26", "Création de zones Manche", "2026-01-01", "2027-01-01", "same.pdf", True, "new")
+        geometry = {"type": "Polygon", "coordinates": [[[1.0, 47.0], [1.1, 47.0], [1.1, 47.1], [1.0, 47.0]]]}
+        cached = [{
+            "type": "Feature",
+            "id": "old",
+            "properties": {"name": "ZRT LF-R400 A DEP DUNKERQUE", "zoneType": "ZRT", "lowerLimit": "SFC", "upperLimit": "FL 095"},
+            "geometry": geometry,
+        }]
+        parsed = [{
+            "type": "Feature",
+            "id": "new",
+            "properties": {"name": 'ZRT LF-R400A "DEP Dunkerque"', "zoneType": "ZRT", "lowerLimit": "SFC", "upperLimit": "FL 095"},
+            "geometry": geometry,
+        }]
+        manifest = {"title": entry.title, "sourcePdf": entry.pdf_url}
+        reconciled, recovered, unresolved = reconcile_cached_features_on_regression(entry, parsed, cached, manifest)
+        self.assertEqual(len(reconciled), 1)
+        self.assertEqual(recovered, [])
+        self.assertEqual(unresolved, [])
+
+    def test_regression_reconciliation_preserves_stacked_vertical_zone(self):
+        entry = ListingEntry("023/26", "Création de deux TRA", "2026-01-01", "2027-01-01", "same.pdf", True, "new")
+        geometry = {"type": "Polygon", "coordinates": [[[-1.0, 47.0], [-0.8, 47.0], [-0.9, 46.8], [-1.0, 47.0]]]}
+        cached = [
+            {"type": "Feature", "id": "low", "properties": {"name": "TRA90NL", "zoneType": "TRA", "lowerLimit": "FL 195", "upperLimit": "FL 275"}, "geometry": geometry},
+            {"type": "Feature", "id": "high", "properties": {"name": "TRA90NH", "zoneType": "TRA", "lowerLimit": "FL 305", "upperLimit": "FL 335"}, "geometry": geometry},
+        ]
+        parsed = [cached[0]]
+        manifest = {"title": entry.title, "sourcePdf": entry.pdf_url}
+        reconciled, recovered, unresolved = reconcile_cached_features_on_regression(entry, parsed, cached, manifest)
+        self.assertEqual(len(reconciled), 2)
+        self.assertEqual(recovered, ["TRA90NH"])
+        self.assertEqual(unresolved, [])
+        self.assertTrue(reconciled[1]["properties"]["regressionFallback"])
 
     def test_circle_pdf(self):
         entry = ListingEntry("154/26", "Création ZRT", "2026-07-16", "2027-07-14", "https://example.invalid", True, "def")

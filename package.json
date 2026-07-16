@@ -1,7 +1,7 @@
 {
-  "name": "cap-clair-web13-29-1-sup-aip-parser-v3-1-fiabilisation-beta",
+  "name": "cap-clair-web13-29-2-sup-aip-anti-regression-beta",
   "private": true,
-  "version": "0.13.29-1",
+  "version": "0.13.29-2",
   "type": "module",
   "scripts": {
     "dev": "vite",

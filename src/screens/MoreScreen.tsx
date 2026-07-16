@@ -199,12 +199,15 @@ export function MoreScreen({
                     <div><dt>Base générée</dt><dd>{formatSupAipDatasetTimestamp(supAipDatasetStatus.generatedAt)}</dd></div>
                     <div><dt>Liste SIA</dt><dd>{formatSupAipDatasetTimestamp(supAipDatasetStatus.sourceUpdatedAt)}</dd></div>
                     <div><dt>PDF contrôlés</dt><dd>{supAipDatasetStatus.processedPublicationCount ?? (supAipDatasetStatus.downloadedPublicationCount + supAipDatasetStatus.reusedPublicationCount)} / {supAipDatasetStatus.listingPublicationCount}</dd></div>
-                    <div><dt>SUP entièrement cartographiés</dt><dd>{supAipDatasetStatus.fullyMappedPublicationCount ?? Math.max(0, supAipDatasetStatus.mappedPublicationCount - supAipDatasetStatus.partialPublicationCount - (supAipDatasetStatus.conservativePublicationCount ?? 0))} / {supAipDatasetStatus.zonalPublicationCount}</dd></div>
+                    <div><dt>SUP entièrement cartographiés</dt><dd>{supAipDatasetStatus.fullyMappedPublicationCount ?? Math.max(0, supAipDatasetStatus.mappedPublicationCount - supAipDatasetStatus.partialPublicationCount - (supAipDatasetStatus.conservativePublicationCount ?? 0) - (supAipDatasetStatus.fallbackPublicationCount ?? 0))} / {supAipDatasetStatus.zonalPublicationCount}</dd></div>
                     <div><dt>SUP affichés avec prudence</dt><dd>{supAipDatasetStatus.conservativePublicationCount ?? supAipDatasetStatus.conservativelyMappedPublicationCount ?? 0}</dd></div>
+                    <div><dt>SUP complets avec repli</dt><dd>{supAipDatasetStatus.fallbackPublicationCount ?? supAipDatasetStatus.fallbackMappedPublicationCount ?? 0}</dd></div>
                     <div><dt>SUP réellement partiels</dt><dd>{supAipDatasetStatus.partialPublicationCount}</dd></div>
                     <div><dt>SUP non cartographiés</dt><dd>{supAipDatasetStatus.completeUnmappedPublicationCount}</dd></div>
                     <div><dt>Verticales manquantes</dt><dd>{supAipDatasetStatus.missingVerticalFeatureCount ?? 0}</dd></div>
                     {(supAipDatasetStatus.safetyFallbackPublicationCount ?? 0) > 0 && <div><dt>Replis de sécurité</dt><dd>{supAipDatasetStatus.safetyFallbackPublicationCount} SUP / {supAipDatasetStatus.safetyFallbackFeatureCount ?? 0} zone(s)</dd></div>}
+                    {(supAipDatasetStatus.regressionRecoveredPublicationCount ?? 0) > 0 && <div><dt>Régressions compensées</dt><dd>{supAipDatasetStatus.regressionRecoveredPublicationCount} SUP / {supAipDatasetStatus.regressionRecoveredFeatureCount ?? 0} zone(s)</dd></div>}
+                    <div><dt>Régressions non résolues</dt><dd>{supAipDatasetStatus.unresolvedRegressionCount ?? 0}</dd></div>
                     {(supAipDatasetStatus.ignoredReferenceObjectCount ?? 0) > 0 && <div><dt>Références permanentes ignorées</dt><dd>{supAipDatasetStatus.ignoredReferenceObjectCount}</dd></div>}
                   </dl>
                   {supAipDatasetStatus.incompleteCausePublicationCounts && Object.values(supAipDatasetStatus.incompleteCausePublicationCounts).some((count) => count > 0) && (
@@ -227,7 +230,8 @@ export function MoreScreen({
                   {(supAipDatasetStatus.completeUnmappedPublicationCount > 0 || supAipDatasetStatus.partialPublicationCount > 0) && <p className="supaip-dataset-alert">Les publications réellement incomplètes restent signalées. Elles ne sont jamais considérées comme absentes: consulter leur PDF officiel avant le vol.</p>}
                   {(supAipDatasetStatus.conservativePublicationCount ?? 0) > 0 && <p className="supaip-dataset-alert">Les SUP affichés avec prudence possèdent toutes leurs zones principales, mais au moins une exclusion interne n'est pas encore découpée. Le contour extérieur complet est conservé volontairement.</p>}
                   {(supAipDatasetStatus.missingVerticalFeatureCount ?? 0) > 0 && <p className="supaip-dataset-alert">Certaines zones n'ont pas de limites verticales extraites. La fiche l'indique explicitement et renvoie vers le PDF SIA.</p>}
-                  {(supAipDatasetStatus.safetyFallbackPublicationCount ?? 0) > 0 && <p className="supaip-dataset-alert">Des géométries valides d'une version précédente ont été conservées après une régression du parseur. Leur nombre exact est désormais audité dans GitHub Actions.</p>}
+                  {(supAipDatasetStatus.safetyFallbackPublicationCount ?? 0) > 0 && <p className="supaip-dataset-alert">Des géométries valides d'une version précédente ont été conservées après comparaison publication par publication. Toute chute que le système ne peut pas compenser bloque désormais le workflow avant publication.</p>}
+                  {(supAipDatasetStatus.unresolvedRegressionCount ?? 0) > 0 && <p className="supaip-dataset-alert">Une régression non résolue est signalée. Cette base ne devrait pas avoir été publiée automatiquement: contrôler immédiatement le dernier run GitHub Actions.</p>}
                 </>
               ) : <p>Lecture du statut...</p>}
               <a href="https://www.sia.aviation-civile.gouv.fr/documents/supaip/aip/id/6" target="_blank" rel="noreferrer">Ouvrir la liste officielle SIA</a>

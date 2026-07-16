@@ -1,37 +1,38 @@
-CAP CLAIR WEB13.29.1 - SUP AIP PARSER V3.1 FIABILISATION BETA
+CAP CLAIR WEB13.29.2 - SUP AIP ANTI-REGRESSION BETA
 
-PATCH A APPLIQUER SUR WEB13.29.0 APRES AVOIR RECUPERE LE DERNIER COMMIT DU ROBOT SUP AIP.
+PATCH A APPLIQUER SUR WEB13.29.1 APRES AVOIR RECUPERE LE DERNIER COMMIT DU ROBOT SUP AIP.
 
+INSTALLATION
 1. Dans GitHub Desktop, utiliser Pull origin s'il est proposé.
 2. Ne pas vider le dossier local et conserver le dossier .git.
 3. Copier tout le contenu de ce patch à la racine du dépôt et accepter les remplacements.
 4. Vérifier que les fichiers public/data/supaip-current.geojson, supaip-status.json, supaip-unmapped.json et supaip-manifest.json ne sont ni supprimés ni remplacés.
 5. Commit puis Push origin sur main.
-6. Vérifier la chip WEB13.29.1 et le titre de l'onglet.
+6. Vérifier la chip WEB13.29.2 et le titre de l'onglet.
 7. Lancer une fois Actions > Update SUP AIP data > Run workflow sur main.
-8. Après le commit automatique du robot, faire Pull origin dans GitHub Desktop.
+8. Le bilan doit afficher Régressions non résolues : 0 avant le commit automatique.
+9. Après le commit du robot, faire Pull origin dans GitHub Desktop.
 
-TEST ZOOM
-- Dézoomer dans Planifier, ouvrir Log de nav, revenir dans Planifier: le zoom et le centre doivent rester identiques.
-- Faire le même test dans Suivi puis dans Replay.
-- Planifier et Suivi doivent conserver des vues indépendantes.
+CONTROLES ATTENDUS
+- Le SUP AIP 101/26 doit revenir à 20/20 géométries.
+- Le SUP AIP 077/26 doit produire 12 géométries opérationnelles.
+- Les zones ZRT portant un code LF-R ne doivent plus être classées comme références permanentes.
+- Les publications protégées par une ancienne géométrie doivent apparaître sous le statut complet avec repli, et non comme réellement partielles lorsque rien d'autre ne manque.
+- Toute chute publication par publication impossible à restaurer doit faire échouer le workflow avant écriture et avant commit.
+- Le bloc Régressions compensées doit détailler les SUP concernés et les noms des zones restaurées.
 
-TEST SUP AIP
-- Le workflow doit être vert et afficher Parser V3.1.
-- Le bilan doit séparer: entièrement cartographiés, affichés avec prudence, réellement partiels et non cartographiés.
-- Les objets permanents cités comme LFR, CTR ou TMA doivent apparaître dans "Références permanentes ignorées" et ne plus gonfler les géométries SUP AIP.
-- Les replis de sécurité doivent être détaillés avec le numéro du SUP AIP et le nom exact des zones conservées.
-- Vérifier que les SUP 023/26 et 207/25 restent présents après la régénération.
-
-CORRECTIFS 13.29.1
-- Filtre les espaces permanents cites comme references (LF-R, CTR, TMA, RMZ, TMZ) sans masquer une zone temporaire plausible.
-- Ignore les faux titres de tableau comme "ZRT activable H24" ou "ZRT.".
-- Ne restaure plus une reference permanente via le garde-fou anti-regression.
-- Separe les SUP complets, affiches avec prudence, reellement partiels et non cartographies.
-- Detaille les replis de securite publication par publication et zone par zone.
-- Conserve les couches superposees partageant le meme contour mais pas les memes verticales.
+CORRECTIFS 13.29.2
+- Rapprochement robuste par identifiant, nom canonique, géométrie et verticales.
+- Restauration individuelle des anciennes zones disparues.
+- Protection contre une reclassification spatiale vers non spatiale.
+- Blocage strict si une publication actuelle contient moins de zones opérationnelles que la dernière base valide après réconciliation.
+- Statut séparé complet avec repli.
+- Compteurs visibles dans Plus > SUP AIP et GitHub Actions.
+- Actions GitHub mises à jour vers checkout@v7 et setup-python@v7.
 
 VALIDATION LOCALE
-- 24 tests Python du parseur reussis.
-- 28 tests TypeScript/React reussis.
-- Build de production Vite reussi.
+- 27 tests Python du parseur réussis.
+- Test réel du PDF officiel 101/26 : 20/20 géométries.
+- Test réel du PDF officiel 077/26 : 12 géométries.
+- 28 tests TypeScript/React réussis.
+- Compilation TypeScript et build Vite/PWA réussis.
