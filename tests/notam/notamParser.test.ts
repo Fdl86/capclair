@@ -40,6 +40,9 @@ describe('SOFIA PIB parser', () => {
   it('parses all NOTAM blocks across page boundaries', () => {
     expect(notams).toHaveLength(36);
     expect(notams.find((notam) => notam.id === 'LFFA-B3027/26')?.fields.e).toContain('INDISPONIBLE');
+    expect(notams.find((notam) => notam.id === 'LFFA-E3454/26')?.rawText).not.toMatch(/AIRE DE MANŒUVRE|AIRE DE TRAFIC|\bNIL\b/i);
+    expect(notams.find((notam) => notam.id === 'LFFA-E3146/26')?.rawText).not.toContain("AIDES À L'ATTERRISSAGE");
+    expect(notams.find((notam) => notam.id === 'LFFA-P2573/26')?.rawText).not.toMatch(/EN-ROUTE|AUTRES INFORMATIONS/i);
     expect(notams.every((notam) => notam.fields.q !== null)).toBe(true);
   });
 
@@ -59,6 +62,42 @@ describe('SOFIA PIB parser', () => {
 
   it('does not interpret SR-SS as a certain active schedule', () => {
     expect(notams.find((notam) => notam.id === 'LFFA-W0947/26')?.temporalStatus).toBe('complex');
+  });
+
+  it('removes SOFIA empty-category blocks appended by copy/paste without losing the next NOTAM', () => {
+    const pasted = normalizeSofiaText(`LFFA-E3454/26
+DU: 11 07 2026 00:00 AU: 31 07 2026 23:59
+A)LFOU
+Q) LFRR / QFFAH / IV / BO / A / 000/999 / 4705N00053W005
+E) HORAIRES ET NIVEAUX RFFS :
+NIVEAU 2 : 0600-1000 1200-1600
+SAUF 11 12 13 14 19 20 25 26 29 JUILLET : NIVEAU 1.
+
+Aire de manoeuvre
+
+NIL
+
+Aire de trafic
+
+NIL
+
+Balisage
+
+NIL
+
+LFFA-E3146/26
+DU: 25 06 2026 06:09 AU: 31 12 2026 00:00
+A)LFOU
+Q) LFRR / QLIXX / IV / BO / A / 000/999 / 4705N00053W005
+E) FEUX D'EXTREMITE PHYSIQUE PISTE 20 SITUES A 90M AU DELA DES DISTANCES DECLAREES.
+REF AD2 LFOU AD 2.14`);
+    const parsed = parseNotams(pasted, context, route);
+
+    expect(parsed).toHaveLength(2);
+    expect(parsed[0].fields.e).toContain('NIVEAU 2');
+    expect(parsed[0].rawText).not.toMatch(/Aire de manoeuvre|Aire de trafic|\bNIL\b/i);
+    expect(parsed[1].id).toBe('LFFA-E3146/26');
+    expect(parsed[1].fields.e).toContain("FEUX D'EXTREMITE");
   });
 
   it('accepts ICAO B/C fields, a multiline Q field and removes exact duplicates', () => {

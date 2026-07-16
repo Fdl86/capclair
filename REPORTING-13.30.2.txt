@@ -1,0 +1,43 @@
+CAP CLAIR WEB13.30.2 - NOTAM MAP UX HOTFIX
+
+PÉRIMÈTRE
+- Version web/PWA uniquement.
+- Aucune refonte de la navigation ou des sections.
+- Base de travail : WEB13.30.1.
+
+CORRECTIFS
+1. Copier-coller SOFIA
+- Les titres de rubriques SOFIA ajoutés entre deux NOTAM ne sont plus intégrés au texte du NOTAM précédent.
+- Les catégories vides suivies de NIL sont ignorées dans la fiche individuelle.
+- Le texte complet du briefing reste conservé au niveau de l'analyse.
+- Le PDF et le texte collé utilisent toujours la même chaîne de normalisation et de parsing.
+
+2. Fiche NOTAM cartographique
+- En-tête séparé du contenu défilant.
+- Bouton de fermeture toujours visible, quelle que soit la longueur du NOTAM.
+- Onglets des éléments superposés maintenus dans l'en-tête.
+- Fermeture possible avec la touche Échap sur ordinateur.
+- Hauteur limitée à l'espace réellement disponible dans la carte.
+
+3. Encombrement cartographique
+- Tous les cercles Q restent présents, cliquables et explicitement décrits comme approximatifs dans leur fiche.
+- Le libellé répété Approximation Q n'est plus affiché sur chaque cercle.
+- Le libellé reste affiché pour les NOTAM dont le créneau D est interprété actif.
+- Les avertissements SUP AIP non cartographiés conservent leur signalement renforcé.
+
+SÉCURITÉ
+- Aucun NOTAM n'est supprimé de l'analyse ou de la consultation.
+- Aucune géométrie Q n'est présentée comme une limite aéronautique officielle.
+- Les contours SUP AIP exacts restent prioritaires.
+
+VALIDATION RÉELLEMENT EXÉCUTÉE
+- Vitest : 19 fichiers, 43 tests réussis.
+- Tests Python SUP AIP : 27 tests réussis.
+- TypeScript : réussi via tsc -b.
+- Build Vite/PWA : réussi avec Vite 8.1.5.
+- Fixture réelle SOFIA : 36 NOTAM conservés.
+- Test spécifique copier-coller : rubriques Aire de manoeuvre, Aire de trafic, Balisage et blocs NIL retirés des fiches individuelles.
+- Test cartographique : seuls les deux NOTAM à créneau interprété actif conservent le libellé Approximation Q ; les autres cercles restent présents et cliquables.
+
+AVERTISSEMENT DE BUILD
+- Vite signale toujours certains chunks supérieurs à 900 kB. Cet avertissement existant n'empêche pas la construction et n'est pas lié au hotfix.

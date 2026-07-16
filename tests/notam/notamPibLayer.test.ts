@@ -49,7 +49,7 @@ describe('NOTAM PIB OpenLayers layer', () => {
     vi.unstubAllGlobals();
   });
 
-  it('uses exact SUP geometries, keeps the LFDB21Z E polygon and labels every Q circle as approximate', async () => {
+  it('uses exact SUP geometries, keeps LFDB21Z and limits repeated Q labels to active schedules', async () => {
     const analysis = await analyzePibText({ text: fixture, sourceKind: 'text', routeSnapshot: route });
     const layer = createNotamPibLayer();
     const count = await updateNotamPibLayer(layer, analysis, { enabled: true, filter: 'all' });
@@ -62,6 +62,11 @@ describe('NOTAM PIB OpenLayers layer', () => {
     expect(selections.filter((item) => item?.notamId === 'LFFA-R1880/26' && item.kind === 'sup-exact')).toHaveLength(97);
     expect(selections.some((item) => item?.notamId === 'LFFA-R1880/26' && item.kind === 'q-approximation')).toBe(false);
     expect(selections.filter((item) => item?.kind === 'q-approximation').every((item) => item?.warning?.includes('approximative'))).toBe(true);
+
+    const qApproximationFeatures = features.filter((feature) => feature.get('kind') === 'q-approximation');
+    const labelledQFeatures = qApproximationFeatures.filter((feature) => feature.get('showApproximationLabel') === true);
+    expect(labelledQFeatures).toHaveLength(2);
+    expect(labelledQFeatures.map((feature) => notamPibSelectionFromFeature(feature)?.notamId).sort()).toEqual(['LFFA-F1552/26', 'LFFA-F1558/26']);
 
     layer.dispose();
   });

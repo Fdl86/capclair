@@ -42,7 +42,11 @@ const pointStyle = new Style({
 });
 const approximationStyle = new Style({
   stroke: new Stroke({ color: 'rgba(255, 169, 70, 0.95)', width: 2, lineDash: [9, 7] }),
-  fill: new Fill({ color: 'rgba(255, 169, 70, 0.055)' }),
+  fill: new Fill({ color: 'rgba(255, 169, 70, 0.055)' })
+});
+const activeApproximationStyle = new Style({
+  stroke: new Stroke({ color: 'rgba(255, 169, 70, 0.98)', width: 2.5, lineDash: [9, 7] }),
+  fill: new Fill({ color: 'rgba(255, 169, 70, 0.07)' }),
   text: new Text({
     text: 'Approximation Q',
     font: '700 10px system-ui, sans-serif',
@@ -74,7 +78,7 @@ function styleForFeature(feature: Feature<Geometry>) {
     case 'e-polygon': return exactPolygonStyle;
     case 'e-point': return pointStyle;
     case 'missing-sup-approximation': return missingSupStyle;
-    default: return approximationStyle;
+    default: return feature.get('showApproximationLabel') ? activeApproximationStyle : approximationStyle;
   }
 }
 
@@ -178,7 +182,13 @@ function addIndependentFeatures(
         ? `La géométrie SUP AIP ${supId ?? ''} n’a pas pu être chargée. Le cercle Q est affiché uniquement comme aide approximative.`
         : 'Le cercle Q indique seulement une zone d’influence approximative et ne constitue pas une limite aéronautique officielle.';
     const selection = selectionFor(notam, kind, supId ? `SUP AIP ${supId}` : notam.id, supId, warning);
-    source.addFeature(new Feature({ geometry, kind, selection, cancelled }));
+    source.addFeature(new Feature({
+      geometry,
+      kind,
+      selection,
+      cancelled,
+      showApproximationLabel: kind === 'q-approximation' && notam.temporalStatus === 'active'
+    }));
   }
 }
 

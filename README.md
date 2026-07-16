@@ -1,9 +1,16 @@
-# CAP CLAIR WEB13.30.1 - NOTAM PIB BETA
+# CAP CLAIR WEB13.30.2 - NOTAM PIB BETA
 
 CAP CLAIR est une application VFR mobile-first en Vite, React, TypeScript et OpenLayers, déployée comme PWA sur Cloudflare Pages.
 
 
-## WEB13.30.1 - NOTAM PIB BETA
+## WEB13.30.2 - NOTAM MAP UX HOTFIX
+
+
+- correction du copier-coller SOFIA : les rubriques vides et blocs `NIL` ne sont plus rattachés au NOTAM précédent ;
+- fiche NOTAM cartographique avec en-tête fixe, fermeture toujours accessible et contenu interne défilant ;
+- touche `Échap` disponible pour fermer la fiche sur ordinateur ;
+- désencombrement de la carte : les libellés `Approximation Q` restent visibles pour les créneaux actifs, tous les autres cercles Q restent présents et cliquables sans répétition du libellé ;
+- aucune refonte des sections ou de la navigation dans ce hotfix.
 
 - nouvelle section `Plus > NOTAM / PIB` avec import local d'un PDF SOFIA ou collage du contenu textuel ;
 - extraction PDF locale avec PDF.js, sans envoi vers un serveur et sans OCR automatique ;
@@ -241,14 +248,14 @@ La couche est un prototype de validation d'interface et de géométrie. Elle n'e
 
 ## Installation avec GitHub Desktop
 
-Cette livraison est un zip complet WEB13.30.1.
+Cette livraison est un zip complet WEB13.30.2.
 
 1. Dans GitHub Desktop, ouvrir la branche web `main` et utiliser `Pull origin` s'il est proposé.
 2. Fermer CAP CLAIR dans le navigateur pendant le remplacement local.
 3. Dans le dossier local du dépôt, supprimer tout le contenu en conservant uniquement le dossier caché `.git`.
-4. Copier tout le contenu du zip WEB13.30.1 à la racine du dépôt.
+4. Copier tout le contenu du zip WEB13.30.2 à la racine du dépôt.
 5. Dans GitHub Desktop, vérifier les changements, créer le commit puis utiliser `Push origin` sur `main`.
-6. Après le déploiement Cloudflare Pages, vérifier `WEB13.30.1` dans la chip visible et dans le titre de l'onglet.
+6. Après le déploiement Cloudflare Pages, vérifier `WEB13.30.2` dans la chip visible et dans le titre de l'onglet.
 7. Contrôler dans `Plus > NOTAM / PIB` l'import du PDF SOFIA et laisser la couche cartographique désactivée avant le premier choix explicite.
 8. Le workflow SUP AIP existant est conservé avec `actions/checkout@v6` et `actions/setup-python@v6`.
 9. Lors du prochain commit automatique du robot SUP AIP, utiliser ensuite `Pull origin` dans GitHub Desktop.
@@ -256,5 +263,5 @@ Cette livraison est un zip complet WEB13.30.1.
 Commit recommandé :
 
 ```text
-main: fix WEB13.30.1 Cloudflare PDF.js build
+main: fix WEB13.30.2 NOTAM map UX and pasted text parsing
 ```

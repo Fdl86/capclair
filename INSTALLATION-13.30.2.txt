@@ -1,0 +1,15 @@
+CAP CLAIR WEB13.30.2 - INSTALLATION AVEC GITHUB DESKTOP
+
+1. Ouvrir le dépôt CAP CLAIR dans GitHub Desktop.
+2. Faire Pull origin si le bouton est proposé.
+3. Fermer l'application locale si elle est ouverte.
+4. Dans le dossier local du dépôt, conserver uniquement le dossier .git.
+5. Supprimer les autres fichiers et dossiers.
+6. Copier tout le contenu du dossier présent dans l'archive WEB13.30.2 à la racine du dépôt.
+7. Vérifier que .github/workflows/update-supaip.yml est toujours présent.
+8. Créer le commit : main: fix WEB13.30.2 NOTAM map UX and pasted text parsing
+9. Cliquer sur Push origin.
+10. Utiliser uniquement le déploiement Cloudflare issu de ce commit.
+11. Vérifier la chip WEB13.30.2 et le titre d'onglet après déploiement.
+12. Tester un import PDF puis un copier-coller du même PIB.
+13. Ouvrir un NOTAM long dans Suivi et vérifier que la croix reste toujours accessible.

@@ -3825,7 +3825,7 @@
 .supaip-cause-summary li { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 10px; color: var(--text-3); font-size: 0.62rem; }
 .supaip-cause-summary li b { color: var(--text); }
 
-/* WEB13.30.1 - NOTAM / PIB BETA */
+/* WEB13.30.2 - NOTAM / PIB BETA */
 .more-notam-accordion .accordion-body {
   padding: 0 12px 12px;
 }

@@ -12,6 +12,73 @@ import { extractSupAipReferences } from './supAipReferenceParser';
 
 const NOTAM_ID = /\b([A-Z]{4})-([A-Z])(\d{4})\/(\d{2})\b/g;
 
+
+const SOFIA_SECTION_HEADINGS = new Set([
+  'AERODROME DE DEPART',
+  'AERODROME DE DESTINATION',
+  'INSTALLATIONS ET SERVICES',
+  'AIRE DE MANOEUVRE',
+  'AIRE DE TRAFIC',
+  'BALISAGE',
+  "AIDES A L'ATTERRISSAGE, INSTALLATIONS RADIONAVIGATION ET GNSS",
+  'PROCEDURES',
+  "ORGANISATION DE L'ESPACE AERIEN ET SERVICES DE LA CIRCULATION AERIENNE",
+  "ORGANISATION DE L'ESPACE AERIEN ET PROCEDURES",
+  'SERVICES DE LA CIRCULATION AERIENNE ET VOLMET',
+  'INSTALLATIONS DE COMMUNICATION ET DE SURVEILLANCE',
+  'METEOROLOGIE ET EQUIPEMENTS',
+  "RESTRICTIONS DE L'ESPACE AERIEN",
+  'AVERTISSEMENTS',
+  'OBSTACLES',
+  'AUTRES INFORMATIONS',
+  'EN-ROUTE'
+]);
+
+function normalizeHeading(value: string) {
+  return value
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .replace(/[’‘]/g, "'")
+    .replace(/\s+/g, ' ')
+    .trim()
+    .toUpperCase();
+}
+
+function isSofiaSectionHeading(value: string) {
+  return SOFIA_SECTION_HEADINGS.has(normalizeHeading(value));
+}
+
+/**
+ * SOFIA's copy/paste view can append empty report categories (often followed by
+ * NIL) to the preceding NOTAM until the next NOTAM identifier. Those headings
+ * are document structure, not part of fields E/F/G. Keep the complete briefing
+ * text at analysis level, but stop the individual NOTAM block at the first
+ * clearly separated SOFIA category heading.
+ */
+function trimTrailingSofiaSections(block: string) {
+  const lines = block.split('\n');
+  let hasStartedField = false;
+
+  for (let index = 0; index < lines.length; index += 1) {
+    const trimmed = lines[index].trim();
+    if (/^[ABCDEFGQ]\)\s*/.test(trimmed) || /^DU:\s*/i.test(trimmed)) {
+      hasStartedField = true;
+      continue;
+    }
+    if (!hasStartedField || !isSofiaSectionHeading(trimmed)) continue;
+
+    const previousIsBlank = index > 0 && lines[index - 1].trim() === '';
+    const nextNonBlank = lines.slice(index + 1).map((line) => line.trim()).find(Boolean) ?? '';
+    const followedByNilOrHeading = /^NIL\.?$/i.test(nextNonBlank) || isSofiaSectionHeading(nextNonBlank);
+
+    if (previousIsBlank || followedByNilOrHeading) {
+      return lines.slice(0, index).join('\n').trim();
+    }
+  }
+
+  return block.trim();
+}
+
 function parseNotamDate(raw: string): string | null {
   const cleaned = raw.trim().replace(/\s+EST$/i, '').trim();
   const sofia = cleaned.match(/^(\d{2})\s+(\d{2})\s+(\d{4})\s+(\d{2}):(\d{2})$/);
@@ -211,7 +278,7 @@ export function parseNotams(text: string, context: PibRouteContext, route: Brief
   const parsed = matches.map((match, index) => {
     const start = match.index ?? 0;
     const end = matches[index + 1]?.index ?? text.length;
-    const block = text.slice(start, end).trim();
+    const block = trimTrailingSofiaSections(text.slice(start, end));
     const validity = parseValidity(block);
     const { validFromIso, validToIso, validToPermanent } = validity;
     const aRaw = extractField(block, 'A') ?? '';
