@@ -43,7 +43,8 @@ export default defineConfig({
           '**/data/supaip-current.geojson',
           '**/data/supaip-status.json',
           '**/data/supaip-unmapped.json',
-          '**/data/supaip-manifest.json'
+          '**/data/supaip-manifest.json',
+          '**/data/supaip/**'
         ],
         runtimeCaching: [
           {
@@ -53,6 +54,23 @@ export default defineConfig({
               cacheName: 'capclair-supaip-live-data',
               networkTimeoutSeconds: 8,
               expiration: { maxEntries: 8, maxAgeSeconds: 7 * 24 * 60 * 60 }
+            }
+          },
+          {
+            urlPattern: /\/data\/supaip\/latest\.json(?:\?.*)?$/,
+            handler: 'NetworkFirst',
+            options: {
+              cacheName: 'capclair-supaip-latest',
+              networkTimeoutSeconds: 8,
+              expiration: { maxEntries: 2, maxAgeSeconds: 7 * 24 * 60 * 60 }
+            }
+          },
+          {
+            urlPattern: /\/data\/supaip\/revisions\/[a-f0-9]{64}\/(?:status\.json|manifest\.json|data\.geojson|unmapped\.json)(?:\?.*)?$/,
+            handler: 'CacheFirst',
+            options: {
+              cacheName: 'capclair-supaip-immutable-revisions',
+              expiration: { maxEntries: 12, maxAgeSeconds: 90 * 24 * 60 * 60 }
             }
           },
           {

@@ -1,0 +1,10 @@
+WEB13.30.4 - SUP AIP DATA PIPELINE
+
+- séparation datasetGeneratedAt et lastSuccessfulCheckAt
+- latest.json mutable et léger
+- révisions SUP AIP immuables
+- SHA-256 et tailles pour validation Android
+- publication transactionnelle
+- commit après chaque contrôle SIA réussi
+- anciennes URLs conservées
+- aucune modification fonctionnelle du module NOTAM

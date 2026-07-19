@@ -1,7 +1,7 @@
 {
-  "name": "cap-clair-web13-30-3-notam-selection-highlight-hotfix",
+  "name": "cap-clair-web13-30-4-sup-aip-data-pipeline",
   "private": true,
-  "version": "0.13.30-3",
+  "version": "0.13.30-4",
   "type": "module",
   "scripts": {
     "dev": "vite",

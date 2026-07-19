@@ -1,0 +1,147 @@
+CAP CLAIR WEB13.30.4 - SUP AIP DATA PIPELINE
+
+Base de travail
+- CAP CLAIR WEB13.30.3 - NOTAM SELECTION HIGHLIGHT HOTFIX
+
+Objectif
+- séparer la date de dernière modification du contenu SUP AIP de la date du dernier contrôle SIA réussi
+- publier des révisions immuables et vérifiables par Android
+- conserver les quatre anciennes URLs pour WEB13.30.3 et Android DEV15.4.0
+- déclencher un commit et un redéploiement Cloudflare après chaque contrôle réussi, même sans changement métier
+
+Architecture livrée
+
+1. Pointeur mutable
+- public/data/supaip/latest.json
+- schemaVersion 2
+- datasetRevision
+- datasetGeneratedAt
+- lastSuccessfulCheckAt
+- staleAfterHours
+- manifestUrl
+- manifestSha256
+- manifestSize
+- businessContentSha256
+
+2. Révisions immuables
+- public/data/supaip/revisions/<datasetRevision>/status.json
+- public/data/supaip/revisions/<datasetRevision>/manifest.json
+- public/data/supaip/revisions/<datasetRevision>/data.geojson
+- public/data/supaip/revisions/<datasetRevision>/unmapped.json
+
+3. Compatibilité conservée
+- public/data/supaip-status.json
+- public/data/supaip-current.geojson
+- public/data/supaip-manifest.json
+- public/data/supaip-unmapped.json
+
+Le champ historique generatedAt de supaip-status.json reste un alias de lastSuccessfulCheckAt. Les nouveaux clients utilisent datasetGeneratedAt et lastSuccessfulCheckAt séparément.
+
+Comportement sans changement SIA
+- datasetRevision reste identique
+- datasetGeneratedAt reste identique
+- lastSuccessfulCheckAt est actualisé
+- seuls supaip-status.json et supaip/latest.json changent
+- un commit léger est créé par GitHub Actions
+- Cloudflare Pages redéploie l'information de fraîcheur
+- le GeoJSON complet reste identique et Android n'a pas besoin de le retélécharger
+
+Comportement avec changement métier
+- une nouvelle révision est calculée à partir du contenu aéronautique canonique
+- la date de contrôle, la version du parseur et les empreintes techniques ne changent pas seules datasetRevision
+- une modification de géométrie, de verticale, de validité, de statut, de titre ou de PDF officiel crée une nouvelle révision
+- la révision est générée et validée dans un dossier temporaire
+- latest.json est écrit en dernier
+- les anciennes révisions restent présentes
+
+Validation Android
+Le manifeste de révision contient :
+- featureCount
+- publicationCount
+- publicationsWithGeometry
+- featuresWithVerticalLimits
+- featuresWithoutVerticalLimits
+- geoJsonSha256
+- geoJsonSize
+- taille et SHA-256 de data.geojson, status.json et unmapped.json
+
+latest.json contient l'empreinte et la taille du manifeste. Android peut donc vérifier le manifeste, puis tous les fichiers de la révision.
+
+Contrôles de publication
+- FeatureCollection non vide
+- identifiants uniques
+- types Polygon et MultiPolygon uniquement
+- coordonnées finies et dans les domaines longitude/latitude
+- validation topologique Shapely
+- compteurs cohérents
+- verticales extraites complètes
+- message exact en cas de verticale non extraite : Limites verticales non extraites - consulter le PDF SIA
+- présence d'un PDF officiel SIA pour chaque publication et chaque géométrie
+- empreintes SHA-256 calculées sur les octets réellement publiés
+- latest.json interdit de pointer vers une révision incomplète
+- révision existante jamais réécrite
+
+Migration des géométries historiques
+L'audit topologique de la base WEB13.30.3 a détecté trois géométries historiques auto-intersectées :
+- 077-26-zrt-guerande-lf-r17
+- 188-25-zrt-cesa-couloir-hourtin-plage
+- 206-25-zrt-2-le-croisic
+
+Elles n'ont pas été réparées automatiquement, car une correction géométrique sans nouvelle extraction officielle pourrait modifier leur emprise aéronautique. Elles sont conservées uniquement par exception historique figée sur leur SHA-256 exact.
+
+Règle appliquée :
+- la géométrie historique strictement identique peut être conservée
+- toute modification invalide ou toute nouvelle géométrie invalide est rejetée
+- l'exception et son empreinte sont inscrites dans le manifeste
+
+Interface web
+- aucune refonte
+- ajout minimal de la ligne Dernier contrôle SIA
+- Base générée utilise datasetGeneratedAt
+- la péremption utilise lastSuccessfulCheckAt
+- repli compatible sur generatedAt pour les anciens fichiers
+
+PWA
+- les révisions immuables ne sont pas préchargées en double dans le precache
+- latest.json utilise NetworkFirst
+- les fichiers de révision immuables utilisent CacheFirst
+- les anciennes URLs continuent d'utiliser NetworkFirst
+
+Workflow GitHub Actions
+- actions/checkout@v6
+- actions/setup-python@v6
+- exécution des tests du parseur et du pipeline
+- génération dans un dossier temporaire
+- publication transactionnelle
+- validation finale
+- commit des fichiers compatibles, de latest.json et des éventuelles nouvelles révisions
+- cron conservé : 17 */6 * * *
+
+Validation exécutée
+- 27 tests Python du parseur existant réussis
+- 17 tests Python du nouveau pipeline réussis
+- total Python : 44 tests réussis
+- 20 fichiers Vitest réussis
+- 46 tests Vitest réussis
+- TypeScript réussi
+- build Vite/PWA réussi
+- validation complète de la révision initiale réussie
+- parsing YAML du workflow réussi
+
+Simulation explicite sans changement
+- datasetRevision conservé : 882607b7a9cb9681d5a4bfc0349090ebd42edf512b523d724f8ffd81bc5bedff
+- datasetGeneratedAt conservé : 2026-07-16T04:39:32Z
+- lastSuccessfulCheckAt actualisé dans la simulation
+- revisionCreated : false
+- seuls supaip-status.json et supaip/latest.json ont changé
+
+Limite de validation locale
+L'environnement de construction n'a pas pu résoudre le domaine SIA pendant le test réseau direct. Le téléchargement réel de la liste SIA n'a donc pas été rejoué localement. Le parseur existant, le pipeline, le workflow, la publication transactionnelle et les scénarios avec ou sans changement ont été validés hors réseau. Le premier contrôle réel devra être lancé depuis GitHub Actions après le push.
+
+Non-régressions
+- aucun fichier du module NOTAM modifié
+- aucune suppression des anciennes URLs
+- aucune suppression du parseur V3.2 ou de ses protections anti-régression
+- toutes les publications restent présentes dans le manifeste, même sans géométrie
+- aucune zone n'est supprimée de la base pour une raison d'altitude
+- les PDF officiels restent accessibles

@@ -248,7 +248,8 @@ export function MoreScreen({
                     <b>{supAipDatasetStatus.featureCount}</b> géométries affichées depuis <b>{supAipDatasetStatus.mappedPublicationCount}</b> publications spatiales.
                   </p>
                   <dl>
-                    <div><dt>Base générée</dt><dd>{formatSupAipDatasetTimestamp(supAipDatasetStatus.generatedAt)}</dd></div>
+                    <div><dt>Base générée</dt><dd>{formatSupAipDatasetTimestamp(supAipDatasetStatus.datasetGeneratedAt ?? supAipDatasetStatus.generatedAt)}</dd></div>
+                    <div><dt>Dernier contrôle SIA</dt><dd>{formatSupAipDatasetTimestamp(supAipDatasetStatus.lastSuccessfulCheckAt ?? supAipDatasetStatus.generatedAt)}</dd></div>
                     <div><dt>Liste SIA</dt><dd>{formatSupAipDatasetTimestamp(supAipDatasetStatus.sourceUpdatedAt)}</dd></div>
                     <div><dt>PDF contrôlés</dt><dd>{supAipDatasetStatus.processedPublicationCount ?? (supAipDatasetStatus.downloadedPublicationCount + supAipDatasetStatus.reusedPublicationCount)} / {supAipDatasetStatus.listingPublicationCount}</dd></div>
                     <div><dt>SUP entièrement cartographiés</dt><dd>{supAipDatasetStatus.fullyMappedPublicationCount ?? Math.max(0, supAipDatasetStatus.mappedPublicationCount - supAipDatasetStatus.partialPublicationCount - (supAipDatasetStatus.conservativePublicationCount ?? 0) - (supAipDatasetStatus.fallbackPublicationCount ?? 0))} / {supAipDatasetStatus.zonalPublicationCount}</dd></div>

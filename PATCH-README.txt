@@ -1,2 +1,2 @@
-CAP CLAIR
-Pour la livraison actuelle, utiliser INSTALLATION-13.30.2.txt.
+CAP CLAIR WEB13.30.4 - SUP AIP DATA PIPELINE
+Consulter REPORTING-13.30.4.txt et INSTALLATION-13.30.4.txt.

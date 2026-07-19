@@ -265,3 +265,38 @@ Commit recommandé :
 ```text
 main: fix WEB13.30.2 NOTAM map UX and pasted text parsing
 ```
+
+## Pipeline SUP AIP versionné - WEB13.30.4
+
+Le workflow `.github/workflows/update-supaip.yml` contrôle automatiquement la liste officielle SIA toutes les 6 heures.
+
+Le contrat public principal est désormais :
+
+- `/data/supaip/latest.json` : pointeur mutable vers la dernière révision validée et date du dernier contrôle SIA réussi ;
+- `/data/supaip/revisions/<datasetRevision>/manifest.json` : manifeste immuable avec compteurs, tailles et empreintes SHA-256 ;
+- `/data/supaip/revisions/<datasetRevision>/data.geojson` : base géométrique immuable ;
+- `/data/supaip/revisions/<datasetRevision>/status.json` : état immuable de la génération ;
+- `/data/supaip/revisions/<datasetRevision>/unmapped.json` : publications partielles ou non cartographiées.
+
+Les anciennes URLs restent publiées pour WEB13.30.3 et Android DEV15.4.0 :
+
+- `/data/supaip-current.geojson` ;
+- `/data/supaip-status.json` ;
+- `/data/supaip-manifest.json` ;
+- `/data/supaip-unmapped.json`.
+
+Deux dates sont distinctes :
+
+- `datasetGeneratedAt` change uniquement lorsque le contenu métier de la base change ;
+- `lastSuccessfulCheckAt` change après chaque contrôle SIA réussi, même sans nouvelle révision.
+
+Le champ historique `generatedAt` de `/data/supaip-status.json` reste temporairement un alias de `lastSuccessfulCheckAt` pour la compatibilité des anciens clients.
+
+La publication est préparée et validée dans un dossier temporaire. Une nouvelle révision est installée avant les copies compatibles, puis `latest.json` est écrit en dernier. Les révisions déjà publiées ne sont jamais réécrites.
+
+Commandes de contrôle local :
+
+```bash
+python -m unittest tools.supaip.test_update_supaip tools.supaip.test_supaip_pipeline
+python tools/supaip/validate_supaip_release.py --output-dir public/data
+```

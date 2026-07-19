@@ -1,0 +1,41 @@
+INSTALLATION - CAP CLAIR WEB13.30.4 - SUP AIP DATA PIPELINE
+
+1. Dans GitHub Desktop, effectuer Pull origin si proposé.
+2. Ouvrir le dossier local de la branche web/PWA.
+3. Vider son contenu en conservant uniquement le dossier .git.
+4. Copier dans ce dossier tout le contenu du ZIP WEB13.30.4.
+5. Vérifier que le dossier .github est bien présent.
+6. Vérifier la présence de :
+   - public/data/supaip/latest.json
+   - public/data/supaip/revisions/882607.../manifest.json
+   - tools/supaip/publish_supaip.py
+   - tools/supaip/validate_supaip_release.py
+7. Commit conseillé :
+   main: publish WEB13.30.4 SUP AIP data pipeline
+8. Push origin.
+9. Attendre le déploiement Cloudflare Pages de WEB13.30.4.
+10. Dans GitHub, ouvrir Actions > Update SUP AIP data > Run workflow.
+11. Vérifier que le workflow est vert et qu'il crée un commit data: contrôle automatique SUP AIP.
+12. Attendre le nouveau déploiement Cloudflare Pages déclenché par ce commit.
+
+Contrôles après déploiement
+- la version visible dans CAP CLAIR indique WEB13.30.4
+- le titre de l'onglet indique WEB13.30.4 - SUP AIP DATA PIPELINE
+- /data/supaip/latest.json répond
+- latest.json contient une date lastSuccessfulCheckAt correspondant au contrôle GitHub
+- /data/supaip-status.json contient datasetGeneratedAt et lastSuccessfulCheckAt
+- generatedAt est identique à lastSuccessfulCheckAt pour la compatibilité Android DEV15.4.0
+- manifestUrl ouvre une révision complète
+- les quatre anciennes URLs répondent toujours
+
+Comportement attendu lors du premier workflow
+Si le SIA n'a pas changé :
+- datasetRevision reste 882607b7a9cb9681d5a4bfc0349090ebd42edf512b523d724f8ffd81bc5bedff
+- datasetGeneratedAt reste 2026-07-16T04:39:32Z
+- lastSuccessfulCheckAt est actualisé
+- un commit léger est créé
+
+Si le SIA a changé :
+- une nouvelle révision immuable est créée
+- latest.json pointe vers elle après validation
+- l'ancienne révision reste disponible

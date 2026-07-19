@@ -1870,6 +1870,74 @@ def stable_payload_hash(payload: Any) -> str:
     return hashlib.sha256(raw.encode("utf-8")).hexdigest()
 
 
+REVISION_VOLATILE_KEYS = {
+    "generatedAt",
+    "datasetRevision",
+    "businessContentSha256",
+    "datasetGeneratedAt",
+    "lastSuccessfulCheckAt",
+    "sourceUpdatedAt",
+    "sourceFingerprint",
+    "parserVersion",
+    "overrideRevision",
+    "downloadedPublicationCount",
+    "reusedPublicationCount",
+    "processedPublicationCount",
+    "checkMode",
+}
+
+
+def strip_revision_volatile_values(value: Any) -> Any:
+    """Remove technical/check metadata from the business revision payload."""
+    if isinstance(value, dict):
+        return {
+            key: strip_revision_volatile_values(item)
+            for key, item in sorted(value.items())
+            if key not in REVISION_VOLATILE_KEYS
+        }
+    if isinstance(value, list):
+        return [strip_revision_volatile_values(item) for item in value]
+    return value
+
+
+def compute_dataset_revision(
+    collection: dict[str, Any],
+    unmapped: list[dict[str, Any]],
+    manifest: list[dict[str, Any]],
+) -> str:
+    """Hash only the published aeronautical content, never the last check date."""
+    return stable_payload_hash(strip_revision_volatile_values({
+        "collection": collection,
+        "unmapped": unmapped,
+        "manifest": manifest,
+    }))
+
+
+def utc_now_iso() -> str:
+    return datetime.now(timezone.utc).replace(microsecond=0).isoformat().replace("+00:00", "Z")
+
+
+def choose_dataset_revision(
+    previous_revision: str | None,
+    previous_business_content_sha256: str | None,
+    business_content_sha256: str,
+) -> str:
+    if previous_revision and previous_business_content_sha256 == business_content_sha256:
+        return previous_revision
+    return business_content_sha256
+
+
+def choose_dataset_generated_at(
+    previous_revision: str | None,
+    next_revision: str,
+    previous_dataset_generated_at: str | None,
+    check_at: str,
+) -> str:
+    if previous_revision == next_revision and previous_dataset_generated_at:
+        return previous_dataset_generated_at
+    return check_at
+
+
 def is_critical_parse_warning(value: str) -> bool:
     return bool(
         re.search(
@@ -1931,6 +1999,9 @@ def build_dataset(output_dir: Path, override_path: Path, polite_delay: float = 0
     overrides = load_manual_overrides(override_path)
     previous_count = sum(len(items) for items in previous_features.values())
     previous_status = load_json(output_dir / "supaip-status.json", {})
+    previous_geo_payload = load_json(output_dir / "supaip-current.geojson", {})
+    previous_unmapped_payload = load_json(output_dir / "supaip-unmapped.json", {})
+    previous_manifest_payload = load_json(output_dir / "supaip-manifest.json", {})
     override_revision = stable_payload_hash(overrides)
     required_outputs = (
         output_dir / "supaip-current.geojson",
@@ -1938,19 +2009,6 @@ def build_dataset(output_dir: Path, override_path: Path, polite_delay: float = 0
         output_dir / "supaip-unmapped.json",
         output_dir / "supaip-manifest.json",
     )
-    manifest_is_current = len(previous_manifest) == len(entries) and all(
-        (previous_manifest.get(entry.sup_aip) or {}).get("sourceFingerprint") == entry.fingerprint
-        and (previous_manifest.get(entry.sup_aip) or {}).get("parserVersion") == PARSER_VERSION
-        for entry in entries
-    )
-    if (
-        previous_status.get("parserVersion") == PARSER_VERSION
-        and previous_status.get("overrideRevision") == override_revision
-        and manifest_is_current
-        and all(path.exists() for path in required_outputs)
-    ):
-        return previous_status
-
     all_features: list[dict[str, Any]] = []
     unmapped: list[dict[str, Any]] = []
     manifest: list[dict[str, Any]] = []
@@ -2298,27 +2356,47 @@ def build_dataset(output_dir: Path, override_path: Path, polite_delay: float = 0
 
     sorted_unmapped = sorted(unmapped, key=lambda item: item.get("supAip", ""), reverse=True)
     sorted_manifest = sorted(manifest, key=lambda item: item.get("supAip", ""), reverse=True)
-    dataset_revision = stable_payload_hash({
-        "sourceUpdatedAt": source_updated_at,
-        "overrideRevision": override_revision,
-        "collection": collection_base,
-        "unmapped": sorted_unmapped,
-        "manifest": sorted_manifest,
-    })
-    if previous_status.get("datasetRevision") == dataset_revision and all(path.exists() for path in required_outputs):
-        return previous_status
+    business_content_sha256 = compute_dataset_revision(collection_base, sorted_unmapped, sorted_manifest)
+    previous_business_content_sha256 = previous_status.get("businessContentSha256")
+    if not previous_business_content_sha256 and previous_geo_payload:
+        previous_business_content_sha256 = compute_dataset_revision(
+            previous_geo_payload,
+            list(previous_unmapped_payload.get("publications") or []),
+            list(previous_manifest_payload.get("publications") or []),
+        )
+    previous_revision = previous_status.get("datasetRevision")
+    dataset_revision = choose_dataset_revision(
+        previous_revision, previous_business_content_sha256, business_content_sha256
+    )
+    check_at = utc_now_iso()
+    previous_dataset_generated_at = previous_status.get("datasetGeneratedAt") or previous_status.get("generatedAt")
+    dataset_generated_at = choose_dataset_generated_at(
+        previous_revision, dataset_revision, previous_dataset_generated_at, check_at
+    )
+    check_mode = "full-rebuild" if downloaded_publications > 0 else "listing-reuse"
 
-    generated_at = datetime.now(timezone.utc).replace(microsecond=0).isoformat().replace("+00:00", "Z")
-    collection = {**collection_base, "generatedAt": generated_at, "datasetRevision": dataset_revision}
+    # The GeoJSON and revision payloads keep the content generation date.
+    # Only the mutable compatibility status carries the latest successful check.
+    collection = {
+        **collection_base,
+        "generatedAt": dataset_generated_at,
+        "datasetGeneratedAt": dataset_generated_at,
+        "datasetRevision": dataset_revision,
+        "businessContentSha256": business_content_sha256,
+    }
     status = {
         "schemaVersion": 2,
         "mode": "automatic",
         "beta": True,
-        "generatedAt": generated_at,
+        "generatedAt": check_at,
+        "datasetGeneratedAt": dataset_generated_at,
+        "lastSuccessfulCheckAt": check_at,
+        "checkMode": check_mode,
         "sourceUpdatedAt": source_updated_at,
         "sourceUrl": SOURCE_URL,
         "parserVersion": PARSER_VERSION,
         "datasetRevision": dataset_revision,
+        "businessContentSha256": business_content_sha256,
         "overrideRevision": override_revision,
         "listingPublicationCount": len(entries),
         "processedPublicationCount": downloaded_publications + reused_publications,
@@ -2356,16 +2434,20 @@ def build_dataset(output_dir: Path, override_path: Path, polite_delay: float = 0
     }
     unmapped_payload = {
         "schemaVersion": 2,
-        "generatedAt": generated_at,
+        "generatedAt": dataset_generated_at,
+        "datasetGeneratedAt": dataset_generated_at,
         "datasetRevision": dataset_revision,
+        "businessContentSha256": business_content_sha256,
         "sourceUrl": SOURCE_URL,
         "parserVersion": PARSER_VERSION,
         "publications": sorted_unmapped,
     }
     manifest_payload = {
-        "schemaVersion": 1,
-        "generatedAt": generated_at,
+        "schemaVersion": 2,
+        "generatedAt": dataset_generated_at,
+        "datasetGeneratedAt": dataset_generated_at,
         "datasetRevision": dataset_revision,
+        "businessContentSha256": business_content_sha256,
         "sourceUrl": SOURCE_URL,
         "parserVersion": PARSER_VERSION,
         "publications": sorted_manifest,

@@ -3,6 +3,10 @@ export interface SupAipDatasetStatus {
   mode: 'bootstrap' | 'automatic';
   beta: boolean;
   generatedAt: string;
+  datasetGeneratedAt?: string;
+  lastSuccessfulCheckAt?: string;
+  checkMode?: 'listing-reuse' | 'full-rebuild' | 'seed-existing' | string;
+  manifestUrl?: string;
   sourceUpdatedAt?: string | null;
   sourceUrl: string;
   parserVersion: string;
@@ -63,9 +67,9 @@ export async function fetchSupAipDatasetStatus(signal?: AbortSignal): Promise<Su
 
 export function supAipDatasetAgeHours(status: SupAipDatasetStatus | null, now = Date.now()): number | null {
   if (!status) return null;
-  const generatedAt = Date.parse(status.generatedAt);
-  if (!Number.isFinite(generatedAt)) return null;
-  return Math.max(0, (now - generatedAt) / 3_600_000);
+  const checkedAt = Date.parse(status.lastSuccessfulCheckAt ?? status.generatedAt);
+  if (!Number.isFinite(checkedAt)) return null;
+  return Math.max(0, (now - checkedAt) / 3_600_000);
 }
 
 export function isSupAipDatasetStale(status: SupAipDatasetStatus | null, now = Date.now()): boolean {
