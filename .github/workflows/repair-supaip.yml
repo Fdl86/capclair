@@ -1,0 +1,396 @@
+name: Repair SUP AIP parser 3.0.3
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: repair-supaip-parser
+  cancel-in-progress: false
+
+jobs:
+  repair:
+    runs-on: ubuntu-24.04
+
+    steps:
+      - name: Checkout main
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+
+      - name: Setup Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: tools/supaip/requirements.txt
+
+      - name: Restore healthy source and apply parser fix
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          python - <<'PY'
+          from __future__ import annotations
+
+          import re
+          import subprocess
+          import textwrap
+          from pathlib import Path
+
+          GOOD_COMMIT = "5a93c89ea61636ca85183c8a5e470c82fc8c7f0a"
+          UPDATE_REL = "tools/supaip/update_supaip.py"
+          TEST_REL = "tools/supaip/test_update_supaip.py"
+
+          def fail(message: str) -> None:
+              raise SystemExit(f"[FAIL] {message}")
+
+          def from_good_commit(relative_path: str) -> str:
+              try:
+                  raw = subprocess.check_output(
+                      ["git", "show", f"{GOOD_COMMIT}:{relative_path}"],
+                  )
+              except subprocess.CalledProcessError as exc:
+                  fail(f"Impossible de restaurer {relative_path} depuis {GOOD_COMMIT}: {exc}")
+              return raw.decode("utf-8")
+
+          def replace_once(text: str, old: str, new: str, label: str) -> str:
+              count = text.count(old)
+              if count != 1:
+                  fail(f"{label}: motif attendu exactement 1 fois, trouvé {count}")
+              return text.replace(old, new, 1)
+
+          update = from_good_commit(UPDATE_REL)
+          tests = from_good_commit(TEST_REL)
+
+          update = replace_once(
+              update,
+              "from requests.adapters import HTTPAdapter\nfrom urllib3.util.retry import Retry",
+              "from requests.adapters import HTTPAdapter\n"
+              "from shapely.geometry import shape\n"
+              "from shapely.validation import explain_validity\n"
+              "from urllib3.util.retry import Retry",
+              "imports Shapely",
+          )
+          update = replace_once(
+              update,
+              'PARSER_VERSION = "capclair-supaip-parser-3.0.2"',
+              'PARSER_VERSION = "capclair-supaip-parser-3.0.3"',
+              "parser version",
+          )
+          update = replace_once(
+              update,
+              'USER_AGENT = "CAP-CLAIR-SUPAIP-BETA/3.0.2 (+automatic SIA public-document reader)"',
+              'USER_AGENT = "CAP-CLAIR-SUPAIP-BETA/3.0.3 (+automatic SIA public-document reader)"',
+              "user agent",
+          )
+
+          split_re = re.compile(
+              r"def split_zone_names\(value: str\) -> list\[str\]:\n"
+              r".*?"
+              r"(?=\ndef leading_zone_name\(value: str\) -> str:)",
+              re.DOTALL,
+          )
+
+          split_block = textwrap.dedent(r'''\
+          ELIDED_SAME_FAMILY_ZONE_RE = re.compile(
+              r"^(?P<prefix>ZRT/ZDT|ZRT|ZDT|ZIT|TRA|TSA|CTR(?:\s+TEMPORAIRE)?|TMA(?:\s+TEMPORAIRE)?|RMZ|TMZ|FBZ)"
+              r"\s+(?P<family>[A-ZÀ-ÖØ-Ý][A-ZÀ-ÖØ-Ý0-9'-]*)"
+              r"\s+(?P<first>\d+(?:\.\d+)*)"
+              r"(?P<rest>(?:\s+ET\s+(?P=family)\s+\d+(?:\.\d+)*)+)",
+              re.IGNORECASE,
+          )
+
+
+          def expand_elided_same_family_zone_names(value: str) -> list[str]:
+              text = clean_space(value)
+              match = ELIDED_SAME_FAMILY_ZONE_RE.match(text)
+              if not match:
+                  return []
+
+              prefix = clean_space(match.group("prefix")).upper()
+              family = match.group("family")
+              identifiers = [match.group("first")]
+              identifiers.extend(
+                  re.findall(
+                      rf"\bET\s+{re.escape(family)}\s+(\d+(?:\.\d+)*)",
+                      match.group("rest"),
+                      re.IGNORECASE,
+                  )
+              )
+
+              return [
+                  clean_zone_name(f"{prefix} {family} {identifier}")
+                  for identifier in identifiers
+              ]
+
+
+          def split_zone_names(value: str) -> list[str]:
+              text = clean_space(value).strip(" :")
+              starts = [match.start() for match in ZONE_START_RE.finditer(text)]
+              names: list[str] = []
+
+              for index, start in enumerate(starts):
+                  end = starts[index + 1] if index + 1 < len(starts) else len(text)
+                  segment = text[start:end]
+
+                  candidates = expand_elided_same_family_zone_names(segment)
+                  if not candidates:
+                      candidates = [clean_zone_name(segment)]
+
+                  for name in candidates:
+                      if not name:
+                          continue
+                      if re.search(
+                          r"\b(?:lorsqu['’]elle|interf[eé]rente|sont\s+utilisables?|ne\s+seront\s+pas)\b",
+                          name,
+                          re.IGNORECASE,
+                      ):
+                          continue
+                      if name.upper() in {"ZRT/ZDT ORG", "ZRT ORG", "ZDT ORG"}:
+                          continue
+                      if name not in names:
+                          names.append(name)
+
+              if not names:
+                  names.extend(temporary_lfr_names(text))
+
+              return names
+
+          ''')
+
+          update, count = split_re.subn(lambda _: split_block, update, count=1)
+          if count != 1:
+              fail(f"split_zone_names: remplacement impossible, trouvé {count}")
+
+          geometry_re = re.compile(
+              r"    ring = close_ring\(points\)\n"
+              r"    if len\(ring\) < 4:\n"
+              r"        return None, \"medium\", \[\"Polygone incomplet\.\"\]\n"
+              r".*?"
+              r"    return \{\"type\": \"Polygon\", \"coordinates\": \[ring\]\}, confidence, warnings\n",
+              re.DOTALL,
+          )
+
+          geometry_block = textwrap.indent(
+              textwrap.dedent('''\
+              ring = close_ring(points)
+              if len(ring) < 4:
+                  return None, "medium", ["Polygone incomplet."]
+
+              if not point_equal(points[0], points[-1]):
+                  confidence = "medium"
+                  warnings.append("Contour fermé automatiquement entre la dernière et la première coordonnée.")
+
+              if EXCLUSION_RE.search(normalized):
+                  confidence = "medium"
+                  warnings.append("Exclusion interne non découpée: contour extérieur affiché par prudence.")
+
+              geometry = {"type": "Polygon", "coordinates": [ring]}
+
+              try:
+                  polygon = shape(geometry)
+              except Exception as exc:
+                  return None, "medium", [f"Polygone invalide: {exc}"]
+
+              if polygon.is_empty:
+                  return None, "medium", ["Polygone invalide: géométrie vide."]
+
+              if not polygon.is_valid:
+                  return None, "medium", [f"Polygone invalide: {explain_validity(polygon)}"]
+
+              return geometry, confidence, warnings
+              '''),
+              "    ",
+          )
+
+          update, count = geometry_re.subn(lambda _: geometry_block, update, count=1)
+          if count != 1:
+              fail(f"geometry_from_text: remplacement impossible, trouvé {count}")
+
+          update = replace_once(
+              update,
+              r"limite d[eé]pendant|arc d[eé]tect[eé]|polygone incomplet|",
+              r"limite d[eé]pendant|arc d[eé]tect[eé]|polygone incomplet|polygone invalide|",
+              "critical invalid polygon warning",
+          )
+
+          if "import unittest\n" not in tests:
+              tests = "import unittest\n\n" + tests
+
+          if "    geometry_from_text,\n" not in tests:
+              tests = replace_once(
+                  tests,
+                  "    column_cluster_zones,\n",
+                  "    column_cluster_zones,\n    geometry_from_text,\n",
+                  "test import geometry_from_text",
+              )
+
+          if "    split_zone_names,\n" not in tests:
+              tests = replace_once(
+                  tests,
+                  "    parse_spatial_pdf,\n)",
+                  "    parse_spatial_pdf,\n    split_zone_names,\n)",
+                  "test import split_zone_names",
+              )
+
+          coordinate_test = tests.find("    def test_coordinate_formats(self):")
+          if coordinate_test < 0:
+              fail("test_coordinate_formats introuvable")
+          next_test = tests.find("\n    def test_", coordinate_test + 1)
+          if next_test < 0:
+              fail("méthode de test suivante introuvable")
+
+          regression_tests = textwrap.indent(
+              textwrap.dedent(r'''\
+              def test_elided_same_family_zone_names_are_split(self):
+                  self.assertEqual(
+                      split_zone_names("ZRT/ZDT BRAVO 1.1 ET BRAVO 2.1"),
+                      ["ZRT/ZDT BRAVO 1.1", "ZRT/ZDT BRAVO 2.1"],
+                  )
+                  self.assertEqual(
+                      split_zone_names("ZRT CHARLIE 1.1 et CHARLIE 2.1"),
+                      ["ZRT CHARLIE 1.1", "ZRT CHARLIE 2.1"],
+                  )
+
+              def test_poker_bravo_two_column_heading_is_split(self):
+                  page = PdfPageLayout(
+                      page_index=5,
+                      width=600,
+                      height=800,
+                      blocks=(
+                          PdfBlock(5, 70, 50, 530, 75, "ZRT/ZDT BRAVO 1.1 ET BRAVO 2.1"),
+                          PdfBlock(
+                              5,
+                              70,
+                              100,
+                              260,
+                              230,
+                              "LIMITES LATÉRALES\n"
+                              "46°20'00'' N,004°33'00'' W\n"
+                              "46°20'00'' N,002°04'00'' W\n"
+                              "47°49'16'' N,003°05'26'' W\n"
+                              "47°09'38'' N,005°03'40'' W\n"
+                              "46°20'00'' N,004°33'00'' W",
+                          ),
+                          PdfBlock(
+                              5,
+                              340,
+                              100,
+                              530,
+                              230,
+                              "LIMITES LATÉRALES\n"
+                              "44°03'05'' N,003°09'01'' W\n"
+                              "43°35'00'' N,001°47'00'' W\n"
+                              "44°40'00'' N,001°00'00'' W\n"
+                              "46°20'00'' N,002°04'00'' W\n"
+                              "46°20'00'' N,004°33'00'' W\n"
+                              "44°03'05'' N,003°09'01'' W",
+                          ),
+                          PdfBlock(5, 100, 240, 230, 260, "FL 165 / FL 285"),
+                          PdfBlock(5, 370, 240, 500, 260, "FL 165 / FL 285"),
+                      ),
+                  )
+
+                  zones = column_cluster_zones(page)
+
+                  self.assertEqual(
+                      [zone.name for zone in zones],
+                      ["ZRT/ZDT BRAVO 1.1", "ZRT/ZDT BRAVO 2.1"],
+                  )
+                  self.assertTrue(all(zone.geometry for zone in zones))
+                  self.assertTrue(all(zone.vertical_extracted for zone in zones))
+
+              def test_self_intersecting_polygon_is_rejected(self):
+                  text = @@TRIPLE_DQ@@
+                  LIMITES LATÉRALES
+                  47°00'00'' N,001°00'00'' E
+                  47°10'00'' N,001°10'00'' E
+                  47°00'00'' N,001°10'00'' E
+                  47°10'00'' N,001°00'00'' E
+                  47°00'00'' N,001°00'00'' E
+                  @@TRIPLE_DQ@@
+
+                  geometry, confidence, warnings = geometry_from_text(text)
+
+                  self.assertIsNone(geometry)
+                  self.assertEqual(confidence, "medium")
+                  self.assertTrue(any("Polygone invalide" in warning for warning in warnings))
+              ''').replace("@@TRIPLE_DQ@@", chr(34) * 3),
+              "    ",
+          )
+
+          tests = tests[:next_test] + "\n\n" + regression_tests + tests[next_test:]
+
+          required_update_tokens = (
+              "ZONE_TITLE_RE = re.compile(",
+              'PARSER_VERSION = "capclair-supaip-parser-3.0.3"',
+              "def expand_elided_same_family_zone_names",
+              "def split_zone_names",
+              "polygon.is_valid",
+              "explain_validity(polygon)",
+              "polygone invalide|",
+          )
+          for token in required_update_tokens:
+              if token not in update:
+                  fail(f"token manquant dans update_supaip.py: {token}")
+
+          required_test_tokens = (
+              "import unittest",
+              "def test_elided_same_family_zone_names_are_split",
+              "def test_poker_bravo_two_column_heading_is_split",
+              "def test_self_intersecting_polygon_is_rejected",
+          )
+          for token in required_test_tokens:
+              if token not in tests:
+                  fail(f"token manquant dans test_update_supaip.py: {token}")
+
+          Path(UPDATE_REL).write_text(update, encoding="utf-8", newline="\n")
+          Path(TEST_REL).write_text(tests, encoding="utf-8", newline="\n")
+
+          print("[OK] Fichiers restaurés depuis le commit sain et corrigés.")
+          PY
+
+      - name: Python syntax gate
+        run: |
+          python -m py_compile \
+            tools/supaip/update_supaip.py \
+            tools/supaip/test_update_supaip.py
+
+      - name: Install SUP AIP dependencies
+        run: python -m pip install --disable-pip-version-check -r tools/supaip/requirements.txt
+
+      - name: Run SUP AIP tests
+        run: |
+          python -m unittest \
+            tools.supaip.test_update_supaip \
+            tools.supaip.test_supaip_pipeline
+
+      - name: Verify expected fix
+        shell: bash
+        run: |
+          set -euo pipefail
+          grep -F 'PARSER_VERSION = "capclair-supaip-parser-3.0.3"' tools/supaip/update_supaip.py
+          grep -F 'ZONE_TITLE_RE = re.compile(' tools/supaip/update_supaip.py
+          grep -F 'def expand_elided_same_family_zone_names' tools/supaip/update_supaip.py
+          grep -F 'polygon.is_valid' tools/supaip/update_supaip.py
+          grep -F 'def test_poker_bravo_two_column_heading_is_split' tools/supaip/test_update_supaip.py
+
+      - name: Commit repaired source
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          if git diff --quiet -- tools/supaip/update_supaip.py tools/supaip/test_update_supaip.py; then
+            echo "No source change to commit"
+            exit 0
+          fi
+
+          git config user.name "CAP CLAIR SUP AIP Repair"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          git add tools/supaip/update_supaip.py tools/supaip/test_update_supaip.py
+          git commit -m "fix: repair SUP AIP multi-column parser"
+          git push
