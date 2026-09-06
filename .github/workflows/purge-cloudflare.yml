@@ -27,6 +27,7 @@ jobs:
           echo "========================================"
           echo
           echo "Project: $PROJECT_NAME"
+          echo
 
           if [ -z "${CLOUDFLARE_ACCOUNT_ID:-}" ]; then
             echo "[ERROR] CLOUDFLARE_ACCOUNT_ID secret is missing."
@@ -38,58 +39,112 @@ jobs:
             exit 1
           fi
 
-          API_BASE="https://api.cloudflare.com/client/v4/accounts/$CLOUDFLARE_ACCOUNT_ID/pages/projects/$PROJECT_NAME/deployments"
+          API_ROOT="https://api.cloudflare.com/client/v4"
+          API_BASE="$API_ROOT/accounts/$CLOUDFLARE_ACCOUNT_ID/pages/projects/$PROJECT_NAME"
+          DEPLOYMENTS_URL="$API_BASE/deployments"
 
           mkdir -p /tmp/cf-purge
           : > /tmp/cf-purge/deployments.jsonl
 
-          echo
-          echo "Fetching deployment list..."
+          echo "Checking Cloudflare project..."
 
-          FIRST_RESPONSE=$(curl \
+          HTTP_CODE=$(curl \
             --silent \
             --show-error \
-            --fail-with-body \
-            --retry 3 \
-            --retry-all-errors \
-            -H "Authorization: Bearer $CLOUDFLARE_API_TOKEN" \
-            "$API_BASE?page=1&per_page=100")
+            --output /tmp/cf-purge/project.json \
+            --write-out "%{http_code}" \
+            --request GET \
+            --header "Authorization: Bearer $CLOUDFLARE_API_TOKEN" \
+            "$API_BASE")
 
-          if ! echo "$FIRST_RESPONSE" | jq -e '.success == true' > /dev/null; then
-            echo "[ERROR] Cloudflare API returned an error:"
-            echo "$FIRST_RESPONSE" | jq .
+          if [ "$HTTP_CODE" != "200" ]; then
+            echo
+            echo "[ERROR] Cloudflare project check failed."
+            echo "HTTP status: $HTTP_CODE"
+            echo
+            cat /tmp/cf-purge/project.json | jq . || cat /tmp/cf-purge/project.json
             exit 1
           fi
 
-          echo "$FIRST_RESPONSE" | jq -c '.result[]' \
+          if ! jq -e '.success == true' /tmp/cf-purge/project.json > /dev/null; then
+            echo
+            echo "[ERROR] Cloudflare API rejected the project request:"
+            cat /tmp/cf-purge/project.json | jq .
+            exit 1
+          fi
+
+          echo "[OK] Project found."
+          echo
+
+          echo "Fetching deployment list..."
+
+          HTTP_CODE=$(curl \
+            --silent \
+            --show-error \
+            --output /tmp/cf-purge/page.json \
+            --write-out "%{http_code}" \
+            --request GET \
+            --header "Authorization: Bearer $CLOUDFLARE_API_TOKEN" \
+            "$DEPLOYMENTS_URL")
+
+          if [ "$HTTP_CODE" != "200" ]; then
+            echo
+            echo "[ERROR] Unable to list deployments."
+            echo "HTTP status: $HTTP_CODE"
+            echo
+            cat /tmp/cf-purge/page.json | jq . || cat /tmp/cf-purge/page.json
+            exit 1
+          fi
+
+          if ! jq -e '.success == true' /tmp/cf-purge/page.json > /dev/null; then
+            echo
+            echo "[ERROR] Cloudflare rejected deployment listing:"
+            cat /tmp/cf-purge/page.json | jq .
+            exit 1
+          fi
+
+          jq -c '.result[]' /tmp/cf-purge/page.json \
             >> /tmp/cf-purge/deployments.jsonl
 
-          TOTAL_PAGES=$(echo "$FIRST_RESPONSE" | jq -r '.result_info.total_pages // 1')
-          TOTAL_COUNT=$(echo "$FIRST_RESPONSE" | jq -r '.result_info.total_count // (.result | length)')
+          TOTAL_PAGES=$(jq -r '.result_info.total_pages // 1' /tmp/cf-purge/page.json)
+          PER_PAGE=$(jq -r '.result_info.per_page // 20' /tmp/cf-purge/page.json)
+          TOTAL_COUNT=$(jq -r '.result_info.total_count // (.result | length)' /tmp/cf-purge/page.json)
 
-          echo "Deployments found: $TOTAL_COUNT"
-          echo "Pages: $TOTAL_PAGES"
+          echo "Deployments reported: $TOTAL_COUNT"
+          echo "Results per page:     $PER_PAGE"
+          echo "Pages:                $TOTAL_PAGES"
 
           if [ "$TOTAL_PAGES" -gt 1 ]; then
             for PAGE in $(seq 2 "$TOTAL_PAGES"); do
+
               echo "Fetching page $PAGE/$TOTAL_PAGES..."
 
-              RESPONSE=$(curl \
+              HTTP_CODE=$(curl \
                 --silent \
                 --show-error \
-                --fail-with-body \
-                --retry 3 \
-                --retry-all-errors \
-                -H "Authorization: Bearer $CLOUDFLARE_API_TOKEN" \
-                "$API_BASE?page=$PAGE&per_page=100")
+                --output /tmp/cf-purge/page.json \
+                --write-out "%{http_code}" \
+                --request GET \
+                --header "Authorization: Bearer $CLOUDFLARE_API_TOKEN" \
+                "$DEPLOYMENTS_URL?page=$PAGE")
 
-              if ! echo "$RESPONSE" | jq -e '.success == true' > /dev/null; then
-                echo "[ERROR] Failed to fetch page $PAGE:"
-                echo "$RESPONSE" | jq .
+              if [ "$HTTP_CODE" != "200" ]; then
+                echo
+                echo "[ERROR] Failed to fetch page $PAGE."
+                echo "HTTP status: $HTTP_CODE"
+                echo
+                cat /tmp/cf-purge/page.json | jq . || cat /tmp/cf-purge/page.json
                 exit 1
               fi
 
-              echo "$RESPONSE" | jq -c '.result[]' \
+              if ! jq -e '.success == true' /tmp/cf-purge/page.json > /dev/null; then
+                echo
+                echo "[ERROR] Cloudflare rejected page $PAGE:"
+                cat /tmp/cf-purge/page.json | jq .
+                exit 1
+              fi
+
+              jq -c '.result[]' /tmp/cf-purge/page.json \
                 >> /tmp/cf-purge/deployments.jsonl
             done
           fi
@@ -102,24 +157,23 @@ jobs:
           echo "Keeping newest deployment of every branch..."
 
           jq -s -r '
-            group_by(.deployment_trigger.metadata.branch // "__unknown__")
+            sort_by(.deployment_trigger.metadata.branch // "__unknown__")
+            | group_by(.deployment_trigger.metadata.branch // "__unknown__")
             | map(
                 sort_by(.created_on)
                 | reverse
                 | .[1:]
               )
             | flatten
-            | sort_by(.created_on)
             | .[].id
           ' /tmp/cf-purge/deployments.jsonl \
             > /tmp/cf-purge/delete_ids.txt
 
           DELETE_COUNT=$(wc -l < /tmp/cf-purge/delete_ids.txt)
-
           KEEP_COUNT=$((ACTUAL_COUNT - DELETE_COUNT))
 
           echo
-          echo "Deployments kept:    $KEEP_COUNT"
+          echo "Deployments kept:     $KEEP_COUNT"
           echo "Deployments to purge: $DELETE_COUNT"
 
           if [ "$DELETE_COUNT" -eq 0 ]; then
@@ -132,7 +186,7 @@ jobs:
           echo "Deleting up to 10 deployments simultaneously..."
           echo
 
-          export API_BASE
+          export DEPLOYMENTS_URL
           export CLOUDFLARE_API_TOKEN
 
           delete_deployment() {
@@ -140,26 +194,30 @@ jobs:
 
             for ATTEMPT in 1 2 3; do
 
-              echo "Deleting $DEPLOYMENT_ID..."
+              RESPONSE_FILE="/tmp/cf-delete-$DEPLOYMENT_ID.json"
 
-              RESPONSE=$(curl \
+              HTTP_CODE=$(curl \
                 --silent \
                 --show-error \
-                --retry 3 \
-                --retry-all-errors \
+                --output "$RESPONSE_FILE" \
+                --write-out "%{http_code}" \
                 --request DELETE \
-                -H "Authorization: Bearer $CLOUDFLARE_API_TOKEN" \
-                "$API_BASE/$DEPLOYMENT_ID?force=true") || true
+                --header "Authorization: Bearer $CLOUDFLARE_API_TOKEN" \
+                "$DEPLOYMENTS_URL/$DEPLOYMENT_ID?force=true") || HTTP_CODE="000"
 
-              if echo "$RESPONSE" | jq -e '.success == true' > /dev/null 2>&1; then
+              if [ "$HTTP_CODE" = "200" ] && \
+                 jq -e '.success == true' "$RESPONSE_FILE" > /dev/null 2>&1; then
+
                 echo "[OK] $DEPLOYMENT_ID"
+                rm -f "$RESPONSE_FILE"
                 return 0
               fi
 
-              echo "[RETRY $ATTEMPT/3] $DEPLOYMENT_ID"
+              echo "[RETRY $ATTEMPT/3] $DEPLOYMENT_ID - HTTP $HTTP_CODE"
 
-              if [ -n "$RESPONSE" ]; then
-                echo "$RESPONSE" | jq -c '.errors // .' 2>/dev/null || true
+              if [ -s "$RESPONSE_FILE" ]; then
+                jq -c '.errors // .' "$RESPONSE_FILE" 2>/dev/null || \
+                  cat "$RESPONSE_FILE"
               fi
 
               sleep $((ATTEMPT * 2))
