@@ -31,12 +31,13 @@ import fitz  # PyMuPDF
 import requests
 from bs4 import BeautifulSoup
 from requests.adapters import HTTPAdapter
+from shapely.geometry import shape
+from shapely.validation import explain_validity
 from urllib3.util.retry import Retry
 
 SOURCE_URL = "https://www.sia.aviation-civile.gouv.fr/documents/supaip/aip/id/6"
-PARSER_VERSION = "capclair-supaip-parser-3.0.2"
-USER_AGENT = "CAP-CLAIR-SUPAIP-BETA/3.0.2 (+automatic SIA public-document reader)"
-ZONE_TITLE_RE = re.compile(
+PARSER_VERSION = "capclair-supaip-parser-3.0.3"
+USER_AGENT = "CAP-CLAIR-SUPAIP-BETA/3.0.3 (+automatic SIA public-document reader)"
     r"\b(?:ZRT|ZDT|ZIT|TRA|TSA|zone(?:s)?\s+(?:r[eé]glement[eé]e|dangereuse|interdite|r[eé]serv[eé]e)(?:s)?\s+temporaire(?:s)?|CTR\s+temporaire|TMA\s+temporaire)\b",
     re.IGNORECASE,
 )
@@ -502,23 +503,68 @@ def temporary_lfr_names(value: str) -> list[str]:
     return names
 
 
+ELIDED_SAME_FAMILY_ZONE_RE = re.compile(
+    r"^(?P<prefix>ZRT/ZDT|ZRT|ZDT|ZIT|TRA|TSA|CTR(?:\s+TEMPORAIRE)?|TMA(?:\s+TEMPORAIRE)?|RMZ|TMZ|FBZ)"
+    r"\s+(?P<family>[A-ZÀ-ÖØ-Ý][A-ZÀ-ÖØ-Ý0-9'-]*)"
+    r"\s+(?P<first>\d+(?:\.\d+)*)"
+    r"(?P<rest>(?:\s+ET\s+(?P=family)\s+\d+(?:\.\d+)*)+)",
+    re.IGNORECASE,
+)
+
+
+def expand_elided_same_family_zone_names(value: str) -> list[str]:
+    text = clean_space(value)
+    match = ELIDED_SAME_FAMILY_ZONE_RE.match(text)
+    if not match:
+        return []
+
+    prefix = clean_space(match.group("prefix")).upper()
+    family = match.group("family")
+    identifiers = [match.group("first")]
+    identifiers.extend(
+        re.findall(
+            rf"\bET\s+{re.escape(family)}\s+(\d+(?:\.\d+)*)",
+            match.group("rest"),
+            re.IGNORECASE,
+        )
+    )
+
+    return [
+        clean_zone_name(f"{prefix} {family} {identifier}")
+        for identifier in identifiers
+    ]
+
+
 def split_zone_names(value: str) -> list[str]:
     text = clean_space(value).strip(" :")
     starts = [match.start() for match in ZONE_START_RE.finditer(text)]
     names: list[str] = []
+
     for index, start in enumerate(starts):
         end = starts[index + 1] if index + 1 < len(starts) else len(text)
-        name = clean_zone_name(text[start:end])
-        if not name:
-            continue
-        if re.search(r"\b(?:lorsqu['’]elle|interf[eé]rente|sont\s+utilisables?|ne\s+seront\s+pas)\b", name, re.IGNORECASE):
-            continue
-        if name.upper() in {"ZRT/ZDT ORG", "ZRT ORG", "ZDT ORG"}:
-            continue
-        if name and name not in names:
-            names.append(name)
+        segment = text[start:end]
+
+        candidates = expand_elided_same_family_zone_names(segment)
+        if not candidates:
+            candidates = [clean_zone_name(segment)]
+
+        for name in candidates:
+            if not name:
+                continue
+            if re.search(
+                r"\b(?:lorsqu['’]elle|interf[eé]rente|sont\s+utilisables?|ne\s+seront\s+pas)\b",
+                name,
+                re.IGNORECASE,
+            ):
+                continue
+            if name.upper() in {"ZRT/ZDT ORG", "ZRT ORG", "ZDT ORG"}:
+                continue
+            if name not in names:
+                names.append(name)
+
     if not names:
         names.extend(temporary_lfr_names(text))
+
     return names
 
 
@@ -630,14 +676,29 @@ def geometry_from_text(text: str) -> tuple[dict[str, Any] | None, str, list[str]
     ring = close_ring(points)
     if len(ring) < 4:
         return None, "medium", ["Polygone incomplet."]
+
     if not point_equal(points[0], points[-1]):
         confidence = "medium"
         warnings.append("Contour fermé automatiquement entre la dernière et la première coordonnée.")
+
     if EXCLUSION_RE.search(normalized):
         confidence = "medium"
         warnings.append("Exclusion interne non découpée: contour extérieur affiché par prudence.")
-    return {"type": "Polygon", "coordinates": [ring]}, confidence, warnings
 
+    geometry = {"type": "Polygon", "coordinates": [ring]}
+
+    try:
+        polygon = shape(geometry)
+    except Exception as exc:
+        return None, "medium", [f"Polygone invalide: {exc}"]
+
+    if polygon.is_empty:
+        return None, "medium", ["Polygone invalide: géométrie vide."]
+
+    if not polygon.is_valid:
+        return None, "medium", [f"Polygone invalide: {explain_validity(polygon)}"]
+
+    return geometry, confidence, warnings
 
 def load_airspace_catalog(path: Path = Path("src/data/airspaceCatalog.ts")) -> list[dict[str, Any]]:
     global _AIRSPACE_CATALOG_CACHE
@@ -1942,7 +2003,8 @@ def is_critical_parse_warning(value: str) -> bool:
     return bool(
         re.search(
             r"(?:limites? lat[eé]rales? non extraites?|sans limites verticales|"
-            r"limite d[eé]pendant|arc d[eé]tect[eé]|polygone incomplet|moins de trois coordonn[eé]es|rayon circulaire hors)",
+            r"limite d[eé]pendant|arc d[eé]tect[eé]|polygone incomplet|polygone invalide|"
+            r"moins de trois coordonn[eé]es|rayon circulaire hors)",
             value,
             re.IGNORECASE,
         )
