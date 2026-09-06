@@ -1,3 +1,5 @@
+import unittest
+
 from tools.supaip.update_supaip import (
     ListingEntry,
     PdfBlock,
@@ -53,7 +55,7 @@ class SupAipParserTests(unittest.TestCase):
         self.assertAlmostEqual(matches[0].lat, 47.749444, places=5)
         self.assertLess(matches[1].lon, 0)
 
-        def test_elided_same_family_zone_names_are_split(self):
+    def test_elided_same_family_zone_names_are_split(self):
         self.assertEqual(
             split_zone_names("ZRT/ZDT BRAVO 1.1 ET BRAVO 2.1"),
             ["ZRT/ZDT BRAVO 1.1", "ZRT/ZDT BRAVO 2.1"],

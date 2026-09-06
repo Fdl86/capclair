@@ -38,6 +38,7 @@ from urllib3.util.retry import Retry
 SOURCE_URL = "https://www.sia.aviation-civile.gouv.fr/documents/supaip/aip/id/6"
 PARSER_VERSION = "capclair-supaip-parser-3.0.3"
 USER_AGENT = "CAP-CLAIR-SUPAIP-BETA/3.0.3 (+automatic SIA public-document reader)"
+ZONE_TITLE_RE = re.compile(
     r"\b(?:ZRT|ZDT|ZIT|TRA|TSA|zone(?:s)?\s+(?:r[eé]glement[eé]e|dangereuse|interdite|r[eé]serv[eé]e)(?:s)?\s+temporaire(?:s)?|CTR\s+temporaire|TMA\s+temporaire)\b",
     re.IGNORECASE,
 )
