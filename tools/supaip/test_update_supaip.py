@@ -1,5 +1,3 @@
-import unittest
-
 from tools.supaip.update_supaip import (
     ListingEntry,
     PdfBlock,
@@ -12,6 +10,7 @@ from tools.supaip.update_supaip import (
     extract_vertical_pair,
     embedded_column_zones,
     column_cluster_zones,
+    geometry_from_text,
     grid_zones,
     filter_target_zones,
     is_conservative_parse_warning,
@@ -27,6 +26,7 @@ from tools.supaip.update_supaip import (
     ParsedZone,
     resolve_permanent_airspace_references,
     parse_spatial_pdf,
+    split_zone_names,
 )
 
 
@@ -52,6 +52,80 @@ class SupAipParserTests(unittest.TestCase):
         self.assertEqual(len(matches), 2)
         self.assertAlmostEqual(matches[0].lat, 47.749444, places=5)
         self.assertLess(matches[1].lon, 0)
+
+        def test_elided_same_family_zone_names_are_split(self):
+        self.assertEqual(
+            split_zone_names("ZRT/ZDT BRAVO 1.1 ET BRAVO 2.1"),
+            ["ZRT/ZDT BRAVO 1.1", "ZRT/ZDT BRAVO 2.1"],
+        )
+        self.assertEqual(
+            split_zone_names("ZRT CHARLIE 1.1 et CHARLIE 2.1"),
+            ["ZRT CHARLIE 1.1", "ZRT CHARLIE 2.1"],
+        )
+
+    def test_poker_bravo_two_column_heading_is_split(self):
+        page = PdfPageLayout(
+            page_index=5,
+            width=600,
+            height=800,
+            blocks=(
+                PdfBlock(5, 70, 50, 530, 75, "ZRT/ZDT BRAVO 1.1 ET BRAVO 2.1"),
+                PdfBlock(
+                    5,
+                    70,
+                    100,
+                    260,
+                    230,
+                    "LIMITES LATÉRALES\n"
+                    "46°20'00'' N,004°33'00'' W\n"
+                    "46°20'00'' N,002°04'00'' W\n"
+                    "47°49'16'' N,003°05'26'' W\n"
+                    "47°09'38'' N,005°03'40'' W\n"
+                    "46°20'00'' N,004°33'00'' W",
+                ),
+                PdfBlock(
+                    5,
+                    340,
+                    100,
+                    530,
+                    230,
+                    "LIMITES LATÉRALES\n"
+                    "44°03'05'' N,003°09'01'' W\n"
+                    "43°35'00'' N,001°47'00'' W\n"
+                    "44°40'00'' N,001°00'00'' W\n"
+                    "46°20'00'' N,002°04'00'' W\n"
+                    "46°20'00'' N,004°33'00'' W\n"
+                    "44°03'05'' N,003°09'01'' W",
+                ),
+                PdfBlock(5, 100, 240, 230, 260, "FL 165 / FL 285"),
+                PdfBlock(5, 370, 240, 500, 260, "FL 165 / FL 285"),
+            ),
+        )
+
+        zones = column_cluster_zones(page)
+
+        self.assertEqual(
+            [zone.name for zone in zones],
+            ["ZRT/ZDT BRAVO 1.1", "ZRT/ZDT BRAVO 2.1"],
+        )
+        self.assertTrue(all(zone.geometry for zone in zones))
+        self.assertTrue(all(zone.vertical_extracted for zone in zones))
+
+    def test_self_intersecting_polygon_is_rejected(self):
+        text = """
+        LIMITES LATÉRALES
+        47°00'00'' N,001°00'00'' E
+        47°10'00'' N,001°10'00'' E
+        47°00'00'' N,001°10'00'' E
+        47°10'00'' N,001°00'00'' E
+        47°00'00'' N,001°00'00'' E
+        """
+
+        geometry, confidence, warnings = geometry_from_text(text)
+
+        self.assertIsNone(geometry)
+        self.assertEqual(confidence, "medium")
+        self.assertTrue(any("Polygone invalide" in warning for warning in warnings))
 
     def test_vertical_formats(self):
         self.assertEqual(extract_vertical_pair("FL125/FL135"), ("FL 125", "FL 135"))
