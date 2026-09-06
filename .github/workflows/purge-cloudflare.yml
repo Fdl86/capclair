@@ -1,0 +1,187 @@
+name: PURGE CLOUDFLARE DEPLOYMENTS
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  purge:
+    runs-on: ubuntu-latest
+
+    env:
+      PROJECT_NAME: capclair
+      CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+      CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+
+    steps:
+      - name: Purge old Cloudflare Pages deployments
+        shell: bash
+
+        run: |
+          set -euo pipefail
+
+          echo "========================================"
+          echo " CLOUDFLARE PAGES PURGE"
+          echo "========================================"
+          echo
+          echo "Project: $PROJECT_NAME"
+
+          if [ -z "${CLOUDFLARE_ACCOUNT_ID:-}" ]; then
+            echo "[ERROR] CLOUDFLARE_ACCOUNT_ID secret is missing."
+            exit 1
+          fi
+
+          if [ -z "${CLOUDFLARE_API_TOKEN:-}" ]; then
+            echo "[ERROR] CLOUDFLARE_API_TOKEN secret is missing."
+            exit 1
+          fi
+
+          API_BASE="https://api.cloudflare.com/client/v4/accounts/$CLOUDFLARE_ACCOUNT_ID/pages/projects/$PROJECT_NAME/deployments"
+
+          mkdir -p /tmp/cf-purge
+          : > /tmp/cf-purge/deployments.jsonl
+
+          echo
+          echo "Fetching deployment list..."
+
+          FIRST_RESPONSE=$(curl \
+            --silent \
+            --show-error \
+            --fail-with-body \
+            --retry 3 \
+            --retry-all-errors \
+            -H "Authorization: Bearer $CLOUDFLARE_API_TOKEN" \
+            "$API_BASE?page=1&per_page=100")
+
+          if ! echo "$FIRST_RESPONSE" | jq -e '.success == true' > /dev/null; then
+            echo "[ERROR] Cloudflare API returned an error:"
+            echo "$FIRST_RESPONSE" | jq .
+            exit 1
+          fi
+
+          echo "$FIRST_RESPONSE" | jq -c '.result[]' \
+            >> /tmp/cf-purge/deployments.jsonl
+
+          TOTAL_PAGES=$(echo "$FIRST_RESPONSE" | jq -r '.result_info.total_pages // 1')
+          TOTAL_COUNT=$(echo "$FIRST_RESPONSE" | jq -r '.result_info.total_count // (.result | length)')
+
+          echo "Deployments found: $TOTAL_COUNT"
+          echo "Pages: $TOTAL_PAGES"
+
+          if [ "$TOTAL_PAGES" -gt 1 ]; then
+            for PAGE in $(seq 2 "$TOTAL_PAGES"); do
+              echo "Fetching page $PAGE/$TOTAL_PAGES..."
+
+              RESPONSE=$(curl \
+                --silent \
+                --show-error \
+                --fail-with-body \
+                --retry 3 \
+                --retry-all-errors \
+                -H "Authorization: Bearer $CLOUDFLARE_API_TOKEN" \
+                "$API_BASE?page=$PAGE&per_page=100")
+
+              if ! echo "$RESPONSE" | jq -e '.success == true' > /dev/null; then
+                echo "[ERROR] Failed to fetch page $PAGE:"
+                echo "$RESPONSE" | jq .
+                exit 1
+              fi
+
+              echo "$RESPONSE" | jq -c '.result[]' \
+                >> /tmp/cf-purge/deployments.jsonl
+            done
+          fi
+
+          ACTUAL_COUNT=$(wc -l < /tmp/cf-purge/deployments.jsonl)
+
+          echo
+          echo "Collected: $ACTUAL_COUNT deployments"
+          echo
+          echo "Keeping newest deployment of every branch..."
+
+          jq -s -r '
+            group_by(.deployment_trigger.metadata.branch // "__unknown__")
+            | map(
+                sort_by(.created_on)
+                | reverse
+                | .[1:]
+              )
+            | flatten
+            | sort_by(.created_on)
+            | .[].id
+          ' /tmp/cf-purge/deployments.jsonl \
+            > /tmp/cf-purge/delete_ids.txt
+
+          DELETE_COUNT=$(wc -l < /tmp/cf-purge/delete_ids.txt)
+
+          KEEP_COUNT=$((ACTUAL_COUNT - DELETE_COUNT))
+
+          echo
+          echo "Deployments kept:    $KEEP_COUNT"
+          echo "Deployments to purge: $DELETE_COUNT"
+
+          if [ "$DELETE_COUNT" -eq 0 ]; then
+            echo
+            echo "Nothing to delete."
+            exit 0
+          fi
+
+          echo
+          echo "Deleting up to 10 deployments simultaneously..."
+          echo
+
+          export API_BASE
+          export CLOUDFLARE_API_TOKEN
+
+          delete_deployment() {
+            DEPLOYMENT_ID="$1"
+
+            for ATTEMPT in 1 2 3; do
+
+              echo "Deleting $DEPLOYMENT_ID..."
+
+              RESPONSE=$(curl \
+                --silent \
+                --show-error \
+                --retry 3 \
+                --retry-all-errors \
+                --request DELETE \
+                -H "Authorization: Bearer $CLOUDFLARE_API_TOKEN" \
+                "$API_BASE/$DEPLOYMENT_ID?force=true") || true
+
+              if echo "$RESPONSE" | jq -e '.success == true' > /dev/null 2>&1; then
+                echo "[OK] $DEPLOYMENT_ID"
+                return 0
+              fi
+
+              echo "[RETRY $ATTEMPT/3] $DEPLOYMENT_ID"
+
+              if [ -n "$RESPONSE" ]; then
+                echo "$RESPONSE" | jq -c '.errors // .' 2>/dev/null || true
+              fi
+
+              sleep $((ATTEMPT * 2))
+            done
+
+            echo "[FAILED] $DEPLOYMENT_ID"
+            return 1
+          }
+
+          export -f delete_deployment
+
+          xargs \
+            -r \
+            -P 10 \
+            -n 1 \
+            bash -c 'delete_deployment "$1"' _ \
+            < /tmp/cf-purge/delete_ids.txt
+
+          echo
+          echo "========================================"
+          echo " CLOUDFLARE PURGE COMPLETED"
+          echo "========================================"
+          echo
+          echo "Deleted: $DELETE_COUNT"
+          echo "Kept:    $KEEP_COUNT"
