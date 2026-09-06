@@ -1,0 +1,58 @@
+name: PURGE ALL WORKFLOW RUNS
+
+on:
+  workflow_dispatch:
+
+permissions:
+  actions: write
+  contents: read
+
+jobs:
+  purge:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Delete all completed workflow runs
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPO: ${{ github.repository }}
+          CURRENT_RUN_ID: ${{ github.run_id }}
+
+        run: |
+          set -euo pipefail
+
+          echo "Repository: $REPO"
+          echo "Current purge run: $CURRENT_RUN_ID"
+          echo
+          echo "Collecting completed workflow runs..."
+
+          mapfile -t RUN_IDS < <(
+            gh api --paginate \
+              "/repos/$REPO/actions/runs?status=completed&per_page=100" \
+              --jq '.workflow_runs[].id'
+          )
+
+          echo "Found ${#RUN_IDS[@]} completed runs."
+          echo
+
+          DELETED=0
+
+          for RUN_ID in "${RUN_IDS[@]}"; do
+            if [[ "$RUN_ID" == "$CURRENT_RUN_ID" ]]; then
+              continue
+            fi
+
+            echo "Deleting run $RUN_ID..."
+            gh api \
+              --method DELETE \
+              "/repos/$REPO/actions/runs/$RUN_ID" \
+              --silent
+
+            DELETED=$((DELETED + 1))
+          done
+
+          echo
+          echo "========================================"
+          echo "Deleted runs: $DELETED"
+          echo "========================================"
