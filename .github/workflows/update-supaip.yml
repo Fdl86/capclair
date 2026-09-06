@@ -9,16 +9,20 @@ permissions:
   contents: write
 
 concurrency:
-  group: update-supaip-data
+  group: capclair-main-writer
   cancel-in-progress: false
 
 jobs:
   update:
     runs-on: ubuntu-latest
     timeout-minutes: 35
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v6
+        with:
+          ref: main
+          fetch-depth: 0
 
       - name: Set up Python
         uses: actions/setup-python@v6
@@ -27,27 +31,89 @@ jobs:
           cache: pip
           cache-dependency-path: tools/supaip/requirements.txt
 
-      - name: Install SUP AIP dependencies
-        run: python -m pip install --disable-pip-version-check -r tools/supaip/requirements.txt
-
-      - name: Run parser and pipeline tests
+      - name: Run validated SUP AIP publication with retry
+        shell: bash
         run: |
-          python -m unittest \
-            tools.supaip.test_update_supaip \
-            tools.supaip.test_supaip_pipeline
+          set -euo pipefail
 
-      - name: Build and publish SUP AIP transactionally
-        run: |
-          python tools/supaip/publish_supaip.py \
-            --output-dir public/data \
-            --overrides tools/supaip/overrides.geojson
+          MAX_ATTEMPTS=3
 
-      - name: Validate complete published release
-        run: python tools/supaip/validate_supaip_release.py --output-dir public/data
+          write_summary() {
+            python - <<'PY'
+          import json
+          import os
+          from pathlib import Path
 
-      - name: Validate compatibility and counters
-        run: |
-          python - <<'PY'
+          data_dir = Path('public/data')
+          latest = json.loads((data_dir / 'supaip/latest.json').read_text(encoding='utf-8'))
+          status = json.loads((data_dir / 'supaip-status.json').read_text(encoding='utf-8'))
+          revision_dir = data_dir / 'supaip' / 'revisions' / latest['datasetRevision']
+          manifest = json.loads((revision_dir / 'manifest.json').read_text(encoding='utf-8'))
+          unmapped = json.loads((revision_dir / 'unmapped.json').read_text(encoding='utf-8')).get('publications', [])
+          summary = Path(os.environ['GITHUB_STEP_SUMMARY'])
+
+          lines = [
+              '# CAP CLAIR - SUP AIP DATA PIPELINE',
+              '',
+              f"- Révision : `{latest['datasetRevision']}`",
+              f"- Base générée : {latest['datasetGeneratedAt']}",
+              f"- Dernier contrôle SIA réussi : {latest['lastSuccessfulCheckAt']}",
+              f"- Mode du contrôle : {latest.get('checkMode', 'inconnu')}",
+              f"- Publications SIA : {manifest['publicationCount']}",
+              f"- Publications avec géométrie : {manifest['publicationsWithGeometry']}",
+              f"- Géométries : {manifest['featureCount']}",
+              f"- Géométries avec verticales : {manifest['featuresWithVerticalLimits']}",
+              f"- Géométries sans verticales : {manifest['featuresWithoutVerticalLimits']}",
+              f"- PDF téléchargés : {status['downloadedPublicationCount']}",
+              f"- Publications réutilisées : {status['reusedPublicationCount']}",
+              f"- Régressions non résolues : {status.get('unresolvedRegressionCount', 0)}",
+              f"- Exceptions géométriques historiques inchangées : {len(manifest.get('legacyInvalidGeometryExceptions', []))}",
+              '',
+              '## Publications à contrôler',
+              '',
+          ]
+
+          if unmapped:
+              for item in unmapped[:60]:
+                  state = item.get('status', 'à contrôler')
+                  lines.append(
+                      f"- {item.get('supAip')} - {state} - "
+                      f"{item.get('mappedGeometryCount', 0)}/{item.get('expectedNamedGeometryCount', 0)} géométries - "
+                      f"{item.get('missingVerticalCount', 0)} verticale(s) manquante(s)"
+                  )
+          else:
+              lines.append('- Aucune publication à contrôler.')
+
+          summary.write_text('\n'.join(lines) + '\n', encoding='utf-8')
+          PY
+          }
+
+          for attempt in $(seq 1 "$MAX_ATTEMPTS"); do
+            echo "SUP AIP publication attempt $attempt/$MAX_ATTEMPTS"
+
+            git fetch origin main
+            git reset --hard origin/main
+
+            # Remove only untracked generated revision directories left by
+            # a previous failed attempt on this runner.
+            git clean -fd -- public/data/supaip/revisions
+
+            python -m pip install \
+              --disable-pip-version-check \
+              -r tools/supaip/requirements.txt
+
+            python -m unittest \
+              tools.supaip.test_update_supaip \
+              tools.supaip.test_supaip_pipeline
+
+            python tools/supaip/publish_supaip.py \
+              --output-dir public/data \
+              --overrides tools/supaip/overrides.geojson
+
+            python tools/supaip/validate_supaip_release.py \
+              --output-dir public/data
+
+            python - <<'PY'
           import json
           from pathlib import Path
 
@@ -81,74 +147,39 @@ jobs:
           )
           PY
 
-      - name: Publish run summary
-        run: |
-          python - <<'PY'
-          import json
-          import os
-          from pathlib import Path
+            if git diff --quiet -- \
+              public/data/supaip-current.geojson \
+              public/data/supaip-status.json \
+              public/data/supaip-manifest.json \
+              public/data/supaip-unmapped.json \
+              public/data/supaip; then
+              echo "No SUP AIP publication diff"
+              write_summary
+              exit 0
+            fi
 
-          data_dir = Path('public/data')
-          latest = json.loads((data_dir / 'supaip/latest.json').read_text(encoding='utf-8'))
-          status = json.loads((data_dir / 'supaip-status.json').read_text(encoding='utf-8'))
-          revision_dir = data_dir / 'supaip' / 'revisions' / latest['datasetRevision']
-          manifest = json.loads((revision_dir / 'manifest.json').read_text(encoding='utf-8'))
-          unmapped = json.loads((revision_dir / 'unmapped.json').read_text(encoding='utf-8')).get('publications', [])
-          summary = Path(os.environ['GITHUB_STEP_SUMMARY'])
+            git config user.name "CAP CLAIR SUP AIP Bot"
+            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
-          lines = [
-              '# CAP CLAIR - SUP AIP DATA PIPELINE',
-              '',
-              f"- Révision : `{latest['datasetRevision']}`",
-              f"- Base générée : {latest['datasetGeneratedAt']}",
-              f"- Dernier contrôle SIA réussi : {latest['lastSuccessfulCheckAt']}",
-              f"- Mode du contrôle : {latest.get('checkMode', 'inconnu')}",
-              f"- Publications SIA : {manifest['publicationCount']}",
-              f"- Publications avec géométrie : {manifest['publicationsWithGeometry']}",
-              f"- Géométries : {manifest['featureCount']}",
-              f"- Géométries avec verticales : {manifest['featuresWithVerticalLimits']}",
-              f"- Géométries sans verticales : {manifest['featuresWithoutVerticalLimits']}",
-              f"- PDF téléchargés : {status['downloadedPublicationCount']}",
-              f"- Publications réutilisées : {status['reusedPublicationCount']}",
-              f"- Régressions non résolues : {status.get('unresolvedRegressionCount', 0)}",
-              f"- Exceptions géométriques historiques inchangées : {len(manifest.get('legacyInvalidGeometryExceptions', []))}",
-              '',
-              '## Publications à contrôler',
-              '',
-          ]
-          if unmapped:
-              for item in unmapped[:60]:
-                  state = item.get('status', 'à contrôler')
-                  lines.append(
-                      f"- {item.get('supAip')} - {state} - "
-                      f"{item.get('mappedGeometryCount', 0)}/{item.get('expectedNamedGeometryCount', 0)} géométries - "
-                      f"{item.get('missingVerticalCount', 0)} verticale(s) manquante(s)"
-                  )
-          else:
-              lines.append('- Aucune publication à contrôler.')
+            git add \
+              public/data/supaip-current.geojson \
+              public/data/supaip-status.json \
+              public/data/supaip-manifest.json \
+              public/data/supaip-unmapped.json \
+              public/data/supaip
 
-          summary.write_text('\n'.join(lines) + '\n', encoding='utf-8')
-          PY
+            git commit -m "data: contrôle automatique SUP AIP"
 
-      - name: Commit successful check and release data
-        run: |
-          if git diff --quiet -- \
-            public/data/supaip-current.geojson \
-            public/data/supaip-status.json \
-            public/data/supaip-manifest.json \
-            public/data/supaip-unmapped.json \
-            public/data/supaip; then
-            echo "No SUP AIP publication diff"
-            exit 0
-          fi
+            if git push origin HEAD:main; then
+              echo "SUP AIP publication pushed successfully"
+              write_summary
+              exit 0
+            fi
 
-          git config user.name "CAP CLAIR SUP AIP Bot"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add \
-            public/data/supaip-current.geojson \
-            public/data/supaip-status.json \
-            public/data/supaip-manifest.json \
-            public/data/supaip-unmapped.json \
-            public/data/supaip
-          git commit -m "data: contrôle automatique SUP AIP"
-          git push
+            echo "main changed during publication. Candidate discarded."
+
+            if [ "$attempt" -eq "$MAX_ATTEMPTS" ]; then
+              echo "SUP AIP publication failed after $MAX_ATTEMPTS attempts"
+              exit 1
+            fi
+          done
