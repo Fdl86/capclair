@@ -1,12 +1,12 @@
 {
   "schemaVersion": 2,
-  "datasetRevision": "8d199e951b9b065cc95e0b900ac091ccd156619b72c9c6a177b3b2bbac7dbf14",
-  "datasetGeneratedAt": "2026-09-22T17:01:59Z",
-  "lastSuccessfulCheckAt": "2026-09-22T17:01:59Z",
+  "datasetRevision": "f44c203a881b1970cac07f4b52e7de44ce97d848e9d81896ebdb384967766733",
+  "datasetGeneratedAt": "2026-09-22T21:25:22Z",
+  "lastSuccessfulCheckAt": "2026-09-22T21:25:22Z",
   "staleAfterHours": 36,
   "checkMode": "listing-reuse",
-  "manifestUrl": "/data/supaip/revisions/8d199e951b9b065cc95e0b900ac091ccd156619b72c9c6a177b3b2bbac7dbf14/manifest.json",
-  "manifestSha256": "d61922dc7e33089deff087bf9832563c47f511092157683dee22c7a746531f7d",
+  "manifestUrl": "/data/supaip/revisions/f44c203a881b1970cac07f4b52e7de44ce97d848e9d81896ebdb384967766733/manifest.json",
+  "manifestSha256": "97ca10019a0e49ce8e6e75a5ecbab4d327f8f7bcae342f6b52eea3c59b52fa88",
   "manifestSize": 87600,
-  "businessContentSha256": "8d199e951b9b065cc95e0b900ac091ccd156619b72c9c6a177b3b2bbac7dbf14"
+  "businessContentSha256": "f44c203a881b1970cac07f4b52e7de44ce97d848e9d81896ebdb384967766733"
 }
