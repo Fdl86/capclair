@@ -4,8 +4,6 @@
   "beta": true,
   "generatedAt": "2026-10-07T06:09:07Z",
   "datasetGeneratedAt": "2026-10-07T06:09:07Z",
-  "lastSuccessfulCheckAt": "2026-10-07T06:09:07Z",
-  "checkMode": "listing-reuse",
   "sourceUpdatedAt": "2026-10-01T00:00:00Z",
   "sourceUrl": "https://www.sia.aviation-civile.gouv.fr/documents/supaip/aip/id/6",
   "parserVersion": "capclair-supaip-parser-3.0.3",
@@ -125,6 +123,5 @@
     "other": "Autre format à contrôler"
   },
   "staleAfterHours": 36,
-  "message": "Parser V3.2: chaque publication est comparée à la dernière base valide. Toute chute non restaurée bloque le workflow avant écriture; les ZRT portant un code LF-R restent reconnues comme zones temporaires. Vérifier le PDF, SOFIA et les NOTAM avant le vol.",
-  "manifestUrl": "/data/supaip/revisions/5c0470e8018eab0139eb104e2f3a75baaa663f5f242ee7c1243c268a5fc31c18/manifest.json"
+  "message": "Parser V3.2: chaque publication est comparée à la dernière base valide. Toute chute non restaurée bloque le workflow avant écriture; les ZRT portant un code LF-R restent reconnues comme zones temporaires. Vérifier le PDF, SOFIA et les NOTAM avant le vol."
 }
