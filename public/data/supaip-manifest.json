@@ -1,9 +1,9 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-10-14T05:01:40Z",
-  "datasetGeneratedAt": "2026-10-14T05:01:40Z",
-  "datasetRevision": "05bd808e51f62492b3f1b83b38739ae45e91d78c8227405e5a94af095a42d016",
-  "businessContentSha256": "05bd808e51f62492b3f1b83b38739ae45e91d78c8227405e5a94af095a42d016",
+  "generatedAt": "2026-10-14T12:03:32Z",
+  "datasetGeneratedAt": "2026-10-14T12:03:32Z",
+  "datasetRevision": "1adfda0905b224f700aec2477be0605040f419aef995e57415d42c37f07e61f9",
+  "businessContentSha256": "1adfda0905b224f700aec2477be0605040f419aef995e57415d42c37f07e61f9",
   "sourceUrl": "https://www.sia.aviation-civile.gouv.fr/documents/supaip/aip/id/6",
   "parserVersion": "capclair-supaip-parser-3.0.3",
   "publications": [
@@ -406,21 +406,21 @@
     },
     {
       "supAip": "207/26",
-      "title": "création de 9 zones réglementées temporaires (ZRT) pour l'exercice PERSEE dans la région Sud-Est",
+      "title": "Annulé le 14/10/2026 création de 9 zones réglementées temporaires (ZRT) pour l'exercice PERSEE dans la région Sud-Est",
       "spatial": true,
       "mappedGeometryCount": 10,
       "expectedNamedGeometryCount": 10,
       "declaredZoneCount": 9,
       "missingVerticalCount": 0,
-      "status": "complete",
-      "partial": false,
+      "status": "partial",
+      "partial": true,
       "conservative": false,
       "fallback": false,
       "safetyFallbackFeatureCount": 0,
       "safetyFallbackFeatureNames": [],
       "ignoredReferenceObjectCount": 0,
       "sourcePdf": "https://www.sia.aviation-civile.gouv.fr/documents/download/f/d/15082867/",
-      "sourceFingerprint": "d185dc8a8738ebeb970e",
+      "sourceFingerprint": "cd7f048e552abf70d19d",
       "parserVersion": "capclair-supaip-parser-3.0.3"
     },
     {
@@ -1863,20 +1863,20 @@
   "publicationsWithGeometry": 78,
   "featuresWithVerticalLimits": 438,
   "featuresWithoutVerticalLimits": 2,
-  "geoJsonSha256": "f5303878f336acde3c920d00a0b7cbd58a82aa6ebf0a76feb770dabd4512609a",
-  "geoJsonSize": 1567367,
+  "geoJsonSha256": "b9e5e91da4d9f3a2e98a394401cf41fa2b9bcb053e4939bf1541fea23f68a3a3",
+  "geoJsonSize": 1567587,
   "files": {
     "data.geojson": {
-      "sha256": "f5303878f336acde3c920d00a0b7cbd58a82aa6ebf0a76feb770dabd4512609a",
-      "size": 1567367
+      "sha256": "b9e5e91da4d9f3a2e98a394401cf41fa2b9bcb053e4939bf1541fea23f68a3a3",
+      "size": 1567587
     },
     "status.json": {
-      "sha256": "348d24d64f64dee68d1f900b278b3d072f71db6bbe4f107faf89fb2c8aa8aa0d",
+      "sha256": "cc309d5b1084135fa478ca6b56a796ec2e8a5d4f688b12050dc4b92fe7717d32",
       "size": 3894
     },
     "unmapped.json": {
-      "sha256": "2fce2140b1fe580688a8962ba244bc28a36074b75eb615334f75b0080429ba91",
-      "size": 67037
+      "sha256": "6013bfeaf5ff071c9d761612f0d3e48e93f3dde9e22f843cbf7fda638e7e6d79",
+      "size": 68999
     }
   },
   "legacyInvalidGeometryExceptions": [
