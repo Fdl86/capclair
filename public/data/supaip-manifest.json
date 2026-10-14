@@ -1,9 +1,9 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-10-14T12:03:32Z",
-  "datasetGeneratedAt": "2026-10-14T12:03:32Z",
-  "datasetRevision": "1adfda0905b224f700aec2477be0605040f419aef995e57415d42c37f07e61f9",
-  "businessContentSha256": "1adfda0905b224f700aec2477be0605040f419aef995e57415d42c37f07e61f9",
+  "generatedAt": "2026-10-14T17:19:24Z",
+  "datasetGeneratedAt": "2026-10-14T17:19:24Z",
+  "datasetRevision": "122ea4147b47da97a8b5028df04f885edc14f780304bcabac9e27ef72f044b3a",
+  "businessContentSha256": "122ea4147b47da97a8b5028df04f885edc14f780304bcabac9e27ef72f044b3a",
   "sourceUrl": "https://www.sia.aviation-civile.gouv.fr/documents/supaip/aip/id/6",
   "parserVersion": "capclair-supaip-parser-3.0.3",
   "publications": [
@@ -412,8 +412,8 @@
       "expectedNamedGeometryCount": 10,
       "declaredZoneCount": 9,
       "missingVerticalCount": 0,
-      "status": "partial",
-      "partial": true,
+      "status": "complete",
+      "partial": false,
       "conservative": false,
       "fallback": false,
       "safetyFallbackFeatureCount": 0,
@@ -1368,7 +1368,7 @@
       "title": "Modiﬁcation temporaire de l'itinéraire hélicoptères en CTR Paris entre LFPI et IH3 (Gentilly)",
       "spatial": false,
       "sourcePdf": "https://www.sia.aviation-civile.gouv.fr/documents/download/f/d/15043921/",
-      "sourceFingerprint": "1b45de6b6bf200bb4d78",
+      "sourceFingerprint": "4a495e63f2f57fc9c312",
       "parserVersion": "capclair-supaip-parser-3.0.3"
     },
     {
@@ -1863,20 +1863,20 @@
   "publicationsWithGeometry": 78,
   "featuresWithVerticalLimits": 438,
   "featuresWithoutVerticalLimits": 2,
-  "geoJsonSha256": "b9e5e91da4d9f3a2e98a394401cf41fa2b9bcb053e4939bf1541fea23f68a3a3",
+  "geoJsonSha256": "0a9d0ca22cff0a22351699d3d4e3adc25f0658c9f28d62be3c137f9b872fcbdb",
   "geoJsonSize": 1567587,
   "files": {
     "data.geojson": {
-      "sha256": "b9e5e91da4d9f3a2e98a394401cf41fa2b9bcb053e4939bf1541fea23f68a3a3",
+      "sha256": "0a9d0ca22cff0a22351699d3d4e3adc25f0658c9f28d62be3c137f9b872fcbdb",
       "size": 1567587
     },
     "status.json": {
-      "sha256": "cc309d5b1084135fa478ca6b56a796ec2e8a5d4f688b12050dc4b92fe7717d32",
+      "sha256": "9e08368905070f2bd78465f6aea63150d7aa3c3f1fb3e95c8ab6754d7fb8ba4d",
       "size": 3894
     },
     "unmapped.json": {
-      "sha256": "6013bfeaf5ff071c9d761612f0d3e48e93f3dde9e22f843cbf7fda638e7e6d79",
-      "size": 68999
+      "sha256": "c7357599846ced01ed88543c1ac7cf508b0751e9863b1f4b6eb14da71616757f",
+      "size": 67621
     }
   },
   "legacyInvalidGeometryExceptions": [
