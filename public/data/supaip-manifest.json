@@ -1,9 +1,9 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-10-14T21:47:03Z",
-  "datasetGeneratedAt": "2026-10-14T21:47:03Z",
-  "datasetRevision": "2a1a76f190d9c9477fe468e988b4fc74cface45d4be6013c272c783bcf6c2c8a",
-  "businessContentSha256": "2a1a76f190d9c9477fe468e988b4fc74cface45d4be6013c272c783bcf6c2c8a",
+  "generatedAt": "2026-10-15T04:50:22Z",
+  "datasetGeneratedAt": "2026-10-15T04:50:22Z",
+  "datasetRevision": "37eca05c308cb990dd3ac01952403ae65d6513a9e3a72009828b27ee91b381fc",
+  "businessContentSha256": "37eca05c308cb990dd3ac01952403ae65d6513a9e3a72009828b27ee91b381fc",
   "sourceUrl": "https://www.sia.aviation-civile.gouv.fr/documents/supaip/aip/id/6",
   "parserVersion": "capclair-supaip-parser-3.0.3",
   "publications": [
@@ -81,6 +81,90 @@
       "ignoredReferenceObjectCount": 0,
       "sourcePdf": "https://www.sia.aviation-civile.gouv.fr/documents/download/f/d/13739998/",
       "sourceFingerprint": "844fb76ef0d076854788",
+      "parserVersion": "capclair-supaip-parser-3.0.3"
+    },
+    {
+      "supAip": "229/26",
+      "title": "LFLL - Impacts aire BRAVO pendant travaux rénovation T2",
+      "spatial": false,
+      "sourcePdf": "https://www.sia.aviation-civile.gouv.fr/documents/download/f/d/15088554/",
+      "sourceFingerprint": "5ea59a58e6786aef49c2",
+      "parserVersion": "capclair-supaip-parser-3.0.3"
+    },
+    {
+      "supAip": "228/26",
+      "title": "Création de deux zones réglementées temporaires (ZRT) dans la région de CONDOM pour l’exercice CASEX ATC 26-3 Condom",
+      "spatial": true,
+      "mappedGeometryCount": 2,
+      "expectedNamedGeometryCount": 2,
+      "declaredZoneCount": 2,
+      "missingVerticalCount": 0,
+      "status": "conservative",
+      "partial": false,
+      "conservative": true,
+      "fallback": false,
+      "safetyFallbackFeatureCount": 0,
+      "safetyFallbackFeatureNames": [],
+      "ignoredReferenceObjectCount": 0,
+      "sourcePdf": "https://www.sia.aviation-civile.gouv.fr/documents/download/f/d/15088552/",
+      "sourceFingerprint": "c02ceebdf1c949e31a92",
+      "parserVersion": "capclair-supaip-parser-3.0.3"
+    },
+    {
+      "supAip": "227/26",
+      "title": "Création de 2 zones réglementées temporaires expérimentales (ZRT) dans le haut Var pour l'exploitation de drones",
+      "spatial": true,
+      "mappedGeometryCount": 2,
+      "expectedNamedGeometryCount": 2,
+      "declaredZoneCount": 2,
+      "missingVerticalCount": 0,
+      "status": "complete",
+      "partial": false,
+      "conservative": false,
+      "fallback": false,
+      "safetyFallbackFeatureCount": 0,
+      "safetyFallbackFeatureNames": [],
+      "ignoredReferenceObjectCount": 0,
+      "sourcePdf": "https://www.sia.aviation-civile.gouv.fr/documents/download/f/d/15088550/",
+      "sourceFingerprint": "ed8ace725394a8c7b125",
+      "parserVersion": "capclair-supaip-parser-3.0.3"
+    },
+    {
+      "supAip": "226/26",
+      "title": "Création de 2 zone Réglementées Temporaires (ZRT) dans le cadre de l'exercice OSMOS dans la région de Marmoutier et de Reichshoffen (67)",
+      "spatial": true,
+      "mappedGeometryCount": 2,
+      "expectedNamedGeometryCount": 2,
+      "declaredZoneCount": 2,
+      "missingVerticalCount": 0,
+      "status": "complete",
+      "partial": false,
+      "conservative": false,
+      "fallback": false,
+      "safetyFallbackFeatureCount": 0,
+      "safetyFallbackFeatureNames": [],
+      "ignoredReferenceObjectCount": 0,
+      "sourcePdf": "https://www.sia.aviation-civile.gouv.fr/documents/download/f/d/15088548/",
+      "sourceFingerprint": "a7cbefd62ed837639b44",
+      "parserVersion": "capclair-supaip-parser-3.0.3"
+    },
+    {
+      "supAip": "225/26",
+      "title": "Création d’une zone réglementée temporaire (ZRT) dans la CTR 1 de Dinard et la TMA 4 Rennes à l’occasion du départ de la course nautique transatlantique \"Route du Rhum\" édition 2026",
+      "spatial": true,
+      "mappedGeometryCount": 0,
+      "expectedNamedGeometryCount": 1,
+      "declaredZoneCount": 1,
+      "missingVerticalCount": 0,
+      "status": "unmapped",
+      "partial": false,
+      "conservative": false,
+      "fallback": false,
+      "safetyFallbackFeatureCount": 0,
+      "safetyFallbackFeatureNames": [],
+      "ignoredReferenceObjectCount": 1,
+      "sourcePdf": "https://www.sia.aviation-civile.gouv.fr/documents/download/f/d/15088546/",
+      "sourceFingerprint": "b5351cf8dbc81bfd4be1",
       "parserVersion": "capclair-supaip-parser-3.0.3"
     },
     {
@@ -405,25 +489,6 @@
       "parserVersion": "capclair-supaip-parser-3.0.3"
     },
     {
-      "supAip": "207/26",
-      "title": "Annulé le 14/10/2026 création de 9 zones réglementées temporaires (ZRT) pour l'exercice PERSEE dans la région Sud-Est",
-      "spatial": true,
-      "mappedGeometryCount": 10,
-      "expectedNamedGeometryCount": 10,
-      "declaredZoneCount": 9,
-      "missingVerticalCount": 0,
-      "status": "complete",
-      "partial": false,
-      "conservative": false,
-      "fallback": false,
-      "safetyFallbackFeatureCount": 0,
-      "safetyFallbackFeatureNames": [],
-      "ignoredReferenceObjectCount": 0,
-      "sourcePdf": "https://www.sia.aviation-civile.gouv.fr/documents/download/f/d/15082867/",
-      "sourceFingerprint": "cd7f048e552abf70d19d",
-      "parserVersion": "capclair-supaip-parser-3.0.3"
-    },
-    {
       "supAip": "207/25",
       "title": "Création de Zones Réglementées Temporaires (ZRT) et de zones dangereuses temporaires (ZDT) au profit de la DGA Essais de Missiles, et FBZ associées",
       "spatial": true,
@@ -731,25 +796,6 @@
       "ignoredReferenceObjectCount": 0,
       "sourcePdf": "https://www.sia.aviation-civile.gouv.fr/documents/download/f/d/15077177/",
       "sourceFingerprint": "3540a841af0d75bff945",
-      "parserVersion": "capclair-supaip-parser-3.0.3"
-    },
-    {
-      "supAip": "176/25",
-      "title": "Création d’une Zone Réglementée Temporaire (ZRT) au profit de vols hors vue d’aéronefs sans équipage à bord dans la région Sud de Chartres",
-      "spatial": true,
-      "mappedGeometryCount": 1,
-      "expectedNamedGeometryCount": 1,
-      "declaredZoneCount": 1,
-      "missingVerticalCount": 0,
-      "status": "complete",
-      "partial": false,
-      "conservative": false,
-      "fallback": false,
-      "safetyFallbackFeatureCount": 0,
-      "safetyFallbackFeatureNames": [],
-      "ignoredReferenceObjectCount": 0,
-      "sourcePdf": "https://www.sia.aviation-civile.gouv.fr/documents/download/f/d/14989135/",
-      "sourceFingerprint": "9acdc47ef774c3573376",
       "parserVersion": "capclair-supaip-parser-3.0.3"
     },
     {
@@ -1242,25 +1288,6 @@
       "ignoredReferenceObjectCount": 0,
       "sourcePdf": "https://www.sia.aviation-civile.gouv.fr/documents/download/f/d/14934800/",
       "sourceFingerprint": "1ff378acf791f2c1a4a2",
-      "parserVersion": "capclair-supaip-parser-3.0.3"
-    },
-    {
-      "supAip": "093/26",
-      "title": "Création d’une Zone Réglementée Temporaire autour de Lourdes (65)",
-      "spatial": true,
-      "mappedGeometryCount": 1,
-      "expectedNamedGeometryCount": 1,
-      "declaredZoneCount": 1,
-      "missingVerticalCount": 0,
-      "status": "complete",
-      "partial": false,
-      "conservative": false,
-      "fallback": false,
-      "safetyFallbackFeatureCount": 0,
-      "safetyFallbackFeatureNames": [],
-      "ignoredReferenceObjectCount": 0,
-      "sourcePdf": "https://www.sia.aviation-civile.gouv.fr/documents/download/f/d/15049516/",
-      "sourceFingerprint": "f0f558808a4da83deccb",
       "parserVersion": "capclair-supaip-parser-3.0.3"
     },
     {
@@ -1858,25 +1885,25 @@
       "parserVersion": "capclair-supaip-parser-3.0.3"
     }
   ],
-  "featureCount": 440,
-  "publicationCount": 112,
+  "featureCount": 434,
+  "publicationCount": 114,
   "publicationsWithGeometry": 78,
-  "featuresWithVerticalLimits": 438,
+  "featuresWithVerticalLimits": 432,
   "featuresWithoutVerticalLimits": 2,
-  "geoJsonSha256": "914b3703bd3505be5157fa4497b8682bd1c971c79b68eabc862d78335487a9bf",
-  "geoJsonSize": 1567587,
+  "geoJsonSha256": "f338f5f9af52e784e7dc6d5493e701d27ee81ef7115ea9156c5101f0b6ecd693",
+  "geoJsonSize": 1526522,
   "files": {
     "data.geojson": {
-      "sha256": "914b3703bd3505be5157fa4497b8682bd1c971c79b68eabc862d78335487a9bf",
-      "size": 1567587
+      "sha256": "f338f5f9af52e784e7dc6d5493e701d27ee81ef7115ea9156c5101f0b6ecd693",
+      "size": 1526522
     },
     "status.json": {
-      "sha256": "c8c00c569b7e11e2a5207416022d91aac1283859c9f8ce8b15a9ba6071fdf8ca",
+      "sha256": "feea75f5b2e7638da725dccf51138486e1decc75b03225f8924eccd4fe8b4d64",
       "size": 3894
     },
     "unmapped.json": {
-      "sha256": "1442ab18079562215389eb755a53df8198ca1486828f92342002e1b4c0e4b6b2",
-      "size": 67913
+      "sha256": "79fe70a44c95058a95abd4e74b840453e69beacf415797468f1246db5946e439",
+      "size": 70375
     }
   },
   "legacyInvalidGeometryExceptions": [

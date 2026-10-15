@@ -574,6 +574,450 @@
     },
     {
       "type": "Feature",
+      "id": "228-26-zrt-condom-bravo",
+      "properties": {
+        "id": "228-26-zrt-condom-bravo",
+        "name": "ZRT CONDOM BRAVO",
+        "zoneType": "ZRT",
+        "beta": true,
+        "supAip": "228/26",
+        "title": "Création de deux zones réglementées temporaires (ZRT) dans la région de CONDOM pour l’exercice CASEX ATC 26-3 Condom",
+        "validFrom": "2026-11-02T00:00:00Z",
+        "validTo": "2026-11-13T23:59:59Z",
+        "activationMode": "notam",
+        "activationText": "TOUTES LES ZONES - Le 02 novembre 2026 Activable de 0700 à 1700 - Le 03 novembre 2026 Activable de 0700 à 2300 - Le 04 novembre 2026 Activable de 0700 à 1700 - Le 05 novembre 2026 Activable de 0700 à 2300 - Le 06 novembre 2026 Activable de 0700 à 1400 - Le 09 novembre 2026 Activable de 0700 à 1700 - Le 10 novembre 2026 Activable de 0700 à 2300 - Le 11 novembre 2026 Activable de 0700 à 1700 - Le 12 novembre 2026 Activable de 0700 à 2300 - Le 13 novembre 2026 Activable de 0700 à 1400",
+        "lowerLimit": "FL 115",
+        "upperLimit": "FL 195",
+        "verticalLimitsExtracted": true,
+        "verticalLimitNotice": null,
+        "sourcePdf": "https://www.sia.aviation-civile.gouv.fr/documents/download/f/d/15088552/",
+        "sourcePage": "https://www.sia.aviation-civile.gouv.fr/documents/supaip/aip/id/6",
+        "sourcePageNumber": 3,
+        "dataScope": "auto-sia",
+        "geometrySource": "automatic-layout-v3",
+        "geometryConfidence": "high",
+        "geometryWarnings": [],
+        "sourceFingerprint": "c02ceebdf1c949e31a92",
+        "parserVersion": "capclair-supaip-parser-3.0.3",
+        "frequency": "MARSAN APP : 119,700 MHz | TOULOUSE INFO : 121,250 MHz | PYRENEES INFO : 126,530 MHz | AQUITAINE INFO : 120,575 MHz"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              0.2366667,
+              44.2447222
+            ],
+            [
+              0.5536111,
+              44.0108333
+            ],
+            [
+              0.38,
+              43.685
+            ],
+            [
+              0.0666667,
+              43.5855556
+            ],
+            [
+              0.0655556,
+              44.1138889
+            ],
+            [
+              0.2366667,
+              44.2447222
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "228-26-zrt-condom-alpha",
+      "properties": {
+        "id": "228-26-zrt-condom-alpha",
+        "name": "ZRT CONDOM ALPHA",
+        "zoneType": "ZRT",
+        "beta": true,
+        "supAip": "228/26",
+        "title": "Création de deux zones réglementées temporaires (ZRT) dans la région de CONDOM pour l’exercice CASEX ATC 26-3 Condom",
+        "validFrom": "2026-11-02T00:00:00Z",
+        "validTo": "2026-11-13T23:59:59Z",
+        "activationMode": "notam",
+        "activationText": "TOUTES LES ZONES - Le 02 novembre 2026 Activable de 0700 à 1700 - Le 03 novembre 2026 Activable de 0700 à 2300 - Le 04 novembre 2026 Activable de 0700 à 1700 - Le 05 novembre 2026 Activable de 0700 à 2300 - Le 06 novembre 2026 Activable de 0700 à 1400 - Le 09 novembre 2026 Activable de 0700 à 1700 - Le 10 novembre 2026 Activable de 0700 à 2300 - Le 11 novembre 2026 Activable de 0700 à 1700 - Le 12 novembre 2026 Activable de 0700 à 2300 - Le 13 novembre 2026 Activable de 0700 à 1400",
+        "lowerLimit": "SFC",
+        "upperLimit": "FL 115",
+        "verticalLimitsExtracted": true,
+        "verticalLimitNotice": null,
+        "sourcePdf": "https://www.sia.aviation-civile.gouv.fr/documents/download/f/d/15088552/",
+        "sourcePage": "https://www.sia.aviation-civile.gouv.fr/documents/supaip/aip/id/6",
+        "sourcePageNumber": 3,
+        "dataScope": "auto-sia",
+        "geometrySource": "automatic-layout-v3",
+        "geometryConfidence": "medium",
+        "geometryWarnings": [
+          "Exclusion interne non découpée: contour extérieur affiché par prudence."
+        ],
+        "sourceFingerprint": "c02ceebdf1c949e31a92",
+        "parserVersion": "capclair-supaip-parser-3.0.3",
+        "frequency": "MARSAN APP : 119,700 MHz | TOULOUSE INFO : 121,250 MHz | PYRENEES INFO : 126,530 MHz | AQUITAINE INFO : 120,575 MHz"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              0.2366667,
+              44.2447222
+            ],
+            [
+              0.5536111,
+              44.0108333
+            ],
+            [
+              0.38,
+              43.685
+            ],
+            [
+              0.0666667,
+              43.5855556
+            ],
+            [
+              0.0655556,
+              44.1138889
+            ],
+            [
+              0.2366667,
+              44.2447222
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "227-26-zrt-pegoud",
+      "properties": {
+        "id": "227-26-zrt-pegoud",
+        "name": "ZRT PEGOUD",
+        "zoneType": "ZRT",
+        "beta": true,
+        "supAip": "227/26",
+        "title": "Création de 2 zones réglementées temporaires expérimentales (ZRT) dans le haut Var pour l'exploitation de drones",
+        "validFrom": "2026-11-03T00:00:00Z",
+        "validTo": "2027-02-23T23:59:59Z",
+        "activationMode": "notam",
+        "activationText": "MOIS JOUR HORAIRE ZRT PEGOUD ZRT CRUSOE 0700-1200 novembre 2026 3,5,17,24 activable 1500-2359 décembre 2026 1,3,8 0700-1200 activable 0700-1200 janvier 2027 12,19,21,28 activable 1500-2359 0700-1200 février 2027 2,9,11,22,23 activable 1500-2359 ZRT PEGOUD - Du 01 décembre 2026 à 0700 au 23 février 2027 à 2359 - Activable selon le tableau ci dessus ZRT CRUSOE - Du 03 novembre 2026 à 0700 au 28 janvier 2027 à 2359 - Activable selon le tableau ci dessus",
+        "lowerLimit": "2000 ft ASFC",
+        "upperLimit": "FL 105",
+        "verticalLimitsExtracted": true,
+        "verticalLimitNotice": null,
+        "sourcePdf": "https://www.sia.aviation-civile.gouv.fr/documents/download/f/d/15088550/",
+        "sourcePage": "https://www.sia.aviation-civile.gouv.fr/documents/supaip/aip/id/6",
+        "sourcePageNumber": 3,
+        "dataScope": "auto-sia",
+        "geometrySource": "automatic-layout-v3",
+        "geometryConfidence": "high",
+        "geometryWarnings": [],
+        "sourceFingerprint": "ed8ace725394a8c7b125",
+        "parserVersion": "capclair-supaip-parser-3.0.3",
+        "frequency": "NICE INFO : 124,425 MHz | MARSEILLE INFO : 120,550 MHz | MARSEILLE CTL : 126,155 MHz 127,905 MHz | LE LUC APP : 122,200 MHz"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              6.3391667,
+              43.9705556
+            ],
+            [
+              6.1705556,
+              43.9702778
+            ],
+            [
+              6.1716667,
+              43.9077778
+            ],
+            [
+              6.2036111,
+              43.8975
+            ],
+            [
+              6.2008333,
+              43.8269444
+            ],
+            [
+              6.2205556,
+              43.7608333
+            ],
+            [
+              6.34,
+              43.7527778
+            ],
+            [
+              6.3391667,
+              43.9705556
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "227-26-zrt-crusoe",
+      "properties": {
+        "id": "227-26-zrt-crusoe",
+        "name": "ZRT CRUSOE",
+        "zoneType": "ZRT",
+        "beta": true,
+        "supAip": "227/26",
+        "title": "Création de 2 zones réglementées temporaires expérimentales (ZRT) dans le haut Var pour l'exploitation de drones",
+        "validFrom": "2026-11-03T00:00:00Z",
+        "validTo": "2027-02-23T23:59:59Z",
+        "activationMode": "notam",
+        "activationText": "MOIS JOUR HORAIRE ZRT PEGOUD ZRT CRUSOE 0700-1200 novembre 2026 3,5,17,24 activable 1500-2359 décembre 2026 1,3,8 0700-1200 activable 0700-1200 janvier 2027 12,19,21,28 activable 1500-2359 0700-1200 février 2027 2,9,11,22,23 activable 1500-2359 ZRT PEGOUD - Du 01 décembre 2026 à 0700 au 23 février 2027 à 2359 - Activable selon le tableau ci dessus ZRT CRUSOE - Du 03 novembre 2026 à 0700 au 28 janvier 2027 à 2359 - Activable selon le tableau ci dessus",
+        "lowerLimit": "2000 ft ASFC",
+        "upperLimit": "FL 105",
+        "verticalLimitsExtracted": true,
+        "verticalLimitNotice": null,
+        "sourcePdf": "https://www.sia.aviation-civile.gouv.fr/documents/download/f/d/15088550/",
+        "sourcePage": "https://www.sia.aviation-civile.gouv.fr/documents/supaip/aip/id/6",
+        "sourcePageNumber": 3,
+        "dataScope": "auto-sia",
+        "geometrySource": "automatic-layout-v3",
+        "geometryConfidence": "high",
+        "geometryWarnings": [],
+        "sourceFingerprint": "ed8ace725394a8c7b125",
+        "parserVersion": "capclair-supaip-parser-3.0.3",
+        "frequency": "NICE INFO : 124,425 MHz | MARSEILLE INFO : 120,550 MHz | MARSEILLE CTL : 126,155 MHz 127,905 MHz | LE LUC APP : 122,200 MHz"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              6.6694444,
+              43.7277778
+            ],
+            [
+              6.3472222,
+              43.7538889
+            ],
+            [
+              6.2902778,
+              43.7577778
+            ],
+            [
+              6.2902778,
+              43.9294444
+            ],
+            [
+              6.2222222,
+              43.9427778
+            ],
+            [
+              6.2222222,
+              44.0
+            ],
+            [
+              6.2916667,
+              44.0
+            ],
+            [
+              6.3136111,
+              43.9661111
+            ],
+            [
+              6.3666667,
+              43.9533333
+            ],
+            [
+              6.4077778,
+              43.9127778
+            ],
+            [
+              6.5152778,
+              43.8441667
+            ],
+            [
+              6.6472222,
+              43.7747222
+            ],
+            [
+              6.6694444,
+              43.7277778
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "226-26-zrt-osmos-bravo",
+      "properties": {
+        "id": "226-26-zrt-osmos-bravo",
+        "name": "ZRT OSMOS BRAVO",
+        "zoneType": "ZRT",
+        "beta": true,
+        "supAip": "226/26",
+        "title": "Création de 2 zone Réglementées Temporaires (ZRT) dans le cadre de l'exercice OSMOS dans la région de Marmoutier et de Reichshoffen (67)",
+        "validFrom": "2026-11-02T00:00:00Z",
+        "validTo": "2026-11-20T23:59:59Z",
+        "activationMode": "schedule",
+        "activationText": "TOUTES LES ZONES - Du 02 novembre 2026 à 0700 au 20 novembre 2026 à 1600 - ZRT activables : 02 0700-1600, 1900-2359 03-19 0000-1600, 1900-2359 20 0000-1600",
+        "lowerLimit": "SFC",
+        "upperLimit": "6500 ft AMSL",
+        "verticalLimitsExtracted": true,
+        "verticalLimitNotice": null,
+        "sourcePdf": "https://www.sia.aviation-civile.gouv.fr/documents/download/f/d/15088548/",
+        "sourcePage": "https://www.sia.aviation-civile.gouv.fr/documents/supaip/aip/id/6",
+        "sourcePageNumber": 2,
+        "dataScope": "auto-sia",
+        "geometrySource": "automatic-layout-v3",
+        "geometryConfidence": "high",
+        "geometryWarnings": [],
+        "sourceFingerprint": "a7cbefd62ed837639b44",
+        "parserVersion": "capclair-supaip-parser-3.0.3",
+        "frequency": "PHALSBOURG : 118,450 MHz | STRASBOURG INFO : 136,135 MHz"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              7.9091667,
+              49.0108333
+            ],
+            [
+              7.7197222,
+              49.0188889
+            ],
+            [
+              7.6608333,
+              48.9169444
+            ],
+            [
+              7.8525,
+              48.9166667
+            ],
+            [
+              7.9091667,
+              49.0108333
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "226-26-zrt-osmos-alpha",
+      "properties": {
+        "id": "226-26-zrt-osmos-alpha",
+        "name": "ZRT OSMOS ALPHA",
+        "zoneType": "ZRT",
+        "beta": true,
+        "supAip": "226/26",
+        "title": "Création de 2 zone Réglementées Temporaires (ZRT) dans le cadre de l'exercice OSMOS dans la région de Marmoutier et de Reichshoffen (67)",
+        "validFrom": "2026-11-02T00:00:00Z",
+        "validTo": "2026-11-20T23:59:59Z",
+        "activationMode": "schedule",
+        "activationText": "TOUTES LES ZONES - Du 02 novembre 2026 à 0700 au 20 novembre 2026 à 1600 - ZRT activables : 02 0700-1600, 1900-2359 03-19 0000-1600, 1900-2359 20 0000-1600",
+        "lowerLimit": "SFC",
+        "upperLimit": "5000 ft AMSL",
+        "verticalLimitsExtracted": true,
+        "verticalLimitNotice": null,
+        "sourcePdf": "https://www.sia.aviation-civile.gouv.fr/documents/download/f/d/15088548/",
+        "sourcePage": "https://www.sia.aviation-civile.gouv.fr/documents/supaip/aip/id/6",
+        "sourcePageNumber": 2,
+        "dataScope": "auto-sia",
+        "geometrySource": "automatic-layout-v3",
+        "geometryConfidence": "high",
+        "geometryWarnings": [],
+        "sourceFingerprint": "a7cbefd62ed837639b44",
+        "parserVersion": "capclair-supaip-parser-3.0.3",
+        "frequency": "PHALSBOURG : 118,450 MHz | STRASBOURG INFO : 136,135 MHz"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              7.3736111,
+              48.7205556
+            ],
+            [
+              7.4269444,
+              48.7236111
+            ],
+            [
+              7.4594444,
+              48.6813889
+            ],
+            [
+              7.4457516,
+              48.6776724
+            ],
+            [
+              7.4325994,
+              48.6731805
+            ],
+            [
+              7.419814,
+              48.6682497
+            ],
+            [
+              7.4074288,
+              48.6628931
+            ],
+            [
+              7.3954763,
+              48.6571248
+            ],
+            [
+              7.3839879,
+              48.65096
+            ],
+            [
+              7.3729936,
+              48.6444149
+            ],
+            [
+              7.3625219,
+              48.6375066
+            ],
+            [
+              7.3526003,
+              48.6302534
+            ],
+            [
+              7.3432545,
+              48.6226742
+            ],
+            [
+              7.3345088,
+              48.6147889
+            ],
+            [
+              7.3269444,
+              48.6063889
+            ],
+            [
+              7.2597222,
+              48.6241667
+            ],
+            [
+              7.3736111,
+              48.7205556
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
       "id": "224-26-zrt-cyanne",
       "properties": {
         "id": "224-26-zrt-cyanne",
@@ -5067,1422 +5511,6 @@
     },
     {
       "type": "Feature",
-      "id": "207-26-zrt-consideree",
-      "properties": {
-        "id": "207-26-zrt-consideree",
-        "name": "ZRT considérée",
-        "zoneType": "ZRT",
-        "beta": true,
-        "supAip": "207/26",
-        "title": "Annulé le 14/10/2026 création de 9 zones réglementées temporaires (ZRT) pour l'exercice PERSEE dans la région Sud-Est",
-        "validFrom": "2026-09-28T00:00:00Z",
-        "validTo": "2026-10-14T23:59:59Z",
-        "activationMode": "notam",
-        "activationText": "Prévision d'activation à J-1 Les mercredi, samedi et dimanche entre 10h00 et 16h30 activation limitée sur 1 créneau d'une heure. ZRT RONE 1 - Du 28 septembre 2026 à 0000 au 16 octobre 2026 à 2359 - Activable - 1 créneau de 2H par jour et 2 créneaux de 2H par nuit ZRT RONE 2 - Du 28 septembre 2026 à 0000 au 13 octobre 2026 à 2359 - Activable - 1 créneau de 2H par jour et 2 créneaux de 2H par nuit ZRT RONE 3 ALPHA / ZRT RONE 3 BRAVO / ZRT RONE 4 / ZRT MAQUIS 1 / ZRT MAQUIS 2 / ZRT MAQUIS 3 / ZRT APT - Du 28 septembre 2026 à 0000 au 16 octobre 2026 à 2359 - Activable - 2 créneaux de 2h par jour et par nuit",
-        "lowerLimit": "SFC",
-        "upperLimit": "1500 ft ASFC",
-        "verticalLimitsExtracted": true,
-        "verticalLimitNotice": null,
-        "sourcePdf": "https://www.sia.aviation-civile.gouv.fr/documents/download/f/d/15082867/",
-        "sourcePage": "https://www.sia.aviation-civile.gouv.fr/documents/supaip/aip/id/6",
-        "sourcePageNumber": 8,
-        "dataScope": "auto-sia",
-        "geometrySource": "automatic-layout-v3",
-        "geometryConfidence": "high",
-        "geometryWarnings": [],
-        "sourceFingerprint": "cd7f048e552abf70d19d",
-        "parserVersion": "capclair-supaip-parser-3.0.3",
-        "frequency": "PROVENCE INFO : 132,305 MHz 126,260 MHz | CLERMONT INFO : 119,375 MHz | LYON INFO : 135,530 MHz 135,200 MHz | ORANGE APP : 118,925 MHz"
-      },
-      "geometry": {
-        "type": "Polygon",
-        "coordinates": [
-          [
-            [
-              5.5055556,
-              44.2552553
-            ],
-            [
-              5.5085973,
-              44.255184
-            ],
-            [
-              5.5116261,
-              44.2549702
-            ],
-            [
-              5.5146287,
-              44.2546149
-            ],
-            [
-              5.5175925,
-              44.2541196
-            ],
-            [
-              5.5205046,
-              44.2534865
-            ],
-            [
-              5.5233527,
-              44.2527183
-            ],
-            [
-              5.5261244,
-              44.2518182
-            ],
-            [
-              5.5288078,
-              44.2507901
-            ],
-            [
-              5.5313916,
-              44.2496385
-            ],
-            [
-              5.5338646,
-              44.2483682
-            ],
-            [
-              5.5362162,
-              44.2469848
-            ],
-            [
-              5.5384363,
-              44.2454941
-            ],
-            [
-              5.5405155,
-              44.2439025
-            ],
-            [
-              5.5424447,
-              44.2422169
-            ],
-            [
-              5.5442159,
-              44.2404445
-            ],
-            [
-              5.5458214,
-              44.2385928
-            ],
-            [
-              5.5472542,
-              44.2366699
-            ],
-            [
-              5.5485084,
-              44.2346839
-            ],
-            [
-              5.5495786,
-              44.2326434
-            ],
-            [
-              5.5504601,
-              44.2305571
-            ],
-            [
-              5.5511492,
-              44.228434
-            ],
-            [
-              5.5516431,
-              44.2262831
-            ],
-            [
-              5.5519395,
-              44.2241137
-            ],
-            [
-              5.5520373,
-              44.221935
-            ],
-            [
-              5.5519361,
-              44.2197564
-            ],
-            [
-              5.5516363,
-              44.2175872
-            ],
-            [
-              5.5511392,
-              44.2154368
-            ],
-            [
-              5.5504469,
-              44.2133142
-            ],
-            [
-              5.5495626,
-              44.2112286
-            ],
-            [
-              5.5484898,
-              44.2091889
-            ],
-            [
-              5.5472334,
-              44.2072038
-            ],
-            [
-              5.5457986,
-              44.2052819
-            ],
-            [
-              5.5441916,
-              44.2034314
-            ],
-            [
-              5.5424193,
-              44.2016601
-            ],
-            [
-              5.5404894,
-              44.1999757
-            ],
-            [
-              5.53841,
-              44.1983854
-            ],
-            [
-              5.5361901,
-              44.1968959
-            ],
-            [
-              5.5338392,
-              44.1955137
-            ],
-            [
-              5.5313673,
-              44.1942446
-            ],
-            [
-              5.5287851,
-              44.193094
-            ],
-            [
-              5.5261035,
-              44.192067
-            ],
-            [
-              5.5233341,
-              44.1911678
-            ],
-            [
-              5.5204886,
-              44.1904004
-            ],
-            [
-              5.5175794,
-              44.189768
-            ],
-            [
-              5.5146187,
-              44.1892733
-            ],
-            [
-              5.5116192,
-              44.1889184
-            ],
-            [
-              5.5085939,
-              44.1887049
-            ],
-            [
-              5.5055556,
-              44.1886336
-            ],
-            [
-              5.5025172,
-              44.1887049
-            ],
-            [
-              5.4994919,
-              44.1889184
-            ],
-            [
-              5.4964924,
-              44.1892733
-            ],
-            [
-              5.4935318,
-              44.189768
-            ],
-            [
-              5.4906225,
-              44.1904004
-            ],
-            [
-              5.487777,
-              44.1911678
-            ],
-            [
-              5.4850076,
-              44.192067
-            ],
-            [
-              5.482326,
-              44.193094
-            ],
-            [
-              5.4797438,
-              44.1942446
-            ],
-            [
-              5.4772719,
-              44.1955137
-            ],
-            [
-              5.474921,
-              44.1968959
-            ],
-            [
-              5.4727011,
-              44.1983854
-            ],
-            [
-              5.4706217,
-              44.1999757
-            ],
-            [
-              5.4686918,
-              44.2016601
-            ],
-            [
-              5.4669195,
-              44.2034314
-            ],
-            [
-              5.4653125,
-              44.2052819
-            ],
-            [
-              5.4638777,
-              44.2072038
-            ],
-            [
-              5.4626213,
-              44.2091889
-            ],
-            [
-              5.4615486,
-              44.2112286
-            ],
-            [
-              5.4606642,
-              44.2133142
-            ],
-            [
-              5.4599719,
-              44.2154368
-            ],
-            [
-              5.4594748,
-              44.2175872
-            ],
-            [
-              5.459175,
-              44.2197564
-            ],
-            [
-              5.4590738,
-              44.221935
-            ],
-            [
-              5.4591716,
-              44.2241137
-            ],
-            [
-              5.459468,
-              44.2262831
-            ],
-            [
-              5.4599619,
-              44.228434
-            ],
-            [
-              5.460651,
-              44.2305571
-            ],
-            [
-              5.4615326,
-              44.2326434
-            ],
-            [
-              5.4626027,
-              44.2346839
-            ],
-            [
-              5.4638569,
-              44.2366699
-            ],
-            [
-              5.4652898,
-              44.2385928
-            ],
-            [
-              5.4668952,
-              44.2404445
-            ],
-            [
-              5.4686664,
-              44.2422169
-            ],
-            [
-              5.4705957,
-              44.2439025
-            ],
-            [
-              5.4726748,
-              44.2454941
-            ],
-            [
-              5.4748949,
-              44.2469848
-            ],
-            [
-              5.4772465,
-              44.2483682
-            ],
-            [
-              5.4797195,
-              44.2496385
-            ],
-            [
-              5.4823033,
-              44.2507901
-            ],
-            [
-              5.4849867,
-              44.2518182
-            ],
-            [
-              5.4877584,
-              44.2527183
-            ],
-            [
-              5.4906065,
-              44.2534865
-            ],
-            [
-              5.4935186,
-              44.2541196
-            ],
-            [
-              5.4964824,
-              44.2546149
-            ],
-            [
-              5.4994851,
-              44.2549702
-            ],
-            [
-              5.5025138,
-              44.255184
-            ],
-            [
-              5.5055556,
-              44.2552553
-            ]
-          ]
-        ]
-      }
-    },
-    {
-      "type": "Feature",
-      "id": "207-26-zrt-rone-4",
-      "properties": {
-        "id": "207-26-zrt-rone-4",
-        "name": "ZRT RONE 4",
-        "zoneType": "ZRT",
-        "beta": true,
-        "supAip": "207/26",
-        "title": "Annulé le 14/10/2026 création de 9 zones réglementées temporaires (ZRT) pour l'exercice PERSEE dans la région Sud-Est",
-        "validFrom": "2026-09-28T00:00:00Z",
-        "validTo": "2026-10-14T23:59:59Z",
-        "activationMode": "notam",
-        "activationText": "Prévision d'activation à J-1 Les mercredi, samedi et dimanche entre 10h00 et 16h30 activation limitée sur 1 créneau d'une heure. ZRT RONE 1 - Du 28 septembre 2026 à 0000 au 16 octobre 2026 à 2359 - Activable - 1 créneau de 2H par jour et 2 créneaux de 2H par nuit ZRT RONE 2 - Du 28 septembre 2026 à 0000 au 13 octobre 2026 à 2359 - Activable - 1 créneau de 2H par jour et 2 créneaux de 2H par nuit ZRT RONE 3 ALPHA / ZRT RONE 3 BRAVO / ZRT RONE 4 / ZRT MAQUIS 1 / ZRT MAQUIS 2 / ZRT MAQUIS 3 / ZRT APT - Du 28 septembre 2026 à 0000 au 16 octobre 2026 à 2359 - Activable - 2 créneaux de 2h par jour et par nuit",
-        "lowerLimit": "SFC",
-        "upperLimit": "FL 095",
-        "verticalLimitsExtracted": true,
-        "verticalLimitNotice": null,
-        "sourcePdf": "https://www.sia.aviation-civile.gouv.fr/documents/download/f/d/15082867/",
-        "sourcePage": "https://www.sia.aviation-civile.gouv.fr/documents/supaip/aip/id/6",
-        "sourcePageNumber": 7,
-        "dataScope": "auto-sia",
-        "geometrySource": "automatic-layout-v3",
-        "geometryConfidence": "medium",
-        "geometryWarnings": [
-          "Exclusion interne non découpée: contour extérieur affiché par prudence."
-        ],
-        "sourceFingerprint": "cd7f048e552abf70d19d",
-        "parserVersion": "capclair-supaip-parser-3.0.3",
-        "frequency": "PROVENCE INFO : 132,305 MHz 126,260 MHz | CLERMONT INFO : 119,375 MHz | LYON INFO : 135,530 MHz 135,200 MHz | ORANGE APP : 118,925 MHz"
-      },
-      "geometry": {
-        "type": "Polygon",
-        "coordinates": [
-          [
-            [
-              5.4344444,
-              45.2458333
-            ],
-            [
-              5.4047222,
-              44.83
-            ],
-            [
-              5.8338889,
-              44.8161111
-            ],
-            [
-              5.9322222,
-              45.0172222
-            ],
-            [
-              6.0072222,
-              45.225
-            ],
-            [
-              5.83,
-              45.2677778
-            ],
-            [
-              5.7130556,
-              45.3205556
-            ],
-            [
-              5.6175,
-              45.3125
-            ],
-            [
-              5.5983333,
-              45.2866667
-            ],
-            [
-              5.5602778,
-              45.27
-            ],
-            [
-              5.4344444,
-              45.2458333
-            ]
-          ]
-        ]
-      }
-    },
-    {
-      "type": "Feature",
-      "id": "207-26-zrt-rone-3-bravo",
-      "properties": {
-        "id": "207-26-zrt-rone-3-bravo",
-        "name": "ZRT RONE 3 BRAVO",
-        "zoneType": "ZRT",
-        "beta": true,
-        "supAip": "207/26",
-        "title": "Annulé le 14/10/2026 création de 9 zones réglementées temporaires (ZRT) pour l'exercice PERSEE dans la région Sud-Est",
-        "validFrom": "2026-09-28T00:00:00Z",
-        "validTo": "2026-10-14T23:59:59Z",
-        "activationMode": "notam",
-        "activationText": "Prévision d'activation à J-1 Les mercredi, samedi et dimanche entre 10h00 et 16h30 activation limitée sur 1 créneau d'une heure. ZRT RONE 1 - Du 28 septembre 2026 à 0000 au 16 octobre 2026 à 2359 - Activable - 1 créneau de 2H par jour et 2 créneaux de 2H par nuit ZRT RONE 2 - Du 28 septembre 2026 à 0000 au 13 octobre 2026 à 2359 - Activable - 1 créneau de 2H par jour et 2 créneaux de 2H par nuit ZRT RONE 3 ALPHA / ZRT RONE 3 BRAVO / ZRT RONE 4 / ZRT MAQUIS 1 / ZRT MAQUIS 2 / ZRT MAQUIS 3 / ZRT APT - Du 28 septembre 2026 à 0000 au 16 octobre 2026 à 2359 - Activable - 2 créneaux de 2h par jour et par nuit",
-        "lowerLimit": "SFC",
-        "upperLimit": "FL 065",
-        "verticalLimitsExtracted": true,
-        "verticalLimitNotice": null,
-        "sourcePdf": "https://www.sia.aviation-civile.gouv.fr/documents/download/f/d/15082867/",
-        "sourcePage": "https://www.sia.aviation-civile.gouv.fr/documents/supaip/aip/id/6",
-        "sourcePageNumber": 7,
-        "dataScope": "auto-sia",
-        "geometrySource": "automatic-layout-v3",
-        "geometryConfidence": "medium",
-        "geometryWarnings": [
-          "Exclusion interne non découpée: contour extérieur affiché par prudence."
-        ],
-        "sourceFingerprint": "cd7f048e552abf70d19d",
-        "parserVersion": "capclair-supaip-parser-3.0.3",
-        "frequency": "PROVENCE INFO : 132,305 MHz 126,260 MHz | CLERMONT INFO : 119,375 MHz | LYON INFO : 135,530 MHz 135,200 MHz | ORANGE APP : 118,925 MHz"
-      },
-      "geometry": {
-        "type": "Polygon",
-        "coordinates": [
-          [
-            [
-              5.1344444,
-              45.1863889
-            ],
-            [
-              5.1972222,
-              45.0661111
-            ],
-            [
-              5.1013889,
-              44.9308333
-            ],
-            [
-              5.21,
-              44.8672222
-            ],
-            [
-              5.4047222,
-              44.83
-            ],
-            [
-              5.4336111,
-              45.2444444
-            ],
-            [
-              5.1344444,
-              45.1863889
-            ]
-          ]
-        ]
-      }
-    },
-    {
-      "type": "Feature",
-      "id": "207-26-zrt-rone-3-alpha",
-      "properties": {
-        "id": "207-26-zrt-rone-3-alpha",
-        "name": "ZRT RONE 3 ALPHA",
-        "zoneType": "ZRT",
-        "beta": true,
-        "supAip": "207/26",
-        "title": "Annulé le 14/10/2026 création de 9 zones réglementées temporaires (ZRT) pour l'exercice PERSEE dans la région Sud-Est",
-        "validFrom": "2026-09-28T00:00:00Z",
-        "validTo": "2026-10-14T23:59:59Z",
-        "activationMode": "notam",
-        "activationText": "Prévision d'activation à J-1 Les mercredi, samedi et dimanche entre 10h00 et 16h30 activation limitée sur 1 créneau d'une heure. ZRT RONE 1 - Du 28 septembre 2026 à 0000 au 16 octobre 2026 à 2359 - Activable - 1 créneau de 2H par jour et 2 créneaux de 2H par nuit ZRT RONE 2 - Du 28 septembre 2026 à 0000 au 13 octobre 2026 à 2359 - Activable - 1 créneau de 2H par jour et 2 créneaux de 2H par nuit ZRT RONE 3 ALPHA / ZRT RONE 3 BRAVO / ZRT RONE 4 / ZRT MAQUIS 1 / ZRT MAQUIS 2 / ZRT MAQUIS 3 / ZRT APT - Du 28 septembre 2026 à 0000 au 16 octobre 2026 à 2359 - Activable - 2 créneaux de 2h par jour et par nuit",
-        "lowerLimit": "SFC",
-        "upperLimit": "3500 ft AMSL",
-        "verticalLimitsExtracted": true,
-        "verticalLimitNotice": null,
-        "sourcePdf": "https://www.sia.aviation-civile.gouv.fr/documents/download/f/d/15082867/",
-        "sourcePage": "https://www.sia.aviation-civile.gouv.fr/documents/supaip/aip/id/6",
-        "sourcePageNumber": 7,
-        "dataScope": "auto-sia",
-        "geometrySource": "automatic-layout-v3",
-        "geometryConfidence": "medium",
-        "geometryWarnings": [
-          "Exclusion interne non découpée: contour extérieur affiché par prudence."
-        ],
-        "sourceFingerprint": "cd7f048e552abf70d19d",
-        "parserVersion": "capclair-supaip-parser-3.0.3",
-        "frequency": "PROVENCE INFO : 132,305 MHz 126,260 MHz | CLERMONT INFO : 119,375 MHz | LYON INFO : 135,530 MHz 135,200 MHz | ORANGE APP : 118,925 MHz"
-      },
-      "geometry": {
-        "type": "Polygon",
-        "coordinates": [
-          [
-            [
-              4.8158333,
-              45.0952778
-            ],
-            [
-              5.1344444,
-              45.1863889
-            ],
-            [
-              5.1972222,
-              45.0661111
-            ],
-            [
-              5.1013889,
-              44.9308333
-            ],
-            [
-              4.8158333,
-              45.0952778
-            ]
-          ]
-        ]
-      }
-    },
-    {
-      "type": "Feature",
-      "id": "207-26-zrt-rone-2",
-      "properties": {
-        "id": "207-26-zrt-rone-2",
-        "name": "ZRT RONE 2",
-        "zoneType": "ZRT",
-        "beta": true,
-        "supAip": "207/26",
-        "title": "Annulé le 14/10/2026 création de 9 zones réglementées temporaires (ZRT) pour l'exercice PERSEE dans la région Sud-Est",
-        "validFrom": "2026-09-28T00:00:00Z",
-        "validTo": "2026-10-14T23:59:59Z",
-        "activationMode": "notam",
-        "activationText": "Prévision d'activation à J-1 Les mercredi, samedi et dimanche entre 10h00 et 16h30 activation limitée sur 1 créneau d'une heure. ZRT RONE 1 - Du 28 septembre 2026 à 0000 au 16 octobre 2026 à 2359 - Activable - 1 créneau de 2H par jour et 2 créneaux de 2H par nuit ZRT RONE 2 - Du 28 septembre 2026 à 0000 au 13 octobre 2026 à 2359 - Activable - 1 créneau de 2H par jour et 2 créneaux de 2H par nuit ZRT RONE 3 ALPHA / ZRT RONE 3 BRAVO / ZRT RONE 4 / ZRT MAQUIS 1 / ZRT MAQUIS 2 / ZRT MAQUIS 3 / ZRT APT - Du 28 septembre 2026 à 0000 au 16 octobre 2026 à 2359 - Activable - 2 créneaux de 2h par jour et par nuit",
-        "lowerLimit": "SFC",
-        "upperLimit": "3500 ft AMSL",
-        "verticalLimitsExtracted": true,
-        "verticalLimitNotice": null,
-        "sourcePdf": "https://www.sia.aviation-civile.gouv.fr/documents/download/f/d/15082867/",
-        "sourcePage": "https://www.sia.aviation-civile.gouv.fr/documents/supaip/aip/id/6",
-        "sourcePageNumber": 7,
-        "dataScope": "auto-sia",
-        "geometrySource": "automatic-layout-v3",
-        "geometryConfidence": "medium",
-        "geometryWarnings": [
-          "Exclusion interne non découpée: contour extérieur affiché par prudence.",
-          "Polygone invalide: Self-intersection[5.66920500842394 44.8214406796289]"
-        ],
-        "sourceFingerprint": "cd7f048e552abf70d19d",
-        "parserVersion": "capclair-supaip-parser-3.0.3",
-        "frequency": "PROVENCE INFO : 132,305 MHz 126,260 MHz | CLERMONT INFO : 119,375 MHz | LYON INFO : 135,530 MHz 135,200 MHz | ORANGE APP : 118,925 MHz"
-      },
-      "geometry": {
-        "type": "Polygon",
-        "coordinates": [
-          [
-            [
-              5.0227778,
-              44.665
-            ],
-            [
-              4.5097222,
-              44.6655556
-            ],
-            [
-              4.8158333,
-              45.0952778
-            ],
-            [
-              5.2102778,
-              44.8675
-            ],
-            [
-              5.0227778,
-              44.665
-            ]
-          ]
-        ]
-      }
-    },
-    {
-      "type": "Feature",
-      "id": "207-26-zrt-rone-1",
-      "properties": {
-        "id": "207-26-zrt-rone-1",
-        "name": "ZRT RONE 1",
-        "zoneType": "ZRT",
-        "beta": true,
-        "supAip": "207/26",
-        "title": "Annulé le 14/10/2026 création de 9 zones réglementées temporaires (ZRT) pour l'exercice PERSEE dans la région Sud-Est",
-        "validFrom": "2026-09-28T00:00:00Z",
-        "validTo": "2026-10-14T23:59:59Z",
-        "activationMode": "notam",
-        "activationText": "Prévision d'activation à J-1 Les mercredi, samedi et dimanche entre 10h00 et 16h30 activation limitée sur 1 créneau d'une heure. ZRT RONE 1 - Du 28 septembre 2026 à 0000 au 16 octobre 2026 à 2359 - Activable - 1 créneau de 2H par jour et 2 créneaux de 2H par nuit ZRT RONE 2 - Du 28 septembre 2026 à 0000 au 13 octobre 2026 à 2359 - Activable - 1 créneau de 2H par jour et 2 créneaux de 2H par nuit ZRT RONE 3 ALPHA / ZRT RONE 3 BRAVO / ZRT RONE 4 / ZRT MAQUIS 1 / ZRT MAQUIS 2 / ZRT MAQUIS 3 / ZRT APT - Du 28 septembre 2026 à 0000 au 16 octobre 2026 à 2359 - Activable - 2 créneaux de 2h par jour et par nuit",
-        "lowerLimit": "1000 ft ASFC",
-        "upperLimit": "3500 ft AMSL",
-        "verticalLimitsExtracted": true,
-        "verticalLimitNotice": null,
-        "sourcePdf": "https://www.sia.aviation-civile.gouv.fr/documents/download/f/d/15082867/",
-        "sourcePage": "https://www.sia.aviation-civile.gouv.fr/documents/supaip/aip/id/6",
-        "sourcePageNumber": 7,
-        "dataScope": "auto-sia",
-        "geometrySource": "automatic-layout-v3",
-        "geometryConfidence": "medium",
-        "geometryWarnings": [
-          "Exclusion interne non découpée: contour extérieur affiché par prudence.",
-          "Polygone invalide: Ring Self-intersection[5.1344444 45.1863889]"
-        ],
-        "sourceFingerprint": "cd7f048e552abf70d19d",
-        "parserVersion": "capclair-supaip-parser-3.0.3",
-        "frequency": "PROVENCE INFO : 132,305 MHz 126,260 MHz | CLERMONT INFO : 119,375 MHz | LYON INFO : 135,530 MHz 135,200 MHz | ORANGE APP : 118,925 MHz"
-      },
-      "geometry": {
-        "type": "Polygon",
-        "coordinates": [
-          [
-            [
-              4.83,
-              44.2977778
-            ],
-            [
-              4.8902778,
-              44.2991667
-            ],
-            [
-              4.9391667,
-              44.2925
-            ],
-            [
-              4.9163889,
-              44.4252778
-            ],
-            [
-              5.0230556,
-              44.665
-            ],
-            [
-              4.5080556,
-              44.6661111
-            ],
-            [
-              4.6375,
-              44.4366667
-            ],
-            [
-              4.6791667,
-              44.3822222
-            ],
-            [
-              4.83,
-              44.2977778
-            ]
-          ]
-        ]
-      }
-    },
-    {
-      "type": "Feature",
-      "id": "207-26-zrt-maquis-3",
-      "properties": {
-        "id": "207-26-zrt-maquis-3",
-        "name": "ZRT MAQUIS 3",
-        "zoneType": "ZRT",
-        "beta": true,
-        "supAip": "207/26",
-        "title": "Annulé le 14/10/2026 création de 9 zones réglementées temporaires (ZRT) pour l'exercice PERSEE dans la région Sud-Est",
-        "validFrom": "2026-09-28T00:00:00Z",
-        "validTo": "2026-10-14T23:59:59Z",
-        "activationMode": "notam",
-        "activationText": "Prévision d'activation à J-1 Les mercredi, samedi et dimanche entre 10h00 et 16h30 activation limitée sur 1 créneau d'une heure. ZRT RONE 1 - Du 28 septembre 2026 à 0000 au 16 octobre 2026 à 2359 - Activable - 1 créneau de 2H par jour et 2 créneaux de 2H par nuit ZRT RONE 2 - Du 28 septembre 2026 à 0000 au 13 octobre 2026 à 2359 - Activable - 1 créneau de 2H par jour et 2 créneaux de 2H par nuit ZRT RONE 3 ALPHA / ZRT RONE 3 BRAVO / ZRT RONE 4 / ZRT MAQUIS 1 / ZRT MAQUIS 2 / ZRT MAQUIS 3 / ZRT APT - Du 28 septembre 2026 à 0000 au 16 octobre 2026 à 2359 - Activable - 2 créneaux de 2h par jour et par nuit",
-        "lowerLimit": "SFC",
-        "upperLimit": "FL 095",
-        "verticalLimitsExtracted": true,
-        "verticalLimitNotice": null,
-        "sourcePdf": "https://www.sia.aviation-civile.gouv.fr/documents/download/f/d/15082867/",
-        "sourcePage": "https://www.sia.aviation-civile.gouv.fr/documents/supaip/aip/id/6",
-        "sourcePageNumber": 7,
-        "dataScope": "auto-sia",
-        "geometrySource": "automatic-layout-v3",
-        "geometryConfidence": "high",
-        "geometryWarnings": [],
-        "sourceFingerprint": "cd7f048e552abf70d19d",
-        "parserVersion": "capclair-supaip-parser-3.0.3",
-        "frequency": "PROVENCE INFO : 132,305 MHz 126,260 MHz | CLERMONT INFO : 119,375 MHz | LYON INFO : 135,530 MHz 135,200 MHz | ORANGE APP : 118,925 MHz"
-      },
-      "geometry": {
-        "type": "Polygon",
-        "coordinates": [
-          [
-            [
-              5.4641667,
-              44.4991667
-            ],
-            [
-              5.2102778,
-              44.8666667
-            ],
-            [
-              5.405,
-              44.8291667
-            ],
-            [
-              5.6691667,
-              44.8216667
-            ],
-            [
-              5.6886111,
-              44.7069444
-            ],
-            [
-              5.7616667,
-              44.6680556
-            ],
-            [
-              5.7033333,
-              44.6144444
-            ],
-            [
-              5.7102778,
-              44.5769444
-            ],
-            [
-              5.6738889,
-              44.4566667
-            ],
-            [
-              5.4641667,
-              44.4991667
-            ]
-          ]
-        ]
-      }
-    },
-    {
-      "type": "Feature",
-      "id": "207-26-zrt-maquis-2",
-      "properties": {
-        "id": "207-26-zrt-maquis-2",
-        "name": "ZRT MAQUIS 2",
-        "zoneType": "ZRT",
-        "beta": true,
-        "supAip": "207/26",
-        "title": "Annulé le 14/10/2026 création de 9 zones réglementées temporaires (ZRT) pour l'exercice PERSEE dans la région Sud-Est",
-        "validFrom": "2026-09-28T00:00:00Z",
-        "validTo": "2026-10-14T23:59:59Z",
-        "activationMode": "notam",
-        "activationText": "Prévision d'activation à J-1 Les mercredi, samedi et dimanche entre 10h00 et 16h30 activation limitée sur 1 créneau d'une heure. ZRT RONE 1 - Du 28 septembre 2026 à 0000 au 16 octobre 2026 à 2359 - Activable - 1 créneau de 2H par jour et 2 créneaux de 2H par nuit ZRT RONE 2 - Du 28 septembre 2026 à 0000 au 13 octobre 2026 à 2359 - Activable - 1 créneau de 2H par jour et 2 créneaux de 2H par nuit ZRT RONE 3 ALPHA / ZRT RONE 3 BRAVO / ZRT RONE 4 / ZRT MAQUIS 1 / ZRT MAQUIS 2 / ZRT MAQUIS 3 / ZRT APT - Du 28 septembre 2026 à 0000 au 16 octobre 2026 à 2359 - Activable - 2 créneaux de 2h par jour et par nuit",
-        "lowerLimit": "1000 ft ASFC",
-        "upperLimit": "FL 075",
-        "verticalLimitsExtracted": true,
-        "verticalLimitNotice": null,
-        "sourcePdf": "https://www.sia.aviation-civile.gouv.fr/documents/download/f/d/15082867/",
-        "sourcePage": "https://www.sia.aviation-civile.gouv.fr/documents/supaip/aip/id/6",
-        "sourcePageNumber": 7,
-        "dataScope": "auto-sia",
-        "geometrySource": "automatic-layout-v3",
-        "geometryConfidence": "medium",
-        "geometryWarnings": [
-          "Exclusion interne non découpée: contour extérieur affiché par prudence."
-        ],
-        "sourceFingerprint": "cd7f048e552abf70d19d",
-        "parserVersion": "capclair-supaip-parser-3.0.3",
-        "frequency": "PROVENCE INFO : 132,305 MHz 126,260 MHz | CLERMONT INFO : 119,375 MHz | LYON INFO : 135,530 MHz 135,200 MHz | ORANGE APP : 118,925 MHz"
-      },
-      "geometry": {
-        "type": "Polygon",
-        "coordinates": [
-          [
-            [
-              5.4641667,
-              44.4991667
-            ],
-            [
-              5.1683333,
-              44.3880556
-            ],
-            [
-              5.0316667,
-              44.3886111
-            ],
-            [
-              4.9163889,
-              44.4252778
-            ],
-            [
-              5.0230556,
-              44.665
-            ],
-            [
-              5.2088889,
-              44.8669444
-            ],
-            [
-              5.4641667,
-              44.4991667
-            ]
-          ]
-        ]
-      }
-    },
-    {
-      "type": "Feature",
-      "id": "207-26-zrt-maquis-1",
-      "properties": {
-        "id": "207-26-zrt-maquis-1",
-        "name": "ZRT MAQUIS 1",
-        "zoneType": "ZRT",
-        "beta": true,
-        "supAip": "207/26",
-        "title": "Annulé le 14/10/2026 création de 9 zones réglementées temporaires (ZRT) pour l'exercice PERSEE dans la région Sud-Est",
-        "validFrom": "2026-09-28T00:00:00Z",
-        "validTo": "2026-10-14T23:59:59Z",
-        "activationMode": "notam",
-        "activationText": "Prévision d'activation à J-1 Les mercredi, samedi et dimanche entre 10h00 et 16h30 activation limitée sur 1 créneau d'une heure. ZRT RONE 1 - Du 28 septembre 2026 à 0000 au 16 octobre 2026 à 2359 - Activable - 1 créneau de 2H par jour et 2 créneaux de 2H par nuit ZRT RONE 2 - Du 28 septembre 2026 à 0000 au 13 octobre 2026 à 2359 - Activable - 1 créneau de 2H par jour et 2 créneaux de 2H par nuit ZRT RONE 3 ALPHA / ZRT RONE 3 BRAVO / ZRT RONE 4 / ZRT MAQUIS 1 / ZRT MAQUIS 2 / ZRT MAQUIS 3 / ZRT APT - Du 28 septembre 2026 à 0000 au 16 octobre 2026 à 2359 - Activable - 2 créneaux de 2h par jour et par nuit",
-        "lowerLimit": "500 ft ASFC",
-        "upperLimit": "FL 075",
-        "verticalLimitsExtracted": true,
-        "verticalLimitNotice": null,
-        "sourcePdf": "https://www.sia.aviation-civile.gouv.fr/documents/download/f/d/15082867/",
-        "sourcePage": "https://www.sia.aviation-civile.gouv.fr/documents/supaip/aip/id/6",
-        "sourcePageNumber": 7,
-        "dataScope": "auto-sia",
-        "geometrySource": "automatic-layout-v3",
-        "geometryConfidence": "high",
-        "geometryWarnings": [],
-        "sourceFingerprint": "cd7f048e552abf70d19d",
-        "parserVersion": "capclair-supaip-parser-3.0.3",
-        "frequency": "PROVENCE INFO : 132,305 MHz 126,260 MHz | CLERMONT INFO : 119,375 MHz | LYON INFO : 135,530 MHz 135,200 MHz | ORANGE APP : 118,925 MHz"
-      },
-      "geometry": {
-        "type": "Polygon",
-        "coordinates": [
-          [
-            [
-              5.4641667,
-              44.4991667
-            ],
-            [
-              5.4361111,
-              44.3341667
-            ],
-            [
-              5.5711111,
-              44.3066667
-            ],
-            [
-              5.7322222,
-              44.2319444
-            ],
-            [
-              5.7316667,
-              44.1325
-            ],
-            [
-              5.5269444,
-              44.1066667
-            ],
-            [
-              5.3783333,
-              44.1716667
-            ],
-            [
-              5.1825,
-              44.2275
-            ],
-            [
-              5.1683333,
-              44.3880556
-            ],
-            [
-              5.4641667,
-              44.4991667
-            ]
-          ]
-        ]
-      }
-    },
-    {
-      "type": "Feature",
-      "id": "207-26-zrt-apt",
-      "properties": {
-        "id": "207-26-zrt-apt",
-        "name": "ZRT APT",
-        "zoneType": "ZRT",
-        "beta": true,
-        "supAip": "207/26",
-        "title": "Annulé le 14/10/2026 création de 9 zones réglementées temporaires (ZRT) pour l'exercice PERSEE dans la région Sud-Est",
-        "validFrom": "2026-09-28T00:00:00Z",
-        "validTo": "2026-10-14T23:59:59Z",
-        "activationMode": "notam",
-        "activationText": "Prévision d'activation à J-1 Les mercredi, samedi et dimanche entre 10h00 et 16h30 activation limitée sur 1 créneau d'une heure. ZRT RONE 1 - Du 28 septembre 2026 à 0000 au 16 octobre 2026 à 2359 - Activable - 1 créneau de 2H par jour et 2 créneaux de 2H par nuit ZRT RONE 2 - Du 28 septembre 2026 à 0000 au 13 octobre 2026 à 2359 - Activable - 1 créneau de 2H par jour et 2 créneaux de 2H par nuit ZRT RONE 3 ALPHA / ZRT RONE 3 BRAVO / ZRT RONE 4 / ZRT MAQUIS 1 / ZRT MAQUIS 2 / ZRT MAQUIS 3 / ZRT APT - Du 28 septembre 2026 à 0000 au 16 octobre 2026 à 2359 - Activable - 2 créneaux de 2h par jour et par nuit",
-        "lowerLimit": "500 ft ASFC",
-        "upperLimit": "FL 075",
-        "verticalLimitsExtracted": true,
-        "verticalLimitNotice": null,
-        "sourcePdf": "https://www.sia.aviation-civile.gouv.fr/documents/download/f/d/15082867/",
-        "sourcePage": "https://www.sia.aviation-civile.gouv.fr/documents/supaip/aip/id/6",
-        "sourcePageNumber": 7,
-        "dataScope": "auto-sia",
-        "geometrySource": "automatic-layout-v3",
-        "geometryConfidence": "high",
-        "geometryWarnings": [],
-        "sourceFingerprint": "cd7f048e552abf70d19d",
-        "parserVersion": "capclair-supaip-parser-3.0.3",
-        "frequency": "PROVENCE INFO : 132,305 MHz 126,260 MHz | CLERMONT INFO : 119,375 MHz | LYON INFO : 135,530 MHz 135,200 MHz | ORANGE APP : 118,925 MHz"
-      },
-      "geometry": {
-        "type": "Polygon",
-        "coordinates": [
-          [
-            [
-              5.4863889,
-              44.0302216
-            ],
-            [
-              5.4939644,
-              44.0300431
-            ],
-            [
-              5.5015073,
-              44.0295082
-            ],
-            [
-              5.5089852,
-              44.0286192
-            ],
-            [
-              5.5163659,
-              44.0273801
-            ],
-            [
-              5.5236178,
-              44.0257961
-            ],
-            [
-              5.5307096,
-              44.023874
-            ],
-            [
-              5.5376108,
-              44.021622
-            ],
-            [
-              5.5442919,
-              44.01905
-            ],
-            [
-              5.5507242,
-              44.0161689
-            ],
-            [
-              5.55688,
-              44.012991
-            ],
-            [
-              5.5627329,
-              44.0095301
-            ],
-            [
-              5.5682579,
-              44.0058011
-            ],
-            [
-              5.5734312,
-              44.0018199
-            ],
-            [
-              5.5782308,
-              43.9976036
-            ],
-            [
-              5.5826361,
-              43.9931704
-            ],
-            [
-              5.5866284,
-              43.9885392
-            ],
-            [
-              5.5901904,
-              43.98373
-            ],
-            [
-              5.5933072,
-              43.9787634
-            ],
-            [
-              5.5959653,
-              43.9736607
-            ],
-            [
-              5.5981537,
-              43.9684437
-            ],
-            [
-              5.5998629,
-              43.9631349
-            ],
-            [
-              5.6010858,
-              43.9577569
-            ],
-            [
-              5.6018173,
-              43.9523329
-            ],
-            [
-              5.6020543,
-              43.9468861
-            ],
-            [
-              5.6017961,
-              43.9414398
-            ],
-            [
-              5.6010438,
-              43.9360173
-            ],
-            [
-              5.5998009,
-              43.9306418
-            ],
-            [
-              5.5980726,
-              43.9253363
-            ],
-            [
-              5.5958667,
-              43.9201236
-            ],
-            [
-              5.5931926,
-              43.9150259
-            ],
-            [
-              5.5900619,
-              43.910065
-            ],
-            [
-              5.586488,
-              43.9052621
-            ],
-            [
-              5.5824864,
-              43.9006378
-            ],
-            [
-              5.5780743,
-              43.8962118
-            ],
-            [
-              5.5732706,
-              43.8920031
-            ],
-            [
-              5.5680958,
-              43.8880295
-            ],
-            [
-              5.5625722,
-              43.884308
-            ],
-            [
-              5.5567234,
-              43.8808546
-            ],
-            [
-              5.5505745,
-              43.877684
-            ],
-            [
-              5.5441516,
-              43.8748097
-            ],
-            [
-              5.5374823,
-              43.872244
-            ],
-            [
-              5.530595,
-              43.8699978
-            ],
-            [
-              5.5235191,
-              43.8680808
-            ],
-            [
-              5.5162849,
-              43.866501
-            ],
-            [
-              5.5089232,
-              43.8652652
-            ],
-            [
-              5.5014653,
-              43.8643787
-            ],
-            [
-              5.4939432,
-              43.8638453
-            ],
-            [
-              5.4863889,
-              43.8636673
-            ],
-            [
-              5.4788346,
-              43.8638453
-            ],
-            [
-              5.4713124,
-              43.8643787
-            ],
-            [
-              5.4638546,
-              43.8652652
-            ],
-            [
-              5.4564929,
-              43.866501
-            ],
-            [
-              5.4492587,
-              43.8680808
-            ],
-            [
-              5.4421828,
-              43.8699978
-            ],
-            [
-              5.4352955,
-              43.872244
-            ],
-            [
-              5.4286262,
-              43.8748097
-            ],
-            [
-              5.4222033,
-              43.877684
-            ],
-            [
-              5.4160543,
-              43.8808546
-            ],
-            [
-              5.4102056,
-              43.884308
-            ],
-            [
-              5.404682,
-              43.8880295
-            ],
-            [
-              5.3995072,
-              43.8920031
-            ],
-            [
-              5.3947035,
-              43.8962118
-            ],
-            [
-              5.3902913,
-              43.9006378
-            ],
-            [
-              5.3862898,
-              43.9052621
-            ],
-            [
-              5.3827159,
-              43.910065
-            ],
-            [
-              5.3795852,
-              43.9150259
-            ],
-            [
-              5.3769111,
-              43.9201236
-            ],
-            [
-              5.3747051,
-              43.9253363
-            ],
-            [
-              5.3729769,
-              43.9306418
-            ],
-            [
-              5.3717339,
-              43.9360173
-            ],
-            [
-              5.3709817,
-              43.9414398
-            ],
-            [
-              5.3707234,
-              43.9468861
-            ],
-            [
-              5.3709605,
-              43.9523329
-            ],
-            [
-              5.371692,
-              43.9577569
-            ],
-            [
-              5.3729149,
-              43.9631349
-            ],
-            [
-              5.3746241,
-              43.9684437
-            ],
-            [
-              5.3768124,
-              43.9736607
-            ],
-            [
-              5.3794706,
-              43.9787634
-            ],
-            [
-              5.3825874,
-              43.98373
-            ],
-            [
-              5.3861494,
-              43.9885392
-            ],
-            [
-              5.3901416,
-              43.9931704
-            ],
-            [
-              5.3945469,
-              43.9976036
-            ],
-            [
-              5.3993466,
-              44.0018199
-            ],
-            [
-              5.4045199,
-              44.0058011
-            ],
-            [
-              5.4100449,
-              44.0095301
-            ],
-            [
-              5.4158978,
-              44.012991
-            ],
-            [
-              5.4220536,
-              44.0161689
-            ],
-            [
-              5.4284859,
-              44.01905
-            ],
-            [
-              5.435167,
-              44.021622
-            ],
-            [
-              5.4420682,
-              44.023874
-            ],
-            [
-              5.44916,
-              44.0257961
-            ],
-            [
-              5.4564119,
-              44.0273801
-            ],
-            [
-              5.4637926,
-              44.0286192
-            ],
-            [
-              5.4712705,
-              44.0295082
-            ],
-            [
-              5.4788134,
-              44.0300431
-            ],
-            [
-              5.4863889,
-              44.0302216
-            ]
-          ]
-        ]
-      }
-    },
-    {
-      "type": "Feature",
       "id": "207-25-zrt-zdt-lfdb4",
       "properties": {
         "id": "207-25-zrt-zdt-lfdb4",
@@ -9871,114 +8899,6 @@
             [
               1.0561111,
               49.4188889
-            ]
-          ]
-        ]
-      }
-    },
-    {
-      "type": "Feature",
-      "id": "176-25-zrt-drone-region-sud-de-chartres",
-      "properties": {
-        "id": "176-25-zrt-drone-region-sud-de-chartres",
-        "name": "ZRT DRONE REGION SUD DE CHARTRES",
-        "zoneType": "ZRT",
-        "beta": true,
-        "supAip": "176/25",
-        "title": "Création d’une Zone Réglementée Temporaire (ZRT) au profit de vols hors vue d’aéronefs sans équipage à bord dans la région Sud de Chartres",
-        "validFrom": "2025-10-16T00:00:00Z",
-        "validTo": "2026-10-14T23:59:59Z",
-        "activationMode": "notam",
-        "activationText": "ZRT activable par NOTAM avec un préavis minimum de 48 heures : SR-30 - SS+30",
-        "lowerLimit": "SFC",
-        "upperLimit": "500 ft ASFC",
-        "verticalLimitsExtracted": true,
-        "verticalLimitNotice": null,
-        "sourcePdf": "https://www.sia.aviation-civile.gouv.fr/documents/download/f/d/14989135/",
-        "sourcePage": "https://www.sia.aviation-civile.gouv.fr/documents/supaip/aip/id/6",
-        "sourcePageNumber": 2,
-        "dataScope": "auto-sia",
-        "geometrySource": "automatic-layout-v3",
-        "geometryConfidence": "medium",
-        "geometryWarnings": [
-          "Contour fermé automatiquement entre la dernière et la première coordonnée.",
-          "Exclusion interne non découpée: contour extérieur affiché par prudence."
-        ],
-        "sourceFingerprint": "9acdc47ef774c3573376",
-        "parserVersion": "capclair-supaip-parser-3.0.3",
-        "frequency": "SEINE INFO : 127.815 MHz (pendant HOR ATS)"
-      },
-      "geometry": {
-        "type": "Polygon",
-        "coordinates": [
-          [
-            [
-              1.8486111,
-              48.3172222
-            ],
-            [
-              1.8505556,
-              48.3108333
-            ],
-            [
-              1.6475,
-              48.2577778
-            ],
-            [
-              1.4494444,
-              48.2055556
-            ],
-            [
-              1.4147222,
-              48.2033333
-            ],
-            [
-              1.4152778,
-              48.2463889
-            ],
-            [
-              1.4333333,
-              48.2955556
-            ],
-            [
-              1.4858333,
-              48.2866667
-            ],
-            [
-              1.5716667,
-              48.2566667
-            ],
-            [
-              1.5577778,
-              48.2519444
-            ],
-            [
-              1.4505556,
-              48.2833333
-            ],
-            [
-              1.4277778,
-              48.2463889
-            ],
-            [
-              1.435,
-              48.2147222
-            ],
-            [
-              1.4730556,
-              48.2302778
-            ],
-            [
-              1.66,
-              48.2763889
-            ],
-            [
-              1.7772222,
-              48.31
-            ],
-            [
-              1.8486111,
-              48.3172222
             ]
           ]
         ]
@@ -19868,541 +18788,6 @@
             [
               1.3586111,
               47.7494444
-            ]
-          ]
-        ]
-      }
-    },
-    {
-      "type": "Feature",
-      "id": "093-26-zrt-lourdes",
-      "properties": {
-        "id": "093-26-zrt-lourdes",
-        "name": "ZRT LOURDES",
-        "zoneType": "ZRT",
-        "beta": true,
-        "supAip": "093/26",
-        "title": "Création d’une Zone Réglementée Temporaire autour de Lourdes (65)",
-        "validFrom": "2026-05-22T00:00:00Z",
-        "validTo": "2026-10-10T23:59:59Z",
-        "activationMode": "notam",
-        "activationText": "ZRT LOURDES - Du 22 mai 2026 au 24 mai 2026 H24 Activable par NOTAM avec préavis de 48 h - Du 12 août 2026 au 17 août 2026 H24 Activable par NOTAM avec préavis de 48 h - Du 07 octobre 2026 au 10 octobre 2026 H24 Activable par NOTAM avec préavis de 48 h",
-        "lowerLimit": "SFC",
-        "upperLimit": "5500 ft AMSL",
-        "verticalLimitsExtracted": true,
-        "verticalLimitNotice": null,
-        "sourcePdf": "https://www.sia.aviation-civile.gouv.fr/documents/download/f/d/15049516/",
-        "sourcePage": "https://www.sia.aviation-civile.gouv.fr/documents/supaip/aip/id/6",
-        "sourcePageNumber": 2,
-        "dataScope": "auto-sia",
-        "geometrySource": "automatic-layout-v3",
-        "geometryConfidence": "medium",
-        "geometryWarnings": [
-          "Exclusion interne non découpée: contour extérieur affiché par prudence."
-        ],
-        "sourceFingerprint": "f0f558808a4da83deccb",
-        "parserVersion": "capclair-supaip-parser-3.0.3",
-        "frequency": "LOURDES TWR : 119,050 MHz"
-      },
-      "geometry": {
-        "type": "Polygon",
-        "coordinates": [
-          [
-            [
-              -0.1225,
-              43.1338889
-            ],
-            [
-              -0.1261962,
-              43.1311848
-            ],
-            [
-              -0.1295486,
-              43.1282504
-            ],
-            [
-              -0.1326866,
-              43.1251925
-            ],
-            [
-              -0.1356016,
-              43.1220193
-            ],
-            [
-              -0.1382858,
-              43.1187394
-            ],
-            [
-              -0.1407319,
-              43.1153618
-            ],
-            [
-              -0.1429333,
-              43.1118957
-            ],
-            [
-              -0.144884,
-              43.1083506
-            ],
-            [
-              -0.1465788,
-              43.104736
-            ],
-            [
-              -0.1480131,
-              43.1010618
-            ],
-            [
-              -0.1491831,
-              43.097338
-            ],
-            [
-              -0.1500855,
-              43.0935748
-            ],
-            [
-              -0.1507181,
-              43.0897823
-            ],
-            [
-              -0.1510791,
-              43.0859709
-            ],
-            [
-              -0.1511675,
-              43.082151
-            ],
-            [
-              -0.1509834,
-              43.0783328
-            ],
-            [
-              -0.150527,
-              43.0745269
-            ],
-            [
-              -0.1497999,
-              43.0707435
-            ],
-            [
-              -0.1488039,
-              43.0669929
-            ],
-            [
-              -0.1475419,
-              43.0632853
-            ],
-            [
-              -0.1460172,
-              43.0596308
-            ],
-            [
-              -0.1442342,
-              43.0560393
-            ],
-            [
-              -0.1421977,
-              43.0525206
-            ],
-            [
-              -0.1399132,
-              43.0490841
-            ],
-            [
-              -0.137387,
-              43.0457392
-            ],
-            [
-              -0.134626,
-              43.042495
-            ],
-            [
-              -0.1316377,
-              43.0393604
-            ],
-            [
-              -0.1284303,
-              43.0363437
-            ],
-            [
-              -0.1250124,
-              43.0334532
-            ],
-            [
-              -0.1213934,
-              43.0306967
-            ],
-            [
-              -0.1175831,
-              43.0280817
-            ],
-            [
-              -0.113592,
-              43.0256153
-            ],
-            [
-              -0.1094307,
-              43.0233041
-            ],
-            [
-              -0.1051106,
-              43.0211544
-            ],
-            [
-              -0.1006434,
-              43.0191721
-            ],
-            [
-              -0.0960413,
-              43.0173626
-            ],
-            [
-              -0.0913167,
-              43.0157306
-            ],
-            [
-              -0.0864825,
-              43.0142807
-            ],
-            [
-              -0.0815517,
-              43.0130168
-            ],
-            [
-              -0.0765376,
-              43.0119422
-            ],
-            [
-              -0.071454,
-              43.01106
-            ],
-            [
-              -0.0663145,
-              43.0103724
-            ],
-            [
-              -0.0611331,
-              43.0098814
-            ],
-            [
-              -0.0559238,
-              43.0095883
-            ],
-            [
-              -0.0507007,
-              43.0094939
-            ],
-            [
-              -0.045478,
-              43.0095984
-            ],
-            [
-              -0.0402697,
-              43.0099016
-            ],
-            [
-              -0.0350901,
-              43.0104026
-            ],
-            [
-              -0.0299531,
-              43.0111001
-            ],
-            [
-              -0.0248727,
-              43.0119922
-            ],
-            [
-              -0.0198626,
-              43.0130764
-            ],
-            [
-              -0.0149363,
-              43.0143499
-            ],
-            [
-              -0.0101073,
-              43.0158091
-            ],
-            [
-              -0.0053887,
-              43.0174502
-            ],
-            [
-              -0.0007931,
-              43.0192687
-            ],
-            [
-              0.0036669,
-              43.0212596
-            ],
-            [
-              0.0079792,
-              43.0234176
-            ],
-            [
-              0.0121321,
-              43.0257368
-            ],
-            [
-              0.0161144,
-              43.0282109
-            ],
-            [
-              0.0199152,
-              43.0308333
-            ],
-            [
-              0.0235242,
-              43.0335968
-            ],
-            [
-              0.0269316,
-              43.0364939
-            ],
-            [
-              0.0301281,
-              43.0395167
-            ],
-            [
-              0.033105,
-              43.0426572
-            ],
-            [
-              0.0358543,
-              43.0459067
-            ],
-            [
-              0.0383684,
-              43.0492564
-            ],
-            [
-              0.0406404,
-              43.0526973
-            ],
-            [
-              0.0426642,
-              43.05622
-            ],
-            [
-              0.0444342,
-              43.0598149
-            ],
-            [
-              0.0459456,
-              43.0634724
-            ],
-            [
-              0.0469444,
-              43.0672222
-            ],
-            [
-              0.0158333,
-              43.0722222
-            ],
-            [
-              0.0166796,
-              43.0747211
-            ],
-            [
-              0.0171594,
-              43.077271
-            ],
-            [
-              0.0174589,
-              43.0798357
-            ],
-            [
-              0.0175771,
-              43.0824082
-            ],
-            [
-              0.0175139,
-              43.0849817
-            ],
-            [
-              0.0172692,
-              43.0875495
-            ],
-            [
-              0.0168438,
-              43.0901046
-            ],
-            [
-              0.0162387,
-              43.0926404
-            ],
-            [
-              0.0154555,
-              43.09515
-            ],
-            [
-              0.0144963,
-              43.0976268
-            ],
-            [
-              0.0133637,
-              43.1000643
-            ],
-            [
-              0.0120605,
-              43.1024559
-            ],
-            [
-              0.0105903,
-              43.1047953
-            ],
-            [
-              0.0089569,
-              43.1070764
-            ],
-            [
-              0.0071646,
-              43.1092929
-            ],
-            [
-              0.0052182,
-              43.1114392
-            ],
-            [
-              0.0031229,
-              43.1135093
-            ],
-            [
-              0.0008842,
-              43.1154979
-            ],
-            [
-              -0.001492,
-              43.1173997
-            ],
-            [
-              -0.0039993,
-              43.1192095
-            ],
-            [
-              -0.0066311,
-              43.1209227
-            ],
-            [
-              -0.0093805,
-              43.1225346
-            ],
-            [
-              -0.01224,
-              43.1240409
-            ],
-            [
-              -0.0152022,
-              43.1254377
-            ],
-            [
-              -0.0182592,
-              43.1267212
-            ],
-            [
-              -0.0214027,
-              43.127888
-            ],
-            [
-              -0.0246246,
-              43.128935
-            ],
-            [
-              -0.0279161,
-              43.1298595
-            ],
-            [
-              -0.0312686,
-              43.1306589
-            ],
-            [
-              -0.0346732,
-              43.1313312
-            ],
-            [
-              -0.0381207,
-              43.1318745
-            ],
-            [
-              -0.0416021,
-              43.1322875
-            ],
-            [
-              -0.045108,
-              43.1325689
-            ],
-            [
-              -0.0486291,
-              43.1327182
-            ],
-            [
-              -0.0521561,
-              43.1327348
-            ],
-            [
-              -0.0556796,
-              43.1326187
-            ],
-            [
-              -0.0591902,
-              43.1323702
-            ],
-            [
-              -0.0626785,
-              43.13199
-            ],
-            [
-              -0.0661354,
-              43.1314792
-            ],
-            [
-              -0.0695515,
-              43.130839
-            ],
-            [
-              -0.0729179,
-              43.1300711
-            ],
-            [
-              -0.0762255,
-              43.1291777
-            ],
-            [
-              -0.0794655,
-              43.1281611
-            ],
-            [
-              -0.0826295,
-              43.1270239
-            ],
-            [
-              -0.0857088,
-              43.1257693
-            ],
-            [
-              -0.0886955,
-              43.1244005
-            ],
-            [
-              -0.0915814,
-              43.1229212
-            ],
-            [
-              -0.094359,
-              43.1213353
-            ],
-            [
-              -0.0970209,
-              43.119647
-            ],
-            [
-              -0.0994444,
-              43.1177778
-            ],
-            [
-              -0.1225,
-              43.1338889
             ]
           ]
         ]
@@ -52293,8 +50678,8 @@
       }
     }
   ],
-  "generatedAt": "2026-10-14T21:47:03Z",
-  "datasetGeneratedAt": "2026-10-14T21:47:03Z",
-  "datasetRevision": "2a1a76f190d9c9477fe468e988b4fc74cface45d4be6013c272c783bcf6c2c8a",
-  "businessContentSha256": "2a1a76f190d9c9477fe468e988b4fc74cface45d4be6013c272c783bcf6c2c8a"
+  "generatedAt": "2026-10-15T04:50:22Z",
+  "datasetGeneratedAt": "2026-10-15T04:50:22Z",
+  "datasetRevision": "37eca05c308cb990dd3ac01952403ae65d6513a9e3a72009828b27ee91b381fc",
+  "businessContentSha256": "37eca05c308cb990dd3ac01952403ae65d6513a9e3a72009828b27ee91b381fc"
 }
