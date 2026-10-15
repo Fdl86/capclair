@@ -1,9 +1,9 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-10-15T04:50:22Z",
-  "datasetGeneratedAt": "2026-10-15T04:50:22Z",
-  "datasetRevision": "37eca05c308cb990dd3ac01952403ae65d6513a9e3a72009828b27ee91b381fc",
-  "businessContentSha256": "37eca05c308cb990dd3ac01952403ae65d6513a9e3a72009828b27ee91b381fc",
+  "generatedAt": "2026-10-15T11:40:49Z",
+  "datasetGeneratedAt": "2026-10-15T11:40:49Z",
+  "datasetRevision": "8a917f4ab587674721d175971fe557265b3ac90ad113ac09f33b79ebfee10304",
+  "businessContentSha256": "8a917f4ab587674721d175971fe557265b3ac90ad113ac09f33b79ebfee10304",
   "sourceUrl": "https://www.sia.aviation-civile.gouv.fr/documents/supaip/aip/id/6",
   "parserVersion": "capclair-supaip-parser-3.0.3",
   "publications": [
@@ -99,9 +99,9 @@
       "expectedNamedGeometryCount": 2,
       "declaredZoneCount": 2,
       "missingVerticalCount": 0,
-      "status": "conservative",
+      "status": "complete",
       "partial": false,
-      "conservative": true,
+      "conservative": false,
       "fallback": false,
       "safetyFallbackFeatureCount": 0,
       "safetyFallbackFeatureNames": [],
@@ -1890,20 +1890,20 @@
   "publicationsWithGeometry": 78,
   "featuresWithVerticalLimits": 432,
   "featuresWithoutVerticalLimits": 2,
-  "geoJsonSha256": "f338f5f9af52e784e7dc6d5493e701d27ee81ef7115ea9156c5101f0b6ecd693",
+  "geoJsonSha256": "9e7c1c1ef73362a38e096b1182bc2153350cff2164dda474ee2cffc5f101099b",
   "geoJsonSize": 1526522,
   "files": {
     "data.geojson": {
-      "sha256": "f338f5f9af52e784e7dc6d5493e701d27ee81ef7115ea9156c5101f0b6ecd693",
+      "sha256": "9e7c1c1ef73362a38e096b1182bc2153350cff2164dda474ee2cffc5f101099b",
       "size": 1526522
     },
     "status.json": {
-      "sha256": "feea75f5b2e7638da725dccf51138486e1decc75b03225f8924eccd4fe8b4d64",
+      "sha256": "26e47717f987793cebff4cdcaf1ebc7524f42f8c3acce1d5ef68e87647f31842",
       "size": 3894
     },
     "unmapped.json": {
-      "sha256": "79fe70a44c95058a95abd4e74b840453e69beacf415797468f1246db5946e439",
-      "size": 70375
+      "sha256": "acb4938a3b7ed5f15f578b2d178fc993616fd1668cd303c6f6c81eb261aea5fa",
+      "size": 69602
     }
   },
   "legacyInvalidGeometryExceptions": [
