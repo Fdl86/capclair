@@ -1,9 +1,9 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-10-20T11:48:28Z",
-  "datasetGeneratedAt": "2026-10-20T11:48:28Z",
-  "datasetRevision": "ed07c4ae6113a7b0c4c3330b190863d115698d1caa030174b4063db0fc3bcade",
-  "businessContentSha256": "ed07c4ae6113a7b0c4c3330b190863d115698d1caa030174b4063db0fc3bcade",
+  "generatedAt": "2026-10-20T17:17:25Z",
+  "datasetGeneratedAt": "2026-10-20T17:17:25Z",
+  "datasetRevision": "d28305ca8f27d90602b0e9eb7777bcf5ae5c9f822e75e49fb1cc591dbc7734c4",
+  "businessContentSha256": "d28305ca8f27d90602b0e9eb7777bcf5ae5c9f822e75e49fb1cc591dbc7734c4",
   "sourceUrl": "https://www.sia.aviation-civile.gouv.fr/documents/supaip/aip/id/6",
   "parserVersion": "capclair-supaip-parser-3.0.3",
   "publications": [
@@ -1890,20 +1890,20 @@
   "publicationsWithGeometry": 78,
   "featuresWithVerticalLimits": 432,
   "featuresWithoutVerticalLimits": 2,
-  "geoJsonSha256": "e710b218ef945eb94c928b726b90fc39a42c0ee332cc850d458660cb2714843a",
+  "geoJsonSha256": "40de3ce7ad5c5359c8697847fa011d76de27ccf835706ed6ee9cb60d351832e3",
   "geoJsonSize": 1526522,
   "files": {
     "data.geojson": {
-      "sha256": "e710b218ef945eb94c928b726b90fc39a42c0ee332cc850d458660cb2714843a",
+      "sha256": "40de3ce7ad5c5359c8697847fa011d76de27ccf835706ed6ee9cb60d351832e3",
       "size": 1526522
     },
     "status.json": {
-      "sha256": "141120c9b778b60da70f07269b3f42528c7c0bafd90da3c12ae798bdb2d4b091",
+      "sha256": "e40af21027819fda3c80759a88fceb6912b49673d9f5ad81a678e1adf64574f9",
       "size": 3894
     },
     "unmapped.json": {
-      "sha256": "c9acba60f3318f9589a9d6751bda8660a0b8caaa4e0bf94472fd40accaa81c23",
-      "size": 75150
+      "sha256": "f1e253026f946cda24a1ba222e476a5cd7158278f4802abf802434a07713cf01",
+      "size": 75442
     }
   },
   "legacyInvalidGeometryExceptions": [
