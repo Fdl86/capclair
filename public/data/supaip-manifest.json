@@ -1,9 +1,9 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-10-21T21:48:37Z",
-  "datasetGeneratedAt": "2026-10-21T21:48:37Z",
-  "datasetRevision": "313dd5226148594e6aabd8b1140e7618ca87f036f4cb7a6cdbca57b28e5b5687",
-  "businessContentSha256": "313dd5226148594e6aabd8b1140e7618ca87f036f4cb7a6cdbca57b28e5b5687",
+  "generatedAt": "2026-10-22T05:00:02Z",
+  "datasetGeneratedAt": "2026-10-22T05:00:02Z",
+  "datasetRevision": "f52383e57ced700ba15e7dbceb261e28a826f4a3c476eb58940d101cc009c240",
+  "businessContentSha256": "f52383e57ced700ba15e7dbceb261e28a826f4a3c476eb58940d101cc009c240",
   "sourceUrl": "https://www.sia.aviation-civile.gouv.fr/documents/supaip/aip/id/6",
   "parserVersion": "capclair-supaip-parser-3.0.3",
   "publications": [
@@ -65,6 +65,25 @@
       "parserVersion": "capclair-supaip-parser-3.0.3"
     },
     {
+      "supAip": "232/26",
+      "title": "Création de Zones Réglementées Temporaires (ZRT) au profit de l'exercice TARANIS 26 en régions Centre, Bourgogne et Est",
+      "spatial": true,
+      "mappedGeometryCount": 16,
+      "expectedNamedGeometryCount": 18,
+      "declaredZoneCount": null,
+      "missingVerticalCount": 0,
+      "status": "partial",
+      "partial": true,
+      "conservative": false,
+      "fallback": false,
+      "safetyFallbackFeatureCount": 0,
+      "safetyFallbackFeatureNames": [],
+      "ignoredReferenceObjectCount": 3,
+      "sourcePdf": "https://www.sia.aviation-civile.gouv.fr/documents/download/f/d/15088564/",
+      "sourceFingerprint": "9cd25564c64f79a35170",
+      "parserVersion": "capclair-supaip-parser-3.0.3"
+    },
+    {
       "supAip": "232/24",
       "title": "Expérimentation : Création de 2 zones réglementées temporaires « ZRT 108 E4 et E5 » dans la région de Nîmes.",
       "spatial": true,
@@ -81,6 +100,44 @@
       "ignoredReferenceObjectCount": 0,
       "sourcePdf": "https://www.sia.aviation-civile.gouv.fr/documents/download/f/d/13739998/",
       "sourceFingerprint": "844fb76ef0d076854788",
+      "parserVersion": "capclair-supaip-parser-3.0.3"
+    },
+    {
+      "supAip": "231/26",
+      "title": "Création de Zones Réglementées Temporaires (ZRT) au profit de l'exercice RW MC COURSE 2026, en régions CENTRE et SUD-EST",
+      "spatial": true,
+      "mappedGeometryCount": 17,
+      "expectedNamedGeometryCount": 18,
+      "declaredZoneCount": null,
+      "missingVerticalCount": 0,
+      "status": "partial",
+      "partial": true,
+      "conservative": false,
+      "fallback": false,
+      "safetyFallbackFeatureCount": 0,
+      "safetyFallbackFeatureNames": [],
+      "ignoredReferenceObjectCount": 0,
+      "sourcePdf": "https://www.sia.aviation-civile.gouv.fr/documents/download/f/d/15088562/",
+      "sourceFingerprint": "7b100912f02621b038f1",
+      "parserVersion": "capclair-supaip-parser-3.0.3"
+    },
+    {
+      "supAip": "230/26",
+      "title": "Création d'une ZRT au profit de vols d'un aéronef sans équipage à bord, hors vue de jour, à Aubenas (07)",
+      "spatial": true,
+      "mappedGeometryCount": 1,
+      "expectedNamedGeometryCount": 1,
+      "declaredZoneCount": 1,
+      "missingVerticalCount": 0,
+      "status": "conservative",
+      "partial": false,
+      "conservative": true,
+      "fallback": false,
+      "safetyFallbackFeatureCount": 0,
+      "safetyFallbackFeatureNames": [],
+      "ignoredReferenceObjectCount": 0,
+      "sourcePdf": "https://www.sia.aviation-civile.gouv.fr/documents/download/f/d/15088560/",
+      "sourceFingerprint": "3b2bed236e22b6feaefa",
       "parserVersion": "capclair-supaip-parser-3.0.3"
     },
     {
@@ -1885,25 +1942,25 @@
       "parserVersion": "capclair-supaip-parser-3.0.3"
     }
   ],
-  "featureCount": 434,
-  "publicationCount": 114,
-  "publicationsWithGeometry": 78,
-  "featuresWithVerticalLimits": 432,
+  "featureCount": 468,
+  "publicationCount": 117,
+  "publicationsWithGeometry": 81,
+  "featuresWithVerticalLimits": 466,
   "featuresWithoutVerticalLimits": 2,
-  "geoJsonSha256": "95a5e8dd33750895d6b43e52673c5d41e865f8dd5b42d8e0465262926dc3d132",
-  "geoJsonSize": 1526522,
+  "geoJsonSha256": "2e68ae71bfae338ded07f56ca2573c2b9e34cef02fe1d9eac153f09bea0f98ec",
+  "geoJsonSize": 1641475,
   "files": {
     "data.geojson": {
-      "sha256": "95a5e8dd33750895d6b43e52673c5d41e865f8dd5b42d8e0465262926dc3d132",
-      "size": 1526522
+      "sha256": "2e68ae71bfae338ded07f56ca2573c2b9e34cef02fe1d9eac153f09bea0f98ec",
+      "size": 1641475
     },
     "status.json": {
-      "sha256": "5ac1200d50056e4d6e28957cd18523c567857af152b78bea7d0b376292e5263b",
+      "sha256": "33f3557c3c6802736eb3c5c141cc6f87d4d461a831f63903548c9642137add23",
       "size": 3894
     },
     "unmapped.json": {
-      "sha256": "6d0bffd169f387499180746eb343dd516e1b21aa6da9fb092be78872386ca8f5",
-      "size": 76902
+      "sha256": "9389514b58eb41c31f284d9b61f9af1e99cf45c55bbfffcf3a4e644bff4079b4",
+      "size": 81904
     }
   },
   "legacyInvalidGeometryExceptions": [

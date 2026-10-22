@@ -434,6 +434,1982 @@
     },
     {
       "type": "Feature",
+      "id": "232-26-zrt-nancy",
+      "properties": {
+        "id": "232-26-zrt-nancy",
+        "name": "ZRT NANCY",
+        "zoneType": "ZRT",
+        "beta": true,
+        "supAip": "232/26",
+        "title": "Création de Zones Réglementées Temporaires (ZRT) au profit de l'exercice TARANIS 26 en régions Centre, Bourgogne et Est",
+        "validFrom": "2026-12-01T00:00:00Z",
+        "validTo": "2026-12-10T23:59:59Z",
+        "activationMode": "schedule",
+        "activationText": "ZRT activables Prévision d'activation connue auprès de l'Airspace Manager à J-1 ouvré 10h00 UTC ZRT BROYE / ZRT ISSOUDUN - Du 01 décembre 2026 à 0700 au 02 décembre 2026 à 1600 - 2 créneaux de 3H max par jour - Du 05 décembre 2026 à 0700 au 06 décembre 2026 à 1600 - 2 créneaux de 3H max par jour - Du 08 décembre 2026 à 0700 au 09 décembre 2026 à 1600 - 2 créneaux de 3H max par jour ZRT BESANÇON / ZRT MONTLAIR - Le 02 décembre 2026 de 0800 à 2000 - 1 créneau de 3H max - Le 05 décembre 2026 de 0800 à 2000 - 1 créneau de 3H max - Le 08 décembre 2026 de 0800 à 2000 - 1 créneau de 3H max ZRT LONGVIC - Du 03 décembre 2026 au 04 décembre 2026 de 0600 à 2000 - 1 créneau de 3H max par jour ZRT BEAUNE - Le 04 décembre 2026 de 0600 à 2000 - 1 créneau de 3H max ZRT GUÉRET / ZRT CHÂTRE / ZRT MONTROND / ZRT CHARITÉ / ZRT AUTUN / ZRT MOULINS - Le 02 décembre 2026 de 0800 à 2000 - 1 créneau de 3H max...",
+        "lowerLimit": "SFC",
+        "upperLimit": "3600 ft AMSL",
+        "verticalLimitsExtracted": true,
+        "verticalLimitNotice": null,
+        "sourcePdf": "https://www.sia.aviation-civile.gouv.fr/documents/download/f/d/15088564/",
+        "sourcePage": "https://www.sia.aviation-civile.gouv.fr/documents/supaip/aip/id/6",
+        "sourcePageNumber": 5,
+        "dataScope": "auto-sia",
+        "geometrySource": "automatic-layout-v3",
+        "geometryConfidence": "high",
+        "geometryWarnings": [],
+        "sourceFingerprint": "9cd25564c64f79a35170",
+        "parserVersion": "capclair-supaip-parser-3.0.3",
+        "frequency": "CLERMONT INFO / APP : 122,225 MHz 119,375 MHz 133,725 MHz | LIMOGES INFO : 124,050 MHz | LIMOGES APP : 118,080 MHz | AQUITAINE INFO : 120,575 MHz | MONTLUÇON INFO : 118,405 MHz"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              5.9161111,
+              48.6622222
+            ],
+            [
+              5.9588889,
+              48.75
+            ],
+            [
+              5.9715949,
+              48.7492243
+            ],
+            [
+              5.984268,
+              48.7484411
+            ],
+            [
+              5.9968647,
+              48.7472366
+            ],
+            [
+              6.0093526,
+              48.7456138
+            ],
+            [
+              6.0216997,
+              48.743577
+            ],
+            [
+              6.0338744,
+              48.7411313
+            ],
+            [
+              6.0458455,
+              48.7382831
+            ],
+            [
+              6.0575823,
+              48.7350396
+            ],
+            [
+              6.0690549,
+              48.7314091
+            ],
+            [
+              6.0802339,
+              48.7274009
+            ],
+            [
+              6.0910908,
+              48.7230253
+            ],
+            [
+              6.1019444,
+              48.7186111
+            ],
+            [
+              6.0597222,
+              48.6286111
+            ],
+            [
+              6.0632428,
+              48.624998
+            ],
+            [
+              6.066368,
+              48.6212279
+            ],
+            [
+              6.0691943,
+              48.6173562
+            ],
+            [
+              6.0717142,
+              48.6133932
+            ],
+            [
+              6.073921,
+              48.6093494
+            ],
+            [
+              6.075809,
+              48.6052357
+            ],
+            [
+              6.0773731,
+              48.6010631
+            ],
+            [
+              6.0786093,
+              48.5968426
+            ],
+            [
+              6.0795143,
+              48.5925855
+            ],
+            [
+              6.0800858,
+              48.5883032
+            ],
+            [
+              6.0803224,
+              48.5840071
+            ],
+            [
+              6.0802236,
+              48.5797087
+            ],
+            [
+              6.0797897,
+              48.5754193
+            ],
+            [
+              6.0790218,
+              48.5711505
+            ],
+            [
+              6.0779223,
+              48.5669136
+            ],
+            [
+              6.076494,
+              48.5627199
+            ],
+            [
+              6.0747408,
+              48.5585805
+            ],
+            [
+              6.0726676,
+              48.5545064
+            ],
+            [
+              6.0702798,
+              48.5505086
+            ],
+            [
+              6.067584,
+              48.5465976
+            ],
+            [
+              6.0645873,
+              48.5427838
+            ],
+            [
+              6.0612978,
+              48.5390774
+            ],
+            [
+              6.0577242,
+              48.5354882
+            ],
+            [
+              6.0538763,
+              48.5320258
+            ],
+            [
+              6.0497642,
+              48.5286993
+            ],
+            [
+              6.0453988,
+              48.5255176
+            ],
+            [
+              6.0407919,
+              48.5224892
+            ],
+            [
+              6.0359558,
+              48.5196221
+            ],
+            [
+              6.0309032,
+              48.5169239
+            ],
+            [
+              6.0256477,
+              48.5144017
+            ],
+            [
+              6.0202032,
+              48.5120623
+            ],
+            [
+              6.0145843,
+              48.5099119
+            ],
+            [
+              6.0088057,
+              48.5079562
+            ],
+            [
+              6.0028829,
+              48.5062003
+            ],
+            [
+              5.9968317,
+              48.504649
+            ],
+            [
+              5.9902778,
+              48.5041667
+            ],
+            [
+              5.9427778,
+              48.4166667
+            ],
+            [
+              5.9300453,
+              48.4172877
+            ],
+            [
+              5.9173744,
+              48.4183224
+            ],
+            [
+              5.9047984,
+              48.419782
+            ],
+            [
+              5.8923498,
+              48.4216629
+            ],
+            [
+              5.8800603,
+              48.4239602
+            ],
+            [
+              5.8679615,
+              48.4266679
+            ],
+            [
+              5.8560844,
+              48.4297793
+            ],
+            [
+              5.8444596,
+              48.4332862
+            ],
+            [
+              5.833117,
+              48.4371797
+            ],
+            [
+              5.8220856,
+              48.4414499
+            ],
+            [
+              5.811394,
+              48.4460857
+            ],
+            [
+              5.8011111,
+              48.4511111
+            ],
+            [
+              5.8486111,
+              48.5383333
+            ],
+            [
+              5.8449951,
+              48.5419651
+            ],
+            [
+              5.8418986,
+              48.5458028
+            ],
+            [
+              5.8391085,
+              48.5497422
+            ],
+            [
+              5.8366327,
+              48.5537727
+            ],
+            [
+              5.834478,
+              48.5578832
+            ],
+            [
+              5.8326502,
+              48.5620626
+            ],
+            [
+              5.8311544,
+              48.5662994
+            ],
+            [
+              5.8299949,
+              48.5705822
+            ],
+            [
+              5.8291748,
+              48.5748991
+            ],
+            [
+              5.8286965,
+              48.5792385
+            ],
+            [
+              5.8285613,
+              48.5835886
+            ],
+            [
+              5.8287698,
+              48.5879373
+            ],
+            [
+              5.8293215,
+              48.5922729
+            ],
+            [
+              5.8302148,
+              48.5965835
+            ],
+            [
+              5.8314476,
+              48.6008574
+            ],
+            [
+              5.8330165,
+              48.6050828
+            ],
+            [
+              5.8349172,
+              48.6092483
+            ],
+            [
+              5.8371447,
+              48.6133424
+            ],
+            [
+              5.839693,
+              48.6173539
+            ],
+            [
+              5.8425552,
+              48.6212719
+            ],
+            [
+              5.8457234,
+              48.6250857
+            ],
+            [
+              5.8491892,
+              48.6287847
+            ],
+            [
+              5.8529431,
+              48.632359
+            ],
+            [
+              5.8569749,
+              48.6357987
+            ],
+            [
+              5.8612735,
+              48.6390943
+            ],
+            [
+              5.8658273,
+              48.6422369
+            ],
+            [
+              5.8706239,
+              48.6452179
+            ],
+            [
+              5.8756501,
+              48.6480291
+            ],
+            [
+              5.8808923,
+              48.6506627
+            ],
+            [
+              5.886336,
+              48.6531117
+            ],
+            [
+              5.8919664,
+              48.6553691
+            ],
+            [
+              5.8977681,
+              48.657429
+            ],
+            [
+              5.9037252,
+              48.6592856
+            ],
+            [
+              5.9098213,
+              48.6609338
+            ],
+            [
+              5.9161111,
+              48.6622222
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "232-26-zrt-moulins",
+      "properties": {
+        "id": "232-26-zrt-moulins",
+        "name": "ZRT MOULINS",
+        "zoneType": "ZRT",
+        "beta": true,
+        "supAip": "232/26",
+        "title": "Création de Zones Réglementées Temporaires (ZRT) au profit de l'exercice TARANIS 26 en régions Centre, Bourgogne et Est",
+        "validFrom": "2026-12-01T00:00:00Z",
+        "validTo": "2026-12-10T23:59:59Z",
+        "activationMode": "schedule",
+        "activationText": "ZRT activables Prévision d'activation connue auprès de l'Airspace Manager à J-1 ouvré 10h00 UTC ZRT BROYE / ZRT ISSOUDUN - Du 01 décembre 2026 à 0700 au 02 décembre 2026 à 1600 - 2 créneaux de 3H max par jour - Du 05 décembre 2026 à 0700 au 06 décembre 2026 à 1600 - 2 créneaux de 3H max par jour - Du 08 décembre 2026 à 0700 au 09 décembre 2026 à 1600 - 2 créneaux de 3H max par jour ZRT BESANÇON / ZRT MONTLAIR - Le 02 décembre 2026 de 0800 à 2000 - 1 créneau de 3H max - Le 05 décembre 2026 de 0800 à 2000 - 1 créneau de 3H max - Le 08 décembre 2026 de 0800 à 2000 - 1 créneau de 3H max ZRT LONGVIC - Du 03 décembre 2026 au 04 décembre 2026 de 0600 à 2000 - 1 créneau de 3H max par jour ZRT BEAUNE - Le 04 décembre 2026 de 0600 à 2000 - 1 créneau de 3H max ZRT GUÉRET / ZRT CHÂTRE / ZRT MONTROND / ZRT CHARITÉ / ZRT AUTUN / ZRT MOULINS - Le 02 décembre 2026 de 0800 à 2000 - 1 créneau de 3H max...",
+        "lowerLimit": "800 ft ASFC",
+        "upperLimit": "3500 ft AMSL",
+        "verticalLimitsExtracted": true,
+        "verticalLimitNotice": null,
+        "sourcePdf": "https://www.sia.aviation-civile.gouv.fr/documents/download/f/d/15088564/",
+        "sourcePage": "https://www.sia.aviation-civile.gouv.fr/documents/supaip/aip/id/6",
+        "sourcePageNumber": 4,
+        "dataScope": "auto-sia",
+        "geometrySource": "automatic-layout-v3",
+        "geometryConfidence": "high",
+        "geometryWarnings": [],
+        "sourceFingerprint": "9cd25564c64f79a35170",
+        "parserVersion": "capclair-supaip-parser-3.0.3",
+        "frequency": "CLERMONT INFO / APP : 122,225 MHz 119,375 MHz 133,725 MHz | LIMOGES INFO : 124,050 MHz | LIMOGES APP : 118,080 MHz | AQUITAINE INFO : 120,575 MHz | MONTLUÇON INFO : 118,405 MHz"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              3.325,
+              47.1347222
+            ],
+            [
+              3.6666667,
+              47.0772222
+            ],
+            [
+              3.6666667,
+              46.9577778
+            ],
+            [
+              3.2897222,
+              46.6463889
+            ],
+            [
+              2.9363889,
+              46.1777778
+            ],
+            [
+              2.5888889,
+              46.2597222
+            ],
+            [
+              3.0336111,
+              46.7191667
+            ],
+            [
+              3.0833333,
+              46.7513889
+            ],
+            [
+              3.2272222,
+              46.8377778
+            ],
+            [
+              3.3833333,
+              46.9833333
+            ],
+            [
+              3.325,
+              47.1347222
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "232-26-zrt-montrond",
+      "properties": {
+        "id": "232-26-zrt-montrond",
+        "name": "ZRT MONTROND",
+        "zoneType": "ZRT",
+        "beta": true,
+        "supAip": "232/26",
+        "title": "Création de Zones Réglementées Temporaires (ZRT) au profit de l'exercice TARANIS 26 en régions Centre, Bourgogne et Est",
+        "validFrom": "2026-12-01T00:00:00Z",
+        "validTo": "2026-12-10T23:59:59Z",
+        "activationMode": "schedule",
+        "activationText": "ZRT activables Prévision d'activation connue auprès de l'Airspace Manager à J-1 ouvré 10h00 UTC ZRT BROYE / ZRT ISSOUDUN - Du 01 décembre 2026 à 0700 au 02 décembre 2026 à 1600 - 2 créneaux de 3H max par jour - Du 05 décembre 2026 à 0700 au 06 décembre 2026 à 1600 - 2 créneaux de 3H max par jour - Du 08 décembre 2026 à 0700 au 09 décembre 2026 à 1600 - 2 créneaux de 3H max par jour ZRT BESANÇON / ZRT MONTLAIR - Le 02 décembre 2026 de 0800 à 2000 - 1 créneau de 3H max - Le 05 décembre 2026 de 0800 à 2000 - 1 créneau de 3H max - Le 08 décembre 2026 de 0800 à 2000 - 1 créneau de 3H max ZRT LONGVIC - Du 03 décembre 2026 au 04 décembre 2026 de 0600 à 2000 - 1 créneau de 3H max par jour ZRT BEAUNE - Le 04 décembre 2026 de 0600 à 2000 - 1 créneau de 3H max ZRT GUÉRET / ZRT CHÂTRE / ZRT MONTROND / ZRT CHARITÉ / ZRT AUTUN / ZRT MOULINS - Le 02 décembre 2026 de 0800 à 2000 - 1 créneau de 3H max...",
+        "lowerLimit": "800 ft ASFC",
+        "upperLimit": "3000 ft AMSL",
+        "verticalLimitsExtracted": true,
+        "verticalLimitNotice": null,
+        "sourcePdf": "https://www.sia.aviation-civile.gouv.fr/documents/download/f/d/15088564/",
+        "sourcePage": "https://www.sia.aviation-civile.gouv.fr/documents/supaip/aip/id/6",
+        "sourcePageNumber": 4,
+        "dataScope": "auto-sia",
+        "geometrySource": "automatic-layout-v3",
+        "geometryConfidence": "high",
+        "geometryWarnings": [],
+        "sourceFingerprint": "9cd25564c64f79a35170",
+        "parserVersion": "capclair-supaip-parser-3.0.3",
+        "frequency": "CLERMONT INFO / APP : 122,225 MHz 119,375 MHz 133,725 MHz | LIMOGES INFO : 124,050 MHz | LIMOGES APP : 118,080 MHz | AQUITAINE INFO : 120,575 MHz | MONTLUÇON INFO : 118,405 MHz"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              2.2494444,
+              46.7158333
+            ],
+            [
+              2.5580556,
+              46.9175
+            ],
+            [
+              2.7875,
+              46.9405556
+            ],
+            [
+              2.8263889,
+              47.0055556
+            ],
+            [
+              2.8216667,
+              47.0413889
+            ],
+            [
+              2.9763889,
+              47.0708333
+            ],
+            [
+              2.8944444,
+              46.8625
+            ],
+            [
+              2.4716667,
+              46.6055556
+            ],
+            [
+              2.2494444,
+              46.7158333
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "232-26-zrt-montlair",
+      "properties": {
+        "id": "232-26-zrt-montlair",
+        "name": "ZRT MONTLAIR",
+        "zoneType": "ZRT",
+        "beta": true,
+        "supAip": "232/26",
+        "title": "Création de Zones Réglementées Temporaires (ZRT) au profit de l'exercice TARANIS 26 en régions Centre, Bourgogne et Est",
+        "validFrom": "2026-12-01T00:00:00Z",
+        "validTo": "2026-12-10T23:59:59Z",
+        "activationMode": "schedule",
+        "activationText": "ZRT activables Prévision d'activation connue auprès de l'Airspace Manager à J-1 ouvré 10h00 UTC ZRT BROYE / ZRT ISSOUDUN - Du 01 décembre 2026 à 0700 au 02 décembre 2026 à 1600 - 2 créneaux de 3H max par jour - Du 05 décembre 2026 à 0700 au 06 décembre 2026 à 1600 - 2 créneaux de 3H max par jour - Du 08 décembre 2026 à 0700 au 09 décembre 2026 à 1600 - 2 créneaux de 3H max par jour ZRT BESANÇON / ZRT MONTLAIR - Le 02 décembre 2026 de 0800 à 2000 - 1 créneau de 3H max - Le 05 décembre 2026 de 0800 à 2000 - 1 créneau de 3H max - Le 08 décembre 2026 de 0800 à 2000 - 1 créneau de 3H max ZRT LONGVIC - Du 03 décembre 2026 au 04 décembre 2026 de 0600 à 2000 - 1 créneau de 3H max par jour ZRT BEAUNE - Le 04 décembre 2026 de 0600 à 2000 - 1 créneau de 3H max ZRT GUÉRET / ZRT CHÂTRE / ZRT MONTROND / ZRT CHARITÉ / ZRT AUTUN / ZRT MOULINS - Le 02 décembre 2026 de 0800 à 2000 - 1 créneau de 3H max...",
+        "lowerLimit": "SFC",
+        "upperLimit": "FL 060",
+        "verticalLimitsExtracted": true,
+        "verticalLimitNotice": null,
+        "sourcePdf": "https://www.sia.aviation-civile.gouv.fr/documents/download/f/d/15088564/",
+        "sourcePage": "https://www.sia.aviation-civile.gouv.fr/documents/supaip/aip/id/6",
+        "sourcePageNumber": 5,
+        "dataScope": "auto-sia",
+        "geometrySource": "automatic-layout-v3",
+        "geometryConfidence": "high",
+        "geometryWarnings": [],
+        "sourceFingerprint": "9cd25564c64f79a35170",
+        "parserVersion": "capclair-supaip-parser-3.0.3",
+        "frequency": "CLERMONT INFO / APP : 122,225 MHz 119,375 MHz 133,725 MHz | LIMOGES INFO : 124,050 MHz | LIMOGES APP : 118,080 MHz | AQUITAINE INFO : 120,575 MHz | MONTLUÇON INFO : 118,405 MHz"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              2.3663889,
+              46.2761111
+            ],
+            [
+              2.3700959,
+              46.2758205
+            ],
+            [
+              2.3737904,
+              46.2754937
+            ],
+            [
+              2.3774555,
+              46.2750357
+            ],
+            [
+              2.3810816,
+              46.2744477
+            ],
+            [
+              2.384659,
+              46.2737313
+            ],
+            [
+              2.3881781,
+              46.2728883
+            ],
+            [
+              2.3916297,
+              46.2719211
+            ],
+            [
+              2.3950044,
+              46.2708322
+            ],
+            [
+              2.3982934,
+              46.2696245
+            ],
+            [
+              2.4014879,
+              46.2683012
+            ],
+            [
+              2.4045794,
+              46.2668658
+            ],
+            [
+              2.4075597,
+              46.2653222
+            ],
+            [
+              2.4104208,
+              46.2636744
+            ],
+            [
+              2.4131553,
+              46.2619269
+            ],
+            [
+              2.4157557,
+              46.2600843
+            ],
+            [
+              2.4182152,
+              46.2581515
+            ],
+            [
+              2.4205273,
+              46.2561336
+            ],
+            [
+              2.4226858,
+              46.254036
+            ],
+            [
+              2.4246851,
+              46.2518642
+            ],
+            [
+              2.4265198,
+              46.2496241
+            ],
+            [
+              2.4281851,
+              46.2473217
+            ],
+            [
+              2.4296765,
+              46.2449629
+            ],
+            [
+              2.4309902,
+              46.2425541
+            ],
+            [
+              2.4321226,
+              46.2401018
+            ],
+            [
+              2.4330708,
+              46.2376123
+            ],
+            [
+              2.4338323,
+              46.2350923
+            ],
+            [
+              2.4344051,
+              46.2325486
+            ],
+            [
+              2.4347876,
+              46.2299878
+            ],
+            [
+              2.434979,
+              46.2274168
+            ],
+            [
+              2.4349787,
+              46.2248424
+            ],
+            [
+              2.4347867,
+              46.2222714
+            ],
+            [
+              2.4344037,
+              46.2197107
+            ],
+            [
+              2.4338305,
+              46.217167
+            ],
+            [
+              2.4330688,
+              46.2146472
+            ],
+            [
+              2.4321207,
+              46.2121578
+            ],
+            [
+              2.4309886,
+              46.2097054
+            ],
+            [
+              2.4296756,
+              46.2072967
+            ],
+            [
+              2.4281852,
+              46.204938
+            ],
+            [
+              2.4265213,
+              46.2026355
+            ],
+            [
+              2.4246885,
+              46.2003953
+            ],
+            [
+              2.4226915,
+              46.1982234
+            ],
+            [
+              2.4205358,
+              46.1961255
+            ],
+            [
+              2.4182269,
+              46.1941073
+            ],
+            [
+              2.4157712,
+              46.192174
+            ],
+            [
+              2.413175,
+              46.1903307
+            ],
+            [
+              2.4104453,
+              46.1885824
+            ],
+            [
+              2.4075893,
+              46.1869337
+            ],
+            [
+              2.4046146,
+              46.1853889
+            ],
+            [
+              2.4015291,
+              46.1839522
+            ],
+            [
+              2.3983409,
+              46.1826273
+            ],
+            [
+              2.3950586,
+              46.1814178
+            ],
+            [
+              2.3916908,
+              46.1803268
+            ],
+            [
+              2.3882464,
+              46.1793573
+            ],
+            [
+              2.3847346,
+              46.1785118
+            ],
+            [
+              2.3811647,
+              46.1777926
+            ],
+            [
+              2.3775461,
+              46.1772015
+            ],
+            [
+              2.3738883,
+              46.1767401
+            ],
+            [
+              2.3702012,
+              46.1764097
+            ],
+            [
+              2.3664944,
+              46.1762111
+            ],
+            [
+              2.3627778,
+              46.1761111
+            ],
+            [
+              2.2916667,
+              46.1761111
+            ],
+            [
+              2.2916667,
+              46.1
+            ],
+            [
+              2.0,
+              46.1
+            ],
+            [
+              2.0,
+              46.1383333
+            ],
+            [
+              2.0029502,
+              46.1399038
+            ],
+            [
+              2.0058127,
+              46.1415485
+            ],
+            [
+              2.0085491,
+              46.1432931
+            ],
+            [
+              2.0111524,
+              46.1451332
+            ],
+            [
+              2.0136154,
+              46.1470637
+            ],
+            [
+              2.0159317,
+              46.1490795
+            ],
+            [
+              2.018095,
+              46.1511754
+            ],
+            [
+              2.0200997,
+              46.1533457
+            ],
+            [
+              2.0219404,
+              46.1555847
+            ],
+            [
+              2.0236122,
+              46.1578864
+            ],
+            [
+              2.0251106,
+              46.1602447
+            ],
+            [
+              2.0264316,
+              46.1626534
+            ],
+            [
+              2.0275717,
+              46.165106
+            ],
+            [
+              2.0285278,
+              46.167596
+            ],
+            [
+              2.0292974,
+              46.1701169
+            ],
+            [
+              2.0298783,
+              46.1726619
+            ],
+            [
+              2.0302691,
+              46.1752242
+            ],
+            [
+              2.0304687,
+              46.1777971
+            ],
+            [
+              2.0304764,
+              46.1803737
+            ],
+            [
+              2.0302923,
+              46.1829471
+            ],
+            [
+              2.0299168,
+              46.1855105
+            ],
+            [
+              2.0293509,
+              46.1880572
+            ],
+            [
+              2.0285961,
+              46.1905802
+            ],
+            [
+              2.0276543,
+              46.193073
+            ],
+            [
+              2.026528,
+              46.1955288
+            ],
+            [
+              2.0252203,
+              46.1979411
+            ],
+            [
+              2.0237345,
+              46.2003036
+            ],
+            [
+              2.0220746,
+              46.2026098
+            ],
+            [
+              2.020245,
+              46.2048538
+            ],
+            [
+              2.0182505,
+              46.2070295
+            ],
+            [
+              2.0160964,
+              46.2091311
+            ],
+            [
+              2.0137885,
+              46.211153
+            ],
+            [
+              2.0113329,
+              46.2130898
+            ],
+            [
+              2.0087361,
+              46.2149364
+            ],
+            [
+              2.006005,
+              46.2166878
+            ],
+            [
+              2.0031469,
+              46.2183395
+            ],
+            [
+              2.0,
+              46.2197222
+            ],
+            [
+              2.0,
+              46.2761111
+            ],
+            [
+              2.25,
+              46.2761111
+            ],
+            [
+              2.3627778,
+              46.2761111
+            ],
+            [
+              2.3663889,
+              46.2761111
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "232-26-zrt-limogeair",
+      "properties": {
+        "id": "232-26-zrt-limogeair",
+        "name": "ZRT LIMOGEAIR",
+        "zoneType": "ZRT",
+        "beta": true,
+        "supAip": "232/26",
+        "title": "Création de Zones Réglementées Temporaires (ZRT) au profit de l'exercice TARANIS 26 en régions Centre, Bourgogne et Est",
+        "validFrom": "2026-12-01T00:00:00Z",
+        "validTo": "2026-12-10T23:59:59Z",
+        "activationMode": "schedule",
+        "activationText": "ZRT activables Prévision d'activation connue auprès de l'Airspace Manager à J-1 ouvré 10h00 UTC ZRT BROYE / ZRT ISSOUDUN - Du 01 décembre 2026 à 0700 au 02 décembre 2026 à 1600 - 2 créneaux de 3H max par jour - Du 05 décembre 2026 à 0700 au 06 décembre 2026 à 1600 - 2 créneaux de 3H max par jour - Du 08 décembre 2026 à 0700 au 09 décembre 2026 à 1600 - 2 créneaux de 3H max par jour ZRT BESANÇON / ZRT MONTLAIR - Le 02 décembre 2026 de 0800 à 2000 - 1 créneau de 3H max - Le 05 décembre 2026 de 0800 à 2000 - 1 créneau de 3H max - Le 08 décembre 2026 de 0800 à 2000 - 1 créneau de 3H max ZRT LONGVIC - Du 03 décembre 2026 au 04 décembre 2026 de 0600 à 2000 - 1 créneau de 3H max par jour ZRT BEAUNE - Le 04 décembre 2026 de 0600 à 2000 - 1 créneau de 3H max ZRT GUÉRET / ZRT CHÂTRE / ZRT MONTROND / ZRT CHARITÉ / ZRT AUTUN / ZRT MOULINS - Le 02 décembre 2026 de 0800 à 2000 - 1 créneau de 3H max...",
+        "lowerLimit": "FL 115",
+        "upperLimit": "FL 195",
+        "verticalLimitsExtracted": true,
+        "verticalLimitNotice": null,
+        "sourcePdf": "https://www.sia.aviation-civile.gouv.fr/documents/download/f/d/15088564/",
+        "sourcePage": "https://www.sia.aviation-civile.gouv.fr/documents/supaip/aip/id/6",
+        "sourcePageNumber": 5,
+        "dataScope": "auto-sia",
+        "geometrySource": "automatic-layout-v3",
+        "geometryConfidence": "high",
+        "geometryWarnings": [
+          "Polygone invalide: Ring Self-intersection[5.9161111 48.6622222]"
+        ],
+        "sourceFingerprint": "9cd25564c64f79a35170",
+        "parserVersion": "capclair-supaip-parser-3.0.3",
+        "frequency": "CLERMONT INFO / APP : 122,225 MHz 119,375 MHz 133,725 MHz | LIMOGES INFO : 124,050 MHz | LIMOGES APP : 118,080 MHz | AQUITAINE INFO : 120,575 MHz | MONTLUÇON INFO : 118,405 MHz"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              1.1430556,
+              45.7311111
+            ],
+            [
+              1.5705556,
+              46.1844444
+            ],
+            [
+              2.4255556,
+              46.2505556
+            ],
+            [
+              2.4274769,
+              46.2483374
+            ],
+            [
+              2.4290514,
+              46.2459922
+            ],
+            [
+              2.4304483,
+              46.2435939
+            ],
+            [
+              2.4316637,
+              46.2411488
+            ],
+            [
+              2.4326946,
+              46.2386635
+            ],
+            [
+              2.4335381,
+              46.2361446
+            ],
+            [
+              2.4341921,
+              46.233599
+            ],
+            [
+              2.4346547,
+              46.2310333
+            ],
+            [
+              2.4349249,
+              46.2284545
+            ],
+            [
+              2.4350018,
+              46.2258694
+            ],
+            [
+              2.4348854,
+              46.2232851
+            ],
+            [
+              2.4345758,
+              46.2207085
+            ],
+            [
+              2.4340741,
+              46.2181463
+            ],
+            [
+              2.4333816,
+              46.2156055
+            ],
+            [
+              2.4325001,
+              46.2130929
+            ],
+            [
+              2.4314321,
+              46.2106152
+            ],
+            [
+              2.4301804,
+              46.2081791
+            ],
+            [
+              2.4286111,
+              46.2058333
+            ],
+            [
+              2.1983333,
+              46.1244444
+            ],
+            [
+              1.3416667,
+              45.6958333
+            ],
+            [
+              1.2616667,
+              45.5652778
+            ],
+            [
+              1.2451891,
+              45.558272
+            ],
+            [
+              1.2284055,
+              45.5516443
+            ],
+            [
+              1.2112168,
+              45.5455496
+            ],
+            [
+              1.1936574,
+              45.5399999
+            ],
+            [
+              1.1757626,
+              45.5350065
+            ],
+            [
+              1.1575681,
+              45.5305792
+            ],
+            [
+              1.1391102,
+              45.5267269
+            ],
+            [
+              1.1205556,
+              45.5230556
+            ],
+            [
+              1.1430556,
+              45.7311111
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "232-26-zrt-issoudun",
+      "properties": {
+        "id": "232-26-zrt-issoudun",
+        "name": "ZRT ISSOUDUN",
+        "zoneType": "ZRT",
+        "beta": true,
+        "supAip": "232/26",
+        "title": "Création de Zones Réglementées Temporaires (ZRT) au profit de l'exercice TARANIS 26 en régions Centre, Bourgogne et Est",
+        "validFrom": "2026-12-01T00:00:00Z",
+        "validTo": "2026-12-10T23:59:59Z",
+        "activationMode": "schedule",
+        "activationText": "ZRT activables Prévision d'activation connue auprès de l'Airspace Manager à J-1 ouvré 10h00 UTC ZRT BROYE / ZRT ISSOUDUN - Du 01 décembre 2026 à 0700 au 02 décembre 2026 à 1600 - 2 créneaux de 3H max par jour - Du 05 décembre 2026 à 0700 au 06 décembre 2026 à 1600 - 2 créneaux de 3H max par jour - Du 08 décembre 2026 à 0700 au 09 décembre 2026 à 1600 - 2 créneaux de 3H max par jour ZRT BESANÇON / ZRT MONTLAIR - Le 02 décembre 2026 de 0800 à 2000 - 1 créneau de 3H max - Le 05 décembre 2026 de 0800 à 2000 - 1 créneau de 3H max - Le 08 décembre 2026 de 0800 à 2000 - 1 créneau de 3H max ZRT LONGVIC - Du 03 décembre 2026 au 04 décembre 2026 de 0600 à 2000 - 1 créneau de 3H max par jour ZRT BEAUNE - Le 04 décembre 2026 de 0600 à 2000 - 1 créneau de 3H max ZRT GUÉRET / ZRT CHÂTRE / ZRT MONTROND / ZRT CHARITÉ / ZRT AUTUN / ZRT MOULINS - Le 02 décembre 2026 de 0800 à 2000 - 1 créneau de 3H max...",
+        "lowerLimit": "SFC",
+        "upperLimit": "2500 ft AMSL",
+        "verticalLimitsExtracted": true,
+        "verticalLimitNotice": null,
+        "sourcePdf": "https://www.sia.aviation-civile.gouv.fr/documents/download/f/d/15088564/",
+        "sourcePage": "https://www.sia.aviation-civile.gouv.fr/documents/supaip/aip/id/6",
+        "sourcePageNumber": 4,
+        "dataScope": "auto-sia",
+        "geometrySource": "automatic-layout-v3",
+        "geometryConfidence": "high",
+        "geometryWarnings": [],
+        "sourceFingerprint": "9cd25564c64f79a35170",
+        "parserVersion": "capclair-supaip-parser-3.0.3",
+        "frequency": "CLERMONT INFO / APP : 122,225 MHz 119,375 MHz 133,725 MHz | LIMOGES INFO : 124,050 MHz | LIMOGES APP : 118,080 MHz | AQUITAINE INFO : 120,575 MHz | MONTLUÇON INFO : 118,405 MHz"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              2.0388889,
+              46.9541667
+            ],
+            [
+              2.3272222,
+              46.7669444
+            ],
+            [
+              2.09,
+              46.6102778
+            ],
+            [
+              1.8436111,
+              46.7416667
+            ],
+            [
+              2.0388889,
+              46.9541667
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "232-26-zrt-gueret",
+      "properties": {
+        "id": "232-26-zrt-gueret",
+        "name": "ZRT GUÉRET",
+        "zoneType": "ZRT",
+        "beta": true,
+        "supAip": "232/26",
+        "title": "Création de Zones Réglementées Temporaires (ZRT) au profit de l'exercice TARANIS 26 en régions Centre, Bourgogne et Est",
+        "validFrom": "2026-12-01T00:00:00Z",
+        "validTo": "2026-12-10T23:59:59Z",
+        "activationMode": "schedule",
+        "activationText": "ZRT activables Prévision d'activation connue auprès de l'Airspace Manager à J-1 ouvré 10h00 UTC ZRT BROYE / ZRT ISSOUDUN - Du 01 décembre 2026 à 0700 au 02 décembre 2026 à 1600 - 2 créneaux de 3H max par jour - Du 05 décembre 2026 à 0700 au 06 décembre 2026 à 1600 - 2 créneaux de 3H max par jour - Du 08 décembre 2026 à 0700 au 09 décembre 2026 à 1600 - 2 créneaux de 3H max par jour ZRT BESANÇON / ZRT MONTLAIR - Le 02 décembre 2026 de 0800 à 2000 - 1 créneau de 3H max - Le 05 décembre 2026 de 0800 à 2000 - 1 créneau de 3H max - Le 08 décembre 2026 de 0800 à 2000 - 1 créneau de 3H max ZRT LONGVIC - Du 03 décembre 2026 au 04 décembre 2026 de 0600 à 2000 - 1 créneau de 3H max par jour ZRT BEAUNE - Le 04 décembre 2026 de 0600 à 2000 - 1 créneau de 3H max ZRT GUÉRET / ZRT CHÂTRE / ZRT MONTROND / ZRT CHARITÉ / ZRT AUTUN / ZRT MOULINS - Le 02 décembre 2026 de 0800 à 2000 - 1 créneau de 3H max...",
+        "lowerLimit": "800 ft ASFC",
+        "upperLimit": "3000 ft AMSL",
+        "verticalLimitsExtracted": true,
+        "verticalLimitNotice": null,
+        "sourcePdf": "https://www.sia.aviation-civile.gouv.fr/documents/download/f/d/15088564/",
+        "sourcePage": "https://www.sia.aviation-civile.gouv.fr/documents/supaip/aip/id/6",
+        "sourcePageNumber": 4,
+        "dataScope": "auto-sia",
+        "geometrySource": "automatic-layout-v3",
+        "geometryConfidence": "high",
+        "geometryWarnings": [
+          "Polygone invalide: Ring Self-intersection[2.0388889 46.9541667]"
+        ],
+        "sourceFingerprint": "9cd25564c64f79a35170",
+        "parserVersion": "capclair-supaip-parser-3.0.3",
+        "frequency": "CLERMONT INFO / APP : 122,225 MHz 119,375 MHz 133,725 MHz | LIMOGES INFO : 124,050 MHz | LIMOGES APP : 118,080 MHz | AQUITAINE INFO : 120,575 MHz | MONTLUÇON INFO : 118,405 MHz"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              1.5791667,
+              46.2611111
+            ],
+            [
+              1.8041667,
+              46.225
+            ],
+            [
+              1.9083333,
+              45.9791667
+            ],
+            [
+              1.6955556,
+              45.8713889
+            ],
+            [
+              1.5791667,
+              46.2611111
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "232-26-zrt-flourair-low",
+      "properties": {
+        "id": "232-26-zrt-flourair-low",
+        "name": "ZRT FLOURAIR LOW",
+        "zoneType": "ZRT",
+        "beta": true,
+        "supAip": "232/26",
+        "title": "Création de Zones Réglementées Temporaires (ZRT) au profit de l'exercice TARANIS 26 en régions Centre, Bourgogne et Est",
+        "validFrom": "2026-12-01T00:00:00Z",
+        "validTo": "2026-12-10T23:59:59Z",
+        "activationMode": "schedule",
+        "activationText": "ZRT activables Prévision d'activation connue auprès de l'Airspace Manager à J-1 ouvré 10h00 UTC ZRT BROYE / ZRT ISSOUDUN - Du 01 décembre 2026 à 0700 au 02 décembre 2026 à 1600 - 2 créneaux de 3H max par jour - Du 05 décembre 2026 à 0700 au 06 décembre 2026 à 1600 - 2 créneaux de 3H max par jour - Du 08 décembre 2026 à 0700 au 09 décembre 2026 à 1600 - 2 créneaux de 3H max par jour ZRT BESANÇON / ZRT MONTLAIR - Le 02 décembre 2026 de 0800 à 2000 - 1 créneau de 3H max - Le 05 décembre 2026 de 0800 à 2000 - 1 créneau de 3H max - Le 08 décembre 2026 de 0800 à 2000 - 1 créneau de 3H max ZRT LONGVIC - Du 03 décembre 2026 au 04 décembre 2026 de 0600 à 2000 - 1 créneau de 3H max par jour ZRT BEAUNE - Le 04 décembre 2026 de 0600 à 2000 - 1 créneau de 3H max ZRT GUÉRET / ZRT CHÂTRE / ZRT MONTROND / ZRT CHARITÉ / ZRT AUTUN / ZRT MOULINS - Le 02 décembre 2026 de 0800 à 2000 - 1 créneau de 3H max...",
+        "lowerLimit": "SFC",
+        "upperLimit": "FL 065",
+        "verticalLimitsExtracted": true,
+        "verticalLimitNotice": null,
+        "sourcePdf": "https://www.sia.aviation-civile.gouv.fr/documents/download/f/d/15088564/",
+        "sourcePage": "https://www.sia.aviation-civile.gouv.fr/documents/supaip/aip/id/6",
+        "sourcePageNumber": 4,
+        "dataScope": "auto-sia",
+        "geometrySource": "automatic-layout-v3",
+        "geometryConfidence": "high",
+        "geometryWarnings": [],
+        "sourceFingerprint": "9cd25564c64f79a35170",
+        "parserVersion": "capclair-supaip-parser-3.0.3",
+        "frequency": "CLERMONT INFO / APP : 122,225 MHz 119,375 MHz 133,725 MHz | LIMOGES INFO : 124,050 MHz | LIMOGES APP : 118,080 MHz | AQUITAINE INFO : 120,575 MHz | MONTLUÇON INFO : 118,405 MHz"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              3.0241667,
+              45.1441667
+            ],
+            [
+              3.0380556,
+              44.7169444
+            ],
+            [
+              2.4166667,
+              44.7427778
+            ],
+            [
+              3.0241667,
+              45.1441667
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "232-26-zrt-flourair",
+      "properties": {
+        "id": "232-26-zrt-flourair",
+        "name": "ZRT FLOURAIR",
+        "zoneType": "ZRT",
+        "beta": true,
+        "supAip": "232/26",
+        "title": "Création de Zones Réglementées Temporaires (ZRT) au profit de l'exercice TARANIS 26 en régions Centre, Bourgogne et Est",
+        "validFrom": "2026-12-01T00:00:00Z",
+        "validTo": "2026-12-10T23:59:59Z",
+        "activationMode": "schedule",
+        "activationText": "ZRT activables Prévision d'activation connue auprès de l'Airspace Manager à J-1 ouvré 10h00 UTC ZRT BROYE / ZRT ISSOUDUN - Du 01 décembre 2026 à 0700 au 02 décembre 2026 à 1600 - 2 créneaux de 3H max par jour - Du 05 décembre 2026 à 0700 au 06 décembre 2026 à 1600 - 2 créneaux de 3H max par jour - Du 08 décembre 2026 à 0700 au 09 décembre 2026 à 1600 - 2 créneaux de 3H max par jour ZRT BESANÇON / ZRT MONTLAIR - Le 02 décembre 2026 de 0800 à 2000 - 1 créneau de 3H max - Le 05 décembre 2026 de 0800 à 2000 - 1 créneau de 3H max - Le 08 décembre 2026 de 0800 à 2000 - 1 créneau de 3H max ZRT LONGVIC - Du 03 décembre 2026 au 04 décembre 2026 de 0600 à 2000 - 1 créneau de 3H max par jour ZRT BEAUNE - Le 04 décembre 2026 de 0600 à 2000 - 1 créneau de 3H max ZRT GUÉRET / ZRT CHÂTRE / ZRT MONTROND / ZRT CHARITÉ / ZRT AUTUN / ZRT MOULINS - Le 02 décembre 2026 de 0800 à 2000 - 1 créneau de 3H max...",
+        "lowerLimit": "FL 115",
+        "upperLimit": "FL 195",
+        "verticalLimitsExtracted": true,
+        "verticalLimitNotice": null,
+        "sourcePdf": "https://www.sia.aviation-civile.gouv.fr/documents/download/f/d/15088564/",
+        "sourcePage": "https://www.sia.aviation-civile.gouv.fr/documents/supaip/aip/id/6",
+        "sourcePageNumber": 5,
+        "dataScope": "auto-sia",
+        "geometrySource": "automatic-layout-v3",
+        "geometryConfidence": "high",
+        "geometryWarnings": [],
+        "sourceFingerprint": "9cd25564c64f79a35170",
+        "parserVersion": "capclair-supaip-parser-3.0.3",
+        "frequency": "CLERMONT INFO / APP : 122,225 MHz 119,375 MHz 133,725 MHz | LIMOGES INFO : 124,050 MHz | LIMOGES APP : 118,080 MHz | AQUITAINE INFO : 120,575 MHz | MONTLUÇON INFO : 118,405 MHz"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              3.0241667,
+              45.1441667
+            ],
+            [
+              3.0380556,
+              44.7169444
+            ],
+            [
+              2.4166667,
+              44.7427778
+            ],
+            [
+              3.0241667,
+              45.1441667
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "232-26-zrt-chatre",
+      "properties": {
+        "id": "232-26-zrt-chatre",
+        "name": "ZRT CHÂTRE",
+        "zoneType": "ZRT",
+        "beta": true,
+        "supAip": "232/26",
+        "title": "Création de Zones Réglementées Temporaires (ZRT) au profit de l'exercice TARANIS 26 en régions Centre, Bourgogne et Est",
+        "validFrom": "2026-12-01T00:00:00Z",
+        "validTo": "2026-12-10T23:59:59Z",
+        "activationMode": "schedule",
+        "activationText": "ZRT activables Prévision d'activation connue auprès de l'Airspace Manager à J-1 ouvré 10h00 UTC ZRT BROYE / ZRT ISSOUDUN - Du 01 décembre 2026 à 0700 au 02 décembre 2026 à 1600 - 2 créneaux de 3H max par jour - Du 05 décembre 2026 à 0700 au 06 décembre 2026 à 1600 - 2 créneaux de 3H max par jour - Du 08 décembre 2026 à 0700 au 09 décembre 2026 à 1600 - 2 créneaux de 3H max par jour ZRT BESANÇON / ZRT MONTLAIR - Le 02 décembre 2026 de 0800 à 2000 - 1 créneau de 3H max - Le 05 décembre 2026 de 0800 à 2000 - 1 créneau de 3H max - Le 08 décembre 2026 de 0800 à 2000 - 1 créneau de 3H max ZRT LONGVIC - Du 03 décembre 2026 au 04 décembre 2026 de 0600 à 2000 - 1 créneau de 3H max par jour ZRT BEAUNE - Le 04 décembre 2026 de 0600 à 2000 - 1 créneau de 3H max ZRT GUÉRET / ZRT CHÂTRE / ZRT MONTROND / ZRT CHARITÉ / ZRT AUTUN / ZRT MOULINS - Le 02 décembre 2026 de 0800 à 2000 - 1 créneau de 3H max...",
+        "lowerLimit": "SFC",
+        "upperLimit": "3000 ft AMSL",
+        "verticalLimitsExtracted": true,
+        "verticalLimitNotice": null,
+        "sourcePdf": "https://www.sia.aviation-civile.gouv.fr/documents/download/f/d/15088564/",
+        "sourcePage": "https://www.sia.aviation-civile.gouv.fr/documents/supaip/aip/id/6",
+        "sourcePageNumber": 4,
+        "dataScope": "auto-sia",
+        "geometrySource": "automatic-layout-v3",
+        "geometryConfidence": "high",
+        "geometryWarnings": [
+          "Polygone invalide: Ring Self-intersection[3.6027778 47.3663889]"
+        ],
+        "sourceFingerprint": "9cd25564c64f79a35170",
+        "parserVersion": "capclair-supaip-parser-3.0.3",
+        "frequency": "CLERMONT INFO / APP : 122,225 MHz 119,375 MHz 133,725 MHz | LIMOGES INFO : 124,050 MHz | LIMOGES APP : 118,080 MHz | AQUITAINE INFO : 120,575 MHz | MONTLUÇON INFO : 118,405 MHz"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              1.5791667,
+              46.2611111
+            ],
+            [
+              1.94,
+              46.5113889
+            ],
+            [
+              2.2494444,
+              46.7158333
+            ],
+            [
+              2.4716667,
+              46.6055556
+            ],
+            [
+              2.2691667,
+              46.4813889
+            ],
+            [
+              1.8041667,
+              46.225
+            ],
+            [
+              1.5791667,
+              46.2611111
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "232-26-zrt-charite",
+      "properties": {
+        "id": "232-26-zrt-charite",
+        "name": "ZRT CHARITÉ",
+        "zoneType": "ZRT",
+        "beta": true,
+        "supAip": "232/26",
+        "title": "Création de Zones Réglementées Temporaires (ZRT) au profit de l'exercice TARANIS 26 en régions Centre, Bourgogne et Est",
+        "validFrom": "2026-12-01T00:00:00Z",
+        "validTo": "2026-12-10T23:59:59Z",
+        "activationMode": "schedule",
+        "activationText": "ZRT activables Prévision d'activation connue auprès de l'Airspace Manager à J-1 ouvré 10h00 UTC ZRT BROYE / ZRT ISSOUDUN - Du 01 décembre 2026 à 0700 au 02 décembre 2026 à 1600 - 2 créneaux de 3H max par jour - Du 05 décembre 2026 à 0700 au 06 décembre 2026 à 1600 - 2 créneaux de 3H max par jour - Du 08 décembre 2026 à 0700 au 09 décembre 2026 à 1600 - 2 créneaux de 3H max par jour ZRT BESANÇON / ZRT MONTLAIR - Le 02 décembre 2026 de 0800 à 2000 - 1 créneau de 3H max - Le 05 décembre 2026 de 0800 à 2000 - 1 créneau de 3H max - Le 08 décembre 2026 de 0800 à 2000 - 1 créneau de 3H max ZRT LONGVIC - Du 03 décembre 2026 au 04 décembre 2026 de 0600 à 2000 - 1 créneau de 3H max par jour ZRT BEAUNE - Le 04 décembre 2026 de 0600 à 2000 - 1 créneau de 3H max ZRT GUÉRET / ZRT CHÂTRE / ZRT MONTROND / ZRT CHARITÉ / ZRT AUTUN / ZRT MOULINS - Le 02 décembre 2026 de 0800 à 2000 - 1 créneau de 3H max...",
+        "lowerLimit": "800 ft ASFC",
+        "upperLimit": "3000 ft AMSL",
+        "verticalLimitsExtracted": true,
+        "verticalLimitNotice": null,
+        "sourcePdf": "https://www.sia.aviation-civile.gouv.fr/documents/download/f/d/15088564/",
+        "sourcePage": "https://www.sia.aviation-civile.gouv.fr/documents/supaip/aip/id/6",
+        "sourcePageNumber": 4,
+        "dataScope": "auto-sia",
+        "geometrySource": "automatic-layout-v3",
+        "geometryConfidence": "high",
+        "geometryWarnings": [],
+        "sourceFingerprint": "9cd25564c64f79a35170",
+        "parserVersion": "capclair-supaip-parser-3.0.3",
+        "frequency": "CLERMONT INFO / APP : 122,225 MHz 119,375 MHz 133,725 MHz | LIMOGES INFO : 124,050 MHz | LIMOGES APP : 118,080 MHz | AQUITAINE INFO : 120,575 MHz | MONTLUÇON INFO : 118,405 MHz"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              2.8216667,
+              47.0413889
+            ],
+            [
+              2.8125,
+              47.1111111
+            ],
+            [
+              2.6772222,
+              47.1916667
+            ],
+            [
+              3.6027778,
+              47.3663889
+            ],
+            [
+              3.6666667,
+              47.0772222
+            ],
+            [
+              3.325,
+              47.1347222
+            ],
+            [
+              2.8216667,
+              47.0413889
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "232-26-zrt-broye",
+      "properties": {
+        "id": "232-26-zrt-broye",
+        "name": "ZRT BROYE",
+        "zoneType": "ZRT",
+        "beta": true,
+        "supAip": "232/26",
+        "title": "Création de Zones Réglementées Temporaires (ZRT) au profit de l'exercice TARANIS 26 en régions Centre, Bourgogne et Est",
+        "validFrom": "2026-12-01T00:00:00Z",
+        "validTo": "2026-12-10T23:59:59Z",
+        "activationMode": "schedule",
+        "activationText": "ZRT activables Prévision d'activation connue auprès de l'Airspace Manager à J-1 ouvré 10h00 UTC ZRT BROYE / ZRT ISSOUDUN - Du 01 décembre 2026 à 0700 au 02 décembre 2026 à 1600 - 2 créneaux de 3H max par jour - Du 05 décembre 2026 à 0700 au 06 décembre 2026 à 1600 - 2 créneaux de 3H max par jour - Du 08 décembre 2026 à 0700 au 09 décembre 2026 à 1600 - 2 créneaux de 3H max par jour ZRT BESANÇON / ZRT MONTLAIR - Le 02 décembre 2026 de 0800 à 2000 - 1 créneau de 3H max - Le 05 décembre 2026 de 0800 à 2000 - 1 créneau de 3H max - Le 08 décembre 2026 de 0800 à 2000 - 1 créneau de 3H max ZRT LONGVIC - Du 03 décembre 2026 au 04 décembre 2026 de 0600 à 2000 - 1 créneau de 3H max par jour ZRT BEAUNE - Le 04 décembre 2026 de 0600 à 2000 - 1 créneau de 3H max ZRT GUÉRET / ZRT CHÂTRE / ZRT MONTROND / ZRT CHARITÉ / ZRT AUTUN / ZRT MOULINS - Le 02 décembre 2026 de 0800 à 2000 - 1 créneau de 3H max...",
+        "lowerLimit": "SFC",
+        "upperLimit": "4000 ft AMSL",
+        "verticalLimitsExtracted": true,
+        "verticalLimitNotice": null,
+        "sourcePdf": "https://www.sia.aviation-civile.gouv.fr/documents/download/f/d/15088564/",
+        "sourcePage": "https://www.sia.aviation-civile.gouv.fr/documents/supaip/aip/id/6",
+        "sourcePageNumber": 3,
+        "dataScope": "auto-sia",
+        "geometrySource": "automatic-layout-v3",
+        "geometryConfidence": "high",
+        "geometryWarnings": [],
+        "sourceFingerprint": "9cd25564c64f79a35170",
+        "parserVersion": "capclair-supaip-parser-3.0.3",
+        "frequency": "CLERMONT INFO / APP : 122,225 MHz 119,375 MHz 133,725 MHz | LIMOGES INFO : 124,050 MHz | LIMOGES APP : 118,080 MHz | AQUITAINE INFO : 120,575 MHz | MONTLUÇON INFO : 118,405 MHz"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              6.5583333,
+              47.1294444
+            ],
+            [
+              5.3430556,
+              47.1369444
+            ],
+            [
+              5.3,
+              47.5166667
+            ],
+            [
+              6.5788889,
+              47.49
+            ],
+            [
+              6.5583333,
+              47.1294444
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "232-26-zrt-brivair-low",
+      "properties": {
+        "id": "232-26-zrt-brivair-low",
+        "name": "ZRT BRIVAIR LOW",
+        "zoneType": "ZRT",
+        "beta": true,
+        "supAip": "232/26",
+        "title": "Création de Zones Réglementées Temporaires (ZRT) au profit de l'exercice TARANIS 26 en régions Centre, Bourgogne et Est",
+        "validFrom": "2026-12-01T00:00:00Z",
+        "validTo": "2026-12-10T23:59:59Z",
+        "activationMode": "schedule",
+        "activationText": "ZRT activables Prévision d'activation connue auprès de l'Airspace Manager à J-1 ouvré 10h00 UTC ZRT BROYE / ZRT ISSOUDUN - Du 01 décembre 2026 à 0700 au 02 décembre 2026 à 1600 - 2 créneaux de 3H max par jour - Du 05 décembre 2026 à 0700 au 06 décembre 2026 à 1600 - 2 créneaux de 3H max par jour - Du 08 décembre 2026 à 0700 au 09 décembre 2026 à 1600 - 2 créneaux de 3H max par jour ZRT BESANÇON / ZRT MONTLAIR - Le 02 décembre 2026 de 0800 à 2000 - 1 créneau de 3H max - Le 05 décembre 2026 de 0800 à 2000 - 1 créneau de 3H max - Le 08 décembre 2026 de 0800 à 2000 - 1 créneau de 3H max ZRT LONGVIC - Du 03 décembre 2026 au 04 décembre 2026 de 0600 à 2000 - 1 créneau de 3H max par jour ZRT BEAUNE - Le 04 décembre 2026 de 0600 à 2000 - 1 créneau de 3H max ZRT GUÉRET / ZRT CHÂTRE / ZRT MONTROND / ZRT CHARITÉ / ZRT AUTUN / ZRT MOULINS - Le 02 décembre 2026 de 0800 à 2000 - 1 créneau de 3H max...",
+        "lowerLimit": "SFC",
+        "upperLimit": "FL 065",
+        "verticalLimitsExtracted": true,
+        "verticalLimitNotice": null,
+        "sourcePdf": "https://www.sia.aviation-civile.gouv.fr/documents/download/f/d/15088564/",
+        "sourcePage": "https://www.sia.aviation-civile.gouv.fr/documents/supaip/aip/id/6",
+        "sourcePageNumber": 5,
+        "dataScope": "auto-sia",
+        "geometrySource": "automatic-layout-v3",
+        "geometryConfidence": "high",
+        "geometryWarnings": [
+          "Polygone invalide: Ring Self-intersection[1.2616667 45.5652778]"
+        ],
+        "sourceFingerprint": "9cd25564c64f79a35170",
+        "parserVersion": "capclair-supaip-parser-3.0.3",
+        "frequency": "CLERMONT INFO / APP : 122,225 MHz 119,375 MHz 133,725 MHz | LIMOGES INFO : 124,050 MHz | LIMOGES APP : 118,080 MHz | AQUITAINE INFO : 120,575 MHz | MONTLUÇON INFO : 118,405 MHz"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              1.2616667,
+              45.5652778
+            ],
+            [
+              1.3980556,
+              45.3661111
+            ],
+            [
+              1.5333333,
+              45.1666667
+            ],
+            [
+              1.7394444,
+              44.8138889
+            ],
+            [
+              1.0677778,
+              44.8716667
+            ],
+            [
+              1.1205556,
+              45.5230556
+            ],
+            [
+              1.1391102,
+              45.5267269
+            ],
+            [
+              1.1575681,
+              45.5305792
+            ],
+            [
+              1.1757626,
+              45.5350065
+            ],
+            [
+              1.1936574,
+              45.5399999
+            ],
+            [
+              1.2112168,
+              45.5455496
+            ],
+            [
+              1.2284055,
+              45.5516443
+            ],
+            [
+              1.2451891,
+              45.558272
+            ],
+            [
+              1.2616667,
+              45.5652778
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "232-26-zrt-brivair",
+      "properties": {
+        "id": "232-26-zrt-brivair",
+        "name": "ZRT BRIVAIR",
+        "zoneType": "ZRT",
+        "beta": true,
+        "supAip": "232/26",
+        "title": "Création de Zones Réglementées Temporaires (ZRT) au profit de l'exercice TARANIS 26 en régions Centre, Bourgogne et Est",
+        "validFrom": "2026-12-01T00:00:00Z",
+        "validTo": "2026-12-10T23:59:59Z",
+        "activationMode": "schedule",
+        "activationText": "ZRT activables Prévision d'activation connue auprès de l'Airspace Manager à J-1 ouvré 10h00 UTC ZRT BROYE / ZRT ISSOUDUN - Du 01 décembre 2026 à 0700 au 02 décembre 2026 à 1600 - 2 créneaux de 3H max par jour - Du 05 décembre 2026 à 0700 au 06 décembre 2026 à 1600 - 2 créneaux de 3H max par jour - Du 08 décembre 2026 à 0700 au 09 décembre 2026 à 1600 - 2 créneaux de 3H max par jour ZRT BESANÇON / ZRT MONTLAIR - Le 02 décembre 2026 de 0800 à 2000 - 1 créneau de 3H max - Le 05 décembre 2026 de 0800 à 2000 - 1 créneau de 3H max - Le 08 décembre 2026 de 0800 à 2000 - 1 créneau de 3H max ZRT LONGVIC - Du 03 décembre 2026 au 04 décembre 2026 de 0600 à 2000 - 1 créneau de 3H max par jour ZRT BEAUNE - Le 04 décembre 2026 de 0600 à 2000 - 1 créneau de 3H max ZRT GUÉRET / ZRT CHÂTRE / ZRT MONTROND / ZRT CHARITÉ / ZRT AUTUN / ZRT MOULINS - Le 02 décembre 2026 de 0800 à 2000 - 1 créneau de 3H max...",
+        "lowerLimit": "FL 115",
+        "upperLimit": "FL 195",
+        "verticalLimitsExtracted": true,
+        "verticalLimitNotice": null,
+        "sourcePdf": "https://www.sia.aviation-civile.gouv.fr/documents/download/f/d/15088564/",
+        "sourcePage": "https://www.sia.aviation-civile.gouv.fr/documents/supaip/aip/id/6",
+        "sourcePageNumber": 5,
+        "dataScope": "auto-sia",
+        "geometrySource": "automatic-layout-v3",
+        "geometryConfidence": "high",
+        "geometryWarnings": [
+          "Polygone invalide: Ring Self-intersection[2.3663889 46.2761111]"
+        ],
+        "sourceFingerprint": "9cd25564c64f79a35170",
+        "parserVersion": "capclair-supaip-parser-3.0.3",
+        "frequency": "CLERMONT INFO / APP : 122,225 MHz 119,375 MHz 133,725 MHz | LIMOGES INFO : 124,050 MHz | LIMOGES APP : 118,080 MHz | AQUITAINE INFO : 120,575 MHz | MONTLUÇON INFO : 118,405 MHz"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              1.2616667,
+              45.5652778
+            ],
+            [
+              1.3980556,
+              45.3661111
+            ],
+            [
+              1.5333333,
+              45.1666667
+            ],
+            [
+              1.7394444,
+              44.8138889
+            ],
+            [
+              1.9641667,
+              44.7583333
+            ],
+            [
+              1.4775,
+              44.7802778
+            ],
+            [
+              1.0577778,
+              44.7477778
+            ],
+            [
+              1.1205556,
+              45.5230556
+            ],
+            [
+              1.1391102,
+              45.5267269
+            ],
+            [
+              1.1575681,
+              45.5305792
+            ],
+            [
+              1.1757626,
+              45.5350065
+            ],
+            [
+              1.1936574,
+              45.5399999
+            ],
+            [
+              1.2112168,
+              45.5455496
+            ],
+            [
+              1.2284055,
+              45.5516443
+            ],
+            [
+              1.2451891,
+              45.558272
+            ],
+            [
+              1.2616667,
+              45.5652778
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "232-26-zrt-besancon",
+      "properties": {
+        "id": "232-26-zrt-besancon",
+        "name": "ZRT BESANÇON",
+        "zoneType": "ZRT",
+        "beta": true,
+        "supAip": "232/26",
+        "title": "Création de Zones Réglementées Temporaires (ZRT) au profit de l'exercice TARANIS 26 en régions Centre, Bourgogne et Est",
+        "validFrom": "2026-12-01T00:00:00Z",
+        "validTo": "2026-12-10T23:59:59Z",
+        "activationMode": "schedule",
+        "activationText": "ZRT activables Prévision d'activation connue auprès de l'Airspace Manager à J-1 ouvré 10h00 UTC ZRT BROYE / ZRT ISSOUDUN - Du 01 décembre 2026 à 0700 au 02 décembre 2026 à 1600 - 2 créneaux de 3H max par jour - Du 05 décembre 2026 à 0700 au 06 décembre 2026 à 1600 - 2 créneaux de 3H max par jour - Du 08 décembre 2026 à 0700 au 09 décembre 2026 à 1600 - 2 créneaux de 3H max par jour ZRT BESANÇON / ZRT MONTLAIR - Le 02 décembre 2026 de 0800 à 2000 - 1 créneau de 3H max - Le 05 décembre 2026 de 0800 à 2000 - 1 créneau de 3H max - Le 08 décembre 2026 de 0800 à 2000 - 1 créneau de 3H max ZRT LONGVIC - Du 03 décembre 2026 au 04 décembre 2026 de 0600 à 2000 - 1 créneau de 3H max par jour ZRT BEAUNE - Le 04 décembre 2026 de 0600 à 2000 - 1 créneau de 3H max ZRT GUÉRET / ZRT CHÂTRE / ZRT MONTROND / ZRT CHARITÉ / ZRT AUTUN / ZRT MOULINS - Le 02 décembre 2026 de 0800 à 2000 - 1 créneau de 3H max...",
+        "lowerLimit": "SFC",
+        "upperLimit": "4000 ft AMSL",
+        "verticalLimitsExtracted": true,
+        "verticalLimitNotice": null,
+        "sourcePdf": "https://www.sia.aviation-civile.gouv.fr/documents/download/f/d/15088564/",
+        "sourcePage": "https://www.sia.aviation-civile.gouv.fr/documents/supaip/aip/id/6",
+        "sourcePageNumber": 3,
+        "dataScope": "auto-sia",
+        "geometrySource": "automatic-layout-v3",
+        "geometryConfidence": "medium",
+        "geometryWarnings": [
+          "Exclusion interne non découpée: contour extérieur affiché par prudence."
+        ],
+        "sourceFingerprint": "9cd25564c64f79a35170",
+        "parserVersion": "capclair-supaip-parser-3.0.3",
+        "frequency": "CLERMONT INFO / APP : 122,225 MHz 119,375 MHz 133,725 MHz | LIMOGES INFO : 124,050 MHz | LIMOGES APP : 118,080 MHz | AQUITAINE INFO : 120,575 MHz | MONTLUÇON INFO : 118,405 MHz"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              5.9166667,
+              47.135
+            ],
+            [
+              5.9166667,
+              47.2822222
+            ],
+            [
+              6.2580556,
+              47.2822222
+            ],
+            [
+              6.2580556,
+              47.1325
+            ],
+            [
+              5.9166667,
+              47.135
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "232-26-zrt-autun",
+      "properties": {
+        "id": "232-26-zrt-autun",
+        "name": "ZRT AUTUN",
+        "zoneType": "ZRT",
+        "beta": true,
+        "supAip": "232/26",
+        "title": "Création de Zones Réglementées Temporaires (ZRT) au profit de l'exercice TARANIS 26 en régions Centre, Bourgogne et Est",
+        "validFrom": "2026-12-01T00:00:00Z",
+        "validTo": "2026-12-10T23:59:59Z",
+        "activationMode": "schedule",
+        "activationText": "ZRT activables Prévision d'activation connue auprès de l'Airspace Manager à J-1 ouvré 10h00 UTC ZRT BROYE / ZRT ISSOUDUN - Du 01 décembre 2026 à 0700 au 02 décembre 2026 à 1600 - 2 créneaux de 3H max par jour - Du 05 décembre 2026 à 0700 au 06 décembre 2026 à 1600 - 2 créneaux de 3H max par jour - Du 08 décembre 2026 à 0700 au 09 décembre 2026 à 1600 - 2 créneaux de 3H max par jour ZRT BESANÇON / ZRT MONTLAIR - Le 02 décembre 2026 de 0800 à 2000 - 1 créneau de 3H max - Le 05 décembre 2026 de 0800 à 2000 - 1 créneau de 3H max - Le 08 décembre 2026 de 0800 à 2000 - 1 créneau de 3H max ZRT LONGVIC - Du 03 décembre 2026 au 04 décembre 2026 de 0600 à 2000 - 1 créneau de 3H max par jour ZRT BEAUNE - Le 04 décembre 2026 de 0600 à 2000 - 1 créneau de 3H max ZRT GUÉRET / ZRT CHÂTRE / ZRT MONTROND / ZRT CHARITÉ / ZRT AUTUN / ZRT MOULINS - Le 02 décembre 2026 de 0800 à 2000 - 1 créneau de 3H max...",
+        "lowerLimit": "SFC",
+        "upperLimit": "3500 ft AMSL",
+        "verticalLimitsExtracted": true,
+        "verticalLimitNotice": null,
+        "sourcePdf": "https://www.sia.aviation-civile.gouv.fr/documents/download/f/d/15088564/",
+        "sourcePage": "https://www.sia.aviation-civile.gouv.fr/documents/supaip/aip/id/6",
+        "sourcePageNumber": 4,
+        "dataScope": "auto-sia",
+        "geometrySource": "automatic-layout-v3",
+        "geometryConfidence": "high",
+        "geometryWarnings": [],
+        "sourceFingerprint": "9cd25564c64f79a35170",
+        "parserVersion": "capclair-supaip-parser-3.0.3",
+        "frequency": "CLERMONT INFO / APP : 122,225 MHz 119,375 MHz 133,725 MHz | LIMOGES INFO : 124,050 MHz | LIMOGES APP : 118,080 MHz | AQUITAINE INFO : 120,575 MHz | MONTLUÇON INFO : 118,405 MHz"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              3.6027778,
+              47.3663889
+            ],
+            [
+              3.9952778,
+              47.4880556
+            ],
+            [
+              4.0966667,
+              47.3852778
+            ],
+            [
+              4.2469444,
+              47.3575
+            ],
+            [
+              4.1830556,
+              47.1972222
+            ],
+            [
+              4.3527778,
+              47.2122222
+            ],
+            [
+              4.6847222,
+              47.1363889
+            ],
+            [
+              4.6972222,
+              46.8152778
+            ],
+            [
+              4.5288889,
+              46.7519444
+            ],
+            [
+              4.2775,
+              47.0136111
+            ],
+            [
+              3.6666667,
+              47.0772222
+            ],
+            [
+              3.6027778,
+              47.3663889
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
       "id": "232-24-zrt-108-e5",
       "properties": {
         "id": "232-24-zrt-108-e5",
@@ -567,6 +2543,1430 @@
             [
               3.8830556,
               43.8641667
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "231-26-zrt-velleron",
+      "properties": {
+        "id": "231-26-zrt-velleron",
+        "name": "ZRT VELLERON",
+        "zoneType": "ZRT",
+        "beta": true,
+        "supAip": "231/26",
+        "title": "Création de Zones Réglementées Temporaires (ZRT) au profit de l'exercice RW MC COURSE 2026, en régions CENTRE et SUD-EST",
+        "validFrom": "2026-11-10T00:00:00Z",
+        "validTo": "2026-11-19T23:59:59Z",
+        "activationMode": "schedule",
+        "activationText": "ZRT activables. Prévision d'activation connue auprès de l'Airspace Manager à J-1 ouvré 10h00 Dates ZRT LIMOGEAIR ZRT BRIVAIR ZRT FLOURAIR 16 novembre 2026 1600 - 2300 1600 - 2300 1600 - 2300 1600 - 2300 1600 - 2300 1600 - 2300 17 novembre 2026 SPARE SPARE SPARE 1600 - 2300 1600 - 2300 1600 - 2300 18 novembre 2026 SPARE SPARE SPARE",
+        "lowerLimit": "SFC",
+        "upperLimit": "2000 ft ASFC",
+        "verticalLimitsExtracted": true,
+        "verticalLimitNotice": null,
+        "sourcePdf": "https://www.sia.aviation-civile.gouv.fr/documents/download/f/d/15088562/",
+        "sourcePage": "https://www.sia.aviation-civile.gouv.fr/documents/supaip/aip/id/6",
+        "sourcePageNumber": 10,
+        "dataScope": "auto-sia",
+        "geometrySource": "automatic-layout-v3",
+        "geometryConfidence": "high",
+        "geometryWarnings": [],
+        "sourceFingerprint": "7b100912f02621b038f1",
+        "parserVersion": "capclair-supaip-parser-3.0.3",
+        "frequency": "Clermont INFO / APP : 122,225 MHz 119,375 MHz 133,725 MHz | Limoges INFO : 124,050 MHz | Limoges APP : 118,080 MHz | Aquitaine INFO : 120,575 MHz | RAMBERT (CDC de Lyon Mont Verdun) : 143,550 MHz 317,500 MHz"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              5.0052778,
+              43.9969444
+            ],
+            [
+              5.2025,
+              43.9866667
+            ],
+            [
+              5.2108333,
+              43.8891667
+            ],
+            [
+              5.0147222,
+              43.9458333
+            ],
+            [
+              5.0052778,
+              43.9969444
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "231-26-zrt-salon",
+      "properties": {
+        "id": "231-26-zrt-salon",
+        "name": "ZRT SALON",
+        "zoneType": "ZRT",
+        "beta": true,
+        "supAip": "231/26",
+        "title": "Création de Zones Réglementées Temporaires (ZRT) au profit de l'exercice RW MC COURSE 2026, en régions CENTRE et SUD-EST",
+        "validFrom": "2026-11-10T00:00:00Z",
+        "validTo": "2026-11-19T23:59:59Z",
+        "activationMode": "schedule",
+        "activationText": "ZRT activables. Prévision d'activation connue auprès de l'Airspace Manager à J-1 ouvré 10h00 Dates ZRT LIMOGEAIR ZRT BRIVAIR ZRT FLOURAIR 16 novembre 2026 1600 - 2300 1600 - 2300 1600 - 2300 1600 - 2300 1600 - 2300 1600 - 2300 17 novembre 2026 SPARE SPARE SPARE 1600 - 2300 1600 - 2300 1600 - 2300 18 novembre 2026 SPARE SPARE SPARE",
+        "lowerLimit": "SFC",
+        "upperLimit": "FL 060",
+        "verticalLimitsExtracted": true,
+        "verticalLimitNotice": null,
+        "sourcePdf": "https://www.sia.aviation-civile.gouv.fr/documents/download/f/d/15088562/",
+        "sourcePage": "https://www.sia.aviation-civile.gouv.fr/documents/supaip/aip/id/6",
+        "sourcePageNumber": 12,
+        "dataScope": "auto-sia",
+        "geometrySource": "automatic-layout-v3",
+        "geometryConfidence": "medium",
+        "geometryWarnings": [
+          "Exclusion interne non découpée: contour extérieur affiché par prudence."
+        ],
+        "sourceFingerprint": "7b100912f02621b038f1",
+        "parserVersion": "capclair-supaip-parser-3.0.3",
+        "frequency": "Clermont INFO / APP : 122,225 MHz 119,375 MHz 133,725 MHz | Limoges INFO : 124,050 MHz | Limoges APP : 118,080 MHz | Aquitaine INFO : 120,575 MHz | RAMBERT (CDC de Lyon Mont Verdun) : 143,550 MHz 317,500 MHz"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              5.0944444,
+              43.5461111
+            ],
+            [
+              5.0541667,
+              43.5819444
+            ],
+            [
+              5.0333333,
+              43.65
+            ],
+            [
+              5.0002778,
+              43.7105556
+            ],
+            [
+              5.2738889,
+              43.7102778
+            ],
+            [
+              5.3172222,
+              43.5875
+            ],
+            [
+              5.0944444,
+              43.5461111
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "231-26-zrt-saint-christol-bravo",
+      "properties": {
+        "id": "231-26-zrt-saint-christol-bravo",
+        "name": "ZRT SAINT CHRISTOL BRAVO",
+        "zoneType": "ZRT",
+        "beta": true,
+        "supAip": "231/26",
+        "title": "Création de Zones Réglementées Temporaires (ZRT) au profit de l'exercice RW MC COURSE 2026, en régions CENTRE et SUD-EST",
+        "validFrom": "2026-11-10T00:00:00Z",
+        "validTo": "2026-11-19T23:59:59Z",
+        "activationMode": "schedule",
+        "activationText": "ZRT activables. Prévision d'activation connue auprès de l'Airspace Manager à J-1 ouvré 10h00 Dates ZRT LIMOGEAIR ZRT BRIVAIR ZRT FLOURAIR 16 novembre 2026 1600 - 2300 1600 - 2300 1600 - 2300 1600 - 2300 1600 - 2300 1600 - 2300 17 novembre 2026 SPARE SPARE SPARE 1600 - 2300 1600 - 2300 1600 - 2300 18 novembre 2026 SPARE SPARE SPARE",
+        "lowerLimit": "FL 075",
+        "upperLimit": "FL 195",
+        "verticalLimitsExtracted": true,
+        "verticalLimitNotice": null,
+        "sourcePdf": "https://www.sia.aviation-civile.gouv.fr/documents/download/f/d/15088562/",
+        "sourcePage": "https://www.sia.aviation-civile.gouv.fr/documents/supaip/aip/id/6",
+        "sourcePageNumber": 11,
+        "dataScope": "auto-sia",
+        "geometrySource": "automatic-layout-v3",
+        "geometryConfidence": "medium",
+        "geometryWarnings": [
+          "Exclusion interne non découpée: contour extérieur affiché par prudence."
+        ],
+        "sourceFingerprint": "7b100912f02621b038f1",
+        "parserVersion": "capclair-supaip-parser-3.0.3",
+        "frequency": "Clermont INFO / APP : 122,225 MHz 119,375 MHz 133,725 MHz | Limoges INFO : 124,050 MHz | Limoges APP : 118,080 MHz | Aquitaine INFO : 120,575 MHz | RAMBERT (CDC de Lyon Mont Verdun) : 143,550 MHz 317,500 MHz"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              5.1686111,
+              44.3875
+            ],
+            [
+              5.5741667,
+              44.3036111
+            ],
+            [
+              5.9444444,
+              44.1286111
+            ],
+            [
+              5.9444444,
+              43.9058333
+            ],
+            [
+              5.2961111,
+              43.6463889
+            ],
+            [
+              5.2108333,
+              43.8891667
+            ],
+            [
+              5.1686111,
+              44.3875
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "231-26-zrt-saint-christol-alpha",
+      "properties": {
+        "id": "231-26-zrt-saint-christol-alpha",
+        "name": "ZRT SAINT CHRISTOL ALPHA",
+        "zoneType": "ZRT",
+        "beta": true,
+        "supAip": "231/26",
+        "title": "Création de Zones Réglementées Temporaires (ZRT) au profit de l'exercice RW MC COURSE 2026, en régions CENTRE et SUD-EST",
+        "validFrom": "2026-11-10T00:00:00Z",
+        "validTo": "2026-11-19T23:59:59Z",
+        "activationMode": "schedule",
+        "activationText": "ZRT activables. Prévision d'activation connue auprès de l'Airspace Manager à J-1 ouvré 10h00 Dates ZRT LIMOGEAIR ZRT BRIVAIR ZRT FLOURAIR 16 novembre 2026 1600 - 2300 1600 - 2300 1600 - 2300 1600 - 2300 1600 - 2300 1600 - 2300 17 novembre 2026 SPARE SPARE SPARE 1600 - 2300 1600 - 2300 1600 - 2300 18 novembre 2026 SPARE SPARE SPARE",
+        "lowerLimit": "SFC",
+        "upperLimit": "FL 075",
+        "verticalLimitsExtracted": true,
+        "verticalLimitNotice": null,
+        "sourcePdf": "https://www.sia.aviation-civile.gouv.fr/documents/download/f/d/15088562/",
+        "sourcePage": "https://www.sia.aviation-civile.gouv.fr/documents/supaip/aip/id/6",
+        "sourcePageNumber": 11,
+        "dataScope": "auto-sia",
+        "geometrySource": "automatic-layout-v3",
+        "geometryConfidence": "medium",
+        "geometryWarnings": [
+          "Exclusion interne non découpée: contour extérieur affiché par prudence."
+        ],
+        "sourceFingerprint": "7b100912f02621b038f1",
+        "parserVersion": "capclair-supaip-parser-3.0.3",
+        "frequency": "Clermont INFO / APP : 122,225 MHz 119,375 MHz 133,725 MHz | Limoges INFO : 124,050 MHz | Limoges APP : 118,080 MHz | Aquitaine INFO : 120,575 MHz | RAMBERT (CDC de Lyon Mont Verdun) : 143,550 MHz 317,500 MHz"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              5.1686111,
+              44.3875
+            ],
+            [
+              5.5741667,
+              44.3036111
+            ],
+            [
+              5.9444444,
+              44.1286111
+            ],
+            [
+              5.9444444,
+              43.9058333
+            ],
+            [
+              5.2961111,
+              43.6463889
+            ],
+            [
+              5.2108333,
+              43.8891667
+            ],
+            [
+              5.1686111,
+              44.3875
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "231-26-zrt-pont-du-gard",
+      "properties": {
+        "id": "231-26-zrt-pont-du-gard",
+        "name": "ZRT PONT DU GARD",
+        "zoneType": "ZRT",
+        "beta": true,
+        "supAip": "231/26",
+        "title": "Création de Zones Réglementées Temporaires (ZRT) au profit de l'exercice RW MC COURSE 2026, en régions CENTRE et SUD-EST",
+        "validFrom": "2026-11-10T00:00:00Z",
+        "validTo": "2026-11-19T23:59:59Z",
+        "activationMode": "schedule",
+        "activationText": "ZRT activables. Prévision d'activation connue auprès de l'Airspace Manager à J-1 ouvré 10h00 Dates ZRT LIMOGEAIR ZRT BRIVAIR ZRT FLOURAIR 16 novembre 2026 1600 - 2300 1600 - 2300 1600 - 2300 1600 - 2300 1600 - 2300 1600 - 2300 17 novembre 2026 SPARE SPARE SPARE 1600 - 2300 1600 - 2300 1600 - 2300 18 novembre 2026 SPARE SPARE SPARE",
+        "lowerLimit": "SFC",
+        "upperLimit": "2000 ft ASFC",
+        "verticalLimitsExtracted": true,
+        "verticalLimitNotice": null,
+        "sourcePdf": "https://www.sia.aviation-civile.gouv.fr/documents/download/f/d/15088562/",
+        "sourcePage": "https://www.sia.aviation-civile.gouv.fr/documents/supaip/aip/id/6",
+        "sourcePageNumber": 10,
+        "dataScope": "auto-sia",
+        "geometrySource": "automatic-layout-v3",
+        "geometryConfidence": "high",
+        "geometryWarnings": [],
+        "sourceFingerprint": "7b100912f02621b038f1",
+        "parserVersion": "capclair-supaip-parser-3.0.3",
+        "frequency": "Clermont INFO / APP : 122,225 MHz 119,375 MHz 133,725 MHz | Limoges INFO : 124,050 MHz | Limoges APP : 118,080 MHz | Aquitaine INFO : 120,575 MHz | RAMBERT (CDC de Lyon Mont Verdun) : 143,550 MHz 317,500 MHz"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              4.5202778,
+              44.0313889
+            ],
+            [
+              4.6605556,
+              43.9797222
+            ],
+            [
+              4.5847222,
+              43.8375
+            ],
+            [
+              4.525,
+              43.875
+            ],
+            [
+              4.5233333,
+              43.9322222
+            ],
+            [
+              4.5132164,
+              43.9355428
+            ],
+            [
+              4.5028275,
+              43.938401
+            ],
+            [
+              4.4922742,
+              43.9409287
+            ],
+            [
+              4.4815767,
+              43.9431208
+            ],
+            [
+              4.4707557,
+              43.9449732
+            ],
+            [
+              4.459832,
+              43.9464823
+            ],
+            [
+              4.4488267,
+              43.9476452
+            ],
+            [
+              4.4377778,
+              43.9486111
+            ],
+            [
+              4.3363889,
+              44.0333333
+            ],
+            [
+              4.5202778,
+              44.0313889
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "231-26-zrt-ombleze",
+      "properties": {
+        "id": "231-26-zrt-ombleze",
+        "name": "ZRT OMBLEZE",
+        "zoneType": "ZRT",
+        "beta": true,
+        "supAip": "231/26",
+        "title": "Création de Zones Réglementées Temporaires (ZRT) au profit de l'exercice RW MC COURSE 2026, en régions CENTRE et SUD-EST",
+        "validFrom": "2026-11-10T00:00:00Z",
+        "validTo": "2026-11-19T23:59:59Z",
+        "activationMode": "schedule",
+        "activationText": "ZRT activables. Prévision d'activation connue auprès de l'Airspace Manager à J-1 ouvré 10h00 Dates ZRT LIMOGEAIR ZRT BRIVAIR ZRT FLOURAIR 16 novembre 2026 1600 - 2300 1600 - 2300 1600 - 2300 1600 - 2300 1600 - 2300 1600 - 2300 17 novembre 2026 SPARE SPARE SPARE 1600 - 2300 1600 - 2300 1600 - 2300 18 novembre 2026 SPARE SPARE SPARE",
+        "lowerLimit": "SFC",
+        "upperLimit": "FL 155",
+        "verticalLimitsExtracted": true,
+        "verticalLimitNotice": null,
+        "sourcePdf": "https://www.sia.aviation-civile.gouv.fr/documents/download/f/d/15088562/",
+        "sourcePage": "https://www.sia.aviation-civile.gouv.fr/documents/supaip/aip/id/6",
+        "sourcePageNumber": 11,
+        "dataScope": "auto-sia",
+        "geometrySource": "automatic-layout-v3",
+        "geometryConfidence": "medium",
+        "geometryWarnings": [
+          "Exclusion interne non découpée: contour extérieur affiché par prudence.",
+          "Polygone invalide: Self-intersection[4.52945671585827 44.597496573459]"
+        ],
+        "sourceFingerprint": "7b100912f02621b038f1",
+        "parserVersion": "capclair-supaip-parser-3.0.3",
+        "frequency": "Clermont INFO / APP : 122,225 MHz 119,375 MHz 133,725 MHz | Limoges INFO : 124,050 MHz | Limoges APP : 118,080 MHz | Aquitaine INFO : 120,575 MHz | RAMBERT (CDC de Lyon Mont Verdun) : 143,550 MHz 317,500 MHz"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              5.0233333,
+              44.5941667
+            ],
+            [
+              5.0061111,
+              44.8011111
+            ],
+            [
+              5.1680556,
+              45.0205556
+            ],
+            [
+              6.1375,
+              45.015
+            ],
+            [
+              6.5458333,
+              44.5308333
+            ],
+            [
+              5.9836111,
+              44.5555556
+            ],
+            [
+              5.7338889,
+              44.4427778
+            ],
+            [
+              5.0233333,
+              44.5941667
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "231-26-zrt-limogeair",
+      "properties": {
+        "id": "231-26-zrt-limogeair",
+        "name": "ZRT LIMOGEAIR",
+        "zoneType": "ZRT",
+        "beta": true,
+        "supAip": "231/26",
+        "title": "Création de Zones Réglementées Temporaires (ZRT) au profit de l'exercice RW MC COURSE 2026, en régions CENTRE et SUD-EST",
+        "validFrom": "2026-11-10T00:00:00Z",
+        "validTo": "2026-11-19T23:59:59Z",
+        "activationMode": "schedule",
+        "activationText": "ZRT activables. Prévision d'activation connue auprès de l'Airspace Manager à J-1 ouvré 10h00 Dates ZRT LIMOGEAIR ZRT BRIVAIR ZRT FLOURAIR 16 novembre 2026 1600 - 2300 1600 - 2300 1600 - 2300 1600 - 2300 1600 - 2300 1600 - 2300 17 novembre 2026 SPARE SPARE SPARE 1600 - 2300 1600 - 2300 1600 - 2300 18 novembre 2026 SPARE SPARE SPARE",
+        "lowerLimit": "FL 115",
+        "upperLimit": "FL 195",
+        "verticalLimitsExtracted": true,
+        "verticalLimitNotice": null,
+        "sourcePdf": "https://www.sia.aviation-civile.gouv.fr/documents/download/f/d/15088562/",
+        "sourcePage": "https://www.sia.aviation-civile.gouv.fr/documents/supaip/aip/id/6",
+        "sourcePageNumber": 5,
+        "dataScope": "auto-sia",
+        "geometrySource": "automatic-layout-v3",
+        "geometryConfidence": "high",
+        "geometryWarnings": [],
+        "sourceFingerprint": "7b100912f02621b038f1",
+        "parserVersion": "capclair-supaip-parser-3.0.3",
+        "frequency": "Clermont INFO / APP : 122,225 MHz 119,375 MHz 133,725 MHz | Limoges INFO : 124,050 MHz | Limoges APP : 118,080 MHz | Aquitaine INFO : 120,575 MHz | RAMBERT (CDC de Lyon Mont Verdun) : 143,550 MHz 317,500 MHz"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              1.1430556,
+              45.7311111
+            ],
+            [
+              1.5705556,
+              46.1844444
+            ],
+            [
+              2.4255556,
+              46.2505556
+            ],
+            [
+              2.4274799,
+              46.2483332
+            ],
+            [
+              2.4290568,
+              46.2459837
+            ],
+            [
+              2.4304553,
+              46.2435808
+            ],
+            [
+              2.4316719,
+              46.241131
+            ],
+            [
+              2.4327031,
+              46.2386409
+            ],
+            [
+              2.4335463,
+              46.2361172
+            ],
+            [
+              2.4341991,
+              46.2335666
+            ],
+            [
+              2.43466,
+              46.230996
+            ],
+            [
+              2.4349277,
+              46.2284124
+            ],
+            [
+              2.4350014,
+              46.2258227
+            ],
+            [
+              2.4348811,
+              46.2232338
+            ],
+            [
+              2.434567,
+              46.2206527
+            ],
+            [
+              2.43406,
+              46.2180863
+            ],
+            [
+              2.4333616,
+              46.2155415
+            ],
+            [
+              2.4324736,
+              46.2130252
+            ],
+            [
+              2.4313985,
+              46.2105442
+            ],
+            [
+              2.430139,
+              46.2081049
+            ],
+            [
+              2.4285472,
+              46.2057611
+            ],
+            [
+              2.1983333,
+              46.1244444
+            ],
+            [
+              1.3416667,
+              45.6958333
+            ],
+            [
+              1.2616667,
+              45.5652778
+            ],
+            [
+              1.2451541,
+              45.5583291
+            ],
+            [
+              1.2283824,
+              45.5517085
+            ],
+            [
+              1.2112063,
+              45.54562
+            ],
+            [
+              1.1936602,
+              45.5400758
+            ],
+            [
+              1.1757793,
+              45.5350869
+            ],
+            [
+              1.1575992,
+              45.5306633
+            ],
+            [
+              1.1391561,
+              45.5268137
+            ],
+            [
+              1.1205556,
+              45.5233333
+            ],
+            [
+              1.1430556,
+              45.7311111
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "231-26-zrt-larzac-bravo",
+      "properties": {
+        "id": "231-26-zrt-larzac-bravo",
+        "name": "ZRT LARZAC BRAVO",
+        "zoneType": "ZRT",
+        "beta": true,
+        "supAip": "231/26",
+        "title": "Création de Zones Réglementées Temporaires (ZRT) au profit de l'exercice RW MC COURSE 2026, en régions CENTRE et SUD-EST",
+        "validFrom": "2026-11-10T00:00:00Z",
+        "validTo": "2026-11-19T23:59:59Z",
+        "activationMode": "schedule",
+        "activationText": "ZRT activables. Prévision d'activation connue auprès de l'Airspace Manager à J-1 ouvré 10h00 Dates ZRT LIMOGEAIR ZRT BRIVAIR ZRT FLOURAIR 16 novembre 2026 1600 - 2300 1600 - 2300 1600 - 2300 1600 - 2300 1600 - 2300 1600 - 2300 17 novembre 2026 SPARE SPARE SPARE 1600 - 2300 1600 - 2300 1600 - 2300 18 novembre 2026 SPARE SPARE SPARE",
+        "lowerLimit": "FL 105",
+        "upperLimit": "FL 195",
+        "verticalLimitsExtracted": true,
+        "verticalLimitNotice": null,
+        "sourcePdf": "https://www.sia.aviation-civile.gouv.fr/documents/download/f/d/15088562/",
+        "sourcePage": "https://www.sia.aviation-civile.gouv.fr/documents/supaip/aip/id/6",
+        "sourcePageNumber": 11,
+        "dataScope": "auto-sia",
+        "geometrySource": "automatic-layout-v3",
+        "geometryConfidence": "high",
+        "geometryWarnings": [],
+        "sourceFingerprint": "7b100912f02621b038f1",
+        "parserVersion": "capclair-supaip-parser-3.0.3",
+        "frequency": "Clermont INFO / APP : 122,225 MHz 119,375 MHz 133,725 MHz | Limoges INFO : 124,050 MHz | Limoges APP : 118,080 MHz | Aquitaine INFO : 120,575 MHz | RAMBERT (CDC de Lyon Mont Verdun) : 143,550 MHz 317,500 MHz"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              3.3341667,
+              44.6055556
+            ],
+            [
+              3.5583333,
+              44.6194444
+            ],
+            [
+              3.775,
+              44.4666667
+            ],
+            [
+              3.4533333,
+              44.4072222
+            ],
+            [
+              3.6319444,
+              44.1830556
+            ],
+            [
+              3.4316667,
+              44.1016667
+            ],
+            [
+              3.5466667,
+              43.9552778
+            ],
+            [
+              3.2763889,
+              43.8894444
+            ],
+            [
+              3.2727778,
+              43.8575
+            ],
+            [
+              2.98,
+              43.9461111
+            ],
+            [
+              2.8980556,
+              44.0238889
+            ],
+            [
+              2.9086111,
+              44.2608333
+            ],
+            [
+              2.9675,
+              44.4230556
+            ],
+            [
+              3.19,
+              44.5680556
+            ],
+            [
+              3.3341667,
+              44.6055556
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "231-26-zrt-larzac-alpha",
+      "properties": {
+        "id": "231-26-zrt-larzac-alpha",
+        "name": "ZRT LARZAC ALPHA",
+        "zoneType": "ZRT",
+        "beta": true,
+        "supAip": "231/26",
+        "title": "Création de Zones Réglementées Temporaires (ZRT) au profit de l'exercice RW MC COURSE 2026, en régions CENTRE et SUD-EST",
+        "validFrom": "2026-11-10T00:00:00Z",
+        "validTo": "2026-11-19T23:59:59Z",
+        "activationMode": "schedule",
+        "activationText": "ZRT activables. Prévision d'activation connue auprès de l'Airspace Manager à J-1 ouvré 10h00 Dates ZRT LIMOGEAIR ZRT BRIVAIR ZRT FLOURAIR 16 novembre 2026 1600 - 2300 1600 - 2300 1600 - 2300 1600 - 2300 1600 - 2300 1600 - 2300 17 novembre 2026 SPARE SPARE SPARE 1600 - 2300 1600 - 2300 1600 - 2300 18 novembre 2026 SPARE SPARE SPARE",
+        "lowerLimit": "SFC",
+        "upperLimit": "FL 105",
+        "verticalLimitsExtracted": true,
+        "verticalLimitNotice": null,
+        "sourcePdf": "https://www.sia.aviation-civile.gouv.fr/documents/download/f/d/15088562/",
+        "sourcePage": "https://www.sia.aviation-civile.gouv.fr/documents/supaip/aip/id/6",
+        "sourcePageNumber": 11,
+        "dataScope": "auto-sia",
+        "geometrySource": "automatic-layout-v3",
+        "geometryConfidence": "high",
+        "geometryWarnings": [],
+        "sourceFingerprint": "7b100912f02621b038f1",
+        "parserVersion": "capclair-supaip-parser-3.0.3",
+        "frequency": "Clermont INFO / APP : 122,225 MHz 119,375 MHz 133,725 MHz | Limoges INFO : 124,050 MHz | Limoges APP : 118,080 MHz | Aquitaine INFO : 120,575 MHz | RAMBERT (CDC de Lyon Mont Verdun) : 143,550 MHz 317,500 MHz"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              3.3341667,
+              44.6055556
+            ],
+            [
+              3.5583333,
+              44.6194444
+            ],
+            [
+              3.775,
+              44.4666667
+            ],
+            [
+              3.4533333,
+              44.4072222
+            ],
+            [
+              3.6319444,
+              44.1830556
+            ],
+            [
+              3.4316667,
+              44.1016667
+            ],
+            [
+              3.5466667,
+              43.9552778
+            ],
+            [
+              3.2763889,
+              43.8894444
+            ],
+            [
+              3.2727778,
+              43.8575
+            ],
+            [
+              2.98,
+              43.9461111
+            ],
+            [
+              2.8980556,
+              44.0238889
+            ],
+            [
+              2.9086111,
+              44.2608333
+            ],
+            [
+              2.9675,
+              44.4230556
+            ],
+            [
+              3.19,
+              44.5680556
+            ],
+            [
+              3.3341667,
+              44.6055556
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "231-26-zrt-lamanon",
+      "properties": {
+        "id": "231-26-zrt-lamanon",
+        "name": "ZRT LAMANON",
+        "zoneType": "ZRT",
+        "beta": true,
+        "supAip": "231/26",
+        "title": "Création de Zones Réglementées Temporaires (ZRT) au profit de l'exercice RW MC COURSE 2026, en régions CENTRE et SUD-EST",
+        "validFrom": "2026-11-10T00:00:00Z",
+        "validTo": "2026-11-19T23:59:59Z",
+        "activationMode": "schedule",
+        "activationText": "ZRT activables. Prévision d'activation connue auprès de l'Airspace Manager à J-1 ouvré 10h00 Dates ZRT LIMOGEAIR ZRT BRIVAIR ZRT FLOURAIR 16 novembre 2026 1600 - 2300 1600 - 2300 1600 - 2300 1600 - 2300 1600 - 2300 1600 - 2300 17 novembre 2026 SPARE SPARE SPARE 1600 - 2300 1600 - 2300 1600 - 2300 18 novembre 2026 SPARE SPARE SPARE",
+        "lowerLimit": "SFC",
+        "upperLimit": "4000 ft AMSL",
+        "verticalLimitsExtracted": true,
+        "verticalLimitNotice": null,
+        "sourcePdf": "https://www.sia.aviation-civile.gouv.fr/documents/download/f/d/15088562/",
+        "sourcePage": "https://www.sia.aviation-civile.gouv.fr/documents/supaip/aip/id/6",
+        "sourcePageNumber": 12,
+        "dataScope": "auto-sia",
+        "geometrySource": "automatic-layout-v3",
+        "geometryConfidence": "high",
+        "geometryWarnings": [],
+        "sourceFingerprint": "7b100912f02621b038f1",
+        "parserVersion": "capclair-supaip-parser-3.0.3",
+        "frequency": "Clermont INFO / APP : 122,225 MHz 119,375 MHz 133,725 MHz | Limoges INFO : 124,050 MHz | Limoges APP : 118,080 MHz | Aquitaine INFO : 120,575 MHz | RAMBERT (CDC de Lyon Mont Verdun) : 143,550 MHz 317,500 MHz"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              4.9736111,
+              43.7594444
+            ],
+            [
+              5.1819444,
+              43.7594444
+            ],
+            [
+              5.1819444,
+              43.6394444
+            ],
+            [
+              5.0363889,
+              43.6394444
+            ],
+            [
+              5.0333333,
+              43.65
+            ],
+            [
+              5.0191667,
+              43.6761111
+            ],
+            [
+              4.9736111,
+              43.7594444
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "231-26-zrt-la-grand-combe-bravo",
+      "properties": {
+        "id": "231-26-zrt-la-grand-combe-bravo",
+        "name": "ZRT LA GRAND'COMBE BRAVO",
+        "zoneType": "ZRT",
+        "beta": true,
+        "supAip": "231/26",
+        "title": "Création de Zones Réglementées Temporaires (ZRT) au profit de l'exercice RW MC COURSE 2026, en régions CENTRE et SUD-EST",
+        "validFrom": "2026-11-10T00:00:00Z",
+        "validTo": "2026-11-19T23:59:59Z",
+        "activationMode": "schedule",
+        "activationText": "ZRT activables. Prévision d'activation connue auprès de l'Airspace Manager à J-1 ouvré 10h00 Dates ZRT LIMOGEAIR ZRT BRIVAIR ZRT FLOURAIR 16 novembre 2026 1600 - 2300 1600 - 2300 1600 - 2300 1600 - 2300 1600 - 2300 1600 - 2300 17 novembre 2026 SPARE SPARE SPARE 1600 - 2300 1600 - 2300 1600 - 2300 18 novembre 2026 SPARE SPARE SPARE",
+        "lowerLimit": "FL 075",
+        "upperLimit": "FL 195",
+        "verticalLimitsExtracted": true,
+        "verticalLimitNotice": null,
+        "sourcePdf": "https://www.sia.aviation-civile.gouv.fr/documents/download/f/d/15088562/",
+        "sourcePage": "https://www.sia.aviation-civile.gouv.fr/documents/supaip/aip/id/6",
+        "sourcePageNumber": 11,
+        "dataScope": "auto-sia",
+        "geometrySource": "automatic-layout-v3",
+        "geometryConfidence": "high",
+        "geometryWarnings": [
+          "Polygone invalide: Self-intersection[4.22217819481437 44.5]"
+        ],
+        "sourceFingerprint": "7b100912f02621b038f1",
+        "parserVersion": "capclair-supaip-parser-3.0.3",
+        "frequency": "Clermont INFO / APP : 122,225 MHz 119,375 MHz 133,725 MHz | Limoges INFO : 124,050 MHz | Limoges APP : 118,080 MHz | Aquitaine INFO : 120,575 MHz | RAMBERT (CDC de Lyon Mont Verdun) : 143,550 MHz 317,500 MHz"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              4.6358333,
+              44.4380556
+            ],
+            [
+              4.3363889,
+              44.0333333
+            ],
+            [
+              4.2461111,
+              44.0333333
+            ],
+            [
+              3.8830556,
+              43.8641667
+            ],
+            [
+              3.4533333,
+              44.4072222
+            ],
+            [
+              3.7766667,
+              44.4669444
+            ],
+            [
+              4.0047222,
+              44.5
+            ],
+            [
+              4.5944444,
+              44.5
+            ],
+            [
+              4.6358333,
+              44.4380556
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "231-26-zrt-la-grand-combe-alpha",
+      "properties": {
+        "id": "231-26-zrt-la-grand-combe-alpha",
+        "name": "ZRT LA GRAND'COMBE ALPHA",
+        "zoneType": "ZRT",
+        "beta": true,
+        "supAip": "231/26",
+        "title": "Création de Zones Réglementées Temporaires (ZRT) au profit de l'exercice RW MC COURSE 2026, en régions CENTRE et SUD-EST",
+        "validFrom": "2026-11-10T00:00:00Z",
+        "validTo": "2026-11-19T23:59:59Z",
+        "activationMode": "schedule",
+        "activationText": "ZRT activables. Prévision d'activation connue auprès de l'Airspace Manager à J-1 ouvré 10h00 Dates ZRT LIMOGEAIR ZRT BRIVAIR ZRT FLOURAIR 16 novembre 2026 1600 - 2300 1600 - 2300 1600 - 2300 1600 - 2300 1600 - 2300 1600 - 2300 17 novembre 2026 SPARE SPARE SPARE 1600 - 2300 1600 - 2300 1600 - 2300 18 novembre 2026 SPARE SPARE SPARE",
+        "lowerLimit": "SFC",
+        "upperLimit": "FL 075",
+        "verticalLimitsExtracted": true,
+        "verticalLimitNotice": null,
+        "sourcePdf": "https://www.sia.aviation-civile.gouv.fr/documents/download/f/d/15088562/",
+        "sourcePage": "https://www.sia.aviation-civile.gouv.fr/documents/supaip/aip/id/6",
+        "sourcePageNumber": 11,
+        "dataScope": "auto-sia",
+        "geometrySource": "automatic-layout-v3",
+        "geometryConfidence": "high",
+        "geometryWarnings": [
+          "Polygone invalide: Self-intersection[4.59641594765173 44.3848421743298]"
+        ],
+        "sourceFingerprint": "7b100912f02621b038f1",
+        "parserVersion": "capclair-supaip-parser-3.0.3",
+        "frequency": "Clermont INFO / APP : 122,225 MHz 119,375 MHz 133,725 MHz | Limoges INFO : 124,050 MHz | Limoges APP : 118,080 MHz | Aquitaine INFO : 120,575 MHz | RAMBERT (CDC de Lyon Mont Verdun) : 143,550 MHz 317,500 MHz"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              4.6358333,
+              44.4380556
+            ],
+            [
+              4.3363889,
+              44.0333333
+            ],
+            [
+              4.2461111,
+              44.0333333
+            ],
+            [
+              3.8830556,
+              43.8641667
+            ],
+            [
+              3.4533333,
+              44.4072222
+            ],
+            [
+              3.7766667,
+              44.4669444
+            ],
+            [
+              4.0047222,
+              44.5
+            ],
+            [
+              4.5944444,
+              44.5
+            ],
+            [
+              4.6358333,
+              44.4380556
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "231-26-zrt-flourair",
+      "properties": {
+        "id": "231-26-zrt-flourair",
+        "name": "ZRT FLOURAIR",
+        "zoneType": "ZRT",
+        "beta": true,
+        "supAip": "231/26",
+        "title": "Création de Zones Réglementées Temporaires (ZRT) au profit de l'exercice RW MC COURSE 2026, en régions CENTRE et SUD-EST",
+        "validFrom": "2026-11-10T00:00:00Z",
+        "validTo": "2026-11-19T23:59:59Z",
+        "activationMode": "schedule",
+        "activationText": "ZRT activables. Prévision d'activation connue auprès de l'Airspace Manager à J-1 ouvré 10h00 Dates ZRT LIMOGEAIR ZRT BRIVAIR ZRT FLOURAIR 16 novembre 2026 1600 - 2300 1600 - 2300 1600 - 2300 1600 - 2300 1600 - 2300 1600 - 2300 17 novembre 2026 SPARE SPARE SPARE 1600 - 2300 1600 - 2300 1600 - 2300 18 novembre 2026 SPARE SPARE SPARE",
+        "lowerLimit": "FL 115",
+        "upperLimit": "FL 195",
+        "verticalLimitsExtracted": true,
+        "verticalLimitNotice": null,
+        "sourcePdf": "https://www.sia.aviation-civile.gouv.fr/documents/download/f/d/15088562/",
+        "sourcePage": "https://www.sia.aviation-civile.gouv.fr/documents/supaip/aip/id/6",
+        "sourcePageNumber": 5,
+        "dataScope": "auto-sia",
+        "geometrySource": "automatic-layout-v3",
+        "geometryConfidence": "high",
+        "geometryWarnings": [],
+        "sourceFingerprint": "7b100912f02621b038f1",
+        "parserVersion": "capclair-supaip-parser-3.0.3",
+        "frequency": "Clermont INFO / APP : 122,225 MHz 119,375 MHz 133,725 MHz | Limoges INFO : 124,050 MHz | Limoges APP : 118,080 MHz | Aquitaine INFO : 120,575 MHz | RAMBERT (CDC de Lyon Mont Verdun) : 143,550 MHz 317,500 MHz"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              3.0241667,
+              45.1441667
+            ],
+            [
+              3.0380556,
+              44.7169444
+            ],
+            [
+              2.4166667,
+              44.7427778
+            ],
+            [
+              3.0241667,
+              45.1441667
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "231-26-zrt-connaux",
+      "properties": {
+        "id": "231-26-zrt-connaux",
+        "name": "ZRT CONNAUX",
+        "zoneType": "ZRT",
+        "beta": true,
+        "supAip": "231/26",
+        "title": "Création de Zones Réglementées Temporaires (ZRT) au profit de l'exercice RW MC COURSE 2026, en régions CENTRE et SUD-EST",
+        "validFrom": "2026-11-10T00:00:00Z",
+        "validTo": "2026-11-19T23:59:59Z",
+        "activationMode": "schedule",
+        "activationText": "ZRT activables. Prévision d'activation connue auprès de l'Airspace Manager à J-1 ouvré 10h00 Dates ZRT LIMOGEAIR ZRT BRIVAIR ZRT FLOURAIR 16 novembre 2026 1600 - 2300 1600 - 2300 1600 - 2300 1600 - 2300 1600 - 2300 1600 - 2300 17 novembre 2026 SPARE SPARE SPARE 1600 - 2300 1600 - 2300 1600 - 2300 18 novembre 2026 SPARE SPARE SPARE",
+        "lowerLimit": "SFC",
+        "upperLimit": "4000 ft AMSL",
+        "verticalLimitsExtracted": true,
+        "verticalLimitNotice": null,
+        "sourcePdf": "https://www.sia.aviation-civile.gouv.fr/documents/download/f/d/15088562/",
+        "sourcePage": "https://www.sia.aviation-civile.gouv.fr/documents/supaip/aip/id/6",
+        "sourcePageNumber": 10,
+        "dataScope": "auto-sia",
+        "geometrySource": "automatic-layout-v3",
+        "geometryConfidence": "high",
+        "geometryWarnings": [],
+        "sourceFingerprint": "7b100912f02621b038f1",
+        "parserVersion": "capclair-supaip-parser-3.0.3",
+        "frequency": "Clermont INFO / APP : 122,225 MHz 119,375 MHz 133,725 MHz | Limoges INFO : 124,050 MHz | Limoges APP : 118,080 MHz | Aquitaine INFO : 120,575 MHz | RAMBERT (CDC de Lyon Mont Verdun) : 143,550 MHz 317,500 MHz"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              4.55,
+              43.9458333
+            ],
+            [
+              4.5202778,
+              44.0313889
+            ],
+            [
+              4.5166667,
+              44.15
+            ],
+            [
+              4.5997222,
+              44.1252778
+            ],
+            [
+              4.7652778,
+              44.0122222
+            ],
+            [
+              4.55,
+              43.9458333
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "231-26-zrt-brivair",
+      "properties": {
+        "id": "231-26-zrt-brivair",
+        "name": "ZRT BRIVAIR",
+        "zoneType": "ZRT",
+        "beta": true,
+        "supAip": "231/26",
+        "title": "Création de Zones Réglementées Temporaires (ZRT) au profit de l'exercice RW MC COURSE 2026, en régions CENTRE et SUD-EST",
+        "validFrom": "2026-11-10T00:00:00Z",
+        "validTo": "2026-11-19T23:59:59Z",
+        "activationMode": "schedule",
+        "activationText": "ZRT activables. Prévision d'activation connue auprès de l'Airspace Manager à J-1 ouvré 10h00 Dates ZRT LIMOGEAIR ZRT BRIVAIR ZRT FLOURAIR 16 novembre 2026 1600 - 2300 1600 - 2300 1600 - 2300 1600 - 2300 1600 - 2300 1600 - 2300 17 novembre 2026 SPARE SPARE SPARE 1600 - 2300 1600 - 2300 1600 - 2300 18 novembre 2026 SPARE SPARE SPARE",
+        "lowerLimit": "FL 115",
+        "upperLimit": "FL 195",
+        "verticalLimitsExtracted": true,
+        "verticalLimitNotice": null,
+        "sourcePdf": "https://www.sia.aviation-civile.gouv.fr/documents/download/f/d/15088562/",
+        "sourcePage": "https://www.sia.aviation-civile.gouv.fr/documents/supaip/aip/id/6",
+        "sourcePageNumber": 5,
+        "dataScope": "auto-sia",
+        "geometrySource": "automatic-layout-v3",
+        "geometryConfidence": "high",
+        "geometryWarnings": [],
+        "sourceFingerprint": "7b100912f02621b038f1",
+        "parserVersion": "capclair-supaip-parser-3.0.3",
+        "frequency": "Clermont INFO / APP : 122,225 MHz 119,375 MHz 133,725 MHz | Limoges INFO : 124,050 MHz | Limoges APP : 118,080 MHz | Aquitaine INFO : 120,575 MHz | RAMBERT (CDC de Lyon Mont Verdun) : 143,550 MHz 317,500 MHz"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              1.2616667,
+              45.5652778
+            ],
+            [
+              1.2451541,
+              45.5583291
+            ],
+            [
+              1.2283824,
+              45.5517085
+            ],
+            [
+              1.2112063,
+              45.54562
+            ],
+            [
+              1.1936602,
+              45.5400758
+            ],
+            [
+              1.1757793,
+              45.5350869
+            ],
+            [
+              1.1575992,
+              45.5306633
+            ],
+            [
+              1.1391561,
+              45.5268137
+            ],
+            [
+              1.1205556,
+              45.5233333
+            ],
+            [
+              1.0577778,
+              44.7477778
+            ],
+            [
+              1.4775,
+              44.7802778
+            ],
+            [
+              1.9641667,
+              44.7583333
+            ],
+            [
+              1.7394444,
+              44.8138889
+            ],
+            [
+              1.5333333,
+              45.1666667
+            ],
+            [
+              1.2616667,
+              45.5652778
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "231-26-zrt-aubenas-bravo",
+      "properties": {
+        "id": "231-26-zrt-aubenas-bravo",
+        "name": "ZRT AUBENAS BRAVO",
+        "zoneType": "ZRT",
+        "beta": true,
+        "supAip": "231/26",
+        "title": "Création de Zones Réglementées Temporaires (ZRT) au profit de l'exercice RW MC COURSE 2026, en régions CENTRE et SUD-EST",
+        "validFrom": "2026-11-10T00:00:00Z",
+        "validTo": "2026-11-19T23:59:59Z",
+        "activationMode": "schedule",
+        "activationText": "ZRT activables. Prévision d'activation connue auprès de l'Airspace Manager à J-1 ouvré 10h00 Dates ZRT LIMOGEAIR ZRT BRIVAIR ZRT FLOURAIR 16 novembre 2026 1600 - 2300 1600 - 2300 1600 - 2300 1600 - 2300 1600 - 2300 1600 - 2300 17 novembre 2026 SPARE SPARE SPARE 1600 - 2300 1600 - 2300 1600 - 2300 18 novembre 2026 SPARE SPARE SPARE",
+        "lowerLimit": "FL 075",
+        "upperLimit": "FL 195",
+        "verticalLimitsExtracted": true,
+        "verticalLimitNotice": null,
+        "sourcePdf": "https://www.sia.aviation-civile.gouv.fr/documents/download/f/d/15088562/",
+        "sourcePage": "https://www.sia.aviation-civile.gouv.fr/documents/supaip/aip/id/6",
+        "sourcePageNumber": 11,
+        "dataScope": "auto-sia",
+        "geometrySource": "automatic-layout-v3",
+        "geometryConfidence": "high",
+        "geometryWarnings": [],
+        "sourceFingerprint": "7b100912f02621b038f1",
+        "parserVersion": "capclair-supaip-parser-3.0.3",
+        "frequency": "Clermont INFO / APP : 122,225 MHz 119,375 MHz 133,725 MHz | Limoges INFO : 124,050 MHz | Limoges APP : 118,080 MHz | Aquitaine INFO : 120,575 MHz | RAMBERT (CDC de Lyon Mont Verdun) : 143,550 MHz 317,500 MHz"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              3.9127778,
+              44.3816667
+            ],
+            [
+              4.2308333,
+              44.6002778
+            ],
+            [
+              4.3355556,
+              44.7680556
+            ],
+            [
+              4.5166667,
+              44.6166667
+            ],
+            [
+              4.6358333,
+              44.4380556
+            ],
+            [
+              4.4358333,
+              44.1680556
+            ],
+            [
+              4.1833333,
+              44.2333333
+            ],
+            [
+              3.9127778,
+              44.3816667
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "231-26-zrt-aubenas-alpha",
+      "properties": {
+        "id": "231-26-zrt-aubenas-alpha",
+        "name": "ZRT AUBENAS ALPHA",
+        "zoneType": "ZRT",
+        "beta": true,
+        "supAip": "231/26",
+        "title": "Création de Zones Réglementées Temporaires (ZRT) au profit de l'exercice RW MC COURSE 2026, en régions CENTRE et SUD-EST",
+        "validFrom": "2026-11-10T00:00:00Z",
+        "validTo": "2026-11-19T23:59:59Z",
+        "activationMode": "schedule",
+        "activationText": "ZRT activables. Prévision d'activation connue auprès de l'Airspace Manager à J-1 ouvré 10h00 Dates ZRT LIMOGEAIR ZRT BRIVAIR ZRT FLOURAIR 16 novembre 2026 1600 - 2300 1600 - 2300 1600 - 2300 1600 - 2300 1600 - 2300 1600 - 2300 17 novembre 2026 SPARE SPARE SPARE 1600 - 2300 1600 - 2300 1600 - 2300 18 novembre 2026 SPARE SPARE SPARE",
+        "lowerLimit": "SFC",
+        "upperLimit": "FL 075",
+        "verticalLimitsExtracted": true,
+        "verticalLimitNotice": null,
+        "sourcePdf": "https://www.sia.aviation-civile.gouv.fr/documents/download/f/d/15088562/",
+        "sourcePage": "https://www.sia.aviation-civile.gouv.fr/documents/supaip/aip/id/6",
+        "sourcePageNumber": 11,
+        "dataScope": "auto-sia",
+        "geometrySource": "automatic-layout-v3",
+        "geometryConfidence": "high",
+        "geometryWarnings": [],
+        "sourceFingerprint": "7b100912f02621b038f1",
+        "parserVersion": "capclair-supaip-parser-3.0.3",
+        "frequency": "Clermont INFO / APP : 122,225 MHz 119,375 MHz 133,725 MHz | Limoges INFO : 124,050 MHz | Limoges APP : 118,080 MHz | Aquitaine INFO : 120,575 MHz | RAMBERT (CDC de Lyon Mont Verdun) : 143,550 MHz 317,500 MHz"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              3.9127778,
+              44.3816667
+            ],
+            [
+              4.2308333,
+              44.6002778
+            ],
+            [
+              4.3355556,
+              44.7680556
+            ],
+            [
+              4.5166667,
+              44.6166667
+            ],
+            [
+              4.6358333,
+              44.4380556
+            ],
+            [
+              4.4358333,
+              44.1680556
+            ],
+            [
+              4.1833333,
+              44.2333333
+            ],
+            [
+              3.9127778,
+              44.3816667
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "230-26-zrt-aubenas-vals-les-bains",
+      "properties": {
+        "id": "230-26-zrt-aubenas-vals-les-bains",
+        "name": "ZRT AUBENAS - VALS LES BAINS",
+        "zoneType": "ZRT",
+        "beta": true,
+        "supAip": "230/26",
+        "title": "Création d'une ZRT au profit de vols d'un aéronef sans équipage à bord, hors vue de jour, à Aubenas (07)",
+        "validFrom": "2026-11-02T00:00:00Z",
+        "validTo": "2027-10-30T23:59:59Z",
+        "activationMode": "notam",
+        "activationText": "ZRT AUBENAS - VALS LES BAINS - Du 02 novembre 2026 au 30 octobre 2027 de 0600 à 1800 tous les jours sauf Dimanche et jours fériés Activable par NOTAM avec préavis de 72 h - ETE - 1HR FR Page 1/2 © SIA --- PAGE 2 --- SUP AIP 230/26 Date de publication : 22 OCT 2026",
+        "lowerLimit": "SFC",
+        "upperLimit": "400 ft ASFC",
+        "verticalLimitsExtracted": true,
+        "verticalLimitNotice": null,
+        "sourcePdf": "https://www.sia.aviation-civile.gouv.fr/documents/download/f/d/15088560/",
+        "sourcePage": "https://www.sia.aviation-civile.gouv.fr/documents/supaip/aip/id/6",
+        "sourcePageNumber": 2,
+        "dataScope": "auto-sia",
+        "geometrySource": "automatic-layout-v3",
+        "geometryConfidence": "medium",
+        "geometryWarnings": [
+          "Exclusion interne non découpée: contour extérieur affiché par prudence."
+        ],
+        "sourceFingerprint": "3b2bed236e22b6feaefa",
+        "parserVersion": "capclair-supaip-parser-3.0.3"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              4.3680556,
+              44.6613889
+            ],
+            [
+              4.3641667,
+              44.6475
+            ],
+            [
+              4.4166667,
+              44.6405556
+            ],
+            [
+              4.3891667,
+              44.6072222
+            ],
+            [
+              4.41,
+              44.5994444
+            ],
+            [
+              4.4425,
+              44.64
+            ],
+            [
+              4.4330556,
+              44.6527778
+            ],
+            [
+              4.3680556,
+              44.6613889
             ]
           ]
         ]
@@ -50678,8 +54078,8 @@
       }
     }
   ],
-  "generatedAt": "2026-10-21T21:48:37Z",
-  "datasetGeneratedAt": "2026-10-21T21:48:37Z",
-  "datasetRevision": "313dd5226148594e6aabd8b1140e7618ca87f036f4cb7a6cdbca57b28e5b5687",
-  "businessContentSha256": "313dd5226148594e6aabd8b1140e7618ca87f036f4cb7a6cdbca57b28e5b5687"
+  "generatedAt": "2026-10-22T05:00:02Z",
+  "datasetGeneratedAt": "2026-10-22T05:00:02Z",
+  "datasetRevision": "f52383e57ced700ba15e7dbceb261e28a826f4a3c476eb58940d101cc009c240",
+  "businessContentSha256": "f52383e57ced700ba15e7dbceb261e28a826f4a3c476eb58940d101cc009c240"
 }
