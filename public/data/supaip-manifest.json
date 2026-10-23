@@ -1,9 +1,9 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-10-23T11:48:17Z",
-  "datasetGeneratedAt": "2026-10-23T11:48:17Z",
-  "datasetRevision": "754628448d7733a7d1f1d5c677184eb84a56916c6250696b959426b9e3b9c3e4",
-  "businessContentSha256": "754628448d7733a7d1f1d5c677184eb84a56916c6250696b959426b9e3b9c3e4",
+  "generatedAt": "2026-10-23T17:15:30Z",
+  "datasetGeneratedAt": "2026-10-23T17:15:30Z",
+  "datasetRevision": "5c9e3e9bf2c76b10d3e8ad7e45e9e43e29e06430d610b976fd296e7a1afb963f",
+  "businessContentSha256": "5c9e3e9bf2c76b10d3e8ad7e45e9e43e29e06430d610b976fd296e7a1afb963f",
   "sourceUrl": "https://www.sia.aviation-civile.gouv.fr/documents/supaip/aip/id/6",
   "parserVersion": "capclair-supaip-parser-3.0.3",
   "publications": [
@@ -118,7 +118,7 @@
       "safetyFallbackFeatureNames": [],
       "ignoredReferenceObjectCount": 0,
       "sourcePdf": "https://www.sia.aviation-civile.gouv.fr/documents/download/f/d/15088562/",
-      "sourceFingerprint": "7b100912f02621b038f1",
+      "sourceFingerprint": "f81f577cb8a75046af8a",
       "parserVersion": "capclair-supaip-parser-3.0.3"
     },
     {
@@ -1947,20 +1947,20 @@
   "publicationsWithGeometry": 81,
   "featuresWithVerticalLimits": 466,
   "featuresWithoutVerticalLimits": 2,
-  "geoJsonSha256": "336c1f2fc03b8f33158977bde6aab05e461d308ca5fa75faa00084de5e90e6ff",
+  "geoJsonSha256": "86297b097ffcbf153e383888bc44d2e8f2cd9be2bdd619e4cb6814952da7dd18",
   "geoJsonSize": 1641475,
   "files": {
     "data.geojson": {
-      "sha256": "336c1f2fc03b8f33158977bde6aab05e461d308ca5fa75faa00084de5e90e6ff",
+      "sha256": "86297b097ffcbf153e383888bc44d2e8f2cd9be2bdd619e4cb6814952da7dd18",
       "size": 1641475
     },
     "status.json": {
-      "sha256": "207cb96e95ef2be0a721aa8f48d536333f74229135858e1de296f176a8d5ecf1",
+      "sha256": "310d9caa52f262c49bf80daf8d5fc6cae74c459c4d936cad0967db3cb5bcfb9f",
       "size": 3894
     },
     "unmapped.json": {
-      "sha256": "f271772dd7612aae2fd22bdda40ead2de916b74cd5be478ce1173c22806cbefc",
-      "size": 80663
+      "sha256": "d16ed050d2918cc4316de7ebe74574cde8471fd836da385cf73aaa1891d57dfa",
+      "size": 81846
     }
   },
   "legacyInvalidGeometryExceptions": [

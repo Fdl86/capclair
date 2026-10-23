@@ -2559,7 +2559,7 @@
         "supAip": "231/26",
         "title": "Création de Zones Réglementées Temporaires (ZRT) au profit de l'exercice RW MC COURSE 2026, en régions CENTRE et SUD-EST",
         "validFrom": "2026-11-10T00:00:00Z",
-        "validTo": "2026-11-19T23:59:59Z",
+        "validTo": "2026-11-10T23:59:59Z",
         "activationMode": "schedule",
         "activationText": "ZRT activables. Prévision d'activation connue auprès de l'Airspace Manager à J-1 ouvré 10h00 Dates ZRT LIMOGEAIR ZRT BRIVAIR ZRT FLOURAIR 16 novembre 2026 1600 - 2300 1600 - 2300 1600 - 2300 1600 - 2300 1600 - 2300 1600 - 2300 17 novembre 2026 SPARE SPARE SPARE 1600 - 2300 1600 - 2300 1600 - 2300 18 novembre 2026 SPARE SPARE SPARE",
         "lowerLimit": "SFC",
@@ -2573,7 +2573,7 @@
         "geometrySource": "automatic-layout-v3",
         "geometryConfidence": "high",
         "geometryWarnings": [],
-        "sourceFingerprint": "7b100912f02621b038f1",
+        "sourceFingerprint": "f81f577cb8a75046af8a",
         "parserVersion": "capclair-supaip-parser-3.0.3",
         "frequency": "Clermont INFO / APP : 122,225 MHz 119,375 MHz 133,725 MHz | Limoges INFO : 124,050 MHz | Limoges APP : 118,080 MHz | Aquitaine INFO : 120,575 MHz | RAMBERT (CDC de Lyon Mont Verdun) : 143,550 MHz 317,500 MHz"
       },
@@ -2616,7 +2616,7 @@
         "supAip": "231/26",
         "title": "Création de Zones Réglementées Temporaires (ZRT) au profit de l'exercice RW MC COURSE 2026, en régions CENTRE et SUD-EST",
         "validFrom": "2026-11-10T00:00:00Z",
-        "validTo": "2026-11-19T23:59:59Z",
+        "validTo": "2026-11-10T23:59:59Z",
         "activationMode": "schedule",
         "activationText": "ZRT activables. Prévision d'activation connue auprès de l'Airspace Manager à J-1 ouvré 10h00 Dates ZRT LIMOGEAIR ZRT BRIVAIR ZRT FLOURAIR 16 novembre 2026 1600 - 2300 1600 - 2300 1600 - 2300 1600 - 2300 1600 - 2300 1600 - 2300 17 novembre 2026 SPARE SPARE SPARE 1600 - 2300 1600 - 2300 1600 - 2300 18 novembre 2026 SPARE SPARE SPARE",
         "lowerLimit": "SFC",
@@ -2632,7 +2632,7 @@
         "geometryWarnings": [
           "Exclusion interne non découpée: contour extérieur affiché par prudence."
         ],
-        "sourceFingerprint": "7b100912f02621b038f1",
+        "sourceFingerprint": "f81f577cb8a75046af8a",
         "parserVersion": "capclair-supaip-parser-3.0.3",
         "frequency": "Clermont INFO / APP : 122,225 MHz 119,375 MHz 133,725 MHz | Limoges INFO : 124,050 MHz | Limoges APP : 118,080 MHz | Aquitaine INFO : 120,575 MHz | RAMBERT (CDC de Lyon Mont Verdun) : 143,550 MHz 317,500 MHz"
       },
@@ -2683,7 +2683,7 @@
         "supAip": "231/26",
         "title": "Création de Zones Réglementées Temporaires (ZRT) au profit de l'exercice RW MC COURSE 2026, en régions CENTRE et SUD-EST",
         "validFrom": "2026-11-10T00:00:00Z",
-        "validTo": "2026-11-19T23:59:59Z",
+        "validTo": "2026-11-10T23:59:59Z",
         "activationMode": "schedule",
         "activationText": "ZRT activables. Prévision d'activation connue auprès de l'Airspace Manager à J-1 ouvré 10h00 Dates ZRT LIMOGEAIR ZRT BRIVAIR ZRT FLOURAIR 16 novembre 2026 1600 - 2300 1600 - 2300 1600 - 2300 1600 - 2300 1600 - 2300 1600 - 2300 17 novembre 2026 SPARE SPARE SPARE 1600 - 2300 1600 - 2300 1600 - 2300 18 novembre 2026 SPARE SPARE SPARE",
         "lowerLimit": "FL 075",
@@ -2699,7 +2699,7 @@
         "geometryWarnings": [
           "Exclusion interne non découpée: contour extérieur affiché par prudence."
         ],
-        "sourceFingerprint": "7b100912f02621b038f1",
+        "sourceFingerprint": "f81f577cb8a75046af8a",
         "parserVersion": "capclair-supaip-parser-3.0.3",
         "frequency": "Clermont INFO / APP : 122,225 MHz 119,375 MHz 133,725 MHz | Limoges INFO : 124,050 MHz | Limoges APP : 118,080 MHz | Aquitaine INFO : 120,575 MHz | RAMBERT (CDC de Lyon Mont Verdun) : 143,550 MHz 317,500 MHz"
       },
@@ -2750,7 +2750,7 @@
         "supAip": "231/26",
         "title": "Création de Zones Réglementées Temporaires (ZRT) au profit de l'exercice RW MC COURSE 2026, en régions CENTRE et SUD-EST",
         "validFrom": "2026-11-10T00:00:00Z",
-        "validTo": "2026-11-19T23:59:59Z",
+        "validTo": "2026-11-10T23:59:59Z",
         "activationMode": "schedule",
         "activationText": "ZRT activables. Prévision d'activation connue auprès de l'Airspace Manager à J-1 ouvré 10h00 Dates ZRT LIMOGEAIR ZRT BRIVAIR ZRT FLOURAIR 16 novembre 2026 1600 - 2300 1600 - 2300 1600 - 2300 1600 - 2300 1600 - 2300 1600 - 2300 17 novembre 2026 SPARE SPARE SPARE 1600 - 2300 1600 - 2300 1600 - 2300 18 novembre 2026 SPARE SPARE SPARE",
         "lowerLimit": "SFC",
@@ -2766,7 +2766,7 @@
         "geometryWarnings": [
           "Exclusion interne non découpée: contour extérieur affiché par prudence."
         ],
-        "sourceFingerprint": "7b100912f02621b038f1",
+        "sourceFingerprint": "f81f577cb8a75046af8a",
         "parserVersion": "capclair-supaip-parser-3.0.3",
         "frequency": "Clermont INFO / APP : 122,225 MHz 119,375 MHz 133,725 MHz | Limoges INFO : 124,050 MHz | Limoges APP : 118,080 MHz | Aquitaine INFO : 120,575 MHz | RAMBERT (CDC de Lyon Mont Verdun) : 143,550 MHz 317,500 MHz"
       },
@@ -2817,7 +2817,7 @@
         "supAip": "231/26",
         "title": "Création de Zones Réglementées Temporaires (ZRT) au profit de l'exercice RW MC COURSE 2026, en régions CENTRE et SUD-EST",
         "validFrom": "2026-11-10T00:00:00Z",
-        "validTo": "2026-11-19T23:59:59Z",
+        "validTo": "2026-11-10T23:59:59Z",
         "activationMode": "schedule",
         "activationText": "ZRT activables. Prévision d'activation connue auprès de l'Airspace Manager à J-1 ouvré 10h00 Dates ZRT LIMOGEAIR ZRT BRIVAIR ZRT FLOURAIR 16 novembre 2026 1600 - 2300 1600 - 2300 1600 - 2300 1600 - 2300 1600 - 2300 1600 - 2300 17 novembre 2026 SPARE SPARE SPARE 1600 - 2300 1600 - 2300 1600 - 2300 18 novembre 2026 SPARE SPARE SPARE",
         "lowerLimit": "SFC",
@@ -2831,7 +2831,7 @@
         "geometrySource": "automatic-layout-v3",
         "geometryConfidence": "high",
         "geometryWarnings": [],
-        "sourceFingerprint": "7b100912f02621b038f1",
+        "sourceFingerprint": "f81f577cb8a75046af8a",
         "parserVersion": "capclair-supaip-parser-3.0.3",
         "frequency": "Clermont INFO / APP : 122,225 MHz 119,375 MHz 133,725 MHz | Limoges INFO : 124,050 MHz | Limoges APP : 118,080 MHz | Aquitaine INFO : 120,575 MHz | RAMBERT (CDC de Lyon Mont Verdun) : 143,550 MHz 317,500 MHz"
       },
@@ -2914,7 +2914,7 @@
         "supAip": "231/26",
         "title": "Création de Zones Réglementées Temporaires (ZRT) au profit de l'exercice RW MC COURSE 2026, en régions CENTRE et SUD-EST",
         "validFrom": "2026-11-10T00:00:00Z",
-        "validTo": "2026-11-19T23:59:59Z",
+        "validTo": "2026-11-10T23:59:59Z",
         "activationMode": "schedule",
         "activationText": "ZRT activables. Prévision d'activation connue auprès de l'Airspace Manager à J-1 ouvré 10h00 Dates ZRT LIMOGEAIR ZRT BRIVAIR ZRT FLOURAIR 16 novembre 2026 1600 - 2300 1600 - 2300 1600 - 2300 1600 - 2300 1600 - 2300 1600 - 2300 17 novembre 2026 SPARE SPARE SPARE 1600 - 2300 1600 - 2300 1600 - 2300 18 novembre 2026 SPARE SPARE SPARE",
         "lowerLimit": "SFC",
@@ -2931,7 +2931,7 @@
           "Exclusion interne non découpée: contour extérieur affiché par prudence.",
           "Polygone invalide: Self-intersection[4.52945671585827 44.597496573459]"
         ],
-        "sourceFingerprint": "7b100912f02621b038f1",
+        "sourceFingerprint": "f81f577cb8a75046af8a",
         "parserVersion": "capclair-supaip-parser-3.0.3",
         "frequency": "Clermont INFO / APP : 122,225 MHz 119,375 MHz 133,725 MHz | Limoges INFO : 124,050 MHz | Limoges APP : 118,080 MHz | Aquitaine INFO : 120,575 MHz | RAMBERT (CDC de Lyon Mont Verdun) : 143,550 MHz 317,500 MHz"
       },
@@ -2986,7 +2986,7 @@
         "supAip": "231/26",
         "title": "Création de Zones Réglementées Temporaires (ZRT) au profit de l'exercice RW MC COURSE 2026, en régions CENTRE et SUD-EST",
         "validFrom": "2026-11-10T00:00:00Z",
-        "validTo": "2026-11-19T23:59:59Z",
+        "validTo": "2026-11-10T23:59:59Z",
         "activationMode": "schedule",
         "activationText": "ZRT activables. Prévision d'activation connue auprès de l'Airspace Manager à J-1 ouvré 10h00 Dates ZRT LIMOGEAIR ZRT BRIVAIR ZRT FLOURAIR 16 novembre 2026 1600 - 2300 1600 - 2300 1600 - 2300 1600 - 2300 1600 - 2300 1600 - 2300 17 novembre 2026 SPARE SPARE SPARE 1600 - 2300 1600 - 2300 1600 - 2300 18 novembre 2026 SPARE SPARE SPARE",
         "lowerLimit": "FL 115",
@@ -3000,7 +3000,7 @@
         "geometrySource": "automatic-layout-v3",
         "geometryConfidence": "high",
         "geometryWarnings": [],
-        "sourceFingerprint": "7b100912f02621b038f1",
+        "sourceFingerprint": "f81f577cb8a75046af8a",
         "parserVersion": "capclair-supaip-parser-3.0.3",
         "frequency": "Clermont INFO / APP : 122,225 MHz 119,375 MHz 133,725 MHz | Limoges INFO : 124,050 MHz | Limoges APP : 118,080 MHz | Aquitaine INFO : 120,575 MHz | RAMBERT (CDC de Lyon Mont Verdun) : 143,550 MHz 317,500 MHz"
       },
@@ -3155,7 +3155,7 @@
         "supAip": "231/26",
         "title": "Création de Zones Réglementées Temporaires (ZRT) au profit de l'exercice RW MC COURSE 2026, en régions CENTRE et SUD-EST",
         "validFrom": "2026-11-10T00:00:00Z",
-        "validTo": "2026-11-19T23:59:59Z",
+        "validTo": "2026-11-10T23:59:59Z",
         "activationMode": "schedule",
         "activationText": "ZRT activables. Prévision d'activation connue auprès de l'Airspace Manager à J-1 ouvré 10h00 Dates ZRT LIMOGEAIR ZRT BRIVAIR ZRT FLOURAIR 16 novembre 2026 1600 - 2300 1600 - 2300 1600 - 2300 1600 - 2300 1600 - 2300 1600 - 2300 17 novembre 2026 SPARE SPARE SPARE 1600 - 2300 1600 - 2300 1600 - 2300 18 novembre 2026 SPARE SPARE SPARE",
         "lowerLimit": "FL 105",
@@ -3169,7 +3169,7 @@
         "geometrySource": "automatic-layout-v3",
         "geometryConfidence": "high",
         "geometryWarnings": [],
-        "sourceFingerprint": "7b100912f02621b038f1",
+        "sourceFingerprint": "f81f577cb8a75046af8a",
         "parserVersion": "capclair-supaip-parser-3.0.3",
         "frequency": "Clermont INFO / APP : 122,225 MHz 119,375 MHz 133,725 MHz | Limoges INFO : 124,050 MHz | Limoges APP : 118,080 MHz | Aquitaine INFO : 120,575 MHz | RAMBERT (CDC de Lyon Mont Verdun) : 143,550 MHz 317,500 MHz"
       },
@@ -3252,7 +3252,7 @@
         "supAip": "231/26",
         "title": "Création de Zones Réglementées Temporaires (ZRT) au profit de l'exercice RW MC COURSE 2026, en régions CENTRE et SUD-EST",
         "validFrom": "2026-11-10T00:00:00Z",
-        "validTo": "2026-11-19T23:59:59Z",
+        "validTo": "2026-11-10T23:59:59Z",
         "activationMode": "schedule",
         "activationText": "ZRT activables. Prévision d'activation connue auprès de l'Airspace Manager à J-1 ouvré 10h00 Dates ZRT LIMOGEAIR ZRT BRIVAIR ZRT FLOURAIR 16 novembre 2026 1600 - 2300 1600 - 2300 1600 - 2300 1600 - 2300 1600 - 2300 1600 - 2300 17 novembre 2026 SPARE SPARE SPARE 1600 - 2300 1600 - 2300 1600 - 2300 18 novembre 2026 SPARE SPARE SPARE",
         "lowerLimit": "SFC",
@@ -3266,7 +3266,7 @@
         "geometrySource": "automatic-layout-v3",
         "geometryConfidence": "high",
         "geometryWarnings": [],
-        "sourceFingerprint": "7b100912f02621b038f1",
+        "sourceFingerprint": "f81f577cb8a75046af8a",
         "parserVersion": "capclair-supaip-parser-3.0.3",
         "frequency": "Clermont INFO / APP : 122,225 MHz 119,375 MHz 133,725 MHz | Limoges INFO : 124,050 MHz | Limoges APP : 118,080 MHz | Aquitaine INFO : 120,575 MHz | RAMBERT (CDC de Lyon Mont Verdun) : 143,550 MHz 317,500 MHz"
       },
@@ -3349,7 +3349,7 @@
         "supAip": "231/26",
         "title": "Création de Zones Réglementées Temporaires (ZRT) au profit de l'exercice RW MC COURSE 2026, en régions CENTRE et SUD-EST",
         "validFrom": "2026-11-10T00:00:00Z",
-        "validTo": "2026-11-19T23:59:59Z",
+        "validTo": "2026-11-10T23:59:59Z",
         "activationMode": "schedule",
         "activationText": "ZRT activables. Prévision d'activation connue auprès de l'Airspace Manager à J-1 ouvré 10h00 Dates ZRT LIMOGEAIR ZRT BRIVAIR ZRT FLOURAIR 16 novembre 2026 1600 - 2300 1600 - 2300 1600 - 2300 1600 - 2300 1600 - 2300 1600 - 2300 17 novembre 2026 SPARE SPARE SPARE 1600 - 2300 1600 - 2300 1600 - 2300 18 novembre 2026 SPARE SPARE SPARE",
         "lowerLimit": "SFC",
@@ -3363,7 +3363,7 @@
         "geometrySource": "automatic-layout-v3",
         "geometryConfidence": "high",
         "geometryWarnings": [],
-        "sourceFingerprint": "7b100912f02621b038f1",
+        "sourceFingerprint": "f81f577cb8a75046af8a",
         "parserVersion": "capclair-supaip-parser-3.0.3",
         "frequency": "Clermont INFO / APP : 122,225 MHz 119,375 MHz 133,725 MHz | Limoges INFO : 124,050 MHz | Limoges APP : 118,080 MHz | Aquitaine INFO : 120,575 MHz | RAMBERT (CDC de Lyon Mont Verdun) : 143,550 MHz 317,500 MHz"
       },
@@ -3414,7 +3414,7 @@
         "supAip": "231/26",
         "title": "Création de Zones Réglementées Temporaires (ZRT) au profit de l'exercice RW MC COURSE 2026, en régions CENTRE et SUD-EST",
         "validFrom": "2026-11-10T00:00:00Z",
-        "validTo": "2026-11-19T23:59:59Z",
+        "validTo": "2026-11-10T23:59:59Z",
         "activationMode": "schedule",
         "activationText": "ZRT activables. Prévision d'activation connue auprès de l'Airspace Manager à J-1 ouvré 10h00 Dates ZRT LIMOGEAIR ZRT BRIVAIR ZRT FLOURAIR 16 novembre 2026 1600 - 2300 1600 - 2300 1600 - 2300 1600 - 2300 1600 - 2300 1600 - 2300 17 novembre 2026 SPARE SPARE SPARE 1600 - 2300 1600 - 2300 1600 - 2300 18 novembre 2026 SPARE SPARE SPARE",
         "lowerLimit": "FL 075",
@@ -3430,7 +3430,7 @@
         "geometryWarnings": [
           "Polygone invalide: Self-intersection[4.22217819481437 44.5]"
         ],
-        "sourceFingerprint": "7b100912f02621b038f1",
+        "sourceFingerprint": "f81f577cb8a75046af8a",
         "parserVersion": "capclair-supaip-parser-3.0.3",
         "frequency": "Clermont INFO / APP : 122,225 MHz 119,375 MHz 133,725 MHz | Limoges INFO : 124,050 MHz | Limoges APP : 118,080 MHz | Aquitaine INFO : 120,575 MHz | RAMBERT (CDC de Lyon Mont Verdun) : 143,550 MHz 317,500 MHz"
       },
@@ -3489,7 +3489,7 @@
         "supAip": "231/26",
         "title": "Création de Zones Réglementées Temporaires (ZRT) au profit de l'exercice RW MC COURSE 2026, en régions CENTRE et SUD-EST",
         "validFrom": "2026-11-10T00:00:00Z",
-        "validTo": "2026-11-19T23:59:59Z",
+        "validTo": "2026-11-10T23:59:59Z",
         "activationMode": "schedule",
         "activationText": "ZRT activables. Prévision d'activation connue auprès de l'Airspace Manager à J-1 ouvré 10h00 Dates ZRT LIMOGEAIR ZRT BRIVAIR ZRT FLOURAIR 16 novembre 2026 1600 - 2300 1600 - 2300 1600 - 2300 1600 - 2300 1600 - 2300 1600 - 2300 17 novembre 2026 SPARE SPARE SPARE 1600 - 2300 1600 - 2300 1600 - 2300 18 novembre 2026 SPARE SPARE SPARE",
         "lowerLimit": "SFC",
@@ -3505,7 +3505,7 @@
         "geometryWarnings": [
           "Polygone invalide: Self-intersection[4.59641594765173 44.3848421743298]"
         ],
-        "sourceFingerprint": "7b100912f02621b038f1",
+        "sourceFingerprint": "f81f577cb8a75046af8a",
         "parserVersion": "capclair-supaip-parser-3.0.3",
         "frequency": "Clermont INFO / APP : 122,225 MHz 119,375 MHz 133,725 MHz | Limoges INFO : 124,050 MHz | Limoges APP : 118,080 MHz | Aquitaine INFO : 120,575 MHz | RAMBERT (CDC de Lyon Mont Verdun) : 143,550 MHz 317,500 MHz"
       },
@@ -3564,7 +3564,7 @@
         "supAip": "231/26",
         "title": "Création de Zones Réglementées Temporaires (ZRT) au profit de l'exercice RW MC COURSE 2026, en régions CENTRE et SUD-EST",
         "validFrom": "2026-11-10T00:00:00Z",
-        "validTo": "2026-11-19T23:59:59Z",
+        "validTo": "2026-11-10T23:59:59Z",
         "activationMode": "schedule",
         "activationText": "ZRT activables. Prévision d'activation connue auprès de l'Airspace Manager à J-1 ouvré 10h00 Dates ZRT LIMOGEAIR ZRT BRIVAIR ZRT FLOURAIR 16 novembre 2026 1600 - 2300 1600 - 2300 1600 - 2300 1600 - 2300 1600 - 2300 1600 - 2300 17 novembre 2026 SPARE SPARE SPARE 1600 - 2300 1600 - 2300 1600 - 2300 18 novembre 2026 SPARE SPARE SPARE",
         "lowerLimit": "FL 115",
@@ -3578,7 +3578,7 @@
         "geometrySource": "automatic-layout-v3",
         "geometryConfidence": "high",
         "geometryWarnings": [],
-        "sourceFingerprint": "7b100912f02621b038f1",
+        "sourceFingerprint": "f81f577cb8a75046af8a",
         "parserVersion": "capclair-supaip-parser-3.0.3",
         "frequency": "Clermont INFO / APP : 122,225 MHz 119,375 MHz 133,725 MHz | Limoges INFO : 124,050 MHz | Limoges APP : 118,080 MHz | Aquitaine INFO : 120,575 MHz | RAMBERT (CDC de Lyon Mont Verdun) : 143,550 MHz 317,500 MHz"
       },
@@ -3617,7 +3617,7 @@
         "supAip": "231/26",
         "title": "Création de Zones Réglementées Temporaires (ZRT) au profit de l'exercice RW MC COURSE 2026, en régions CENTRE et SUD-EST",
         "validFrom": "2026-11-10T00:00:00Z",
-        "validTo": "2026-11-19T23:59:59Z",
+        "validTo": "2026-11-10T23:59:59Z",
         "activationMode": "schedule",
         "activationText": "ZRT activables. Prévision d'activation connue auprès de l'Airspace Manager à J-1 ouvré 10h00 Dates ZRT LIMOGEAIR ZRT BRIVAIR ZRT FLOURAIR 16 novembre 2026 1600 - 2300 1600 - 2300 1600 - 2300 1600 - 2300 1600 - 2300 1600 - 2300 17 novembre 2026 SPARE SPARE SPARE 1600 - 2300 1600 - 2300 1600 - 2300 18 novembre 2026 SPARE SPARE SPARE",
         "lowerLimit": "SFC",
@@ -3631,7 +3631,7 @@
         "geometrySource": "automatic-layout-v3",
         "geometryConfidence": "high",
         "geometryWarnings": [],
-        "sourceFingerprint": "7b100912f02621b038f1",
+        "sourceFingerprint": "f81f577cb8a75046af8a",
         "parserVersion": "capclair-supaip-parser-3.0.3",
         "frequency": "Clermont INFO / APP : 122,225 MHz 119,375 MHz 133,725 MHz | Limoges INFO : 124,050 MHz | Limoges APP : 118,080 MHz | Aquitaine INFO : 120,575 MHz | RAMBERT (CDC de Lyon Mont Verdun) : 143,550 MHz 317,500 MHz"
       },
@@ -3678,7 +3678,7 @@
         "supAip": "231/26",
         "title": "Création de Zones Réglementées Temporaires (ZRT) au profit de l'exercice RW MC COURSE 2026, en régions CENTRE et SUD-EST",
         "validFrom": "2026-11-10T00:00:00Z",
-        "validTo": "2026-11-19T23:59:59Z",
+        "validTo": "2026-11-10T23:59:59Z",
         "activationMode": "schedule",
         "activationText": "ZRT activables. Prévision d'activation connue auprès de l'Airspace Manager à J-1 ouvré 10h00 Dates ZRT LIMOGEAIR ZRT BRIVAIR ZRT FLOURAIR 16 novembre 2026 1600 - 2300 1600 - 2300 1600 - 2300 1600 - 2300 1600 - 2300 1600 - 2300 17 novembre 2026 SPARE SPARE SPARE 1600 - 2300 1600 - 2300 1600 - 2300 18 novembre 2026 SPARE SPARE SPARE",
         "lowerLimit": "FL 115",
@@ -3692,7 +3692,7 @@
         "geometrySource": "automatic-layout-v3",
         "geometryConfidence": "high",
         "geometryWarnings": [],
-        "sourceFingerprint": "7b100912f02621b038f1",
+        "sourceFingerprint": "f81f577cb8a75046af8a",
         "parserVersion": "capclair-supaip-parser-3.0.3",
         "frequency": "Clermont INFO / APP : 122,225 MHz 119,375 MHz 133,725 MHz | Limoges INFO : 124,050 MHz | Limoges APP : 118,080 MHz | Aquitaine INFO : 120,575 MHz | RAMBERT (CDC de Lyon Mont Verdun) : 143,550 MHz 317,500 MHz"
       },
@@ -3775,7 +3775,7 @@
         "supAip": "231/26",
         "title": "Création de Zones Réglementées Temporaires (ZRT) au profit de l'exercice RW MC COURSE 2026, en régions CENTRE et SUD-EST",
         "validFrom": "2026-11-10T00:00:00Z",
-        "validTo": "2026-11-19T23:59:59Z",
+        "validTo": "2026-11-10T23:59:59Z",
         "activationMode": "schedule",
         "activationText": "ZRT activables. Prévision d'activation connue auprès de l'Airspace Manager à J-1 ouvré 10h00 Dates ZRT LIMOGEAIR ZRT BRIVAIR ZRT FLOURAIR 16 novembre 2026 1600 - 2300 1600 - 2300 1600 - 2300 1600 - 2300 1600 - 2300 1600 - 2300 17 novembre 2026 SPARE SPARE SPARE 1600 - 2300 1600 - 2300 1600 - 2300 18 novembre 2026 SPARE SPARE SPARE",
         "lowerLimit": "FL 075",
@@ -3789,7 +3789,7 @@
         "geometrySource": "automatic-layout-v3",
         "geometryConfidence": "high",
         "geometryWarnings": [],
-        "sourceFingerprint": "7b100912f02621b038f1",
+        "sourceFingerprint": "f81f577cb8a75046af8a",
         "parserVersion": "capclair-supaip-parser-3.0.3",
         "frequency": "Clermont INFO / APP : 122,225 MHz 119,375 MHz 133,725 MHz | Limoges INFO : 124,050 MHz | Limoges APP : 118,080 MHz | Aquitaine INFO : 120,575 MHz | RAMBERT (CDC de Lyon Mont Verdun) : 143,550 MHz 317,500 MHz"
       },
@@ -3844,7 +3844,7 @@
         "supAip": "231/26",
         "title": "Création de Zones Réglementées Temporaires (ZRT) au profit de l'exercice RW MC COURSE 2026, en régions CENTRE et SUD-EST",
         "validFrom": "2026-11-10T00:00:00Z",
-        "validTo": "2026-11-19T23:59:59Z",
+        "validTo": "2026-11-10T23:59:59Z",
         "activationMode": "schedule",
         "activationText": "ZRT activables. Prévision d'activation connue auprès de l'Airspace Manager à J-1 ouvré 10h00 Dates ZRT LIMOGEAIR ZRT BRIVAIR ZRT FLOURAIR 16 novembre 2026 1600 - 2300 1600 - 2300 1600 - 2300 1600 - 2300 1600 - 2300 1600 - 2300 17 novembre 2026 SPARE SPARE SPARE 1600 - 2300 1600 - 2300 1600 - 2300 18 novembre 2026 SPARE SPARE SPARE",
         "lowerLimit": "SFC",
@@ -3858,7 +3858,7 @@
         "geometrySource": "automatic-layout-v3",
         "geometryConfidence": "high",
         "geometryWarnings": [],
-        "sourceFingerprint": "7b100912f02621b038f1",
+        "sourceFingerprint": "f81f577cb8a75046af8a",
         "parserVersion": "capclair-supaip-parser-3.0.3",
         "frequency": "Clermont INFO / APP : 122,225 MHz 119,375 MHz 133,725 MHz | Limoges INFO : 124,050 MHz | Limoges APP : 118,080 MHz | Aquitaine INFO : 120,575 MHz | RAMBERT (CDC de Lyon Mont Verdun) : 143,550 MHz 317,500 MHz"
       },
@@ -54078,8 +54078,8 @@
       }
     }
   ],
-  "generatedAt": "2026-10-23T11:48:17Z",
-  "datasetGeneratedAt": "2026-10-23T11:48:17Z",
-  "datasetRevision": "754628448d7733a7d1f1d5c677184eb84a56916c6250696b959426b9e3b9c3e4",
-  "businessContentSha256": "754628448d7733a7d1f1d5c677184eb84a56916c6250696b959426b9e3b9c3e4"
+  "generatedAt": "2026-10-23T17:15:30Z",
+  "datasetGeneratedAt": "2026-10-23T17:15:30Z",
+  "datasetRevision": "5c9e3e9bf2c76b10d3e8ad7e45e9e43e29e06430d610b976fd296e7a1afb963f",
+  "businessContentSha256": "5c9e3e9bf2c76b10d3e8ad7e45e9e43e29e06430d610b976fd296e7a1afb963f"
 }
