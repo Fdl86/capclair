@@ -1,0 +1,827 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-10-25T11:43:13Z",
+  "datasetGeneratedAt": "2026-10-25T11:43:13Z",
+  "datasetRevision": "0b6e0f9bd4e006d7752c6357fd613895a6e3bfc0ea9939766d3a382f1f1d9e53",
+  "businessContentSha256": "0b6e0f9bd4e006d7752c6357fd613895a6e3bfc0ea9939766d3a382f1f1d9e53",
+  "sourceUrl": "https://www.sia.aviation-civile.gouv.fr/documents/supaip/aip/id/6",
+  "parserVersion": "capclair-supaip-parser-3.0.3",
+  "publications": [
+    {
+      "supAip": "233/24",
+      "title": "Création d’une zone dangereuse temporaire (ZDT) et de zones réglementées temporaires (ZRT) pour le transit d’un drone en UIR France",
+      "validFrom": "2025-01-16",
+      "validTo": "2027-01-13",
+      "sourcePdf": "https://www.sia.aviation-civile.gouv.fr/documents/download/f/d/13791052/",
+      "reason": "2/3 géométries nommées extraites.",
+      "status": "partial",
+      "partial": true,
+      "conservative": false,
+      "fallback": false,
+      "expectedNamedGeometryCount": 3,
+      "mappedGeometryCount": 2,
+      "declaredZoneCount": 1,
+      "missingVerticalCount": 0,
+      "safetyFallbackFeatureCount": 0,
+      "safetyFallbackFeatureNames": [],
+      "ignoredReferenceObjectCount": 0,
+      "causeCodes": [
+        "named-geometry-missing"
+      ],
+      "causeLabels": [
+        "Géométries nommées manquantes"
+      ],
+      "sourceFingerprint": "dd9b30f0da43f0323373",
+      "parserVersion": "capclair-supaip-parser-3.0.3"
+    },
+    {
+      "supAip": "232/26",
+      "title": "Création de Zones Réglementées Temporaires (ZRT) au profit de l'exercice TARANIS 26 en régions Centre, Bourgogne et Est",
+      "validFrom": "2026-12-01",
+      "validTo": "2026-12-10",
+      "sourcePdf": "https://www.sia.aviation-civile.gouv.fr/documents/download/f/d/15088564/",
+      "reason": "16/18 géométries nommées extraites.",
+      "status": "partial",
+      "partial": true,
+      "conservative": false,
+      "fallback": false,
+      "expectedNamedGeometryCount": 18,
+      "mappedGeometryCount": 16,
+      "declaredZoneCount": null,
+      "missingVerticalCount": 0,
+      "safetyFallbackFeatureCount": 0,
+      "safetyFallbackFeatureNames": [],
+      "ignoredReferenceObjectCount": 3,
+      "causeCodes": [
+        "named-geometry-missing"
+      ],
+      "causeLabels": [
+        "Géométries nommées manquantes"
+      ],
+      "sourceFingerprint": "9cd25564c64f79a35170",
+      "parserVersion": "capclair-supaip-parser-3.0.3"
+    },
+    {
+      "supAip": "231/26",
+      "title": "Création de Zones Réglementées Temporaires (ZRT) au profit de l'exercice RW MC COURSE 2026, en régions CENTRE et SUD-EST",
+      "validFrom": "2026-11-10",
+      "validTo": "2026-11-10",
+      "sourcePdf": "https://www.sia.aviation-civile.gouv.fr/documents/download/f/d/15088562/",
+      "reason": "17/18 géométries nommées extraites.",
+      "status": "partial",
+      "partial": true,
+      "conservative": false,
+      "fallback": false,
+      "expectedNamedGeometryCount": 18,
+      "mappedGeometryCount": 17,
+      "declaredZoneCount": null,
+      "missingVerticalCount": 0,
+      "safetyFallbackFeatureCount": 0,
+      "safetyFallbackFeatureNames": [],
+      "ignoredReferenceObjectCount": 0,
+      "causeCodes": [
+        "named-geometry-missing"
+      ],
+      "causeLabels": [
+        "Géométries nommées manquantes"
+      ],
+      "sourceFingerprint": "f81f577cb8a75046af8a",
+      "parserVersion": "capclair-supaip-parser-3.0.3"
+    },
+    {
+      "supAip": "225/26",
+      "title": "Création d’une zone réglementée temporaire (ZRT) dans la CTR 1 de Dinard et la TMA 4 Rennes à l’occasion du départ de la course nautique transatlantique \"Route du Rhum\" édition 2026",
+      "validFrom": "2026-10-30",
+      "validTo": "2026-11-15",
+      "sourcePdf": "https://www.sia.aviation-civile.gouv.fr/documents/download/f/d/15088546/",
+      "reason": "0/1 géométries nommées extraites. Aucune géométrie fiable extraite.",
+      "status": "unmapped",
+      "partial": false,
+      "conservative": false,
+      "fallback": false,
+      "expectedNamedGeometryCount": 1,
+      "mappedGeometryCount": 0,
+      "declaredZoneCount": 1,
+      "missingVerticalCount": 0,
+      "safetyFallbackFeatureCount": 0,
+      "safetyFallbackFeatureNames": [],
+      "ignoredReferenceObjectCount": 1,
+      "causeCodes": [
+        "named-geometry-missing"
+      ],
+      "causeLabels": [
+        "Géométries nommées manquantes"
+      ],
+      "sourceFingerprint": "b5351cf8dbc81bfd4be1",
+      "parserVersion": "capclair-supaip-parser-3.0.3"
+    },
+    {
+      "supAip": "220/26",
+      "title": "Création d'une Zone Réglementée Temporaire (ZRT) pour l'exercice DRAGOON dans le VAR entre Cuers et La Môle",
+      "validFrom": "2026-10-17",
+      "validTo": "2026-10-23",
+      "sourcePdf": "https://www.sia.aviation-civile.gouv.fr/documents/download/f/d/15082893/",
+      "reason": "0/1 géométries nommées extraites. Aucune géométrie fiable extraite.",
+      "status": "unmapped",
+      "partial": false,
+      "conservative": false,
+      "fallback": false,
+      "expectedNamedGeometryCount": 1,
+      "mappedGeometryCount": 0,
+      "declaredZoneCount": 1,
+      "missingVerticalCount": 0,
+      "safetyFallbackFeatureCount": 0,
+      "safetyFallbackFeatureNames": [],
+      "ignoredReferenceObjectCount": 1,
+      "causeCodes": [
+        "named-geometry-missing"
+      ],
+      "causeLabels": [
+        "Géométries nommées manquantes"
+      ],
+      "sourceFingerprint": "b7638371b41546b11f53",
+      "parserVersion": "capclair-supaip-parser-3.0.3"
+    },
+    {
+      "supAip": "219/26",
+      "title": "Création de zones réglementées temporaires (ZRT) et de zones dangereuses temporaires (ZDT) pour l’exercice BELOTE 2026-04 dans les FIR et l’UIR France",
+      "validFrom": "2026-10-20",
+      "validTo": "2026-10-22",
+      "sourcePdf": "https://www.sia.aviation-civile.gouv.fr/documents/download/f/d/15082891/",
+      "reason": "10/13 géométries nommées extraites.",
+      "status": "partial",
+      "partial": true,
+      "conservative": false,
+      "fallback": false,
+      "expectedNamedGeometryCount": 13,
+      "mappedGeometryCount": 10,
+      "declaredZoneCount": null,
+      "missingVerticalCount": 0,
+      "safetyFallbackFeatureCount": 0,
+      "safetyFallbackFeatureNames": [],
+      "ignoredReferenceObjectCount": 1,
+      "causeCodes": [
+        "named-geometry-missing"
+      ],
+      "causeLabels": [
+        "Géométries nommées manquantes"
+      ],
+      "sourceFingerprint": "2f076949ff72d904072d",
+      "parserVersion": "capclair-supaip-parser-3.0.3"
+    },
+    {
+      "supAip": "216/25",
+      "title": "Création d’une Zone Réglementée Temporaire (ZRT) « METZ - THIONVILLE » pour vols hors vue d’un aéronef télépiloté sans équipage à bord entre le Centre Hospitalier Universitaire de METZ et le Centre Hospitalier de THIONVILLE (57)",
+      "validFrom": "2026-01-01",
+      "validTo": "2026-12-31",
+      "sourcePdf": "https://www.sia.aviation-civile.gouv.fr/documents/download/f/d/15016258/",
+      "reason": "1 zone(s) conservée(s) depuis la dernière base valide par la protection anti-régression.",
+      "status": "fallback",
+      "partial": false,
+      "conservative": false,
+      "fallback": true,
+      "expectedNamedGeometryCount": 1,
+      "mappedGeometryCount": 1,
+      "declaredZoneCount": 1,
+      "missingVerticalCount": 0,
+      "safetyFallbackFeatureCount": 1,
+      "safetyFallbackFeatureNames": [
+        "ZRT METZ - THIONVILLE"
+      ],
+      "ignoredReferenceObjectCount": 1,
+      "causeCodes": [
+        "safety-fallback"
+      ],
+      "causeLabels": [
+        "Repli de sécurité depuis une ancienne géométrie"
+      ],
+      "sourceFingerprint": "c102d96dbb6d3609c834",
+      "parserVersion": "capclair-supaip-parser-3.0.3"
+    },
+    {
+      "supAip": "215/26",
+      "title": "expérimentation de modification des espaces aériens du LUC- LE CANNET (LFMC) : création d'une CTR temporaire, de 4 TMA temporaires et d'une ZRT.",
+      "validFrom": "2026-11-02",
+      "validTo": "2028-04-12",
+      "sourcePdf": "https://www.sia.aviation-civile.gouv.fr/documents/download/f/d/15082883/",
+      "reason": "0/1 géométries nommées extraites. Aucune géométrie fiable extraite.",
+      "status": "unmapped",
+      "partial": false,
+      "conservative": false,
+      "fallback": false,
+      "expectedNamedGeometryCount": 1,
+      "mappedGeometryCount": 0,
+      "declaredZoneCount": 1,
+      "missingVerticalCount": 0,
+      "safetyFallbackFeatureCount": 0,
+      "safetyFallbackFeatureNames": [],
+      "ignoredReferenceObjectCount": 1,
+      "causeCodes": [
+        "named-geometry-missing"
+      ],
+      "causeLabels": [
+        "Géométries nommées manquantes"
+      ],
+      "sourceFingerprint": "13bba9627778033fdfd0",
+      "parserVersion": "capclair-supaip-parser-3.0.3"
+    },
+    {
+      "supAip": "210/25",
+      "title": "Création d’une Zone Réglementée Temporaire (ZRT) au profit de vols d’aéronefs sans équipage à bord, hors vue, entre le centre hospitalier de Verneuil-d’Avre-et-d’Iton (27) et le centre hospitalier de L’Aigle (61)",
+      "validFrom": "2026-01-01",
+      "validTo": "2027-12-31",
+      "sourcePdf": "https://www.sia.aviation-civile.gouv.fr/documents/download/f/d/15016246/",
+      "reason": "1 zone(s) conservée(s) depuis la dernière base valide par la protection anti-régression.",
+      "status": "fallback",
+      "partial": false,
+      "conservative": false,
+      "fallback": true,
+      "expectedNamedGeometryCount": 1,
+      "mappedGeometryCount": 1,
+      "declaredZoneCount": 1,
+      "missingVerticalCount": 0,
+      "safetyFallbackFeatureCount": 1,
+      "safetyFallbackFeatureNames": [
+        "ZRT L'AIGLE - VERNEUIL D'AVRE"
+      ],
+      "ignoredReferenceObjectCount": 1,
+      "causeCodes": [
+        "safety-fallback"
+      ],
+      "causeLabels": [
+        "Repli de sécurité depuis une ancienne géométrie"
+      ],
+      "sourceFingerprint": "2acd7caddeef2c1263d2",
+      "parserVersion": "capclair-supaip-parser-3.0.3"
+    },
+    {
+      "supAip": "206/25",
+      "title": "Création de 3 Zones Réglementées Temporaires (ZRT) au large du Croisic, au profit de vols hors vue d’aéronefs sans équipage à bord",
+      "validFrom": "2026-01-01",
+      "validTo": "2027-12-31",
+      "sourcePdf": "https://www.sia.aviation-civile.gouv.fr/documents/download/f/d/15016224/",
+      "reason": "2/3 géométries nommées extraites. 1 zone(s) conservée(s) depuis la dernière base valide par la protection anti-régression.",
+      "status": "partial",
+      "partial": true,
+      "conservative": false,
+      "fallback": false,
+      "expectedNamedGeometryCount": 3,
+      "mappedGeometryCount": 2,
+      "declaredZoneCount": 3,
+      "missingVerticalCount": 0,
+      "safetyFallbackFeatureCount": 1,
+      "safetyFallbackFeatureNames": [
+        "ZRT 2 LE CROISIC"
+      ],
+      "ignoredReferenceObjectCount": 0,
+      "causeCodes": [
+        "named-geometry-missing",
+        "safety-fallback"
+      ],
+      "causeLabels": [
+        "Géométries nommées manquantes",
+        "Repli de sécurité depuis une ancienne géométrie"
+      ],
+      "sourceFingerprint": "38e246b8473b89ff50f4",
+      "parserVersion": "capclair-supaip-parser-3.0.3"
+    },
+    {
+      "supAip": "188/25",
+      "title": "Création de neuf Zones Réglementées Temporaires (ZRT) au profit de vols en vue et hors vue d’aéronefs sans équipage à bord sur la côte Atlantique en Gironde",
+      "validFrom": "2025-11-13",
+      "validTo": "2026-11-10",
+      "sourcePdf": "https://www.sia.aviation-civile.gouv.fr/documents/download/f/d/15000061/",
+      "reason": "7/9 géométries nommées extraites. 1 zone(s) conservée(s) depuis la dernière base valide par la protection anti-régression.",
+      "status": "partial",
+      "partial": true,
+      "conservative": false,
+      "fallback": false,
+      "expectedNamedGeometryCount": 9,
+      "mappedGeometryCount": 7,
+      "declaredZoneCount": 9,
+      "missingVerticalCount": 0,
+      "safetyFallbackFeatureCount": 1,
+      "safetyFallbackFeatureNames": [
+        "ZRT CESA COULOIR HOURTIN PLAGE"
+      ],
+      "ignoredReferenceObjectCount": 0,
+      "causeCodes": [
+        "named-geometry-missing",
+        "safety-fallback"
+      ],
+      "causeLabels": [
+        "Géométries nommées manquantes",
+        "Repli de sécurité depuis une ancienne géométrie"
+      ],
+      "sourceFingerprint": "b646e07548dc427be283",
+      "parserVersion": "capclair-supaip-parser-3.0.3"
+    },
+    {
+      "supAip": "182/26",
+      "title": "Création d'une zone réglementée temporaire (ZRT) et d'une zone dangereuse temporaire (ZDT) pour des essais d'aéronef sans équipage à bord",
+      "validFrom": "2026-10-05",
+      "validTo": "2027-12-31",
+      "sourcePdf": "https://www.sia.aviation-civile.gouv.fr/documents/download/f/d/15077192/",
+      "reason": "1/2 géométries nommées extraites.",
+      "status": "partial",
+      "partial": true,
+      "conservative": false,
+      "fallback": false,
+      "expectedNamedGeometryCount": 2,
+      "mappedGeometryCount": 1,
+      "declaredZoneCount": 2,
+      "missingVerticalCount": 0,
+      "safetyFallbackFeatureCount": 0,
+      "safetyFallbackFeatureNames": [],
+      "ignoredReferenceObjectCount": 0,
+      "causeCodes": [
+        "named-geometry-missing"
+      ],
+      "causeLabels": [
+        "Géométries nommées manquantes"
+      ],
+      "sourceFingerprint": "63a82d76f67eb4b941fd",
+      "parserVersion": "capclair-supaip-parser-3.0.3"
+    },
+    {
+      "supAip": "167/25",
+      "title": "Création à titre expérimental d’une Zone Réglementée Temporaire (ZRT) sur l’aérodrome de Nancy Ochey",
+      "validFrom": "2025-09-29",
+      "validTo": "2026-12-31",
+      "sourcePdf": "https://www.sia.aviation-civile.gouv.fr/documents/download/f/d/14983716/",
+      "reason": "1 zone(s) conservée(s) depuis la dernière base valide par la protection anti-régression.",
+      "status": "fallback",
+      "partial": false,
+      "conservative": false,
+      "fallback": true,
+      "expectedNamedGeometryCount": 1,
+      "mappedGeometryCount": 1,
+      "declaredZoneCount": 1,
+      "missingVerticalCount": 0,
+      "safetyFallbackFeatureCount": 1,
+      "safetyFallbackFeatureNames": [
+        "ZRT OCHEY"
+      ],
+      "ignoredReferenceObjectCount": 1,
+      "causeCodes": [
+        "safety-fallback"
+      ],
+      "causeLabels": [
+        "Repli de sécurité depuis une ancienne géométrie"
+      ],
+      "sourceFingerprint": "8ffd4ec157db02bb6b8d",
+      "parserVersion": "capclair-supaip-parser-3.0.3"
+    },
+    {
+      "supAip": "162/26",
+      "title": "Création de 2 Zones Réglementées Temporaires (ZRT) dans la région de COGNAC pour l’entrainement LRE REAPER 2025-2026",
+      "validFrom": "2026-08-06",
+      "validTo": "2027-05-12",
+      "sourcePdf": "https://www.sia.aviation-civile.gouv.fr/documents/download/f/d/15066172/",
+      "reason": "1/2 géométries nommées extraites.",
+      "status": "partial",
+      "partial": true,
+      "conservative": false,
+      "fallback": false,
+      "expectedNamedGeometryCount": 2,
+      "mappedGeometryCount": 1,
+      "declaredZoneCount": 2,
+      "missingVerticalCount": 0,
+      "safetyFallbackFeatureCount": 0,
+      "safetyFallbackFeatureNames": [],
+      "ignoredReferenceObjectCount": 1,
+      "causeCodes": [
+        "named-geometry-missing"
+      ],
+      "causeLabels": [
+        "Géométries nommées manquantes"
+      ],
+      "sourceFingerprint": "505211fdb6e099a46efd",
+      "parserVersion": "capclair-supaip-parser-3.0.3"
+    },
+    {
+      "supAip": "154/26",
+      "title": "Création de 2 Zones Réglementées Temporaires (ZRT) à proximité de Magnac-Lavalette- Villars en Charente",
+      "validFrom": "2026-07-16",
+      "validTo": "2027-07-14",
+      "sourcePdf": "https://www.sia.aviation-civile.gouv.fr/documents/download/f/d/15060792/",
+      "reason": "2 zone(s) conservée(s) depuis la dernière base valide par la protection anti-régression.",
+      "status": "fallback",
+      "partial": false,
+      "conservative": false,
+      "fallback": true,
+      "expectedNamedGeometryCount": 4,
+      "mappedGeometryCount": 4,
+      "declaredZoneCount": 2,
+      "missingVerticalCount": 0,
+      "safetyFallbackFeatureCount": 2,
+      "safetyFallbackFeatureNames": [
+        "ZRT MAGNAC BRAVO",
+        "ZRT MAGNAC ALPHA"
+      ],
+      "ignoredReferenceObjectCount": 0,
+      "causeCodes": [
+        "safety-fallback"
+      ],
+      "causeLabels": [
+        "Repli de sécurité depuis une ancienne géométrie"
+      ],
+      "sourceFingerprint": "0c72aa075c8cab6c9c4b",
+      "parserVersion": "capclair-supaip-parser-3.0.3"
+    },
+    {
+      "supAip": "147/25",
+      "title": "Création de deux Zones Réglementées Temporaires (ZRT) pour des activités spécifiques aux abords de l’aérodrome de Coulommiers Voisins (77) - LFPK",
+      "validFrom": "2025-09-04",
+      "validTo": "2026-11-25",
+      "sourcePdf": "https://www.sia.aviation-civile.gouv.fr/documents/download/f/d/14967459/",
+      "reason": "ZRT 'High' Coulommiers: limites latérales non extraites. ZRT 'Low' Coulommiers: limites latérales non extraites. 0/2 géométries nommées extraites. Aucune géométrie fiable extraite. 0/2 géométries nommées extraites. Aucune géométrie fiable extraite. 0/2 géométries nommées extraites. Aucune géométrie fiable extraite. 0/2 géométries nommées extraites. Aucune géométrie fiable extraite. 0/2 géométries nommées extraites. Aucune géométrie fiable extraite. 0/2 géométries nommées extraites. Aucune géométrie fiable extraite. 0/2 géométries nommées extraites. Aucune géométrie fiable extraite. 0/2 géométries nommées extraites. Aucune géométrie fiable extraite. 0/2 géométries nommées extraites. Aucune géométrie fiable extraite. 0/2 géométries nommées extraites. Aucune géométrie fiable extraite. 0/2 géométries nommées extraites. Aucune géométrie fiable extraite. 0/2 géométries nommées extraites. Aucune géométrie fiable extraite. 0/2 géométries nommées extraites. Aucune géométrie fiable extraite. 0/2 géométries nommées extraites. Aucune géométrie fiable extraite. 0/2 géométries nommées extraites. Aucune géométrie fiable extraite. 0/2 géométries nommées extraites. Aucune géométrie fiable extraite. 0/2 géométries nommées extraites. Aucune géométrie fiable extraite. 0/2 géométries nommées extraites. Aucune géométrie fiable extraite. 0/2 géométries nommées extraites. Aucune géométrie fiable extraite. 0/2 géométries nommées extraites. Aucune géométrie fiable extraite. 0/2 géométries nommées extraites. Aucune géométrie fiable extraite. 0/2 géométries nommées extraites. Aucune géométrie fiable extraite. 0/2 géométries nommées extraites. Aucune géométrie fiable extraite. 0/2 géométries nommées extraites. Aucune géométrie fiable extraite. 0/2 géométries nommées extraites. Aucune géométrie fiable extraite. 0/2 géométries nommées extraites. Aucune géométrie fiable extraite. 0/2 géométries nommées extraites. Aucune géométrie fiable extraite. 0/2 géométries nommées extraites. Aucune géométrie fiable extraite. 0/2 géométries nommées extraites. Aucune géométrie fiable extraite. 0/2 géométries nommées extraites. Aucune géométrie fiable extraite. 0/2 géométries nommées extraites. Aucune géométrie fiable extraite. 0/2 géométries nommées extraites. Aucune géométrie fiable extraite. 0/2 géométries nommées extraites. Aucune géométrie fiable extraite. 0/2 géométries nommées extraites. Aucune géométrie fiable extraite. 0/2 géométries nommées extraites. Aucune géométrie fiable extraite. 0/2 géométries nommées extraites. Aucune géométrie fiable extraite. 0/2 géométries nommées extraites. Aucune géométrie fiable extraite. 0/2 géométries nommées extraites. Aucune géométrie fiable extraite. 0/2 géométries nommées extraites. Aucune géométrie fiable extraite. 0/2 géométries nommées extraites. Aucune géométrie fiable extraite. 0/2 géométries nommées extraites. Aucune géométrie fiable extraite. 0/2 géométries nommées extraites. Aucune géométrie fiable extraite. 0/2 géométries nommées extraites. Aucune géométrie fiable extraite. 0/2 géométries nommées extraites. Aucune géométrie fiable extraite. 0/2 géométries nommées extraites. Aucune géométrie fiable extraite. 0/2 géométries nommées extraites. Aucune géométrie fiable extraite. 0/2 géométries nommées extraites. Aucune géométrie fiable extraite. 0/2 géométries nommées extraites. Aucune géométrie fiable extraite. 0/2 géométries nommées extraites. Aucune géométrie fiable extraite. 0/2 géométries nommées extraites. Aucune géométrie fiable extraite. 0/2 géométries nommées extraites. Aucune géométrie fiable extraite. 0/2 géométries nommées extraites. Aucune géométrie fiable extraite. 0/2 géométries nommées extraites. Aucune géométrie fiable extraite. 0/2 géométries nommées extraites. Aucune géométrie fiable extraite. 0/2 géométries nommées extraites. Aucune géométrie fiable extraite. 0/2 géométries nommées extraites. Aucune géométrie fiable extraite. 0/2 géométries nommées extraites. Aucune géométrie fiable extraite. 0/2 géométries nommées extraites. Aucune géométrie fiable extraite. 0/2 géométries nommées extraites. Aucune géométrie fiable extraite. 0/2 géométries nommées extraites. Aucune géométrie fiable extraite. 0/2 géométries nommées extraites. Aucune géométrie fiable extraite. 0/2 géométries nommées extraites. Aucune géométrie fiable extraite. 0/2 géométries nommées extraites. Aucune géométrie fiable extraite. 0/2 géométries nommées extraites. Aucune géométrie fiable extraite. 0/2 géométries nommées extraites. Aucune géométrie fiable extraite. 0/2 géométries nommées extraites. Aucune géométrie fiable extraite. 0/2 géométries nommées extraites. Aucune géométrie fiable extraite. 0/2 géométries nommées extraites. Aucune géométrie fiable extraite. 0/2 géométries nommées extraites. Aucune géométrie fiable extraite. 0/2 géométries nommées extraites. Aucune géométrie fiable extraite. 0/2 géométries nommées extraites. Aucune géométrie fiable extraite. 0/2 géométries nommées extraites. Aucune géométrie fiable extraite. 0/2 géométries nommées extraites. Aucune géométrie fiable extraite. 0/2 géométries nommées extraites. Aucune géométrie fiable extraite. 0/2 géométries nommées extraites. Aucune géométrie fiable extraite. 0/2 géométries nommées extraites. Aucune géométrie fiable extraite. 0/2 géométries nommées extraites. Aucune géométrie fiable extraite. 0/2 géométries nommées extraites. Aucune géométrie fiable extraite. 0/2 géométries nommées extraites. Aucune géométrie fiable extraite. 0/2 géométries nommées extraites. Aucune géométrie fiable extraite. 0/2 géométries nommées extraites. Aucune géométrie fiable extraite. 0/2 géométries nommées extraites. Aucune géométrie fiable extraite. 0/2 géométries nommées extraites. Aucune géométrie fiable extraite. 0/2 géométries nommées extraites. Aucune géométrie fiable extraite. 0/2 géométries nommées extraites. Aucune géométrie fiable extraite. 0/2 géométries nommées extraites. Aucune géométrie fiable extraite. 0/2 géométries nommées extraites. Aucune géométrie fiable extraite. 0/2 géométries nommées extraites. Aucune géométrie fiable extraite. 0/2 géométries nommées extraites. Aucune géométrie fiable extraite. 0/2 géométries nommées extraites. Aucune géométrie fiable extraite. 0/2 géométries nommées extraites. Aucune géométrie fiable extraite. 0/2 géométries nommées extraites. Aucune géométrie fiable extraite. 0/2 géométries nommées extraites. Aucune géométrie fiable extraite. 0/2 géométries nommées extraites. Aucune géométrie fiable extraite. 0/2 géométries nommées extraites. Aucune géométrie fiable extraite. 0/2 géométries nommées extraites. Aucune géométrie fiable extraite. 0/2 géométries nommées extraites. Aucune géométrie fiable extraite. 0/2 géométries nommées extraites. Aucune géométrie fiable extraite. 0/2 géométries nommées extraites. Aucune géométrie fiable extraite. 0/2 géométries nommées extraites. Aucune géométrie fiable extraite. 0/2 géométries nommées extraites. Aucune géométrie fiable extraite. 0/2 géométries nommées extraites. Aucune géométrie fiable extraite. 0/2 géométries nommées extraites. Aucune géométrie fiable extraite. 0/2 géométries nommées extraites. Aucune géométrie fiable extraite. 0/2 géométries nommées extraites. Aucune géométrie fiable extraite. 0/2 géométries nommées extraites. Aucune géométrie fiable extraite. 0/2 géométries nommées extraites. Aucune géométrie fiable extraite. 0/2 géométries nommées extraites. Aucune géométrie fiable extraite. 0/2 géométries nommées extraites. Aucune géométrie fiable extraite. 0/2 géométries nommées extraites. Aucune géométrie fiable extraite. 0/2 géométries nommées extraites. Aucune géométrie fiable extraite. 0/2 géométries nommées extraites. Aucune géométrie fiable extraite. 0/2 géométries nommées extraites. Aucune géométrie fiable extraite. 0/2 géométries nommées extraites. Aucune géométrie fiable extraite. 0/2 géométries nommées extraites. Aucune géométrie fiable extraite. 0/2 géométries nommées extraites. Aucune géométrie fiable extraite. 0/2 géométries nommées extraites. Aucune géométrie fiable extraite. 0/2 géométries nommées extraites. Aucune géométrie fiable extraite. 0/2 géométries nommées extraites. Aucune géométrie fiable extraite. 0/2 géométries nommées extraites. Aucune géométrie fiable extraite. 0/2 géométries nommées extraites. Aucune géométrie fiable extraite. 0/2 géométries nommées extraites. Aucune géométrie fiable extraite. 0/2 géométries nommées extraites. Aucune géométrie fiable extraite. 0/2 géométries nommées extraites. Aucune géométrie fiable extraite. 0/2 géométries nommées extraites. Aucune géométrie fiable extraite. 0/2 géométries nommées extraites. Aucune géométrie fiable extraite. 0/2 géométries nommées extraites. Aucune géométrie fiable extraite. 0/2 géométries nommées extraites. Aucune géométrie fiable extraite. 0/2 géométries nommées extraites. Aucune géométrie fiable extraite. 0/2 géométries nommées extraites. Aucune géométrie fiable extraite. 0/2 géométries nommées extraites. Aucune géométrie fiable extraite. 0/2 géométries nommées extraites. Aucune géométrie fiable extraite. 0/2 géométries nommées extraites. Aucune géométrie fiable extraite. 0/2 géométries nommées extraites. Aucune géométrie fiable extraite. 0/2 géométries nommées extraites. Aucune géométrie fiable extraite. 0/2 géométries nommées extraites. Aucune géométrie fiable extraite. 0/2 géométries nommées extraites. Aucune géométrie fiable extraite. 0/2 géométries nommées extraites. Aucune géométrie fiable extraite. 0/2 géométries nommées extraites. Aucune géométrie fiable extraite. 0/2 géométries nommées extraites. Aucune géométrie fiable extraite. 0/2 géométries nommées extraites. Aucune géométrie fiable extraite. 0/2 géométries nommées extraites. Aucune géométrie fiable extraite. 0/2 géométries nommées extraites. Aucune géométrie fiable extraite. 0/2 géométries nommées extraites. Aucune géométrie fiable extraite. 0/2 géométries nommées extraites. Aucune géométrie fiable extraite. 0/2 géométries nommées extraites. Aucune géométrie fiable extraite. 0/2 géométries nommées extraites. Aucune géométrie fiable extraite. 0/2 géométries nommées extraites. Aucune géométrie fiable extraite. 0/2 géométries nommées extraites. Aucune géométrie fiable extraite. 0/2 géométries nommées extraites. Aucune géométrie fiable extraite. 0/2 géométries nommées extraites. Aucune géométrie fiable extraite. 0/2 géométries nommées extraites. Aucune géométrie fiable extraite. 0/2 géométries nommées extraites. Aucune géométrie fiable extraite. 0/2 géométries nommées extraites. Aucune géométrie fiable extraite. 0/2 géométries nommées extraites. Aucune géométrie fiable extraite. 0/2 géométries nommées extraites. Aucune géométrie fiable extraite. 0/2 géométries nommées extraites. Aucune géométrie fiable extraite. 0/2 géométries nommées extraites. Aucune géométrie fiable extraite. 0/2 géométries nommées extraites. Aucune géométrie fiable extraite. 0/2 géométries nommées extraites. Aucune géométrie fiable extraite. 0/2 géométries nommées extraites. Aucune géométrie fiable extraite. 0/2 géométries nommées extraites. Aucune géométrie fiable extraite. 0/2 géométries nommées extraites. Aucune géométrie fiable extraite. 0/2 géométries nommées extraites. Aucune géométrie fiable extraite. 0/2 géométries nommées extraites. Aucune géométrie fiable extraite. 0/2 géométries nommées extraites. Aucune géométrie fiable extraite. 0/2 géométries nommées extraites. Aucune géométrie fiable extraite. 0/2 géométries nommées extraites. Aucune géométrie fiable extraite. 0/2 géométries nommées extraites. Aucune géométrie fiable extraite. 0/2 géométries nommées extraites. Aucune géométrie fiable extraite. 0/2 géométries nommées extraites. Aucune géométrie fiable extraite. 0/2 géométries nommées extraites. Aucune géométrie fiable extraite. 0/2 géométries nommées extraites. Aucune géométrie fiable extraite. 0/2 géométries nommées extraites. Aucune géométrie fiable extraite.",
+      "status": "unmapped",
+      "partial": false,
+      "conservative": false,
+      "fallback": false,
+      "expectedNamedGeometryCount": 2,
+      "mappedGeometryCount": 0,
+      "declaredZoneCount": 2,
+      "missingVerticalCount": 0,
+      "safetyFallbackFeatureCount": 0,
+      "safetyFallbackFeatureNames": [],
+      "ignoredReferenceObjectCount": 0,
+      "causeCodes": [
+        "lateral-boundary-not-extracted",
+        "named-geometry-missing"
+      ],
+      "causeLabels": [
+        "Limites latérales non extraites",
+        "Géométries nommées manquantes"
+      ],
+      "sourceFingerprint": "74232ab78c42fdc43879",
+      "parserVersion": "capclair-supaip-parser-3.0.3"
+    },
+    {
+      "supAip": "128/26",
+      "title": "Transport de défibrillateurs par drones au profit du SAMU 76",
+      "validFrom": "2026-07-01",
+      "validTo": "2027-12-31",
+      "sourcePdf": "https://www.sia.aviation-civile.gouv.fr/documents/download/f/d/15055162/",
+      "reason": "ZRT ROUEN: limites latérales non extraites. 0/1 géométries nommées extraites. Aucune géométrie fiable extraite. 0/1 géométries nommées extraites. Aucune géométrie fiable extraite. 0/1 géométries nommées extraites. Aucune géométrie fiable extraite. 0/1 géométries nommées extraites. Aucune géométrie fiable extraite. 0/1 géométries nommées extraites. Aucune géométrie fiable extraite. 0/1 géométries nommées extraites. Aucune géométrie fiable extraite. 0/1 géométries nommées extraites. Aucune géométrie fiable extraite. 0/1 géométries nommées extraites. Aucune géométrie fiable extraite. 0/1 géométries nommées extraites. Aucune géométrie fiable extraite. 0/1 géométries nommées extraites. Aucune géométrie fiable extraite. 0/1 géométries nommées extraites. Aucune géométrie fiable extraite. 0/1 géométries nommées extraites. Aucune géométrie fiable extraite. 0/1 géométries nommées extraites. Aucune géométrie fiable extraite. 0/1 géométries nommées extraites. Aucune géométrie fiable extraite. 0/1 géométries nommées extraites. Aucune géométrie fiable extraite. 0/1 géométries nommées extraites. Aucune géométrie fiable extraite. 0/1 géométries nommées extraites. Aucune géométrie fiable extraite. 0/1 géométries nommées extraites. Aucune géométrie fiable extraite. 0/1 géométries nommées extraites. Aucune géométrie fiable extraite. 0/1 géométries nommées extraites. Aucune géométrie fiable extraite. 0/1 géométries nommées extraites. Aucune géométrie fiable extraite. 0/1 géométries nommées extraites. Aucune géométrie fiable extraite. 0/1 géométries nommées extraites. Aucune géométrie fiable extraite. 0/1 géométries nommées extraites. Aucune géométrie fiable extraite. 0/1 géométries nommées extraites. Aucune géométrie fiable extraite. 0/1 géométries nommées extraites. Aucune géométrie fiable extraite. 0/1 géométries nommées extraites. Aucune géométrie fiable extraite. 0/1 géométries nommées extraites. Aucune géométrie fiable extraite. 0/1 géométries nommées extraites. Aucune géométrie fiable extraite. 0/1 géométries nommées extraites. Aucune géométrie fiable extraite. 0/1 géométries nommées extraites. Aucune géométrie fiable extraite. 0/1 géométries nommées extraites. Aucune géométrie fiable extraite. 0/1 géométries nommées extraites. Aucune géométrie fiable extraite. 0/1 géométries nommées extraites. Aucune géométrie fiable extraite. 0/1 géométries nommées extraites. Aucune géométrie fiable extraite. 0/1 géométries nommées extraites. Aucune géométrie fiable extraite. 0/1 géométries nommées extraites. Aucune géométrie fiable extraite. 0/1 géométries nommées extraites. Aucune géométrie fiable extraite. 0/1 géométries nommées extraites. Aucune géométrie fiable extraite. 0/1 géométries nommées extraites. Aucune géométrie fiable extraite. 0/1 géométries nommées extraites. Aucune géométrie fiable extraite. 0/1 géométries nommées extraites. Aucune géométrie fiable extraite. 0/1 géométries nommées extraites. Aucune géométrie fiable extraite. 0/1 géométries nommées extraites. Aucune géométrie fiable extraite. 0/1 géométries nommées extraites. Aucune géométrie fiable extraite. 0/1 géométries nommées extraites. Aucune géométrie fiable extraite. 0/1 géométries nommées extraites. Aucune géométrie fiable extraite. 0/1 géométries nommées extraites. Aucune géométrie fiable extraite. 0/1 géométries nommées extraites. Aucune géométrie fiable extraite. 0/1 géométries nommées extraites. Aucune géométrie fiable extraite. 0/1 géométries nommées extraites. Aucune géométrie fiable extraite. 0/1 géométries nommées extraites. Aucune géométrie fiable extraite. 0/1 géométries nommées extraites. Aucune géométrie fiable extraite. 0/1 géométries nommées extraites. Aucune géométrie fiable extraite. 0/1 géométries nommées extraites. Aucune géométrie fiable extraite. 0/1 géométries nommées extraites. Aucune géométrie fiable extraite. 0/1 géométries nommées extraites. Aucune géométrie fiable extraite. 0/1 géométries nommées extraites. Aucune géométrie fiable extraite. 0/1 géométries nommées extraites. Aucune géométrie fiable extraite. 0/1 géométries nommées extraites. Aucune géométrie fiable extraite. 0/1 géométries nommées extraites. Aucune géométrie fiable extraite. 0/1 géométries nommées extraites. Aucune géométrie fiable extraite. 0/1 géométries nommées extraites. Aucune géométrie fiable extraite. 0/1 géométries nommées extraites. Aucune géométrie fiable extraite. 0/1 géométries nommées extraites. Aucune géométrie fiable extraite. 0/1 géométries nommées extraites. Aucune géométrie fiable extraite. 0/1 géométries nommées extraites. Aucune géométrie fiable extraite. 0/1 géométries nommées extraites. Aucune géométrie fiable extraite. 0/1 géométries nommées extraites. Aucune géométrie fiable extraite. 0/1 géométries nommées extraites. Aucune géométrie fiable extraite. 0/1 géométries nommées extraites. Aucune géométrie fiable extraite. 0/1 géométries nommées extraites. Aucune géométrie fiable extraite. 0/1 géométries nommées extraites. Aucune géométrie fiable extraite. 0/1 géométries nommées extraites. Aucune géométrie fiable extraite. 0/1 géométries nommées extraites. Aucune géométrie fiable extraite. 0/1 géométries nommées extraites. Aucune géométrie fiable extraite. 0/1 géométries nommées extraites. Aucune géométrie fiable extraite. 0/1 géométries nommées extraites. Aucune géométrie fiable extraite. 0/1 géométries nommées extraites. Aucune géométrie fiable extraite. 0/1 géométries nommées extraites. Aucune géométrie fiable extraite. 0/1 géométries nommées extraites. Aucune géométrie fiable extraite. 0/1 géométries nommées extraites. Aucune géométrie fiable extraite. 0/1 géométries nommées extraites. Aucune géométrie fiable extraite. 0/1 géométries nommées extraites. Aucune géométrie fiable extraite. 0/1 géométries nommées extraites. Aucune géométrie fiable extraite. 0/1 géométries nommées extraites. Aucune géométrie fiable extraite. 0/1 géométries nommées extraites. Aucune géométrie fiable extraite. 0/1 géométries nommées extraites. Aucune géométrie fiable extraite. 0/1 géométries nommées extraites. Aucune géométrie fiable extraite. 0/1 géométries nommées extraites. Aucune géométrie fiable extraite. 0/1 géométries nommées extraites. Aucune géométrie fiable extraite. 0/1 géométries nommées extraites. Aucune géométrie fiable extraite. 0/1 géométries nommées extraites. Aucune géométrie fiable extraite. 0/1 géométries nommées extraites. Aucune géométrie fiable extraite. 0/1 géométries nommées extraites. Aucune géométrie fiable extraite. 0/1 géométries nommées extraites. Aucune géométrie fiable extraite. 0/1 géométries nommées extraites. Aucune géométrie fiable extraite. 0/1 géométries nommées extraites. Aucune géométrie fiable extraite. 0/1 géométries nommées extraites. Aucune géométrie fiable extraite. 0/1 géométries nommées extraites. Aucune géométrie fiable extraite. 0/1 géométries nommées extraites. Aucune géométrie fiable extraite. 0/1 géométries nommées extraites. Aucune géométrie fiable extraite. 0/1 géométries nommées extraites. Aucune géométrie fiable extraite. 0/1 géométries nommées extraites. Aucune géométrie fiable extraite. 0/1 géométries nommées extraites. Aucune géométrie fiable extraite. 0/1 géométries nommées extraites. Aucune géométrie fiable extraite. 0/1 géométries nommées extraites. Aucune géométrie fiable extraite. 0/1 géométries nommées extraites. Aucune géométrie fiable extraite. 0/1 géométries nommées extraites. Aucune géométrie fiable extraite. 0/1 géométries nommées extraites. Aucune géométrie fiable extraite. 0/1 géométries nommées extraites. Aucune géométrie fiable extraite. 0/1 géométries nommées extraites. Aucune géométrie fiable extraite. 0/1 géométries nommées extraites. Aucune géométrie fiable extraite. 0/1 géométries nommées extraites. Aucune géométrie fiable extraite. 0/1 géométries nommées extraites. Aucune géométrie fiable extraite. 0/1 géométries nommées extraites. Aucune géométrie fiable extraite. 0/1 géométries nommées extraites. Aucune géométrie fiable extraite. 0/1 géométries nommées extraites. Aucune géométrie fiable extraite. 0/1 géométries nommées extraites. Aucune géométrie fiable extraite. 0/1 géométries nommées extraites. Aucune géométrie fiable extraite. 0/1 géométries nommées extraites. Aucune géométrie fiable extraite. 0/1 géométries nommées extraites. Aucune géométrie fiable extraite. 0/1 géométries nommées extraites. Aucune géométrie fiable extraite. 0/1 géométries nommées extraites. Aucune géométrie fiable extraite. 0/1 géométries nommées extraites. Aucune géométrie fiable extraite. 0/1 géométries nommées extraites. Aucune géométrie fiable extraite. 0/1 géométries nommées extraites. Aucune géométrie fiable extraite. 0/1 géométries nommées extraites. Aucune géométrie fiable extraite. 0/1 géométries nommées extraites. Aucune géométrie fiable extraite. 0/1 géométries nommées extraites. Aucune géométrie fiable extraite. 0/1 géométries nommées extraites. Aucune géométrie fiable extraite. 0/1 géométries nommées extraites. Aucune géométrie fiable extraite. 0/1 géométries nommées extraites. Aucune géométrie fiable extraite. 0/1 géométries nommées extraites. Aucune géométrie fiable extraite. 0/1 géométries nommées extraites. Aucune géométrie fiable extraite. 0/1 géométries nommées extraites. Aucune géométrie fiable extraite. 0/1 géométries nommées extraites. Aucune géométrie fiable extraite. 0/1 géométries nommées extraites. Aucune géométrie fiable extraite. 0/1 géométries nommées extraites. Aucune géométrie fiable extraite. 0/1 géométries nommées extraites. Aucune géométrie fiable extraite. 0/1 géométries nommées extraites. Aucune géométrie fiable extraite. 0/1 géométries nommées extraites. Aucune géométrie fiable extraite. 0/1 géométries nommées extraites. Aucune géométrie fiable extraite. 0/1 géométries nommées extraites. Aucune géométrie fiable extraite. 0/1 géométries nommées extraites. Aucune géométrie fiable extraite. 0/1 géométries nommées extraites. Aucune géométrie fiable extraite. 0/1 géométries nommées extraites. Aucune géométrie fiable extraite. 0/1 géométries nommées extraites. Aucune géométrie fiable extraite. 0/1 géométries nommées extraites. Aucune géométrie fiable extraite. 0/1 géométries nommées extraites. Aucune géométrie fiable extraite. 0/1 géométries nommées extraites. Aucune géométrie fiable extraite. 0/1 géométries nommées extraites. Aucune géométrie fiable extraite. 0/1 géométries nommées extraites. Aucune géométrie fiable extraite. 0/1 géométries nommées extraites. Aucune géométrie fiable extraite. 0/1 géométries nommées extraites. Aucune géométrie fiable extraite. 0/1 géométries nommées extraites. Aucune géométrie fiable extraite. 0/1 géométries nommées extraites. Aucune géométrie fiable extraite. 0/1 géométries nommées extraites. Aucune géométrie fiable extraite. 0/1 géométries nommées extraites. Aucune géométrie fiable extraite. 0/1 géométries nommées extraites. Aucune géométrie fiable extraite. 0/1 géométries nommées extraites. Aucune géométrie fiable extraite. 0/1 géométries nommées extraites. Aucune géométrie fiable extraite. 0/1 géométries nommées extraites. Aucune géométrie fiable extraite. 0/1 géométries nommées extraites. Aucune géométrie fiable extraite. 0/1 géométries nommées extraites. Aucune géométrie fiable extraite. 0/1 géométries nommées extraites. Aucune géométrie fiable extraite. 0/1 géométries nommées extraites. Aucune géométrie fiable extraite. 0/1 géométries nommées extraites. Aucune géométrie fiable extraite. 0/1 géométries nommées extraites. Aucune géométrie fiable extraite. 0/1 géométries nommées extraites. Aucune géométrie fiable extraite. 0/1 géométries nommées extraites. Aucune géométrie fiable extraite. 0/1 géométries nommées extraites. Aucune géométrie fiable extraite. 0/1 géométries nommées extraites. Aucune géométrie fiable extraite. 0/1 géométries nommées extraites. Aucune géométrie fiable extraite.",
+      "status": "unmapped",
+      "partial": false,
+      "conservative": false,
+      "fallback": false,
+      "expectedNamedGeometryCount": 1,
+      "mappedGeometryCount": 0,
+      "declaredZoneCount": null,
+      "missingVerticalCount": 0,
+      "safetyFallbackFeatureCount": 0,
+      "safetyFallbackFeatureNames": [],
+      "ignoredReferenceObjectCount": 0,
+      "causeCodes": [
+        "lateral-boundary-not-extracted",
+        "named-geometry-missing"
+      ],
+      "causeLabels": [
+        "Limites latérales non extraites",
+        "Géométries nommées manquantes"
+      ],
+      "sourceFingerprint": "85f6df9fb6d386df0e61",
+      "parserVersion": "capclair-supaip-parser-3.0.3"
+    },
+    {
+      "supAip": "077/26",
+      "title": "Expérimentation : création de 7 Zones Réglementées Temporaires (ZRT) au proﬁt d’activités spéciﬁques défense, mise en sommeil des zones LF-D18 A1 et A2 et modiﬁcation des zones LFD18 A3 et A5 en FIR Brest et Bordeaux",
+      "validFrom": "2026-05-01",
+      "validTo": "2027-04-30",
+      "sourcePdf": "https://www.sia.aviation-civile.gouv.fr/documents/download/f/d/15043925/",
+      "reason": "1 zone(s) sans limites verticales extraites.",
+      "status": "partial",
+      "partial": true,
+      "conservative": false,
+      "fallback": false,
+      "expectedNamedGeometryCount": 12,
+      "mappedGeometryCount": 12,
+      "declaredZoneCount": 7,
+      "missingVerticalCount": 1,
+      "safetyFallbackFeatureCount": 0,
+      "safetyFallbackFeatureNames": [],
+      "ignoredReferenceObjectCount": 0,
+      "causeCodes": [
+        "vertical-limit-not-extracted"
+      ],
+      "causeLabels": [
+        "Limites verticales non extraites"
+      ],
+      "sourceFingerprint": "f640cf68fbbe4c792aea",
+      "parserVersion": "capclair-supaip-parser-3.0.3"
+    },
+    {
+      "supAip": "076/26",
+      "title": "Création de Zones Réglementées Temporaires (12 ZRT) et de Zones Dangereuses Temporaires (5 ZDT) au proﬁt de vols hors vue d'aéronefs sans équipage à bord en baie de Seine et Cotentin",
+      "validFrom": "2026-04-27",
+      "validTo": "2027-04-26",
+      "sourcePdf": "https://www.sia.aviation-civile.gouv.fr/documents/download/f/d/15043923/",
+      "reason": "12/17 géométries nommées extraites.",
+      "status": "partial",
+      "partial": true,
+      "conservative": false,
+      "fallback": false,
+      "expectedNamedGeometryCount": 17,
+      "mappedGeometryCount": 12,
+      "declaredZoneCount": 17,
+      "missingVerticalCount": 0,
+      "safetyFallbackFeatureCount": 0,
+      "safetyFallbackFeatureNames": [],
+      "ignoredReferenceObjectCount": 0,
+      "causeCodes": [
+        "named-geometry-missing"
+      ],
+      "causeLabels": [
+        "Géométries nommées manquantes"
+      ],
+      "sourceFingerprint": "54b032e4cc77f5c269d4",
+      "parserVersion": "capclair-supaip-parser-3.0.3"
+    },
+    {
+      "supAip": "065/25",
+      "title": "Création de deux Zones Réglementées Temporaires (ZRT) au profit d’aéronefs d’état sans équipage à bord basés à Cognac",
+      "validFrom": "2025-05-15",
+      "validTo": "2027-05-12",
+      "sourcePdf": "https://www.sia.aviation-civile.gouv.fr/documents/download/f/d/14634691/",
+      "reason": "1/2 géométries nommées extraites.",
+      "status": "partial",
+      "partial": true,
+      "conservative": false,
+      "fallback": false,
+      "expectedNamedGeometryCount": 2,
+      "mappedGeometryCount": 1,
+      "declaredZoneCount": 2,
+      "missingVerticalCount": 0,
+      "safetyFallbackFeatureCount": 0,
+      "safetyFallbackFeatureNames": [],
+      "ignoredReferenceObjectCount": 0,
+      "causeCodes": [
+        "named-geometry-missing"
+      ],
+      "causeLabels": [
+        "Géométries nommées manquantes"
+      ],
+      "sourceFingerprint": "eb1aa9da81fef0a3c407",
+      "parserVersion": "capclair-supaip-parser-3.0.3"
+    },
+    {
+      "supAip": "060/26",
+      "title": "Création à titre expérimental d'une Zone Réglementée Temporaire (ZRT) au proﬁt d'entraînements militaires dans la région de Chenevières.",
+      "validFrom": "2026-04-16",
+      "validTo": "2028-04-12",
+      "sourcePdf": "https://www.sia.aviation-civile.gouv.fr/documents/download/f/d/15038346/",
+      "reason": "1 zone(s) conservée(s) depuis la dernière base valide par la protection anti-régression.",
+      "status": "fallback",
+      "partial": false,
+      "conservative": false,
+      "fallback": true,
+      "expectedNamedGeometryCount": 1,
+      "mappedGeometryCount": 1,
+      "declaredZoneCount": 1,
+      "missingVerticalCount": 0,
+      "safetyFallbackFeatureCount": 1,
+      "safetyFallbackFeatureNames": [
+        "ZRT CHENEVIERES"
+      ],
+      "ignoredReferenceObjectCount": 1,
+      "causeCodes": [
+        "safety-fallback"
+      ],
+      "causeLabels": [
+        "Repli de sécurité depuis une ancienne géométrie"
+      ],
+      "sourceFingerprint": "8883e76b4c1064da7cf7",
+      "parserVersion": "capclair-supaip-parser-3.0.3"
+    },
+    {
+      "supAip": "055/26",
+      "title": "Création de 99 zones temporaires (ZRT/ZDT) pour les transits et les évolutions d’aéronefs d’Etat sans équipage à bord dans le sud de la France",
+      "validFrom": "2026-04-16",
+      "validTo": "2028-04-12",
+      "sourcePdf": "https://www.sia.aviation-civile.gouv.fr/documents/download/f/d/15038336/",
+      "reason": "97/99 géométries nommées extraites.",
+      "status": "partial",
+      "partial": true,
+      "conservative": false,
+      "fallback": false,
+      "expectedNamedGeometryCount": 99,
+      "mappedGeometryCount": 97,
+      "declaredZoneCount": 99,
+      "missingVerticalCount": 0,
+      "safetyFallbackFeatureCount": 0,
+      "safetyFallbackFeatureNames": [],
+      "ignoredReferenceObjectCount": 0,
+      "causeCodes": [
+        "named-geometry-missing"
+      ],
+      "causeLabels": [
+        "Géométries nommées manquantes"
+      ],
+      "sourceFingerprint": "2929f17e9ddafd046ab9",
+      "parserVersion": "capclair-supaip-parser-3.0.3"
+    },
+    {
+      "supAip": "053/26",
+      "title": "Création de 95 zones réglementées temporaires (ZRT) et 4 zones dangereuses temporaires (ZDT) en moyenne et haute altitude, pour le transit et les évolutions de drones d'État vers une zone de travail",
+      "validFrom": "2026-04-16",
+      "validTo": "2028-04-12",
+      "sourcePdf": "https://www.sia.aviation-civile.gouv.fr/documents/download/f/d/15038332/",
+      "reason": "96/99 géométries nommées extraites.",
+      "status": "partial",
+      "partial": true,
+      "conservative": false,
+      "fallback": false,
+      "expectedNamedGeometryCount": 99,
+      "mappedGeometryCount": 96,
+      "declaredZoneCount": 99,
+      "missingVerticalCount": 0,
+      "safetyFallbackFeatureCount": 0,
+      "safetyFallbackFeatureNames": [],
+      "ignoredReferenceObjectCount": 0,
+      "causeCodes": [
+        "named-geometry-missing"
+      ],
+      "causeLabels": [
+        "Géométries nommées manquantes"
+      ],
+      "sourceFingerprint": "506559f3f22ceab1e399",
+      "parserVersion": "capclair-supaip-parser-3.0.3"
+    },
+    {
+      "supAip": "052/26",
+      "title": "CRÉATION DE 16 ZONES INTERDITES TEMPORAIRES AUX AÉRONEFS SANS ÉQUIPAGE A BORD SUR LA COTE MÉDITERRANÉENNE",
+      "validFrom": "2026-04-16",
+      "validTo": "2027-11-24",
+      "sourcePdf": "https://www.sia.aviation-civile.gouv.fr/documents/download/f/d/15038330/",
+      "reason": "15/16 géométries nommées extraites.",
+      "status": "partial",
+      "partial": true,
+      "conservative": false,
+      "fallback": false,
+      "expectedNamedGeometryCount": 16,
+      "mappedGeometryCount": 15,
+      "declaredZoneCount": 16,
+      "missingVerticalCount": 0,
+      "safetyFallbackFeatureCount": 0,
+      "safetyFallbackFeatureNames": [],
+      "ignoredReferenceObjectCount": 0,
+      "causeCodes": [
+        "named-geometry-missing"
+      ],
+      "causeLabels": [
+        "Géométries nommées manquantes"
+      ],
+      "sourceFingerprint": "24c1a423fcafa713f5ef",
+      "parserVersion": "capclair-supaip-parser-3.0.3"
+    },
+    {
+      "supAip": "051/26",
+      "title": "Création d'une zone réglementée temporaire au profit de vols d'aéronefs sans équipage à bord dans la région de VALENCE (26)",
+      "validFrom": "2026-04-06",
+      "validTo": "2026-11-24",
+      "sourcePdf": "https://www.sia.aviation-civile.gouv.fr/documents/download/f/d/15038326/",
+      "reason": "1 zone(s) conservée(s) depuis la dernière base valide par la protection anti-régression.",
+      "status": "fallback",
+      "partial": false,
+      "conservative": false,
+      "fallback": true,
+      "expectedNamedGeometryCount": 1,
+      "mappedGeometryCount": 1,
+      "declaredZoneCount": 1,
+      "missingVerticalCount": 0,
+      "safetyFallbackFeatureCount": 1,
+      "safetyFallbackFeatureNames": [
+        "ZRT SPAHIS"
+      ],
+      "ignoredReferenceObjectCount": 1,
+      "causeCodes": [
+        "safety-fallback"
+      ],
+      "causeLabels": [
+        "Repli de sécurité depuis une ancienne géométrie"
+      ],
+      "sourceFingerprint": "93049325d0e05df76c21",
+      "parserVersion": "capclair-supaip-parser-3.0.3"
+    },
+    {
+      "supAip": "042/26",
+      "title": "Création de trois zones réglementées temporaires (ZRT) au profit d’activités de parachutage en haute altitude (HALO et HAHO), et modification de l’activité PARA 520",
+      "validFrom": "2026-04-02",
+      "validTo": "2026-11-29",
+      "sourcePdf": "https://www.sia.aviation-civile.gouv.fr/documents/download/f/d/15032762/",
+      "reason": "ZRT OLONNE A: limites latérales non extraites. ZRT OLONNE B: limites latérales non extraites. ZRT OLONNE C: limites latérales non extraites. 0/3 géométries nommées extraites. Aucune géométrie fiable extraite. 0/3 géométries nommées extraites. Aucune géométrie fiable extraite. 0/3 géométries nommées extraites. Aucune géométrie fiable extraite. 0/3 géométries nommées extraites. Aucune géométrie fiable extraite. 0/3 géométries nommées extraites. Aucune géométrie fiable extraite. 0/3 géométries nommées extraites. Aucune géométrie fiable extraite. 0/3 géométries nommées extraites. Aucune géométrie fiable extraite. 0/3 géométries nommées extraites. Aucune géométrie fiable extraite. 0/3 géométries nommées extraites. Aucune géométrie fiable extraite. 0/3 géométries nommées extraites. Aucune géométrie fiable extraite. 0/3 géométries nommées extraites. Aucune géométrie fiable extraite. 0/3 géométries nommées extraites. Aucune géométrie fiable extraite. 0/3 géométries nommées extraites. Aucune géométrie fiable extraite. 0/3 géométries nommées extraites. Aucune géométrie fiable extraite. 0/3 géométries nommées extraites. Aucune géométrie fiable extraite. 0/3 géométries nommées extraites. Aucune géométrie fiable extraite. 0/3 géométries nommées extraites. Aucune géométrie fiable extraite. 0/3 géométries nommées extraites. Aucune géométrie fiable extraite. 0/3 géométries nommées extraites. Aucune géométrie fiable extraite. 0/3 géométries nommées extraites. Aucune géométrie fiable extraite. 0/3 géométries nommées extraites. Aucune géométrie fiable extraite. 0/3 géométries nommées extraites. Aucune géométrie fiable extraite. 0/3 géométries nommées extraites. Aucune géométrie fiable extraite. 0/3 géométries nommées extraites. Aucune géométrie fiable extraite. 0/3 géométries nommées extraites. Aucune géométrie fiable extraite. 0/3 géométries nommées extraites. Aucune géométrie fiable extraite. 0/3 géométries nommées extraites. Aucune géométrie fiable extraite. 0/3 géométries nommées extraites. Aucune géométrie fiable extraite. 0/3 géométries nommées extraites. Aucune géométrie fiable extraite. 0/3 géométries nommées extraites. Aucune géométrie fiable extraite. 0/3 géométries nommées extraites. Aucune géométrie fiable extraite. 0/3 géométries nommées extraites. Aucune géométrie fiable extraite. 0/3 géométries nommées extraites. Aucune géométrie fiable extraite. 0/3 géométries nommées extraites. Aucune géométrie fiable extraite. 0/3 géométries nommées extraites. Aucune géométrie fiable extraite. 0/3 géométries nommées extraites. Aucune géométrie fiable extraite. 0/3 géométries nommées extraites. Aucune géométrie fiable extraite. 0/3 géométries nommées extraites. Aucune géométrie fiable extraite. 0/3 géométries nommées extraites. Aucune géométrie fiable extraite. 0/3 géométries nommées extraites. Aucune géométrie fiable extraite. 0/3 géométries nommées extraites. Aucune géométrie fiable extraite. 0/3 géométries nommées extraites. Aucune géométrie fiable extraite. 0/3 géométries nommées extraites. Aucune géométrie fiable extraite. 0/3 géométries nommées extraites. Aucune géométrie fiable extraite. 0/3 géométries nommées extraites. Aucune géométrie fiable extraite. 0/3 géométries nommées extraites. Aucune géométrie fiable extraite. 0/3 géométries nommées extraites. Aucune géométrie fiable extraite. 0/3 géométries nommées extraites. Aucune géométrie fiable extraite. 0/3 géométries nommées extraites. Aucune géométrie fiable extraite. 0/3 géométries nommées extraites. Aucune géométrie fiable extraite. 0/3 géométries nommées extraites. Aucune géométrie fiable extraite. 0/3 géométries nommées extraites. Aucune géométrie fiable extraite. 0/3 géométries nommées extraites. Aucune géométrie fiable extraite. 0/3 géométries nommées extraites. Aucune géométrie fiable extraite. 0/3 géométries nommées extraites. Aucune géométrie fiable extraite. 0/3 géométries nommées extraites. Aucune géométrie fiable extraite. 0/3 géométries nommées extraites. Aucune géométrie fiable extraite. 0/3 géométries nommées extraites. Aucune géométrie fiable extraite. 0/3 géométries nommées extraites. Aucune géométrie fiable extraite. 0/3 géométries nommées extraites. Aucune géométrie fiable extraite. 0/3 géométries nommées extraites. Aucune géométrie fiable extraite. 0/3 géométries nommées extraites. Aucune géométrie fiable extraite. 0/3 géométries nommées extraites. Aucune géométrie fiable extraite. 0/3 géométries nommées extraites. Aucune géométrie fiable extraite. 0/3 géométries nommées extraites. Aucune géométrie fiable extraite. 0/3 géométries nommées extraites. Aucune géométrie fiable extraite. 0/3 géométries nommées extraites. Aucune géométrie fiable extraite. 0/3 géométries nommées extraites. Aucune géométrie fiable extraite. 0/3 géométries nommées extraites. Aucune géométrie fiable extraite. 0/3 géométries nommées extraites. Aucune géométrie fiable extraite. 0/3 géométries nommées extraites. Aucune géométrie fiable extraite. 0/3 géométries nommées extraites. Aucune géométrie fiable extraite. 0/3 géométries nommées extraites. Aucune géométrie fiable extraite. 0/3 géométries nommées extraites. Aucune géométrie fiable extraite. 0/3 géométries nommées extraites. Aucune géométrie fiable extraite. 0/3 géométries nommées extraites. Aucune géométrie fiable extraite. 0/3 géométries nommées extraites. Aucune géométrie fiable extraite. 0/3 géométries nommées extraites. Aucune géométrie fiable extraite. 0/3 géométries nommées extraites. Aucune géométrie fiable extraite. 0/3 géométries nommées extraites. Aucune géométrie fiable extraite. 0/3 géométries nommées extraites. Aucune géométrie fiable extraite. 0/3 géométries nommées extraites. Aucune géométrie fiable extraite. 0/3 géométries nommées extraites. Aucune géométrie fiable extraite. 0/3 géométries nommées extraites. Aucune géométrie fiable extraite. 0/3 géométries nommées extraites. Aucune géométrie fiable extraite. 0/3 géométries nommées extraites. Aucune géométrie fiable extraite. 0/3 géométries nommées extraites. Aucune géométrie fiable extraite. 0/3 géométries nommées extraites. Aucune géométrie fiable extraite. 0/3 géométries nommées extraites. Aucune géométrie fiable extraite. 0/3 géométries nommées extraites. Aucune géométrie fiable extraite. 0/3 géométries nommées extraites. Aucune géométrie fiable extraite. 0/3 géométries nommées extraites. Aucune géométrie fiable extraite. 0/3 géométries nommées extraites. Aucune géométrie fiable extraite. 0/3 géométries nommées extraites. Aucune géométrie fiable extraite. 0/3 géométries nommées extraites. Aucune géométrie fiable extraite. 0/3 géométries nommées extraites. Aucune géométrie fiable extraite. 0/3 géométries nommées extraites. Aucune géométrie fiable extraite. 0/3 géométries nommées extraites. Aucune géométrie fiable extraite. 0/3 géométries nommées extraites. Aucune géométrie fiable extraite. 0/3 géométries nommées extraites. Aucune géométrie fiable extraite. 0/3 géométries nommées extraites. Aucune géométrie fiable extraite. 0/3 géométries nommées extraites. Aucune géométrie fiable extraite. 0/3 géométries nommées extraites. Aucune géométrie fiable extraite. 0/3 géométries nommées extraites. Aucune géométrie fiable extraite. 0/3 géométries nommées extraites. Aucune géométrie fiable extraite. 0/3 géométries nommées extraites. Aucune géométrie fiable extraite. 0/3 géométries nommées extraites. Aucune géométrie fiable extraite. 0/3 géométries nommées extraites. Aucune géométrie fiable extraite. 0/3 géométries nommées extraites. Aucune géométrie fiable extraite. 0/3 géométries nommées extraites. Aucune géométrie fiable extraite. 0/3 géométries nommées extraites. Aucune géométrie fiable extraite. 0/3 géométries nommées extraites. Aucune géométrie fiable extraite. 0/3 géométries nommées extraites. Aucune géométrie fiable extraite. 0/3 géométries nommées extraites. Aucune géométrie fiable extraite. 0/3 géométries nommées extraites. Aucune géométrie fiable extraite. 0/3 géométries nommées extraites. Aucune géométrie fiable extraite. 0/3 géométries nommées extraites. Aucune géométrie fiable extraite. 0/3 géométries nommées extraites. Aucune géométrie fiable extraite. 0/3 géométries nommées extraites. Aucune géométrie fiable extraite. 0/3 géométries nommées extraites. Aucune géométrie fiable extraite. 0/3 géométries nommées extraites. Aucune géométrie fiable extraite. 0/3 géométries nommées extraites. Aucune géométrie fiable extraite. 0/3 géométries nommées extraites. Aucune géométrie fiable extraite. 0/3 géométries nommées extraites. Aucune géométrie fiable extraite. 0/3 géométries nommées extraites. Aucune géométrie fiable extraite. 0/3 géométries nommées extraites. Aucune géométrie fiable extraite. 0/3 géométries nommées extraites. Aucune géométrie fiable extraite. 0/3 géométries nommées extraites. Aucune géométrie fiable extraite. 0/3 géométries nommées extraites. Aucune géométrie fiable extraite. 0/3 géométries nommées extraites. Aucune géométrie fiable extraite. 0/3 géométries nommées extraites. Aucune géométrie fiable extraite. 0/3 géométries nommées extraites. Aucune géométrie fiable extraite. 0/3 géométries nommées extraites. Aucune géométrie fiable extraite. 0/3 géométries nommées extraites. Aucune géométrie fiable extraite. 0/3 géométries nommées extraites. Aucune géométrie fiable extraite. 0/3 géométries nommées extraites. Aucune géométrie fiable extraite. 0/3 géométries nommées extraites. Aucune géométrie fiable extraite. 0/3 géométries nommées extraites. Aucune géométrie fiable extraite. 0/3 géométries nommées extraites. Aucune géométrie fiable extraite. 0/3 géométries nommées extraites. Aucune géométrie fiable extraite. 0/3 géométries nommées extraites. Aucune géométrie fiable extraite. 0/3 géométries nommées extraites. Aucune géométrie fiable extraite. 0/3 géométries nommées extraites. Aucune géométrie fiable extraite. 0/3 géométries nommées extraites. Aucune géométrie fiable extraite. 0/3 géométries nommées extraites. Aucune géométrie fiable extraite. 0/3 géométries nommées extraites. Aucune géométrie fiable extraite. 0/3 géométries nommées extraites. Aucune géométrie fiable extraite. 0/3 géométries nommées extraites. Aucune géométrie fiable extraite. 0/3 géométries nommées extraites. Aucune géométrie fiable extraite. 0/3 géométries nommées extraites. Aucune géométrie fiable extraite. 0/3 géométries nommées extraites. Aucune géométrie fiable extraite. 0/3 géométries nommées extraites. Aucune géométrie fiable extraite. 0/3 géométries nommées extraites. Aucune géométrie fiable extraite. 0/3 géométries nommées extraites. Aucune géométrie fiable extraite. 0/3 géométries nommées extraites. Aucune géométrie fiable extraite. 0/3 géométries nommées extraites. Aucune géométrie fiable extraite. 0/3 géométries nommées extraites. Aucune géométrie fiable extraite. 0/3 géométries nommées extraites. Aucune géométrie fiable extraite. 0/3 géométries nommées extraites. Aucune géométrie fiable extraite. 0/3 géométries nommées extraites. Aucune géométrie fiable extraite. 0/3 géométries nommées extraites. Aucune géométrie fiable extraite. 0/3 géométries nommées extraites. Aucune géométrie fiable extraite. 0/3 géométries nommées extraites. Aucune géométrie fiable extraite. 0/3 géométries nommées extraites. Aucune géométrie fiable extraite. 0/3 géométries nommées extraites. Aucune géométrie fiable extraite. 0/3 géométries nommées extraites. Aucune géométrie fiable extraite. 0/3 géométries nommées extraites. Aucune géométrie fiable extraite. 0/3 géométries nommées extraites. Aucune géométrie fiable extraite. 0/3 géométries nommées extraites. Aucune géométrie fiable extraite. 0/3 géométries nommées extraites. Aucune géométrie fiable extraite. 0/3 géométries nommées extraites. Aucune géométrie fiable extraite. 0/3 géométries nommées extraites. Aucune géométrie fiable extraite. 0/3 géométries nommées extraites. Aucune géométrie fiable extraite. 0/3 géométries nommées extraites. Aucune géométrie fiable extraite.",
+      "status": "unmapped",
+      "partial": false,
+      "conservative": false,
+      "fallback": false,
+      "expectedNamedGeometryCount": 3,
+      "mappedGeometryCount": 0,
+      "declaredZoneCount": 3,
+      "missingVerticalCount": 0,
+      "safetyFallbackFeatureCount": 0,
+      "safetyFallbackFeatureNames": [],
+      "ignoredReferenceObjectCount": 0,
+      "causeCodes": [
+        "lateral-boundary-not-extracted",
+        "named-geometry-missing"
+      ],
+      "causeLabels": [
+        "Limites latérales non extraites",
+        "Géométries nommées manquantes"
+      ],
+      "sourceFingerprint": "0d57d29fef43fd211402",
+      "parserVersion": "capclair-supaip-parser-3.0.3"
+    },
+    {
+      "supAip": "018/26",
+      "title": "Création d’une Zone Réglementée Temporaire (ZRT DRONE COURTALAIN) au profit de vols d'aéronefs sans équipage à bord, hors vue de jour et de nuit, dans la région Centre",
+      "validFrom": "2026-03-03",
+      "validTo": "2026-12-31",
+      "sourcePdf": "https://www.sia.aviation-civile.gouv.fr/documents/download/f/d/15027163/",
+      "reason": "1 zone(s) sans limites verticales extraites. 1 zone(s) conservée(s) depuis la dernière base valide par la protection anti-régression.",
+      "status": "partial",
+      "partial": true,
+      "conservative": false,
+      "fallback": false,
+      "expectedNamedGeometryCount": 2,
+      "mappedGeometryCount": 2,
+      "declaredZoneCount": 1,
+      "missingVerticalCount": 1,
+      "safetyFallbackFeatureCount": 1,
+      "safetyFallbackFeatureNames": [
+        "ZRT 'PUITS LA LANDE' et 'PUITS LA FONTENNELLE'"
+      ],
+      "ignoredReferenceObjectCount": 0,
+      "causeCodes": [
+        "vertical-limit-not-extracted",
+        "safety-fallback"
+      ],
+      "causeLabels": [
+        "Limites verticales non extraites",
+        "Repli de sécurité depuis une ancienne géométrie"
+      ],
+      "sourceFingerprint": "dc78bd2d3522c36847f6",
+      "parserVersion": "capclair-supaip-parser-3.0.3"
+    },
+    {
+      "supAip": "017/26",
+      "title": "Prolongation d’une zone règlementée temporaire (ZRT) « PARA CUERS » pour du parachutage de nuit.",
+      "validFrom": "2026-02-19",
+      "validTo": "2027-01-16",
+      "sourcePdf": "https://www.sia.aviation-civile.gouv.fr/documents/download/f/d/15027161/",
+      "reason": "ZRT PARA CUERS: limites latérales non extraites. 0/1 géométries nommées extraites. Aucune géométrie fiable extraite. 0/1 géométries nommées extraites. Aucune géométrie fiable extraite. 0/1 géométries nommées extraites. Aucune géométrie fiable extraite. 0/1 géométries nommées extraites. Aucune géométrie fiable extraite. 0/1 géométries nommées extraites. Aucune géométrie fiable extraite. 0/1 géométries nommées extraites. Aucune géométrie fiable extraite. 0/1 géométries nommées extraites. Aucune géométrie fiable extraite. 0/1 géométries nommées extraites. Aucune géométrie fiable extraite. 0/1 géométries nommées extraites. Aucune géométrie fiable extraite. 0/1 géométries nommées extraites. Aucune géométrie fiable extraite. 0/1 géométries nommées extraites. Aucune géométrie fiable extraite. 0/1 géométries nommées extraites. Aucune géométrie fiable extraite. 0/1 géométries nommées extraites. Aucune géométrie fiable extraite. 0/1 géométries nommées extraites. Aucune géométrie fiable extraite. 0/1 géométries nommées extraites. Aucune géométrie fiable extraite. 0/1 géométries nommées extraites. Aucune géométrie fiable extraite. 0/1 géométries nommées extraites. Aucune géométrie fiable extraite. 0/1 géométries nommées extraites. Aucune géométrie fiable extraite. 0/1 géométries nommées extraites. Aucune géométrie fiable extraite. 0/1 géométries nommées extraites. Aucune géométrie fiable extraite. 0/1 géométries nommées extraites. Aucune géométrie fiable extraite. 0/1 géométries nommées extraites. Aucune géométrie fiable extraite. 0/1 géométries nommées extraites. Aucune géométrie fiable extraite. 0/1 géométries nommées extraites. Aucune géométrie fiable extraite. 0/1 géométries nommées extraites. Aucune géométrie fiable extraite. 0/1 géométries nommées extraites. Aucune géométrie fiable extraite. 0/1 géométries nommées extraites. Aucune géométrie fiable extraite. 0/1 géométries nommées extraites. Aucune géométrie fiable extraite. 0/1 géométries nommées extraites. Aucune géométrie fiable extraite. 0/1 géométries nommées extraites. Aucune géométrie fiable extraite. 0/1 géométries nommées extraites. Aucune géométrie fiable extraite. 0/1 géométries nommées extraites. Aucune géométrie fiable extraite. 0/1 géométries nommées extraites. Aucune géométrie fiable extraite. 0/1 géométries nommées extraites. Aucune géométrie fiable extraite. 0/1 géométries nommées extraites. Aucune géométrie fiable extraite. 0/1 géométries nommées extraites. Aucune géométrie fiable extraite. 0/1 géométries nommées extraites. Aucune géométrie fiable extraite. 0/1 géométries nommées extraites. Aucune géométrie fiable extraite. 0/1 géométries nommées extraites. Aucune géométrie fiable extraite. 0/1 géométries nommées extraites. Aucune géométrie fiable extraite. 0/1 géométries nommées extraites. Aucune géométrie fiable extraite. 0/1 géométries nommées extraites. Aucune géométrie fiable extraite. 0/1 géométries nommées extraites. Aucune géométrie fiable extraite. 0/1 géométries nommées extraites. Aucune géométrie fiable extraite. 0/1 géométries nommées extraites. Aucune géométrie fiable extraite. 0/1 géométries nommées extraites. Aucune géométrie fiable extraite. 0/1 géométries nommées extraites. Aucune géométrie fiable extraite. 0/1 géométries nommées extraites. Aucune géométrie fiable extraite. 0/1 géométries nommées extraites. Aucune géométrie fiable extraite. 0/1 géométries nommées extraites. Aucune géométrie fiable extraite. 0/1 géométries nommées extraites. Aucune géométrie fiable extraite. 0/1 géométries nommées extraites. Aucune géométrie fiable extraite. 0/1 géométries nommées extraites. Aucune géométrie fiable extraite. 0/1 géométries nommées extraites. Aucune géométrie fiable extraite. 0/1 géométries nommées extraites. Aucune géométrie fiable extraite. 0/1 géométries nommées extraites. Aucune géométrie fiable extraite. 0/1 géométries nommées extraites. Aucune géométrie fiable extraite. 0/1 géométries nommées extraites. Aucune géométrie fiable extraite. 0/1 géométries nommées extraites. Aucune géométrie fiable extraite. 0/1 géométries nommées extraites. Aucune géométrie fiable extraite. 0/1 géométries nommées extraites. Aucune géométrie fiable extraite. 0/1 géométries nommées extraites. Aucune géométrie fiable extraite. 0/1 géométries nommées extraites. Aucune géométrie fiable extraite. 0/1 géométries nommées extraites. Aucune géométrie fiable extraite. 0/1 géométries nommées extraites. Aucune géométrie fiable extraite. 0/1 géométries nommées extraites. Aucune géométrie fiable extraite. 0/1 géométries nommées extraites. Aucune géométrie fiable extraite. 0/1 géométries nommées extraites. Aucune géométrie fiable extraite. 0/1 géométries nommées extraites. Aucune géométrie fiable extraite. 0/1 géométries nommées extraites. Aucune géométrie fiable extraite. 0/1 géométries nommées extraites. Aucune géométrie fiable extraite. 0/1 géométries nommées extraites. Aucune géométrie fiable extraite. 0/1 géométries nommées extraites. Aucune géométrie fiable extraite. 0/1 géométries nommées extraites. Aucune géométrie fiable extraite. 0/1 géométries nommées extraites. Aucune géométrie fiable extraite. 0/1 géométries nommées extraites. Aucune géométrie fiable extraite. 0/1 géométries nommées extraites. Aucune géométrie fiable extraite. 0/1 géométries nommées extraites. Aucune géométrie fiable extraite. 0/1 géométries nommées extraites. Aucune géométrie fiable extraite. 0/1 géométries nommées extraites. Aucune géométrie fiable extraite. 0/1 géométries nommées extraites. Aucune géométrie fiable extraite. 0/1 géométries nommées extraites. Aucune géométrie fiable extraite. 0/1 géométries nommées extraites. Aucune géométrie fiable extraite. 0/1 géométries nommées extraites. Aucune géométrie fiable extraite. 0/1 géométries nommées extraites. Aucune géométrie fiable extraite. 0/1 géométries nommées extraites. Aucune géométrie fiable extraite. 0/1 géométries nommées extraites. Aucune géométrie fiable extraite. 0/1 géométries nommées extraites. Aucune géométrie fiable extraite. 0/1 géométries nommées extraites. Aucune géométrie fiable extraite. 0/1 géométries nommées extraites. Aucune géométrie fiable extraite. 0/1 géométries nommées extraites. Aucune géométrie fiable extraite. 0/1 géométries nommées extraites. Aucune géométrie fiable extraite. 0/1 géométries nommées extraites. Aucune géométrie fiable extraite. 0/1 géométries nommées extraites. Aucune géométrie fiable extraite. 0/1 géométries nommées extraites. Aucune géométrie fiable extraite. 0/1 géométries nommées extraites. Aucune géométrie fiable extraite. 0/1 géométries nommées extraites. Aucune géométrie fiable extraite. 0/1 géométries nommées extraites. Aucune géométrie fiable extraite. 0/1 géométries nommées extraites. Aucune géométrie fiable extraite. 0/1 géométries nommées extraites. Aucune géométrie fiable extraite. 0/1 géométries nommées extraites. Aucune géométrie fiable extraite. 0/1 géométries nommées extraites. Aucune géométrie fiable extraite. 0/1 géométries nommées extraites. Aucune géométrie fiable extraite. 0/1 géométries nommées extraites. Aucune géométrie fiable extraite. 0/1 géométries nommées extraites. Aucune géométrie fiable extraite. 0/1 géométries nommées extraites. Aucune géométrie fiable extraite. 0/1 géométries nommées extraites. Aucune géométrie fiable extraite. 0/1 géométries nommées extraites. Aucune géométrie fiable extraite. 0/1 géométries nommées extraites. Aucune géométrie fiable extraite. 0/1 géométries nommées extraites. Aucune géométrie fiable extraite. 0/1 géométries nommées extraites. Aucune géométrie fiable extraite. 0/1 géométries nommées extraites. Aucune géométrie fiable extraite. 0/1 géométries nommées extraites. Aucune géométrie fiable extraite. 0/1 géométries nommées extraites. Aucune géométrie fiable extraite. 0/1 géométries nommées extraites. Aucune géométrie fiable extraite. 0/1 géométries nommées extraites. Aucune géométrie fiable extraite. 0/1 géométries nommées extraites. Aucune géométrie fiable extraite. 0/1 géométries nommées extraites. Aucune géométrie fiable extraite. 0/1 géométries nommées extraites. Aucune géométrie fiable extraite. 0/1 géométries nommées extraites. Aucune géométrie fiable extraite. 0/1 géométries nommées extraites. Aucune géométrie fiable extraite. 0/1 géométries nommées extraites. Aucune géométrie fiable extraite. 0/1 géométries nommées extraites. Aucune géométrie fiable extraite. 0/1 géométries nommées extraites. Aucune géométrie fiable extraite. 0/1 géométries nommées extraites. Aucune géométrie fiable extraite. 0/1 géométries nommées extraites. Aucune géométrie fiable extraite. 0/1 géométries nommées extraites. Aucune géométrie fiable extraite. 0/1 géométries nommées extraites. Aucune géométrie fiable extraite. 0/1 géométries nommées extraites. Aucune géométrie fiable extraite. 0/1 géométries nommées extraites. Aucune géométrie fiable extraite. 0/1 géométries nommées extraites. Aucune géométrie fiable extraite. 0/1 géométries nommées extraites. Aucune géométrie fiable extraite. 0/1 géométries nommées extraites. Aucune géométrie fiable extraite. 0/1 géométries nommées extraites. Aucune géométrie fiable extraite. 0/1 géométries nommées extraites. Aucune géométrie fiable extraite. 0/1 géométries nommées extraites. Aucune géométrie fiable extraite. 0/1 géométries nommées extraites. Aucune géométrie fiable extraite. 0/1 géométries nommées extraites. Aucune géométrie fiable extraite. 0/1 géométries nommées extraites. Aucune géométrie fiable extraite. 0/1 géométries nommées extraites. Aucune géométrie fiable extraite. 0/1 géométries nommées extraites. Aucune géométrie fiable extraite. 0/1 géométries nommées extraites. Aucune géométrie fiable extraite. 0/1 géométries nommées extraites. Aucune géométrie fiable extraite. 0/1 géométries nommées extraites. Aucune géométrie fiable extraite. 0/1 géométries nommées extraites. Aucune géométrie fiable extraite. 0/1 géométries nommées extraites. Aucune géométrie fiable extraite. 0/1 géométries nommées extraites. Aucune géométrie fiable extraite. 0/1 géométries nommées extraites. Aucune géométrie fiable extraite. 0/1 géométries nommées extraites. Aucune géométrie fiable extraite. 0/1 géométries nommées extraites. Aucune géométrie fiable extraite. 0/1 géométries nommées extraites. Aucune géométrie fiable extraite. 0/1 géométries nommées extraites. Aucune géométrie fiable extraite. 0/1 géométries nommées extraites. Aucune géométrie fiable extraite. 0/1 géométries nommées extraites. Aucune géométrie fiable extraite. 0/1 géométries nommées extraites. Aucune géométrie fiable extraite. 0/1 géométries nommées extraites. Aucune géométrie fiable extraite. 0/1 géométries nommées extraites. Aucune géométrie fiable extraite. 0/1 géométries nommées extraites. Aucune géométrie fiable extraite. 0/1 géométries nommées extraites. Aucune géométrie fiable extraite. 0/1 géométries nommées extraites. Aucune géométrie fiable extraite. 0/1 géométries nommées extraites. Aucune géométrie fiable extraite. 0/1 géométries nommées extraites. Aucune géométrie fiable extraite. 0/1 géométries nommées extraites. Aucune géométrie fiable extraite. 0/1 géométries nommées extraites. Aucune géométrie fiable extraite. 0/1 géométries nommées extraites. Aucune géométrie fiable extraite. 0/1 géométries nommées extraites. Aucune géométrie fiable extraite. 0/1 géométries nommées extraites. Aucune géométrie fiable extraite. 0/1 géométries nommées extraites. Aucune géométrie fiable extraite. 0/1 géométries nommées extraites. Aucune géométrie fiable extraite. 0/1 géométries nommées extraites. Aucune géométrie fiable extraite. 0/1 géométries nommées extraites. Aucune géométrie fiable extraite. 0/1 géométries nommées extraites. Aucune géométrie fiable extraite. 0/1 géométries nommées extraites. Aucune géométrie fiable extraite. 0/1 géométries nommées extraites. Aucune géométrie fiable extraite.",
+      "status": "unmapped",
+      "partial": false,
+      "conservative": false,
+      "fallback": false,
+      "expectedNamedGeometryCount": 1,
+      "mappedGeometryCount": 0,
+      "declaredZoneCount": null,
+      "missingVerticalCount": 0,
+      "safetyFallbackFeatureCount": 0,
+      "safetyFallbackFeatureNames": [],
+      "ignoredReferenceObjectCount": 0,
+      "causeCodes": [
+        "lateral-boundary-not-extracted",
+        "named-geometry-missing"
+      ],
+      "causeLabels": [
+        "Limites latérales non extraites",
+        "Géométries nommées manquantes"
+      ],
+      "sourceFingerprint": "b92045319215d94e4af8",
+      "parserVersion": "capclair-supaip-parser-3.0.3"
+    },
+    {
+      "supAip": "013/26",
+      "title": "Création d'une zone interdite temporaire (ZIT) ORANGE (84)",
+      "validFrom": "2026-02-12",
+      "validTo": "2027-04-14",
+      "sourcePdf": "https://www.sia.aviation-civile.gouv.fr/documents/download/f/d/15027153/",
+      "reason": "0/1 géométries nommées extraites. Aucune géométrie fiable extraite.",
+      "status": "unmapped",
+      "partial": false,
+      "conservative": false,
+      "fallback": false,
+      "expectedNamedGeometryCount": 1,
+      "mappedGeometryCount": 0,
+      "declaredZoneCount": 1,
+      "missingVerticalCount": 0,
+      "safetyFallbackFeatureCount": 0,
+      "safetyFallbackFeatureNames": [],
+      "ignoredReferenceObjectCount": 1,
+      "causeCodes": [
+        "named-geometry-missing"
+      ],
+      "causeLabels": [
+        "Géométries nommées manquantes"
+      ],
+      "sourceFingerprint": "0654924806abccedd3e6",
+      "parserVersion": "capclair-supaip-parser-3.0.3"
+    }
+  ]
+}
