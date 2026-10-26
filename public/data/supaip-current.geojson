@@ -2417,9 +2417,9 @@
         "zoneType": "ZRT",
         "beta": true,
         "supAip": "232/24",
-        "title": "Expérimentation : Création de 2 zones réglementées temporaires « ZRT 108 E4 et E5 » dans la région de Nîmes.",
+        "title": "Annulé le 23/10/2026-Expérimentation : Création de 2 zones réglementées temporaires « ZRT 108 E4 et E5 » dans la région de Nîmes.",
         "validFrom": "2025-01-06T00:00:00Z",
-        "validTo": "2027-04-14T23:59:59Z",
+        "validTo": "2026-10-23T23:59:59Z",
         "activationMode": "notam",
         "activationText": "Activables du lundi au vendredi sauf JF, de 0700 à 1600 UTC (HIV +1HR). En dehors de ces horaires par NOTAM (préavis 48 heures). Information complémentaire : Les zones temporaires pourront être activées simultanément ou indépendamment l'une de l'autre.",
         "lowerLimit": "FL 055",
@@ -2433,7 +2433,7 @@
         "geometrySource": "automatic-layout-v3",
         "geometryConfidence": "high",
         "geometryWarnings": [],
-        "sourceFingerprint": "844fb76ef0d076854788",
+        "sourceFingerprint": "24c6ab214ea472f2e5bf",
         "parserVersion": "capclair-supaip-parser-3.0.3",
         "frequency": "- MONTPELLIER APP : 131.055 MHz | - RHONE Contrôle : 119.475 MHz | - CAMARGUE Contrôle : 127.925 MHz"
       },
@@ -2478,9 +2478,9 @@
         "zoneType": "ZRT",
         "beta": true,
         "supAip": "232/24",
-        "title": "Expérimentation : Création de 2 zones réglementées temporaires « ZRT 108 E4 et E5 » dans la région de Nîmes.",
+        "title": "Annulé le 23/10/2026-Expérimentation : Création de 2 zones réglementées temporaires « ZRT 108 E4 et E5 » dans la région de Nîmes.",
         "validFrom": "2025-01-06T00:00:00Z",
-        "validTo": "2027-04-14T23:59:59Z",
+        "validTo": "2026-10-23T23:59:59Z",
         "activationMode": "notam",
         "activationText": "Activables du lundi au vendredi sauf JF, de 0700 à 1600 UTC (HIV +1HR). En dehors de ces horaires par NOTAM (préavis 48 heures). Information complémentaire : Les zones temporaires pourront être activées simultanément ou indépendamment l'une de l'autre.",
         "lowerLimit": "FL 055",
@@ -2496,7 +2496,7 @@
         "geometryWarnings": [
           "Polygone invalide: Self-intersection[4.52212922341701 43.6868585394852]"
         ],
-        "sourceFingerprint": "844fb76ef0d076854788",
+        "sourceFingerprint": "24c6ab214ea472f2e5bf",
         "parserVersion": "capclair-supaip-parser-3.0.3",
         "frequency": "- MONTPELLIER APP : 131.055 MHz | - RHONE Contrôle : 119.475 MHz | - CAMARGUE Contrôle : 127.925 MHz"
       },
@@ -54078,8 +54078,8 @@
       }
     }
   ],
-  "generatedAt": "2026-10-26T04:57:11Z",
-  "datasetGeneratedAt": "2026-10-26T04:57:11Z",
-  "datasetRevision": "d6a7c4143310e02407420fa2ed9db1fe369edd7ba3b73ea7f19ec113d33693ad",
-  "businessContentSha256": "d6a7c4143310e02407420fa2ed9db1fe369edd7ba3b73ea7f19ec113d33693ad"
+  "generatedAt": "2026-10-26T13:16:16Z",
+  "datasetGeneratedAt": "2026-10-26T13:16:16Z",
+  "datasetRevision": "d8bffe8ce2bc1c8c08996e1cd5e134cef259b41865fad0f0234d8cbe94207aed",
+  "businessContentSha256": "d8bffe8ce2bc1c8c08996e1cd5e134cef259b41865fad0f0234d8cbe94207aed"
 }

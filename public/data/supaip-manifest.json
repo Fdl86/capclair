@@ -1,9 +1,9 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-10-26T04:57:11Z",
-  "datasetGeneratedAt": "2026-10-26T04:57:11Z",
-  "datasetRevision": "d6a7c4143310e02407420fa2ed9db1fe369edd7ba3b73ea7f19ec113d33693ad",
-  "businessContentSha256": "d6a7c4143310e02407420fa2ed9db1fe369edd7ba3b73ea7f19ec113d33693ad",
+  "generatedAt": "2026-10-26T13:16:16Z",
+  "datasetGeneratedAt": "2026-10-26T13:16:16Z",
+  "datasetRevision": "d8bffe8ce2bc1c8c08996e1cd5e134cef259b41865fad0f0234d8cbe94207aed",
+  "businessContentSha256": "d8bffe8ce2bc1c8c08996e1cd5e134cef259b41865fad0f0234d8cbe94207aed",
   "sourceUrl": "https://www.sia.aviation-civile.gouv.fr/documents/supaip/aip/id/6",
   "parserVersion": "capclair-supaip-parser-3.0.3",
   "publications": [
@@ -85,21 +85,21 @@
     },
     {
       "supAip": "232/24",
-      "title": "Expérimentation : Création de 2 zones réglementées temporaires « ZRT 108 E4 et E5 » dans la région de Nîmes.",
+      "title": "Annulé le 23/10/2026-Expérimentation : Création de 2 zones réglementées temporaires « ZRT 108 E4 et E5 » dans la région de Nîmes.",
       "spatial": true,
       "mappedGeometryCount": 2,
       "expectedNamedGeometryCount": 2,
       "declaredZoneCount": 2,
       "missingVerticalCount": 0,
-      "status": "complete",
-      "partial": false,
+      "status": "partial",
+      "partial": true,
       "conservative": false,
       "fallback": false,
       "safetyFallbackFeatureCount": 0,
       "safetyFallbackFeatureNames": [],
       "ignoredReferenceObjectCount": 0,
       "sourcePdf": "https://www.sia.aviation-civile.gouv.fr/documents/download/f/d/13739998/",
-      "sourceFingerprint": "844fb76ef0d076854788",
+      "sourceFingerprint": "24c6ab214ea472f2e5bf",
       "parserVersion": "capclair-supaip-parser-3.0.3"
     },
     {
@@ -698,10 +698,10 @@
     },
     {
       "supAip": "189/26",
-      "title": "Modification temporaire de l'axe du taxiway UNIFORM entre C et D",
+      "title": "Annulé le 26/10/2026-Modification temporaire de l'axe du taxiway UNIFORM entre C et D",
       "spatial": false,
       "sourcePdf": "https://www.sia.aviation-civile.gouv.fr/documents/download/f/d/15077206/",
-      "sourceFingerprint": "1f56e44427e1b92c888e",
+      "sourceFingerprint": "101f13cb00dd5676857e",
       "parserVersion": "capclair-supaip-parser-3.0.3"
     },
     {
@@ -1947,20 +1947,20 @@
   "publicationsWithGeometry": 81,
   "featuresWithVerticalLimits": 466,
   "featuresWithoutVerticalLimits": 2,
-  "geoJsonSha256": "a6350df726f3aa4d7be10a75ddc4971f59da9d4d74bf91000b9e102195fe4e71",
-  "geoJsonSize": 1641475,
+  "geoJsonSha256": "37bdff743685f41b48c95a375fe5945fa06a53826a876286bfc30cd9e7484360",
+  "geoJsonSize": 1641519,
   "files": {
     "data.geojson": {
-      "sha256": "a6350df726f3aa4d7be10a75ddc4971f59da9d4d74bf91000b9e102195fe4e71",
-      "size": 1641475
+      "sha256": "37bdff743685f41b48c95a375fe5945fa06a53826a876286bfc30cd9e7484360",
+      "size": 1641519
     },
     "status.json": {
-      "sha256": "11620f04cb4f744b69e3f4f89c33272014874a1543c89e36eeb405cf3b3e1c4e",
+      "sha256": "f3c146a60bb7264d1ffde671e6e2364de3222a3b41b23735a2ac5547522d35e4",
       "size": 3894
     },
     "unmapped.json": {
-      "sha256": "f98ef8f7a32fbe0d4588e3b607617508589f061bb7bdcdfbc73616f7c2d5e923",
-      "size": 83875
+      "sha256": "793e6ae358bcc5a1ec1d8ead3897ac97b4e860e1bbe808686fb4037e849d20e3",
+      "size": 85203
     }
   },
   "legacyInvalidGeometryExceptions": [
