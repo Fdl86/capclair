@@ -7387,12 +7387,12 @@
           "Zone conservée depuis la dernière base valide après une régression partielle du parseur.",
           "Géométrie conservée depuis la dernière base valide après une régression complète du parseur."
         ],
-        "sourceFingerprint": "c102d96dbb6d3609c834",
+        "sourceFingerprint": "fe8f8d5c24232c2aec93",
         "parserVersion": "capclair-supaip-parser-3.0.3",
         "frequency": "STRASBOURG INFO : 119.450 MHz | LORRAINE TWR : 122.075 MHz",
         "regressionFallback": true,
         "regressionFallbackKind": "complete",
-        "regressionBaselineParserVersion": "capclair-supaip-parser-3.0.2"
+        "regressionBaselineParserVersion": "capclair-supaip-parser-3.0.3"
       },
       "geometry": {
         "type": "Polygon",
@@ -11127,7 +11127,7 @@
         "supAip": "186/26",
         "title": "Création de deux zones réglementées temporaires « ZRT CAHORS AD ALPHA et BRAVO » sur l'aérodrome de Cahors Lalbenque",
         "validFrom": "2026-09-14T00:00:00Z",
-        "validTo": "2027-03-12T23:59:59Z",
+        "validTo": "2026-11-30T23:59:59Z",
         "activationMode": "notam",
         "activationText": "Horaires été -01H00 TOUTES LES ZONES - Du 14 septembre 2026 au 12 mars 2027 de 0700 à 2300 tous les jours sauf Samedi, Dimanche et jours fériés Activable par NOTAM avec préavis de 72 h FR Page 1/2 © SIA --- PAGE 2 --- SUP AIP 186/26 Date de publication : 27 AUG 2026",
         "lowerLimit": "SFC",
@@ -11141,7 +11141,7 @@
         "geometrySource": "automatic-layout-v3",
         "geometryConfidence": "high",
         "geometryWarnings": [],
-        "sourceFingerprint": "6a16566f47c7d52a9e10",
+        "sourceFingerprint": "2154e2bb184a6b2fc176",
         "parserVersion": "capclair-supaip-parser-3.0.3",
         "frequency": "CAHORS AFIS : 119,230 MHz | ne permettent pas le contournement de la zone après contact avec CAHORS Info 119.230 MHz ou contact | Fréquence : 119.230 MHz"
       },
@@ -11188,7 +11188,7 @@
         "supAip": "186/26",
         "title": "Création de deux zones réglementées temporaires « ZRT CAHORS AD ALPHA et BRAVO » sur l'aérodrome de Cahors Lalbenque",
         "validFrom": "2026-09-14T00:00:00Z",
-        "validTo": "2027-03-12T23:59:59Z",
+        "validTo": "2026-11-30T23:59:59Z",
         "activationMode": "notam",
         "activationText": "Horaires été -01H00 TOUTES LES ZONES - Du 14 septembre 2026 au 12 mars 2027 de 0700 à 2300 tous les jours sauf Samedi, Dimanche et jours fériés Activable par NOTAM avec préavis de 72 h FR Page 1/2 © SIA --- PAGE 2 --- SUP AIP 186/26 Date de publication : 27 AUG 2026",
         "lowerLimit": "SFC",
@@ -11202,7 +11202,7 @@
         "geometrySource": "automatic-layout-v3",
         "geometryConfidence": "high",
         "geometryWarnings": [],
-        "sourceFingerprint": "6a16566f47c7d52a9e10",
+        "sourceFingerprint": "2154e2bb184a6b2fc176",
         "parserVersion": "capclair-supaip-parser-3.0.3",
         "frequency": "CAHORS AFIS : 119,230 MHz | ne permettent pas le contournement de la zone après contact avec CAHORS Info 119.230 MHz ou contact | Fréquence : 119.230 MHz"
       },
@@ -54078,8 +54078,8 @@
       }
     }
   ],
-  "generatedAt": "2026-10-27T05:14:38Z",
-  "datasetGeneratedAt": "2026-10-27T05:14:38Z",
-  "datasetRevision": "694f9adfeae38d60c8b93f74908a8d4d30747d96a81b03d52e2490789672b9c9",
-  "businessContentSha256": "694f9adfeae38d60c8b93f74908a8d4d30747d96a81b03d52e2490789672b9c9"
+  "generatedAt": "2026-10-27T12:23:56Z",
+  "datasetGeneratedAt": "2026-10-27T12:23:56Z",
+  "datasetRevision": "a56353bce01880c8d8014be30f36e976e11c87cac14b491a833203ba5ecf7467",
+  "businessContentSha256": "a56353bce01880c8d8014be30f36e976e11c87cac14b491a833203ba5ecf7467"
 }

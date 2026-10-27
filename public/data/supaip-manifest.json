@@ -1,9 +1,9 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-10-27T05:14:38Z",
-  "datasetGeneratedAt": "2026-10-27T05:14:38Z",
-  "datasetRevision": "694f9adfeae38d60c8b93f74908a8d4d30747d96a81b03d52e2490789672b9c9",
-  "businessContentSha256": "694f9adfeae38d60c8b93f74908a8d4d30747d96a81b03d52e2490789672b9c9",
+  "generatedAt": "2026-10-27T12:23:56Z",
+  "datasetGeneratedAt": "2026-10-27T12:23:56Z",
+  "datasetRevision": "a56353bce01880c8d8014be30f36e976e11c87cac14b491a833203ba5ecf7467",
+  "businessContentSha256": "a56353bce01880c8d8014be30f36e976e11c87cac14b491a833203ba5ecf7467",
   "sourceUrl": "https://www.sia.aviation-civile.gouv.fr/documents/supaip/aip/id/6",
   "parserVersion": "capclair-supaip-parser-3.0.3",
   "publications": [
@@ -391,7 +391,7 @@
       ],
       "ignoredReferenceObjectCount": 1,
       "sourcePdf": "https://www.sia.aviation-civile.gouv.fr/documents/download/f/d/15016258/",
-      "sourceFingerprint": "c102d96dbb6d3609c834",
+      "sourceFingerprint": "fe8f8d5c24232c2aec93",
       "parserVersion": "capclair-supaip-parser-3.0.3"
     },
     {
@@ -757,7 +757,7 @@
       "safetyFallbackFeatureNames": [],
       "ignoredReferenceObjectCount": 0,
       "sourcePdf": "https://www.sia.aviation-civile.gouv.fr/documents/download/f/d/15077200/",
-      "sourceFingerprint": "6a16566f47c7d52a9e10",
+      "sourceFingerprint": "2154e2bb184a6b2fc176",
       "parserVersion": "capclair-supaip-parser-3.0.3"
     },
     {
@@ -1947,20 +1947,20 @@
   "publicationsWithGeometry": 81,
   "featuresWithVerticalLimits": 466,
   "featuresWithoutVerticalLimits": 2,
-  "geoJsonSha256": "548903f758860227a9323d411e84b48f4ac2a748c3c5c3c9bf0dc076cbbcad45",
+  "geoJsonSha256": "8a3edc92a8b852c855b4f1e27f37ec928316ca25036d430874058fd10f657fc7",
   "geoJsonSize": 1641519,
   "files": {
     "data.geojson": {
-      "sha256": "548903f758860227a9323d411e84b48f4ac2a748c3c5c3c9bf0dc076cbbcad45",
+      "sha256": "8a3edc92a8b852c855b4f1e27f37ec928316ca25036d430874058fd10f657fc7",
       "size": 1641519
     },
     "status.json": {
-      "sha256": "b484b0dbd0f01f8d6c47c50f2f0b28111e7ad3375ce50b5cf6742354739b4d8c",
-      "size": 3894
+      "sha256": "b99894bc55b374aebfcc1a48871abbf1b42478b03963c41533d8b8bdd8cf7a5d",
+      "size": 4109
     },
     "unmapped.json": {
-      "sha256": "bb067b780e737ace169a8428763d72791b4667c06991c9c24a8e2e5d147e022e",
-      "size": 84751
+      "sha256": "c6a76f69fd2b7907288cc7e574b76bb11b1428efbeead1edf556280dae3e7693",
+      "size": 85043
     }
   },
   "legacyInvalidGeometryExceptions": [
