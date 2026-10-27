@@ -2,15 +2,15 @@
   "schemaVersion": 2,
   "mode": "automatic",
   "beta": true,
-  "generatedAt": "2026-10-27T12:23:56Z",
-  "datasetGeneratedAt": "2026-10-27T12:23:56Z",
-  "lastSuccessfulCheckAt": "2026-10-27T12:23:56Z",
-  "checkMode": "full-rebuild",
+  "generatedAt": "2026-10-27T22:22:30Z",
+  "datasetGeneratedAt": "2026-10-27T22:22:30Z",
+  "lastSuccessfulCheckAt": "2026-10-27T22:22:30Z",
+  "checkMode": "listing-reuse",
   "sourceUpdatedAt": "2026-10-22T00:00:00Z",
   "sourceUrl": "https://www.sia.aviation-civile.gouv.fr/documents/supaip/aip/id/6",
   "parserVersion": "capclair-supaip-parser-3.0.3",
-  "datasetRevision": "a56353bce01880c8d8014be30f36e976e11c87cac14b491a833203ba5ecf7467",
-  "businessContentSha256": "a56353bce01880c8d8014be30f36e976e11c87cac14b491a833203ba5ecf7467",
+  "datasetRevision": "d586a392f83a9917e993ab4223d29f1588f607c9814c5a2a05496a4fa7386d10",
+  "businessContentSha256": "d586a392f83a9917e993ab4223d29f1588f607c9814c5a2a05496a4fa7386d10",
   "overrideRevision": "092a0d66c8ab300d198ad01eeb48da5d5bf812164cc9eca1e9236d0ece81b73f",
   "listingPublicationCount": 117,
   "processedPublicationCount": 117,
@@ -31,8 +31,8 @@
   "partialPublicationCount": 15,
   "conservativePublicationCount": 0,
   "fallbackPublicationCount": 6,
-  "reusedPublicationCount": 115,
-  "downloadedPublicationCount": 2,
+  "reusedPublicationCount": 117,
+  "downloadedPublicationCount": 0,
   "safetyFallbackPublicationCount": 9,
   "safetyFallbackFeatureCount": 10,
   "safetyFallbackDetails": [
@@ -101,19 +101,9 @@
       ]
     }
   ],
-  "regressionRecoveredPublicationCount": 1,
-  "regressionRecoveredFeatureCount": 1,
-  "regressionRecoveredDetails": [
-    {
-      "supAip": "216/25",
-      "candidateFeatureCount": 0,
-      "previousFeatureCount": 1,
-      "recoveredFeatureCount": 1,
-      "recoveredFeatureNames": [
-        "ZRT METZ - THIONVILLE"
-      ]
-    }
-  ],
+  "regressionRecoveredPublicationCount": 0,
+  "regressionRecoveredFeatureCount": 0,
+  "regressionRecoveredDetails": [],
   "unresolvedRegressionCount": 0,
   "ignoredReferenceObjectCount": 16,
   "incompleteCausePublicationCounts": {
@@ -136,5 +126,5 @@
   },
   "staleAfterHours": 36,
   "message": "Parser V3.2: chaque publication est comparée à la dernière base valide. Toute chute non restaurée bloque le workflow avant écriture; les ZRT portant un code LF-R restent reconnues comme zones temporaires. Vérifier le PDF, SOFIA et les NOTAM avant le vol.",
-  "manifestUrl": "/data/supaip/revisions/a56353bce01880c8d8014be30f36e976e11c87cac14b491a833203ba5ecf7467/manifest.json"
+  "manifestUrl": "/data/supaip/revisions/d586a392f83a9917e993ab4223d29f1588f607c9814c5a2a05496a4fa7386d10/manifest.json"
 }
