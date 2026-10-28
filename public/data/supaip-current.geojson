@@ -3981,9 +3981,9 @@
         "zoneType": "ZRT",
         "beta": true,
         "supAip": "228/26",
-        "title": "Création de deux zones réglementées temporaires (ZRT) dans la région de CONDOM pour l’exercice CASEX ATC 26-3 Condom",
+        "title": "Annulé le 28/10/26 Création de deux zones réglementées temporaires (ZRT) dans la région de CONDOM pour l’exercice CASEX ATC 26-3 Condom",
         "validFrom": "2026-11-02T00:00:00Z",
-        "validTo": "2026-11-13T23:59:59Z",
+        "validTo": "2026-10-28T23:59:59Z",
         "activationMode": "notam",
         "activationText": "TOUTES LES ZONES - Le 02 novembre 2026 Activable de 0700 à 1700 - Le 03 novembre 2026 Activable de 0700 à 2300 - Le 04 novembre 2026 Activable de 0700 à 1700 - Le 05 novembre 2026 Activable de 0700 à 2300 - Le 06 novembre 2026 Activable de 0700 à 1400 - Le 09 novembre 2026 Activable de 0700 à 1700 - Le 10 novembre 2026 Activable de 0700 à 2300 - Le 11 novembre 2026 Activable de 0700 à 1700 - Le 12 novembre 2026 Activable de 0700 à 2300 - Le 13 novembre 2026 Activable de 0700 à 1400",
         "lowerLimit": "FL 115",
@@ -3997,7 +3997,7 @@
         "geometrySource": "automatic-layout-v3",
         "geometryConfidence": "high",
         "geometryWarnings": [],
-        "sourceFingerprint": "c02ceebdf1c949e31a92",
+        "sourceFingerprint": "0996cb19df795689efab",
         "parserVersion": "capclair-supaip-parser-3.0.3",
         "frequency": "MARSAN APP : 119,700 MHz | TOULOUSE INFO : 121,250 MHz | PYRENEES INFO : 126,530 MHz | AQUITAINE INFO : 120,575 MHz"
       },
@@ -4042,9 +4042,9 @@
         "zoneType": "ZRT",
         "beta": true,
         "supAip": "228/26",
-        "title": "Création de deux zones réglementées temporaires (ZRT) dans la région de CONDOM pour l’exercice CASEX ATC 26-3 Condom",
+        "title": "Annulé le 28/10/26 Création de deux zones réglementées temporaires (ZRT) dans la région de CONDOM pour l’exercice CASEX ATC 26-3 Condom",
         "validFrom": "2026-11-02T00:00:00Z",
-        "validTo": "2026-11-13T23:59:59Z",
+        "validTo": "2026-10-28T23:59:59Z",
         "activationMode": "notam",
         "activationText": "TOUTES LES ZONES - Le 02 novembre 2026 Activable de 0700 à 1700 - Le 03 novembre 2026 Activable de 0700 à 2300 - Le 04 novembre 2026 Activable de 0700 à 1700 - Le 05 novembre 2026 Activable de 0700 à 2300 - Le 06 novembre 2026 Activable de 0700 à 1400 - Le 09 novembre 2026 Activable de 0700 à 1700 - Le 10 novembre 2026 Activable de 0700 à 2300 - Le 11 novembre 2026 Activable de 0700 à 1700 - Le 12 novembre 2026 Activable de 0700 à 2300 - Le 13 novembre 2026 Activable de 0700 à 1400",
         "lowerLimit": "SFC",
@@ -4060,7 +4060,7 @@
         "geometryWarnings": [
           "Exclusion interne non découpée: contour extérieur affiché par prudence."
         ],
-        "sourceFingerprint": "c02ceebdf1c949e31a92",
+        "sourceFingerprint": "0996cb19df795689efab",
         "parserVersion": "capclair-supaip-parser-3.0.3",
         "frequency": "MARSAN APP : 119,700 MHz | TOULOUSE INFO : 121,250 MHz | PYRENEES INFO : 126,530 MHz | AQUITAINE INFO : 120,575 MHz"
       },
@@ -54078,8 +54078,8 @@
       }
     }
   ],
-  "generatedAt": "2026-10-28T05:53:48Z",
-  "datasetGeneratedAt": "2026-10-28T05:53:48Z",
-  "datasetRevision": "0ec3be5c8706dff2b535e78e6c143569f0f384b0e8c8171f7a248497238675c3",
-  "businessContentSha256": "0ec3be5c8706dff2b535e78e6c143569f0f384b0e8c8171f7a248497238675c3"
+  "generatedAt": "2026-10-28T13:09:29Z",
+  "datasetGeneratedAt": "2026-10-28T13:09:29Z",
+  "datasetRevision": "0e4ec353323f8a6695a4750b81e3e77891bdce8d8e6d48852ed4b35d1306bca8",
+  "businessContentSha256": "0e4ec353323f8a6695a4750b81e3e77891bdce8d8e6d48852ed4b35d1306bca8"
 }

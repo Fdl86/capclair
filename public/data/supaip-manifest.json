@@ -1,9 +1,9 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-10-28T05:53:48Z",
-  "datasetGeneratedAt": "2026-10-28T05:53:48Z",
-  "datasetRevision": "0ec3be5c8706dff2b535e78e6c143569f0f384b0e8c8171f7a248497238675c3",
-  "businessContentSha256": "0ec3be5c8706dff2b535e78e6c143569f0f384b0e8c8171f7a248497238675c3",
+  "generatedAt": "2026-10-28T13:09:29Z",
+  "datasetGeneratedAt": "2026-10-28T13:09:29Z",
+  "datasetRevision": "0e4ec353323f8a6695a4750b81e3e77891bdce8d8e6d48852ed4b35d1306bca8",
+  "businessContentSha256": "0e4ec353323f8a6695a4750b81e3e77891bdce8d8e6d48852ed4b35d1306bca8",
   "sourceUrl": "https://www.sia.aviation-civile.gouv.fr/documents/supaip/aip/id/6",
   "parserVersion": "capclair-supaip-parser-3.0.3",
   "publications": [
@@ -150,21 +150,21 @@
     },
     {
       "supAip": "228/26",
-      "title": "Création de deux zones réglementées temporaires (ZRT) dans la région de CONDOM pour l’exercice CASEX ATC 26-3 Condom",
+      "title": "Annulé le 28/10/26 Création de deux zones réglementées temporaires (ZRT) dans la région de CONDOM pour l’exercice CASEX ATC 26-3 Condom",
       "spatial": true,
       "mappedGeometryCount": 2,
       "expectedNamedGeometryCount": 2,
       "declaredZoneCount": 2,
       "missingVerticalCount": 0,
-      "status": "complete",
+      "status": "conservative",
       "partial": false,
-      "conservative": false,
+      "conservative": true,
       "fallback": false,
       "safetyFallbackFeatureCount": 0,
       "safetyFallbackFeatureNames": [],
       "ignoredReferenceObjectCount": 0,
       "sourcePdf": "https://www.sia.aviation-civile.gouv.fr/documents/download/f/d/15088552/",
-      "sourceFingerprint": "c02ceebdf1c949e31a92",
+      "sourceFingerprint": "0996cb19df795689efab",
       "parserVersion": "capclair-supaip-parser-3.0.3"
     },
     {
@@ -1947,20 +1947,20 @@
   "publicationsWithGeometry": 81,
   "featuresWithVerticalLimits": 466,
   "featuresWithoutVerticalLimits": 2,
-  "geoJsonSha256": "8097dc7b932664b6b83fc59913426d8815b76af81b58b43b598f3ce96083ca5b",
-  "geoJsonSize": 1641519,
+  "geoJsonSha256": "3be0e76d3aa3fa3d0817c897ebc4412e179e49e69c10e6bc302be389bfd6149e",
+  "geoJsonSize": 1641559,
   "files": {
     "data.geojson": {
-      "sha256": "8097dc7b932664b6b83fc59913426d8815b76af81b58b43b598f3ce96083ca5b",
-      "size": 1641519
+      "sha256": "3be0e76d3aa3fa3d0817c897ebc4412e179e49e69c10e6bc302be389bfd6149e",
+      "size": 1641559
     },
     "status.json": {
-      "sha256": "a2bde922eb53639db12e041972d7932a4f18d038bf27e2759cf4e2a94105202d",
+      "sha256": "abb231a06fe99240e7b3aefa57a52ee49ad05fe0491e0410f099b3bf1f27aea4",
       "size": 3894
     },
     "unmapped.json": {
-      "sha256": "85210c72695d7c29c880195914d78c359b3279071a0d36c3111add819061375b",
-      "size": 85627
+      "sha256": "5397bb81afe29a34de26f1d8ade05b2fa9a393e5e1fa208075ce727d8a070929",
+      "size": 87004
     }
   },
   "legacyInvalidGeometryExceptions": [
