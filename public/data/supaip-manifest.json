@@ -1,12 +1,50 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-10-28T22:40:48Z",
-  "datasetGeneratedAt": "2026-10-28T22:40:48Z",
-  "datasetRevision": "f2dec1fef471c81ba2a9befba36f18af4b290c8aa77d68677b125b1f42e05f34",
-  "businessContentSha256": "f2dec1fef471c81ba2a9befba36f18af4b290c8aa77d68677b125b1f42e05f34",
+  "generatedAt": "2026-10-29T05:57:32Z",
+  "datasetGeneratedAt": "2026-10-29T05:57:32Z",
+  "datasetRevision": "c15c3d57e81bb847bf454436b6ef16fd1772a7ab4cbc7a318f75ff7ec88252e0",
+  "businessContentSha256": "c15c3d57e81bb847bf454436b6ef16fd1772a7ab4cbc7a318f75ff7ec88252e0",
   "sourceUrl": "https://www.sia.aviation-civile.gouv.fr/documents/supaip/aip/id/6",
   "parserVersion": "capclair-supaip-parser-3.0.3",
   "publications": [
+    {
+      "supAip": "238/26",
+      "title": "Création d'une zone règlementée temporaire (ZRT) pour l’évolution d’aéronefs d’état sans équipage à bord dans le cadre de la campagne de vol CONYNE dans la région de Belfort (90) – Montbéliard (25)",
+      "spatial": true,
+      "mappedGeometryCount": 1,
+      "expectedNamedGeometryCount": 1,
+      "declaredZoneCount": null,
+      "missingVerticalCount": 0,
+      "status": "complete",
+      "partial": false,
+      "conservative": false,
+      "fallback": false,
+      "safetyFallbackFeatureCount": 0,
+      "safetyFallbackFeatureNames": [],
+      "ignoredReferenceObjectCount": 0,
+      "sourcePdf": "https://www.sia.aviation-civile.gouv.fr/documents/download/f/d/15088578/",
+      "sourceFingerprint": "7eb5c540bf5d0c5c88ca",
+      "parserVersion": "capclair-supaip-parser-3.0.3"
+    },
+    {
+      "supAip": "237/26",
+      "title": "Création de zones réglementées temporaires (ZRT) et zones dangereuses temporaires (ZDT) pour l’opération POKER 2026.04",
+      "spatial": true,
+      "mappedGeometryCount": 35,
+      "expectedNamedGeometryCount": 35,
+      "declaredZoneCount": null,
+      "missingVerticalCount": 0,
+      "status": "partial",
+      "partial": true,
+      "conservative": false,
+      "fallback": false,
+      "safetyFallbackFeatureCount": 0,
+      "safetyFallbackFeatureNames": [],
+      "ignoredReferenceObjectCount": 0,
+      "sourcePdf": "https://www.sia.aviation-civile.gouv.fr/documents/download/f/d/15088576/",
+      "sourceFingerprint": "ed4088094139d16f69e6",
+      "parserVersion": "capclair-supaip-parser-3.0.3"
+    },
     {
       "supAip": "237/24",
       "title": "Expérimentation : Création de deux zones réglementées temporaires dans la région de FIGARI (2A)",
@@ -27,6 +65,63 @@
       "parserVersion": "capclair-supaip-parser-3.0.3"
     },
     {
+      "supAip": "236/26",
+      "title": "Création de Zones Réglementées Temporaires (ZRT) au profit de l'exercice RW MC COURSE 2026, en régions CENTRE et SUD-EST",
+      "spatial": true,
+      "mappedGeometryCount": 17,
+      "expectedNamedGeometryCount": 18,
+      "declaredZoneCount": null,
+      "missingVerticalCount": 0,
+      "status": "partial",
+      "partial": true,
+      "conservative": false,
+      "fallback": false,
+      "safetyFallbackFeatureCount": 0,
+      "safetyFallbackFeatureNames": [],
+      "ignoredReferenceObjectCount": 0,
+      "sourcePdf": "https://www.sia.aviation-civile.gouv.fr/documents/download/f/d/15088574/",
+      "sourceFingerprint": "cfa5e1068ea8c5a9fb1f",
+      "parserVersion": "capclair-supaip-parser-3.0.3"
+    },
+    {
+      "supAip": "235/26",
+      "title": "Création de 2 Zones Réglementées Temporaires (ZRT) dans la région de Barèges (65).",
+      "spatial": true,
+      "mappedGeometryCount": 2,
+      "expectedNamedGeometryCount": 2,
+      "declaredZoneCount": 2,
+      "missingVerticalCount": 0,
+      "status": "complete",
+      "partial": false,
+      "conservative": false,
+      "fallback": false,
+      "safetyFallbackFeatureCount": 0,
+      "safetyFallbackFeatureNames": [],
+      "ignoredReferenceObjectCount": 0,
+      "sourcePdf": "https://www.sia.aviation-civile.gouv.fr/documents/download/f/d/15088572/",
+      "sourceFingerprint": "b317287617f07b34beba",
+      "parserVersion": "capclair-supaip-parser-3.0.3"
+    },
+    {
+      "supAip": "234/26",
+      "title": "Création de Zones Réglementées Temporaires (ZRT) pour l’exercice GASCOGNEX 26-02 en région Centre",
+      "spatial": true,
+      "mappedGeometryCount": 4,
+      "expectedNamedGeometryCount": 4,
+      "declaredZoneCount": null,
+      "missingVerticalCount": 0,
+      "status": "complete",
+      "partial": false,
+      "conservative": false,
+      "fallback": false,
+      "safetyFallbackFeatureCount": 0,
+      "safetyFallbackFeatureNames": [],
+      "ignoredReferenceObjectCount": 0,
+      "sourcePdf": "https://www.sia.aviation-civile.gouv.fr/documents/download/f/d/15088570/",
+      "sourceFingerprint": "f18de41dc18956852171",
+      "parserVersion": "capclair-supaip-parser-3.0.3"
+    },
+    {
       "supAip": "234/24",
       "title": "Modification des zones LF-R204 : Création de deux zones réglementées temporaires",
       "spatial": true,
@@ -43,6 +138,25 @@
       "ignoredReferenceObjectCount": 0,
       "sourcePdf": "https://www.sia.aviation-civile.gouv.fr/documents/download/f/d/13791055/",
       "sourceFingerprint": "0d347bb07762ff1f733a",
+      "parserVersion": "capclair-supaip-parser-3.0.3"
+    },
+    {
+      "supAip": "233/26",
+      "title": "Création d'une Zone Réglementée Temporaire (ZRT) pour l'exercice CERCES 2026",
+      "spatial": true,
+      "mappedGeometryCount": 0,
+      "expectedNamedGeometryCount": 1,
+      "declaredZoneCount": 1,
+      "missingVerticalCount": 0,
+      "status": "unmapped",
+      "partial": false,
+      "conservative": false,
+      "fallback": false,
+      "safetyFallbackFeatureCount": 0,
+      "safetyFallbackFeatureNames": [],
+      "ignoredReferenceObjectCount": 1,
+      "sourcePdf": "https://www.sia.aviation-civile.gouv.fr/documents/download/f/d/15088568/",
+      "sourceFingerprint": "f3600f1d12e3efd2ff13",
       "parserVersion": "capclair-supaip-parser-3.0.3"
     },
     {
@@ -81,25 +195,6 @@
       "ignoredReferenceObjectCount": 3,
       "sourcePdf": "https://www.sia.aviation-civile.gouv.fr/documents/download/f/d/15088564/",
       "sourceFingerprint": "9cd25564c64f79a35170",
-      "parserVersion": "capclair-supaip-parser-3.0.3"
-    },
-    {
-      "supAip": "232/24",
-      "title": "Annulé le 23/10/2026-Expérimentation : Création de 2 zones réglementées temporaires « ZRT 108 E4 et E5 » dans la région de Nîmes.",
-      "spatial": true,
-      "mappedGeometryCount": 2,
-      "expectedNamedGeometryCount": 2,
-      "declaredZoneCount": 2,
-      "missingVerticalCount": 0,
-      "status": "complete",
-      "partial": false,
-      "conservative": false,
-      "fallback": false,
-      "safetyFallbackFeatureCount": 0,
-      "safetyFallbackFeatureNames": [],
-      "ignoredReferenceObjectCount": 0,
-      "sourcePdf": "https://www.sia.aviation-civile.gouv.fr/documents/download/f/d/13739998/",
-      "sourceFingerprint": "24c6ab214ea472f2e5bf",
       "parserVersion": "capclair-supaip-parser-3.0.3"
     },
     {
@@ -146,25 +241,6 @@
       "spatial": false,
       "sourcePdf": "https://www.sia.aviation-civile.gouv.fr/documents/download/f/d/15088554/",
       "sourceFingerprint": "5ea59a58e6786aef49c2",
-      "parserVersion": "capclair-supaip-parser-3.0.3"
-    },
-    {
-      "supAip": "228/26",
-      "title": "Annulé le 28/10/26 Création de deux zones réglementées temporaires (ZRT) dans la région de CONDOM pour l’exercice CASEX ATC 26-3 Condom",
-      "spatial": true,
-      "mappedGeometryCount": 2,
-      "expectedNamedGeometryCount": 2,
-      "declaredZoneCount": 2,
-      "missingVerticalCount": 0,
-      "status": "complete",
-      "partial": false,
-      "conservative": false,
-      "fallback": false,
-      "safetyFallbackFeatureCount": 0,
-      "safetyFallbackFeatureNames": [],
-      "ignoredReferenceObjectCount": 0,
-      "sourcePdf": "https://www.sia.aviation-civile.gouv.fr/documents/download/f/d/15088552/",
-      "sourceFingerprint": "0996cb19df795689efab",
       "parserVersion": "capclair-supaip-parser-3.0.3"
     },
     {
@@ -244,25 +320,6 @@
       "parserVersion": "capclair-supaip-parser-3.0.3"
     },
     {
-      "supAip": "223/26",
-      "title": "Création de 4 Zones Réglementées Temporaires (ZRT) pour l'exercice ALIENOR entre Cognac et Bergerac",
-      "spatial": true,
-      "mappedGeometryCount": 4,
-      "expectedNamedGeometryCount": 4,
-      "declaredZoneCount": 4,
-      "missingVerticalCount": 0,
-      "status": "complete",
-      "partial": false,
-      "conservative": false,
-      "fallback": false,
-      "safetyFallbackFeatureCount": 0,
-      "safetyFallbackFeatureNames": [],
-      "ignoredReferenceObjectCount": 0,
-      "sourcePdf": "https://www.sia.aviation-civile.gouv.fr/documents/download/f/d/15088534/",
-      "sourceFingerprint": "d35d5d72593191d29359",
-      "parserVersion": "capclair-supaip-parser-3.0.3"
-    },
-    {
       "supAip": "222/26",
       "title": "Création d'une Zone Réglementée/Dangereuse Temporaire (ZRT/ZDT) pour l’opération BROMO dans l’Atlantique et FBZ associée",
       "spatial": true,
@@ -301,44 +358,6 @@
       "parserVersion": "capclair-supaip-parser-3.0.3"
     },
     {
-      "supAip": "220/26",
-      "title": "Création d'une Zone Réglementée Temporaire (ZRT) pour l'exercice DRAGOON dans le VAR entre Cuers et La Môle",
-      "spatial": true,
-      "mappedGeometryCount": 0,
-      "expectedNamedGeometryCount": 1,
-      "declaredZoneCount": 1,
-      "missingVerticalCount": 0,
-      "status": "unmapped",
-      "partial": false,
-      "conservative": false,
-      "fallback": false,
-      "safetyFallbackFeatureCount": 0,
-      "safetyFallbackFeatureNames": [],
-      "ignoredReferenceObjectCount": 1,
-      "sourcePdf": "https://www.sia.aviation-civile.gouv.fr/documents/download/f/d/15082893/",
-      "sourceFingerprint": "b7638371b41546b11f53",
-      "parserVersion": "capclair-supaip-parser-3.0.3"
-    },
-    {
-      "supAip": "219/26",
-      "title": "Création de zones réglementées temporaires (ZRT) et de zones dangereuses temporaires (ZDT) pour l’exercice BELOTE 2026-04 dans les FIR et l’UIR France",
-      "spatial": true,
-      "mappedGeometryCount": 10,
-      "expectedNamedGeometryCount": 13,
-      "declaredZoneCount": null,
-      "missingVerticalCount": 0,
-      "status": "partial",
-      "partial": true,
-      "conservative": false,
-      "fallback": false,
-      "safetyFallbackFeatureCount": 0,
-      "safetyFallbackFeatureNames": [],
-      "ignoredReferenceObjectCount": 1,
-      "sourcePdf": "https://www.sia.aviation-civile.gouv.fr/documents/download/f/d/15082891/",
-      "sourceFingerprint": "2f076949ff72d904072d",
-      "parserVersion": "capclair-supaip-parser-3.0.3"
-    },
-    {
       "supAip": "218/26",
       "title": "LFSB : Evaluation IAF optionnel ZONPE RWY 15",
       "spatial": false,
@@ -352,25 +371,6 @@
       "spatial": false,
       "sourcePdf": "https://www.sia.aviation-civile.gouv.fr/documents/download/f/d/15082887/",
       "sourceFingerprint": "a7fb822b37d9c3399919",
-      "parserVersion": "capclair-supaip-parser-3.0.3"
-    },
-    {
-      "supAip": "216/26",
-      "title": "Création de zones réglementées temporaires (ZRT) pour l'exercice BELMONT dans la région de St Affrique",
-      "spatial": true,
-      "mappedGeometryCount": 4,
-      "expectedNamedGeometryCount": 4,
-      "declaredZoneCount": null,
-      "missingVerticalCount": 0,
-      "status": "complete",
-      "partial": false,
-      "conservative": false,
-      "fallback": false,
-      "safetyFallbackFeatureCount": 0,
-      "safetyFallbackFeatureNames": [],
-      "ignoredReferenceObjectCount": 0,
-      "sourcePdf": "https://www.sia.aviation-civile.gouv.fr/documents/download/f/d/15082885/",
-      "sourceFingerprint": "7c45d9ee4e5878349e3e",
       "parserVersion": "capclair-supaip-parser-3.0.3"
     },
     {
@@ -694,14 +694,6 @@
       "ignoredReferenceObjectCount": 0,
       "sourcePdf": "https://www.sia.aviation-civile.gouv.fr/documents/download/f/d/15077208/",
       "sourceFingerprint": "b7b6b6753f40f7320e8a",
-      "parserVersion": "capclair-supaip-parser-3.0.3"
-    },
-    {
-      "supAip": "189/26",
-      "title": "Annulé le 26/10/2026-Modification temporaire de l'axe du taxiway UNIFORM entre C et D",
-      "spatial": false,
-      "sourcePdf": "https://www.sia.aviation-civile.gouv.fr/documents/download/f/d/15077206/",
-      "sourceFingerprint": "101f13cb00dd5676857e",
       "parserVersion": "capclair-supaip-parser-3.0.3"
     },
     {
@@ -1115,14 +1107,6 @@
       "spatial": false,
       "sourcePdf": "https://www.sia.aviation-civile.gouv.fr/documents/download/f/d/15060770/",
       "sourceFingerprint": "c24e24043ea30073c3dc",
-      "parserVersion": "capclair-supaip-parser-3.0.3"
-    },
-    {
-      "supAip": "140/25",
-      "title": "LFSB : évaluation IAF optionnel ZONPE RWY 15",
-      "spatial": false,
-      "sourcePdf": "https://www.sia.aviation-civile.gouv.fr/documents/download/f/d/14945884/",
-      "sourceFingerprint": "2f1cb7624b8338a120e7",
       "parserVersion": "capclair-supaip-parser-3.0.3"
     },
     {
@@ -1761,25 +1745,6 @@
       "parserVersion": "capclair-supaip-parser-3.0.3"
     },
     {
-      "supAip": "038/26",
-      "title": "Création de 2 zones règlementées temporaires (ZRT) pour l’évolution d’aéronefs d’état sans équipage à bord dans le cadre de la campagne de vol HOMBORY dans la région de Belfort (90) – Montbéliard (25).",
-      "spatial": true,
-      "mappedGeometryCount": 2,
-      "expectedNamedGeometryCount": 2,
-      "declaredZoneCount": 2,
-      "missingVerticalCount": 0,
-      "status": "complete",
-      "partial": false,
-      "conservative": false,
-      "fallback": false,
-      "safetyFallbackFeatureCount": 0,
-      "safetyFallbackFeatureNames": [],
-      "ignoredReferenceObjectCount": 0,
-      "sourcePdf": "https://www.sia.aviation-civile.gouv.fr/documents/download/f/d/15032754/",
-      "sourceFingerprint": "ad7178d628a270b66a3e",
-      "parserVersion": "capclair-supaip-parser-3.0.3"
-    },
-    {
       "supAip": "037/26",
       "title": "Expérimentation de modification des espaces aériens d’ORANGE (LFMO) : Création de deux CTR temporaires et d’une TMA temporaire",
       "spatial": true,
@@ -1942,25 +1907,25 @@
       "parserVersion": "capclair-supaip-parser-3.0.3"
     }
   ],
-  "featureCount": 468,
-  "publicationCount": 117,
-  "publicationsWithGeometry": 81,
-  "featuresWithVerticalLimits": 466,
+  "featureCount": 503,
+  "publicationCount": 114,
+  "publicationsWithGeometry": 80,
+  "featuresWithVerticalLimits": 501,
   "featuresWithoutVerticalLimits": 2,
-  "geoJsonSha256": "525aaab5a5e2777c89734f61ff35b7f678a55861c8de016f02e684cff1d37e1a",
-  "geoJsonSize": 1641559,
+  "geoJsonSha256": "5366be4a1980977f4567e73155cf7a11d4a4098a1d106c06fbc635c77c2f5f12",
+  "geoJsonSize": 1734020,
   "files": {
     "data.geojson": {
-      "sha256": "525aaab5a5e2777c89734f61ff35b7f678a55861c8de016f02e684cff1d37e1a",
-      "size": 1641559
+      "sha256": "5366be4a1980977f4567e73155cf7a11d4a4098a1d106c06fbc635c77c2f5f12",
+      "size": 1734020
     },
     "status.json": {
-      "sha256": "7b9223973b79fbda9ee5d471d58a5503052a08a186791c960b88027acdf257e2",
+      "sha256": "99d81fd2406b14d498a594b1826fc815e6fa6a11b5724d0929e0f8c1c57b385a",
       "size": 3894
     },
     "unmapped.json": {
-      "sha256": "07426012e2cb7b4ea6f6261d8dcd8649af98db41978474c5dd8da930c4308e44",
-      "size": 86211
+      "sha256": "e513b90e7cc1c49c5b60f4bd841746888410d45cffa89ba7fce6d5266b95a63f",
+      "size": 89890
     }
   },
   "legacyInvalidGeometryExceptions": [
