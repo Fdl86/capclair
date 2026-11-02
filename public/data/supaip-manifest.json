@@ -1,9 +1,9 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-11-02T06:22:20Z",
-  "datasetGeneratedAt": "2026-11-02T06:22:20Z",
-  "datasetRevision": "f34a6cfef6a00d173810a491b17f3c9cb349a32ccf1588c06a2cad34a50fb7cb",
-  "businessContentSha256": "f34a6cfef6a00d173810a491b17f3c9cb349a32ccf1588c06a2cad34a50fb7cb",
+  "generatedAt": "2026-11-02T21:46:02Z",
+  "datasetGeneratedAt": "2026-11-02T21:46:02Z",
+  "datasetRevision": "63e4af1b31a9633dea187613c1a18ff3edc88c9e818d119685ec94cdbe37cbdd",
+  "businessContentSha256": "63e4af1b31a9633dea187613c1a18ff3edc88c9e818d119685ec94cdbe37cbdd",
   "sourceUrl": "https://www.sia.aviation-civile.gouv.fr/documents/supaip/aip/id/6",
   "parserVersion": "capclair-supaip-parser-3.0.3",
   "publications": [
@@ -199,7 +199,7 @@
     },
     {
       "supAip": "231/26",
-      "title": "Création de Zones Réglementées Temporaires (ZRT) au profit de l'exercice RW MC COURSE 2026, en régions CENTRE et SUD-EST",
+      "title": "Annulé et remplacé par le SUP AIP 236/2026 Création de Zones Réglementées Temporaires (ZRT) au profit de l'exercice RW MC COURSE 2026, en régions CENTRE et SUD-EST",
       "spatial": true,
       "mappedGeometryCount": 17,
       "expectedNamedGeometryCount": 18,
@@ -213,7 +213,7 @@
       "safetyFallbackFeatureNames": [],
       "ignoredReferenceObjectCount": 0,
       "sourcePdf": "https://www.sia.aviation-civile.gouv.fr/documents/download/f/d/15088562/",
-      "sourceFingerprint": "f81f577cb8a75046af8a",
+      "sourceFingerprint": "43b574cd1244ac16f12d",
       "parserVersion": "capclair-supaip-parser-3.0.3"
     },
     {
@@ -1428,7 +1428,7 @@
       "safetyFallbackFeatureNames": [],
       "ignoredReferenceObjectCount": 0,
       "sourcePdf": "https://www.sia.aviation-civile.gouv.fr/documents/download/f/d/15043923/",
-      "sourceFingerprint": "54b032e4cc77f5c269d4",
+      "sourceFingerprint": "98ca972e3726ce4245c1",
       "parserVersion": "capclair-supaip-parser-3.0.3"
     },
     {
@@ -1912,20 +1912,20 @@
   "publicationsWithGeometry": 80,
   "featuresWithVerticalLimits": 501,
   "featuresWithoutVerticalLimits": 2,
-  "geoJsonSha256": "d09288ff1d614cd6fe20a4096c0cbe0a98eb5c690e53a872c3fe4241819bb134",
-  "geoJsonSize": 1734020,
+  "geoJsonSha256": "9d071c18005f41aac07d2b8c9159ff3e7e76751e443316277d1c84e5b41986a6",
+  "geoJsonSize": 1734785,
   "files": {
     "data.geojson": {
-      "sha256": "d09288ff1d614cd6fe20a4096c0cbe0a98eb5c690e53a872c3fe4241819bb134",
-      "size": 1734020
+      "sha256": "9d071c18005f41aac07d2b8c9159ff3e7e76751e443316277d1c84e5b41986a6",
+      "size": 1734785
     },
     "status.json": {
-      "sha256": "910a314e14219d56215ecea4050dc1a30fbd2df74df5947bd22a203f4d3adf0e",
+      "sha256": "2880b6826a9cb0ed2099da5588bdac43e9572ea94e04c1e74bf6aa9714b31ad9",
       "size": 3894
     },
     "unmapped.json": {
-      "sha256": "d09d814fb9bbae6ff434d11ee22b52ee8f17d665a5ed3b6c534c03f0cbafe795",
-      "size": 89942
+      "sha256": "20658147e6938310206d3c918c7c72dd91af8e99da3f3d3117b06006e8192b8d",
+      "size": 91417
     }
   },
   "legacyInvalidGeometryExceptions": [
