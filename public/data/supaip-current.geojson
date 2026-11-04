@@ -29747,7 +29747,7 @@
         "supAip": "063/26",
         "title": "Renouvellement de la zone réglementée temporaire (ZRT) \"LE LUC\" (83)",
         "validFrom": "2026-04-17T00:00:00Z",
-        "validTo": "2027-04-14T23:59:59Z",
+        "validTo": "2026-11-04T23:59:59Z",
         "activationMode": "notam",
         "activationText": "ZRT LE LUC - Du 17 avril 2026 à 0000 au 14 avril 2027 à 2359 - Activable H24",
         "lowerLimit": "SFC",
@@ -29761,7 +29761,7 @@
         "geometrySource": "automatic-layout-v3",
         "geometryConfidence": "high",
         "geometryWarnings": [],
-        "sourceFingerprint": "989d4d9700d310c2262e",
+        "sourceFingerprint": "a3039a9e42f32c8f0d75",
         "parserVersion": "capclair-supaip-parser-3.0.3",
         "frequency": "LE LUC TWR : 123,000 MHz | RAIZ \"LE LUC APP\" : 122,200 MHz | NICE INFO : 124,425 MHz 124.430 MHz à compter du 29/10/2026 | NICE APP : 134,475 MHz"
       },
@@ -57111,8 +57111,8 @@
       }
     }
   ],
-  "generatedAt": "2026-11-04T06:38:46Z",
-  "datasetGeneratedAt": "2026-11-04T06:38:46Z",
-  "datasetRevision": "cc9c940cbf6a364244eeab8d15adcf28858b5d8d70d620b29444a46f5f354af4",
-  "businessContentSha256": "cc9c940cbf6a364244eeab8d15adcf28858b5d8d70d620b29444a46f5f354af4"
+  "generatedAt": "2026-11-04T19:51:55Z",
+  "datasetGeneratedAt": "2026-11-04T19:51:55Z",
+  "datasetRevision": "81b3b74eb5a76beddc50b960e18cd2ad2bdd91841f97da128e29fc1c85ac5946",
+  "businessContentSha256": "81b3b74eb5a76beddc50b960e18cd2ad2bdd91841f97da128e29fc1c85ac5946"
 }
