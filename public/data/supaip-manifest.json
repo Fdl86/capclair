@@ -1,12 +1,50 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-11-04T19:51:55Z",
-  "datasetGeneratedAt": "2026-11-04T19:51:55Z",
-  "datasetRevision": "81b3b74eb5a76beddc50b960e18cd2ad2bdd91841f97da128e29fc1c85ac5946",
-  "businessContentSha256": "81b3b74eb5a76beddc50b960e18cd2ad2bdd91841f97da128e29fc1c85ac5946",
+  "generatedAt": "2026-11-05T06:58:30Z",
+  "datasetGeneratedAt": "2026-11-05T06:58:30Z",
+  "datasetRevision": "47820962aa86ce497859c247f546036948bf5d2449ca58f0f9afaa862f90dab5",
+  "businessContentSha256": "47820962aa86ce497859c247f546036948bf5d2449ca58f0f9afaa862f90dab5",
   "sourceUrl": "https://www.sia.aviation-civile.gouv.fr/documents/supaip/aip/id/6",
   "parserVersion": "capclair-supaip-parser-3.0.3",
   "publications": [
+    {
+      "supAip": "240/26",
+      "title": "Création d'une Zone Règlementée Temporaire entre Blaye et Lesparre-Médoc en Gironde",
+      "spatial": true,
+      "mappedGeometryCount": 1,
+      "expectedNamedGeometryCount": 1,
+      "declaredZoneCount": null,
+      "missingVerticalCount": 0,
+      "status": "complete",
+      "partial": false,
+      "conservative": false,
+      "fallback": false,
+      "safetyFallbackFeatureCount": 0,
+      "safetyFallbackFeatureNames": [],
+      "ignoredReferenceObjectCount": 0,
+      "sourcePdf": "https://www.sia.aviation-civile.gouv.fr/documents/download/f/d/15094273/",
+      "sourceFingerprint": "fcb28a74e1ac9bf93f01",
+      "parserVersion": "capclair-supaip-parser-3.0.3"
+    },
+    {
+      "supAip": "239/26",
+      "title": "Création de deux zones dangereuses temporaires (ZDT) pour l’exercice SKYSHARK 26.",
+      "spatial": true,
+      "mappedGeometryCount": 2,
+      "expectedNamedGeometryCount": 2,
+      "declaredZoneCount": 2,
+      "missingVerticalCount": 0,
+      "status": "complete",
+      "partial": false,
+      "conservative": false,
+      "fallback": false,
+      "safetyFallbackFeatureCount": 0,
+      "safetyFallbackFeatureNames": [],
+      "ignoredReferenceObjectCount": 0,
+      "sourcePdf": "https://www.sia.aviation-civile.gouv.fr/documents/download/f/d/15094271/",
+      "sourceFingerprint": "630b9058a938f5474eea",
+      "parserVersion": "capclair-supaip-parser-3.0.3"
+    },
     {
       "supAip": "238/26",
       "title": "Création d'une zone règlementée temporaire (ZRT) pour l’évolution d’aéronefs d’état sans équipage à bord dans le cadre de la campagne de vol CONYNE dans la région de Belfort (90) – Montbéliard (25)",
@@ -198,25 +236,6 @@
       "parserVersion": "capclair-supaip-parser-3.0.3"
     },
     {
-      "supAip": "231/26",
-      "title": "Annulé et remplacé par le SUP AIP 236/2026 Création de Zones Réglementées Temporaires (ZRT) au profit de l'exercice RW MC COURSE 2026, en régions CENTRE et SUD-EST",
-      "spatial": true,
-      "mappedGeometryCount": 17,
-      "expectedNamedGeometryCount": 18,
-      "declaredZoneCount": null,
-      "missingVerticalCount": 0,
-      "status": "partial",
-      "partial": true,
-      "conservative": false,
-      "fallback": false,
-      "safetyFallbackFeatureCount": 0,
-      "safetyFallbackFeatureNames": [],
-      "ignoredReferenceObjectCount": 0,
-      "sourcePdf": "https://www.sia.aviation-civile.gouv.fr/documents/download/f/d/15088562/",
-      "sourceFingerprint": "43b574cd1244ac16f12d",
-      "parserVersion": "capclair-supaip-parser-3.0.3"
-    },
-    {
       "supAip": "230/26",
       "title": "Création d'une ZRT au profit de vols d'un aéronef sans équipage à bord, hors vue de jour, à Aubenas (07)",
       "spatial": true,
@@ -298,25 +317,6 @@
       "ignoredReferenceObjectCount": 1,
       "sourcePdf": "https://www.sia.aviation-civile.gouv.fr/documents/download/f/d/15088546/",
       "sourceFingerprint": "b5351cf8dbc81bfd4be1",
-      "parserVersion": "capclair-supaip-parser-3.0.3"
-    },
-    {
-      "supAip": "224/26",
-      "title": "Création d'une Zone Réglementée Temporaire (ZRT) pour l'exercice CYANNE 2026 à Peyrelevade en Corrèze (19)",
-      "spatial": true,
-      "mappedGeometryCount": 1,
-      "expectedNamedGeometryCount": 1,
-      "declaredZoneCount": 1,
-      "missingVerticalCount": 0,
-      "status": "complete",
-      "partial": false,
-      "conservative": false,
-      "fallback": false,
-      "safetyFallbackFeatureCount": 0,
-      "safetyFallbackFeatureNames": [],
-      "ignoredReferenceObjectCount": 0,
-      "sourcePdf": "https://www.sia.aviation-civile.gouv.fr/documents/download/f/d/15088536/",
-      "sourceFingerprint": "2ff86caa402595c3c1ff",
       "parserVersion": "capclair-supaip-parser-3.0.3"
     },
     {
@@ -1294,25 +1294,6 @@
       "parserVersion": "capclair-supaip-parser-3.0.3"
     },
     {
-      "supAip": "095/26",
-      "title": "Création de 2 ZRT au profit de vols d'aéronefs sans équipage à bord, hors vue de jour, dans la région d'Aubenas",
-      "spatial": true,
-      "mappedGeometryCount": 2,
-      "expectedNamedGeometryCount": 2,
-      "declaredZoneCount": 2,
-      "missingVerticalCount": 0,
-      "status": "complete",
-      "partial": false,
-      "conservative": false,
-      "fallback": false,
-      "safetyFallbackFeatureCount": 0,
-      "safetyFallbackFeatureNames": [],
-      "ignoredReferenceObjectCount": 0,
-      "sourcePdf": "https://www.sia.aviation-civile.gouv.fr/documents/download/f/d/15049520/",
-      "sourceFingerprint": "0074fcf4c206a4a60c53",
-      "parserVersion": "capclair-supaip-parser-3.0.3"
-    },
-    {
       "supAip": "094/25",
       "title": "Création de 4 zones réglementées temporaires (ZRT) DSV ROMORANTIN ALPHA, BRAVO, CHARLIE et DELTA à titre expérimental pour du parachutage avec Dérive Sous Voile dans la région de Romorantin (41).",
       "spatial": true,
@@ -1337,14 +1318,6 @@
       "spatial": false,
       "sourcePdf": "https://www.sia.aviation-civile.gouv.fr/documents/download/f/d/15049510/",
       "sourceFingerprint": "a7ee0a7045c289ef2d3c",
-      "parserVersion": "capclair-supaip-parser-3.0.3"
-    },
-    {
-      "supAip": "089/26",
-      "title": "Travaux de réfection de la voie TL sur l’AD Lyon Saint-Exupéry (LFLL)",
-      "spatial": false,
-      "sourcePdf": "https://www.sia.aviation-civile.gouv.fr/documents/download/f/d/15049508/",
-      "sourceFingerprint": "31532481dae39af54e73",
       "parserVersion": "capclair-supaip-parser-3.0.3"
     },
     {
@@ -1502,25 +1475,6 @@
       "ignoredReferenceObjectCount": 0,
       "sourcePdf": "https://www.sia.aviation-civile.gouv.fr/documents/download/f/d/14634691/",
       "sourceFingerprint": "eb1aa9da81fef0a3c407",
-      "parserVersion": "capclair-supaip-parser-3.0.3"
-    },
-    {
-      "supAip": "063/26",
-      "title": "Renouvellement de la zone réglementée temporaire (ZRT) \"LE LUC\" (83)",
-      "spatial": true,
-      "mappedGeometryCount": 1,
-      "expectedNamedGeometryCount": 1,
-      "declaredZoneCount": null,
-      "missingVerticalCount": 0,
-      "status": "complete",
-      "partial": false,
-      "conservative": false,
-      "fallback": false,
-      "safetyFallbackFeatureCount": 0,
-      "safetyFallbackFeatureNames": [],
-      "ignoredReferenceObjectCount": 0,
-      "sourcePdf": "https://www.sia.aviation-civile.gouv.fr/documents/download/f/d/15038354/",
-      "sourceFingerprint": "a3039a9e42f32c8f0d75",
       "parserVersion": "capclair-supaip-parser-3.0.3"
     },
     {
@@ -1861,14 +1815,6 @@
       "parserVersion": "capclair-supaip-parser-3.0.3"
     },
     {
-      "supAip": "014/26",
-      "title": "Modification de la zone de stationnement de l’AD LFML (Marseille-Provence) avec création de trois postes avions sur l’ancienne aire de stationnement de la Sécurité Civile",
-      "spatial": false,
-      "sourcePdf": "https://www.sia.aviation-civile.gouv.fr/documents/download/f/d/15027155/",
-      "sourceFingerprint": "a4344785fa86c48b07a5",
-      "parserVersion": "capclair-supaip-parser-3.0.3"
-    },
-    {
       "supAip": "013/26",
       "title": "Création d'une zone interdite temporaire (ZIT) ORANGE (84)",
       "spatial": true,
@@ -1907,25 +1853,25 @@
       "parserVersion": "capclair-supaip-parser-3.0.3"
     }
   ],
-  "featureCount": 503,
-  "publicationCount": 114,
-  "publicationsWithGeometry": 80,
-  "featuresWithVerticalLimits": 501,
+  "featureCount": 485,
+  "publicationCount": 110,
+  "publicationsWithGeometry": 78,
+  "featuresWithVerticalLimits": 483,
   "featuresWithoutVerticalLimits": 2,
-  "geoJsonSha256": "a668ce3f5ee5bf49446ae36972aba6b7a5ce6efb8fb883906c0707e69e3dc1f7",
-  "geoJsonSize": 1734785,
+  "geoJsonSha256": "265d11858c99cd59c951212b6813d22af0269d1827da1339e6ebb8629944eb7f",
+  "geoJsonSize": 1671802,
   "files": {
     "data.geojson": {
-      "sha256": "a668ce3f5ee5bf49446ae36972aba6b7a5ce6efb8fb883906c0707e69e3dc1f7",
-      "size": 1734785
+      "sha256": "265d11858c99cd59c951212b6813d22af0269d1827da1339e6ebb8629944eb7f",
+      "size": 1671802
     },
     "status.json": {
-      "sha256": "a734e2ea653fc213254b014f6a54270fcac21d662e95abe297320d83117c923f",
+      "sha256": "3524d1fcc5ffef2b82f5513ea800742134252e806295ec7ba6148542d455f991",
       "size": 3894
     },
     "unmapped.json": {
-      "sha256": "cde36794dedf6f53f002424339473e846e86d17af53503a4f13354548c9e13e1",
-      "size": 91447
+      "sha256": "e1a6d10324175d31e97d221cb670042064f44b8a0cb978e5e18d5500bdb7239a",
+      "size": 90689
     }
   },
   "legacyInvalidGeometryExceptions": [
