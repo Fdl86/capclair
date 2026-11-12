@@ -1,14 +1,14 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-11-11T19:41:57Z",
-  "datasetGeneratedAt": "2026-11-11T19:41:57Z",
-  "datasetRevision": "bef8689a9737eedcb68843b3c7b5b04c7994aa70abec705434bed1f5e80baa58",
-  "businessContentSha256": "bef8689a9737eedcb68843b3c7b5b04c7994aa70abec705434bed1f5e80baa58",
+  "generatedAt": "2026-11-12T07:22:14Z",
+  "datasetGeneratedAt": "2026-11-12T07:22:14Z",
+  "datasetRevision": "f7aa3ce14253df52af0374e50dc0d572b8af9b4fdec5377363836f4a400220a8",
+  "businessContentSha256": "f7aa3ce14253df52af0374e50dc0d572b8af9b4fdec5377363836f4a400220a8",
   "sourceUrl": "https://www.sia.aviation-civile.gouv.fr/documents/supaip/aip/id/6",
   "parserVersion": "capclair-supaip-parser-3.0.3",
   "publications": [
     {
-      "supAip": "240/26",
+      "supAip": "246/26",
       "title": "Création d'une Zone Règlementée Temporaire entre Blaye et Lesparre-Médoc en Gironde",
       "spatial": true,
       "mappedGeometryCount": 1,
@@ -22,8 +22,92 @@
       "safetyFallbackFeatureCount": 0,
       "safetyFallbackFeatureNames": [],
       "ignoredReferenceObjectCount": 0,
-      "sourcePdf": "https://www.sia.aviation-civile.gouv.fr/documents/download/f/d/15094273/",
-      "sourceFingerprint": "552d1ac7b6c23df12157",
+      "sourcePdf": "https://www.sia.aviation-civile.gouv.fr/documents/download/f/d/15094285/",
+      "sourceFingerprint": "5b1101bb9a74199d1425",
+      "parserVersion": "capclair-supaip-parser-3.0.3"
+    },
+    {
+      "supAip": "245/26",
+      "title": "AD LFML : Travaux de remplacement de l'ILS 13L, de réfection de chaussée et de balisage en D6.",
+      "spatial": false,
+      "sourcePdf": "https://www.sia.aviation-civile.gouv.fr/documents/download/f/d/15094283/",
+      "sourceFingerprint": "7856543878d17662501d",
+      "parserVersion": "capclair-supaip-parser-3.0.3"
+    },
+    {
+      "supAip": "244/26",
+      "title": "Création d'une zone réglementée temporaire (ZRT) à Avon-les-Roches - Camp du Ruchard pour le déploiement d'un aérostat captif",
+      "spatial": true,
+      "mappedGeometryCount": 1,
+      "expectedNamedGeometryCount": 1,
+      "declaredZoneCount": 1,
+      "missingVerticalCount": 0,
+      "status": "complete",
+      "partial": false,
+      "conservative": false,
+      "fallback": false,
+      "safetyFallbackFeatureCount": 0,
+      "safetyFallbackFeatureNames": [],
+      "ignoredReferenceObjectCount": 0,
+      "sourcePdf": "https://www.sia.aviation-civile.gouv.fr/documents/download/f/d/15094281/",
+      "sourceFingerprint": "82acdcaef828ec831034",
+      "parserVersion": "capclair-supaip-parser-3.0.3"
+    },
+    {
+      "supAip": "243/26",
+      "title": "Création de 9 Zones Réglementées Temporaires (ZRT) pour l’exercice BAMBARI 2026 en région sud-ouest",
+      "spatial": true,
+      "mappedGeometryCount": 9,
+      "expectedNamedGeometryCount": 9,
+      "declaredZoneCount": 9,
+      "missingVerticalCount": 0,
+      "status": "complete",
+      "partial": false,
+      "conservative": false,
+      "fallback": false,
+      "safetyFallbackFeatureCount": 0,
+      "safetyFallbackFeatureNames": [],
+      "ignoredReferenceObjectCount": 0,
+      "sourcePdf": "https://www.sia.aviation-civile.gouv.fr/documents/download/f/d/15094279/",
+      "sourceFingerprint": "4bb9237555ed597f41b5",
+      "parserVersion": "capclair-supaip-parser-3.0.3"
+    },
+    {
+      "supAip": "242/26",
+      "title": "Création de deux zones réglementées temporaires (ZRT) pour des activités spécifiques aux abords de l’aérodrome de Coulommiers Voisins (77) - LFPK",
+      "spatial": true,
+      "mappedGeometryCount": 2,
+      "expectedNamedGeometryCount": 2,
+      "declaredZoneCount": 2,
+      "missingVerticalCount": 0,
+      "status": "complete",
+      "partial": false,
+      "conservative": false,
+      "fallback": false,
+      "safetyFallbackFeatureCount": 0,
+      "safetyFallbackFeatureNames": [],
+      "ignoredReferenceObjectCount": 0,
+      "sourcePdf": "https://www.sia.aviation-civile.gouv.fr/documents/download/f/d/15094277/",
+      "sourceFingerprint": "74ec626200524eae09a9",
+      "parserVersion": "capclair-supaip-parser-3.0.3"
+    },
+    {
+      "supAip": "241/26",
+      "title": "Création à titre expérimental d’une Zone Réglementée Temporaire (ZRT) sur AD Villacoublay",
+      "spatial": true,
+      "mappedGeometryCount": 1,
+      "expectedNamedGeometryCount": 1,
+      "declaredZoneCount": 1,
+      "missingVerticalCount": 0,
+      "status": "conservative",
+      "partial": false,
+      "conservative": true,
+      "fallback": false,
+      "safetyFallbackFeatureCount": 0,
+      "safetyFallbackFeatureNames": [],
+      "ignoredReferenceObjectCount": 0,
+      "sourcePdf": "https://www.sia.aviation-civile.gouv.fr/documents/download/f/d/15094275/",
+      "sourceFingerprint": "214625bbcc9de1a52e08",
       "parserVersion": "capclair-supaip-parser-3.0.3"
     },
     {
@@ -317,25 +401,6 @@
       "ignoredReferenceObjectCount": 1,
       "sourcePdf": "https://www.sia.aviation-civile.gouv.fr/documents/download/f/d/15088546/",
       "sourceFingerprint": "b5351cf8dbc81bfd4be1",
-      "parserVersion": "capclair-supaip-parser-3.0.3"
-    },
-    {
-      "supAip": "222/26",
-      "title": "Création d'une Zone Réglementée/Dangereuse Temporaire (ZRT/ZDT) pour l’opération BROMO dans l’Atlantique et FBZ associée",
-      "spatial": true,
-      "mappedGeometryCount": 1,
-      "expectedNamedGeometryCount": 1,
-      "declaredZoneCount": 1,
-      "missingVerticalCount": 0,
-      "status": "complete",
-      "partial": false,
-      "conservative": false,
-      "fallback": false,
-      "safetyFallbackFeatureCount": 0,
-      "safetyFallbackFeatureNames": [],
-      "ignoredReferenceObjectCount": 0,
-      "sourcePdf": "https://www.sia.aviation-civile.gouv.fr/documents/download/f/d/15088532/",
-      "sourceFingerprint": "93c8791eb51f8735a8f9",
       "parserVersion": "capclair-supaip-parser-3.0.3"
     },
     {
@@ -702,27 +767,6 @@
       "spatial": false,
       "sourcePdf": "https://www.sia.aviation-civile.gouv.fr/documents/download/f/d/15077204/",
       "sourceFingerprint": "9ae2e898bb8b21ab21c6",
-      "parserVersion": "capclair-supaip-parser-3.0.3"
-    },
-    {
-      "supAip": "188/25",
-      "title": "Création de neuf Zones Réglementées Temporaires (ZRT) au profit de vols en vue et hors vue d’aéronefs sans équipage à bord sur la côte Atlantique en Gironde",
-      "spatial": true,
-      "mappedGeometryCount": 7,
-      "expectedNamedGeometryCount": 9,
-      "declaredZoneCount": 9,
-      "missingVerticalCount": 0,
-      "status": "partial",
-      "partial": true,
-      "conservative": false,
-      "fallback": false,
-      "safetyFallbackFeatureCount": 1,
-      "safetyFallbackFeatureNames": [
-        "ZRT CESA COULOIR HOURTIN PLAGE"
-      ],
-      "ignoredReferenceObjectCount": 0,
-      "sourcePdf": "https://www.sia.aviation-civile.gouv.fr/documents/download/f/d/15000061/",
-      "sourceFingerprint": "b646e07548dc427be283",
       "parserVersion": "capclair-supaip-parser-3.0.3"
     },
     {
@@ -1853,33 +1897,28 @@
       "parserVersion": "capclair-supaip-parser-3.0.3"
     }
   ],
-  "featureCount": 485,
-  "publicationCount": 110,
-  "publicationsWithGeometry": 78,
-  "featuresWithVerticalLimits": 483,
+  "featureCount": 490,
+  "publicationCount": 113,
+  "publicationsWithGeometry": 80,
+  "featuresWithVerticalLimits": 488,
   "featuresWithoutVerticalLimits": 2,
-  "geoJsonSha256": "1e69f9ca5718c1ee999d657720c3cee822aa5d5fa1d2a881394c3c223a16c38a",
-  "geoJsonSize": 1671802,
+  "geoJsonSha256": "5bb7d87a97e002f7afc5c407c60433c194736b6b6baf2b72b90bf213fc0e2f86",
+  "geoJsonSize": 1772696,
   "files": {
     "data.geojson": {
-      "sha256": "1e69f9ca5718c1ee999d657720c3cee822aa5d5fa1d2a881394c3c223a16c38a",
-      "size": 1671802
+      "sha256": "5bb7d87a97e002f7afc5c407c60433c194736b6b6baf2b72b90bf213fc0e2f86",
+      "size": 1772696
     },
     "status.json": {
-      "sha256": "384af4ab37ed36adceb2175d5fd2be678f4388a821ac830efffde08927c6af78",
-      "size": 3894
+      "sha256": "379221fca4e67baa1963637b260dcaf0c6e630a6688ca82d2ebd7203110dd70b",
+      "size": 3756
     },
     "unmapped.json": {
-      "sha256": "9270f93174ef6203438ab47f1ded7dd15e490f2006984e68855eedf122b6ff6a",
-      "size": 95069
+      "sha256": "9c5af9c2fedc4c8e420c642c4d11c3744afb4c4df20fed4dc66e525a51aef728",
+      "size": 95131
     }
   },
   "legacyInvalidGeometryExceptions": [
-    {
-      "id": "188-25-zrt-cesa-couloir-hourtin-plage",
-      "geometrySha256": "dcc711f85ef9e960045c96fcd02b5ae4be5eaf3d6d98345b65af8525f7af530e",
-      "reason": "Exception historique figée: Ring Self-intersection[-1.2308333 45.2327778]"
-    },
     {
       "id": "206-25-zrt-2-le-croisic",
       "geometrySha256": "c64acea17d22e7decf76eb7278198d1a4ccef4dd38877645515a7623745ca91a",

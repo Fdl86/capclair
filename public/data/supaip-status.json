@@ -2,39 +2,39 @@
   "schemaVersion": 2,
   "mode": "automatic",
   "beta": true,
-  "generatedAt": "2026-11-11T19:41:57Z",
-  "datasetGeneratedAt": "2026-11-11T19:41:57Z",
-  "lastSuccessfulCheckAt": "2026-11-11T19:41:57Z",
-  "checkMode": "listing-reuse",
-  "sourceUpdatedAt": "2026-11-05T00:00:00Z",
+  "generatedAt": "2026-11-12T07:22:14Z",
+  "datasetGeneratedAt": "2026-11-12T07:22:14Z",
+  "lastSuccessfulCheckAt": "2026-11-12T07:22:14Z",
+  "checkMode": "full-rebuild",
+  "sourceUpdatedAt": "2026-11-12T00:00:00Z",
   "sourceUrl": "https://www.sia.aviation-civile.gouv.fr/documents/supaip/aip/id/6",
   "parserVersion": "capclair-supaip-parser-3.0.3",
-  "datasetRevision": "bef8689a9737eedcb68843b3c7b5b04c7994aa70abec705434bed1f5e80baa58",
-  "businessContentSha256": "bef8689a9737eedcb68843b3c7b5b04c7994aa70abec705434bed1f5e80baa58",
+  "datasetRevision": "f7aa3ce14253df52af0374e50dc0d572b8af9b4fdec5377363836f4a400220a8",
+  "businessContentSha256": "f7aa3ce14253df52af0374e50dc0d572b8af9b4fdec5377363836f4a400220a8",
   "overrideRevision": "092a0d66c8ab300d198ad01eeb48da5d5bf812164cc9eca1e9236d0ece81b73f",
-  "listingPublicationCount": 110,
-  "processedPublicationCount": 110,
-  "nonSpatialPublicationCount": 24,
-  "zonalPublicationCount": 86,
-  "mappedPublicationCount": 78,
-  "fullyMappedPublicationCount": 58,
-  "conservativelyMappedPublicationCount": 0,
+  "listingPublicationCount": 113,
+  "processedPublicationCount": 113,
+  "nonSpatialPublicationCount": 25,
+  "zonalPublicationCount": 88,
+  "mappedPublicationCount": 80,
+  "fullyMappedPublicationCount": 60,
+  "conservativelyMappedPublicationCount": 1,
   "fallbackMappedPublicationCount": 6,
-  "featureCount": 485,
-  "expectedNamedGeometryCount": 517,
-  "declaredZoneCount": 396,
-  "verticalCompleteFeatureCount": 483,
+  "featureCount": 490,
+  "expectedNamedGeometryCount": 520,
+  "declaredZoneCount": 399,
+  "verticalCompleteFeatureCount": 488,
   "missingVerticalFeatureCount": 2,
   "unmappedPublicationCount": 28,
   "reviewPublicationCount": 28,
   "completeUnmappedPublicationCount": 8,
-  "partialPublicationCount": 14,
-  "conservativePublicationCount": 0,
+  "partialPublicationCount": 13,
+  "conservativePublicationCount": 1,
   "fallbackPublicationCount": 6,
-  "reusedPublicationCount": 110,
-  "downloadedPublicationCount": 0,
-  "safetyFallbackPublicationCount": 9,
-  "safetyFallbackFeatureCount": 10,
+  "reusedPublicationCount": 107,
+  "downloadedPublicationCount": 6,
+  "safetyFallbackPublicationCount": 8,
+  "safetyFallbackFeatureCount": 9,
   "safetyFallbackDetails": [
     {
       "supAip": "216/25",
@@ -55,13 +55,6 @@
       "featureCount": 1,
       "featureNames": [
         "ZRT 2 LE CROISIC"
-      ]
-    },
-    {
-      "supAip": "188/25",
-      "featureCount": 1,
-      "featureNames": [
-        "ZRT CESA COULOIR HOURTIN PLAGE"
       ]
     },
     {
@@ -109,10 +102,10 @@
   "incompleteCausePublicationCounts": {
     "zone-block-not-detected": 0,
     "lateral-boundary-not-extracted": 4,
-    "internal-exclusion-not-cut": 0,
-    "named-geometry-missing": 20,
+    "internal-exclusion-not-cut": 1,
+    "named-geometry-missing": 19,
     "vertical-limit-not-extracted": 2,
-    "safety-fallback": 9,
+    "safety-fallback": 8,
     "other": 0
   },
   "incompleteCauseLabels": {
@@ -126,5 +119,5 @@
   },
   "staleAfterHours": 36,
   "message": "Parser V3.2: chaque publication est comparée à la dernière base valide. Toute chute non restaurée bloque le workflow avant écriture; les ZRT portant un code LF-R restent reconnues comme zones temporaires. Vérifier le PDF, SOFIA et les NOTAM avant le vol.",
-  "manifestUrl": "/data/supaip/revisions/bef8689a9737eedcb68843b3c7b5b04c7994aa70abec705434bed1f5e80baa58/manifest.json"
+  "manifestUrl": "/data/supaip/revisions/f7aa3ce14253df52af0374e50dc0d572b8af9b4fdec5377363836f4a400220a8/manifest.json"
 }
