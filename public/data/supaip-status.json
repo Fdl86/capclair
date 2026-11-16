@@ -2,15 +2,15 @@
   "schemaVersion": 2,
   "mode": "automatic",
   "beta": true,
-  "generatedAt": "2026-11-16T06:44:46Z",
-  "datasetGeneratedAt": "2026-11-16T06:44:46Z",
-  "lastSuccessfulCheckAt": "2026-11-16T06:44:46Z",
+  "generatedAt": "2026-11-16T22:16:31Z",
+  "datasetGeneratedAt": "2026-11-16T22:16:31Z",
+  "lastSuccessfulCheckAt": "2026-11-16T22:16:31Z",
   "checkMode": "listing-reuse",
   "sourceUpdatedAt": "2026-11-12T00:00:00Z",
   "sourceUrl": "https://www.sia.aviation-civile.gouv.fr/documents/supaip/aip/id/6",
   "parserVersion": "capclair-supaip-parser-3.0.3",
-  "datasetRevision": "ef6c21e2465c26d3a925503b7b750850d83d10311e2371495b7d2ae58da9d954",
-  "businessContentSha256": "ef6c21e2465c26d3a925503b7b750850d83d10311e2371495b7d2ae58da9d954",
+  "datasetRevision": "e44b408edc34a81e67804beacfa46150d4643f0d04215cb9937fc202c8bf8782",
+  "businessContentSha256": "e44b408edc34a81e67804beacfa46150d4643f0d04215cb9937fc202c8bf8782",
   "overrideRevision": "092a0d66c8ab300d198ad01eeb48da5d5bf812164cc9eca1e9236d0ece81b73f",
   "listingPublicationCount": 113,
   "processedPublicationCount": 113,
@@ -119,5 +119,5 @@
   },
   "staleAfterHours": 36,
   "message": "Parser V3.2: chaque publication est comparée à la dernière base valide. Toute chute non restaurée bloque le workflow avant écriture; les ZRT portant un code LF-R restent reconnues comme zones temporaires. Vérifier le PDF, SOFIA et les NOTAM avant le vol.",
-  "manifestUrl": "/data/supaip/revisions/ef6c21e2465c26d3a925503b7b750850d83d10311e2371495b7d2ae58da9d954/manifest.json"
+  "manifestUrl": "/data/supaip/revisions/e44b408edc34a81e67804beacfa46150d4643f0d04215cb9937fc202c8bf8782/manifest.json"
 }
