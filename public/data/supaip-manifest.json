@@ -1,9 +1,9 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-11-18T07:40:37Z",
-  "datasetGeneratedAt": "2026-11-18T07:40:37Z",
-  "datasetRevision": "efff361e0e5c72947af331497759b4318876fcbdf897ca4a68aed36e63c3fc1e",
-  "businessContentSha256": "efff361e0e5c72947af331497759b4318876fcbdf897ca4a68aed36e63c3fc1e",
+  "generatedAt": "2026-11-18T20:40:07Z",
+  "datasetGeneratedAt": "2026-11-18T20:40:07Z",
+  "datasetRevision": "7c6ba1e314b0e6f255c21bddf02b57fbf03f7bffe682492dafe684a1b61269b2",
+  "businessContentSha256": "7c6ba1e314b0e6f255c21bddf02b57fbf03f7bffe682492dafe684a1b61269b2",
   "sourceUrl": "https://www.sia.aviation-civile.gouv.fr/documents/supaip/aip/id/6",
   "parserVersion": "capclair-supaip-parser-3.0.3",
   "publications": [
@@ -1450,10 +1450,10 @@
     },
     {
       "supAip": "075/26",
-      "title": "Modiﬁcation temporaire de l'itinéraire hélicoptères en CTR Paris entre LFPI et IH3 (Gentilly)",
+      "title": "Annulé le 18/11/2026 Modiﬁcation temporaire de l'itinéraire hélicoptères en CTR Paris entre LFPI et IH3 (Gentilly)",
       "spatial": false,
       "sourcePdf": "https://www.sia.aviation-civile.gouv.fr/documents/download/f/d/15043921/",
-      "sourceFingerprint": "4a495e63f2f57fc9c312",
+      "sourceFingerprint": "d1933e461e2d24db90d9",
       "parserVersion": "capclair-supaip-parser-3.0.3"
     },
     {
@@ -1902,20 +1902,20 @@
   "publicationsWithGeometry": 80,
   "featuresWithVerticalLimits": 488,
   "featuresWithoutVerticalLimits": 2,
-  "geoJsonSha256": "6d9d2f8a41e5c27595d3e78dc4fd447eafa66ba6a0fd777d8ec08a235c343132",
+  "geoJsonSha256": "83345ce37cc0dc29bbad729ab4b778dd1f94ac23201e10694b64eee5d577499e",
   "geoJsonSize": 1772696,
   "files": {
     "data.geojson": {
-      "sha256": "6d9d2f8a41e5c27595d3e78dc4fd447eafa66ba6a0fd777d8ec08a235c343132",
+      "sha256": "83345ce37cc0dc29bbad729ab4b778dd1f94ac23201e10694b64eee5d577499e",
       "size": 1772696
     },
     "status.json": {
-      "sha256": "8449c48fdffc8e72fb4d39113e57ae3b798427ea5fc97109655791a288477127",
+      "sha256": "2eba434f3cc0b34788556c89b04aa78272a73c467a2b2b9b3a36d774bfba2b34",
       "size": 3756
     },
     "unmapped.json": {
-      "sha256": "43fbb85b1494072d7f7393a3e389302dc21d6b5777f67972afd57678864eded2",
-      "size": 97596
+      "sha256": "83c8709d92ed69ecc2e7885062e238a8c2135851ec820c8429ffc294227e1f32",
+      "size": 97888
     }
   },
   "legacyInvalidGeometryExceptions": [
