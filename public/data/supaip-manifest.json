@@ -1,12 +1,69 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-11-18T20:40:07Z",
-  "datasetGeneratedAt": "2026-11-18T20:40:07Z",
-  "datasetRevision": "7c6ba1e314b0e6f255c21bddf02b57fbf03f7bffe682492dafe684a1b61269b2",
-  "businessContentSha256": "7c6ba1e314b0e6f255c21bddf02b57fbf03f7bffe682492dafe684a1b61269b2",
+  "generatedAt": "2026-11-19T07:36:44Z",
+  "datasetGeneratedAt": "2026-11-19T07:36:44Z",
+  "datasetRevision": "631e4b1bdea3e6d40e9f04fbbed121f801b59b487cf225a9487b484fbac191b6",
+  "businessContentSha256": "631e4b1bdea3e6d40e9f04fbbed121f801b59b487cf225a9487b484fbac191b6",
   "sourceUrl": "https://www.sia.aviation-civile.gouv.fr/documents/supaip/aip/id/6",
   "parserVersion": "capclair-supaip-parser-3.0.3",
   "publications": [
+    {
+      "supAip": "249/26",
+      "title": "Création de 2 Zones Réglementées Temporaires (ZRT) dans la région de Barèges (65).",
+      "spatial": true,
+      "mappedGeometryCount": 2,
+      "expectedNamedGeometryCount": 2,
+      "declaredZoneCount": 2,
+      "missingVerticalCount": 0,
+      "status": "complete",
+      "partial": false,
+      "conservative": false,
+      "fallback": false,
+      "safetyFallbackFeatureCount": 0,
+      "safetyFallbackFeatureNames": [],
+      "ignoredReferenceObjectCount": 0,
+      "sourcePdf": "https://www.sia.aviation-civile.gouv.fr/documents/download/f/d/15094311/",
+      "sourceFingerprint": "acf73c488284cf5995fa",
+      "parserVersion": "capclair-supaip-parser-3.0.3"
+    },
+    {
+      "supAip": "248/26",
+      "title": "Création d’une Zone Réglementée Temporaire (ZRT) « METZ - THIONVILLE » pour vols hors vue d’un aéronef télépiloté sans équipage à bord entre le Centre Hospitalier Universitaire de METZ et le Centre Hospitalier de THIONVILLE (57)",
+      "spatial": true,
+      "mappedGeometryCount": 0,
+      "expectedNamedGeometryCount": 1,
+      "declaredZoneCount": 1,
+      "missingVerticalCount": 0,
+      "status": "unmapped",
+      "partial": false,
+      "conservative": false,
+      "fallback": false,
+      "safetyFallbackFeatureCount": 0,
+      "safetyFallbackFeatureNames": [],
+      "ignoredReferenceObjectCount": 1,
+      "sourcePdf": "https://www.sia.aviation-civile.gouv.fr/documents/download/f/d/15094309/",
+      "sourceFingerprint": "72fb3af35786cdecb97f",
+      "parserVersion": "capclair-supaip-parser-3.0.3"
+    },
+    {
+      "supAip": "247/26",
+      "title": "Création de trois zones réglementées temporaires « ZRT CAHORS AD ALPHA, BRAVO & CHARLIE » et de points de compte-rendu sur l'aérodrome de Cahors Lalbenque LFCC",
+      "spatial": true,
+      "mappedGeometryCount": 3,
+      "expectedNamedGeometryCount": 3,
+      "declaredZoneCount": 3,
+      "missingVerticalCount": 0,
+      "status": "complete",
+      "partial": false,
+      "conservative": false,
+      "fallback": false,
+      "safetyFallbackFeatureCount": 0,
+      "safetyFallbackFeatureNames": [],
+      "ignoredReferenceObjectCount": 0,
+      "sourcePdf": "https://www.sia.aviation-civile.gouv.fr/documents/download/f/d/15094307/",
+      "sourceFingerprint": "cc4999c32b052eaf8781",
+      "parserVersion": "capclair-supaip-parser-3.0.3"
+    },
     {
       "supAip": "246/26",
       "title": "Création d'une Zone Règlementée Temporaire entre Blaye et Lesparre-Médoc en Gironde",
@@ -382,25 +439,6 @@
       "ignoredReferenceObjectCount": 0,
       "sourcePdf": "https://www.sia.aviation-civile.gouv.fr/documents/download/f/d/15088548/",
       "sourceFingerprint": "a7cbefd62ed837639b44",
-      "parserVersion": "capclair-supaip-parser-3.0.3"
-    },
-    {
-      "supAip": "225/26",
-      "title": "Création d’une zone réglementée temporaire (ZRT) dans la CTR 1 de Dinard et la TMA 4 Rennes à l’occasion du départ de la course nautique transatlantique \"Route du Rhum\" édition 2026",
-      "spatial": true,
-      "mappedGeometryCount": 0,
-      "expectedNamedGeometryCount": 1,
-      "declaredZoneCount": 1,
-      "missingVerticalCount": 0,
-      "status": "unmapped",
-      "partial": false,
-      "conservative": false,
-      "fallback": false,
-      "safetyFallbackFeatureCount": 0,
-      "safetyFallbackFeatureNames": [],
-      "ignoredReferenceObjectCount": 1,
-      "sourcePdf": "https://www.sia.aviation-civile.gouv.fr/documents/download/f/d/15088546/",
-      "sourceFingerprint": "b5351cf8dbc81bfd4be1",
       "parserVersion": "capclair-supaip-parser-3.0.3"
     },
     {
@@ -1449,14 +1487,6 @@
       "parserVersion": "capclair-supaip-parser-3.0.3"
     },
     {
-      "supAip": "075/26",
-      "title": "Annulé le 18/11/2026 Modiﬁcation temporaire de l'itinéraire hélicoptères en CTR Paris entre LFPI et IH3 (Gentilly)",
-      "spatial": false,
-      "sourcePdf": "https://www.sia.aviation-civile.gouv.fr/documents/download/f/d/15043921/",
-      "sourceFingerprint": "d1933e461e2d24db90d9",
-      "parserVersion": "capclair-supaip-parser-3.0.3"
-    },
-    {
       "supAip": "074/26",
       "title": "Création de deux Zones Réglementées Temporaires (ZRT) « AUBIAT-SARDON 1 et 2 » pour vols, hors vue et en vue, d’aéronefs télépilotés sans équipage à bord dans le secteur d’Aigueperse (63)",
       "spatial": true,
@@ -1897,25 +1927,25 @@
       "parserVersion": "capclair-supaip-parser-3.0.3"
     }
   ],
-  "featureCount": 490,
-  "publicationCount": 113,
-  "publicationsWithGeometry": 80,
-  "featuresWithVerticalLimits": 488,
+  "featureCount": 495,
+  "publicationCount": 114,
+  "publicationsWithGeometry": 82,
+  "featuresWithVerticalLimits": 493,
   "featuresWithoutVerticalLimits": 2,
-  "geoJsonSha256": "83345ce37cc0dc29bbad729ab4b778dd1f94ac23201e10694b64eee5d577499e",
-  "geoJsonSize": 1772696,
+  "geoJsonSha256": "1e1004358590daa147730df1c8e0ba23a1351f994156607ddcf74a1cdb6ea703",
+  "geoJsonSize": 1790952,
   "files": {
     "data.geojson": {
-      "sha256": "83345ce37cc0dc29bbad729ab4b778dd1f94ac23201e10694b64eee5d577499e",
-      "size": 1772696
+      "sha256": "1e1004358590daa147730df1c8e0ba23a1351f994156607ddcf74a1cdb6ea703",
+      "size": 1790952
     },
     "status.json": {
-      "sha256": "2eba434f3cc0b34788556c89b04aa78272a73c467a2b2b9b3a36d774bfba2b34",
+      "sha256": "e489b7b0bceba2c99b10d987894f43ce68ccf5912552f631d6b0228778483e9e",
       "size": 3756
     },
     "unmapped.json": {
-      "sha256": "83c8709d92ed69ecc2e7885062e238a8c2135851ec820c8429ffc294227e1f32",
-      "size": 97888
+      "sha256": "76f1ea0c82c42168e36939b6781f5a7d88f504911e28b00223d71a6ea543088b",
+      "size": 98230
     }
   },
   "legacyInvalidGeometryExceptions": [

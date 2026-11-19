@@ -8,6 +8,667 @@
   "features": [
     {
       "type": "Feature",
+      "id": "249-26-zrt-bolou",
+      "properties": {
+        "id": "249-26-zrt-bolou",
+        "name": "ZRT BOLOU",
+        "zoneType": "ZRT",
+        "beta": true,
+        "supAip": "249/26",
+        "title": "Création de 2 Zones Réglementées Temporaires (ZRT) dans la région de Barèges (65).",
+        "validFrom": "2026-12-03T00:00:00Z",
+        "validTo": "2027-04-01T23:59:59Z",
+        "activationMode": "notam",
+        "activationText": "TOUTES LES ZONES - Du 03 décembre 2026 au 01 avril 2027 H24 tous les jours sauf Samedi, Dimanche et jours fériés Activable par NOTAM avec préavis de 72 h - Sauf du samedi 19 décembre 2026 au dimanche 3 janvier 2027 inclus, et du samedi 6 février 2027 au dimanche 21 février 2027 inclus",
+        "lowerLimit": "SFC",
+        "upperLimit": "FL 175",
+        "verticalLimitsExtracted": true,
+        "verticalLimitNotice": null,
+        "sourcePdf": "https://www.sia.aviation-civile.gouv.fr/documents/download/f/d/15094311/",
+        "sourcePage": "https://www.sia.aviation-civile.gouv.fr/documents/supaip/aip/id/6",
+        "sourcePageNumber": 2,
+        "dataScope": "auto-sia",
+        "geometrySource": "automatic-layout-v3",
+        "geometryConfidence": "high",
+        "geometryWarnings": [],
+        "sourceFingerprint": "acf73c488284cf5995fa",
+        "parserVersion": "capclair-supaip-parser-3.0.3",
+        "frequency": "PYRENEES INFO : 126,530 MHz"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              0.0894444,
+              42.8908142
+            ],
+            [
+              0.091972,
+              42.8907536
+            ],
+            [
+              0.0944888,
+              42.8905719
+            ],
+            [
+              0.0969839,
+              42.8902699
+            ],
+            [
+              0.0994467,
+              42.889849
+            ],
+            [
+              0.1018666,
+              42.8893109
+            ],
+            [
+              0.1042332,
+              42.888658
+            ],
+            [
+              0.1065364,
+              42.887893
+            ],
+            [
+              0.1087664,
+              42.8870192
+            ],
+            [
+              0.1109135,
+              42.8860404
+            ],
+            [
+              0.1129685,
+              42.8849608
+            ],
+            [
+              0.1149228,
+              42.8837849
+            ],
+            [
+              0.1167678,
+              42.8825179
+            ],
+            [
+              0.1184957,
+              42.8811652
+            ],
+            [
+              0.1200991,
+              42.8797325
+            ],
+            [
+              0.1215711,
+              42.8782261
+            ],
+            [
+              0.1229054,
+              42.8766522
+            ],
+            [
+              0.1240963,
+              42.8750178
+            ],
+            [
+              0.1251388,
+              42.8733298
+            ],
+            [
+              0.1260283,
+              42.8715955
+            ],
+            [
+              0.1267611,
+              42.8698222
+            ],
+            [
+              0.1273341,
+              42.8680176
+            ],
+            [
+              0.1277448,
+              42.8661894
+            ],
+            [
+              0.1279914,
+              42.8643454
+            ],
+            [
+              0.1280729,
+              42.8624935
+            ],
+            [
+              0.1279891,
+              42.8606417
+            ],
+            [
+              0.1277402,
+              42.8587979
+            ],
+            [
+              0.1273273,
+              42.8569699
+            ],
+            [
+              0.1267523,
+              42.8551657
+            ],
+            [
+              0.1260175,
+              42.8533929
+            ],
+            [
+              0.1251263,
+              42.8516591
+            ],
+            [
+              0.1240823,
+              42.8499717
+            ],
+            [
+              0.12289,
+              42.848338
+            ],
+            [
+              0.1215547,
+              42.846765
+            ],
+            [
+              0.1200819,
+              42.8452593
+            ],
+            [
+              0.1184781,
+              42.8438275
+            ],
+            [
+              0.1167501,
+              42.8424756
+            ],
+            [
+              0.1149052,
+              42.8412094
+            ],
+            [
+              0.1129514,
+              42.8400344
+            ],
+            [
+              0.1108971,
+              42.8389556
+            ],
+            [
+              0.108751,
+              42.8379775
+            ],
+            [
+              0.1065224,
+              42.8371045
+            ],
+            [
+              0.1042207,
+              42.8363401
+            ],
+            [
+              0.1018558,
+              42.8356877
+            ],
+            [
+              0.0994378,
+              42.8351501
+            ],
+            [
+              0.0969771,
+              42.8347296
+            ],
+            [
+              0.0944842,
+              42.8344279
+            ],
+            [
+              0.0919697,
+              42.8342464
+            ],
+            [
+              0.0894444,
+              42.8341858
+            ],
+            [
+              0.0869192,
+              42.8342464
+            ],
+            [
+              0.0844047,
+              42.8344279
+            ],
+            [
+              0.0819118,
+              42.8347296
+            ],
+            [
+              0.0794511,
+              42.8351501
+            ],
+            [
+              0.0770331,
+              42.8356877
+            ],
+            [
+              0.0746682,
+              42.8363401
+            ],
+            [
+              0.0723665,
+              42.8371045
+            ],
+            [
+              0.0701379,
+              42.8379775
+            ],
+            [
+              0.0679918,
+              42.8389556
+            ],
+            [
+              0.0659375,
+              42.8400344
+            ],
+            [
+              0.0639837,
+              42.8412094
+            ],
+            [
+              0.0621388,
+              42.8424756
+            ],
+            [
+              0.0604108,
+              42.8438275
+            ],
+            [
+              0.0588069,
+              42.8452593
+            ],
+            [
+              0.0573342,
+              42.846765
+            ],
+            [
+              0.0559988,
+              42.848338
+            ],
+            [
+              0.0548066,
+              42.8499717
+            ],
+            [
+              0.0537626,
+              42.8516591
+            ],
+            [
+              0.0528713,
+              42.8533929
+            ],
+            [
+              0.0521366,
+              42.8551657
+            ],
+            [
+              0.0515616,
+              42.8569699
+            ],
+            [
+              0.0511487,
+              42.8587979
+            ],
+            [
+              0.0508998,
+              42.8606417
+            ],
+            [
+              0.0508159,
+              42.8624935
+            ],
+            [
+              0.0508975,
+              42.8643454
+            ],
+            [
+              0.0511441,
+              42.8661894
+            ],
+            [
+              0.0515548,
+              42.8680176
+            ],
+            [
+              0.0521277,
+              42.8698222
+            ],
+            [
+              0.0528606,
+              42.8715955
+            ],
+            [
+              0.0537501,
+              42.8733298
+            ],
+            [
+              0.0547926,
+              42.8750178
+            ],
+            [
+              0.0559835,
+              42.8766522
+            ],
+            [
+              0.0573178,
+              42.8782261
+            ],
+            [
+              0.0587898,
+              42.8797325
+            ],
+            [
+              0.0603932,
+              42.8811652
+            ],
+            [
+              0.0621211,
+              42.8825179
+            ],
+            [
+              0.0639661,
+              42.8837849
+            ],
+            [
+              0.0659203,
+              42.8849608
+            ],
+            [
+              0.0679754,
+              42.8860404
+            ],
+            [
+              0.0701225,
+              42.8870192
+            ],
+            [
+              0.0723525,
+              42.887893
+            ],
+            [
+              0.0746557,
+              42.888658
+            ],
+            [
+              0.0770223,
+              42.8893109
+            ],
+            [
+              0.0794422,
+              42.889849
+            ],
+            [
+              0.081905,
+              42.8902699
+            ],
+            [
+              0.0844001,
+              42.8905719
+            ],
+            [
+              0.0869169,
+              42.8907536
+            ],
+            [
+              0.0894444,
+              42.8908142
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "249-26-zrt-barrere",
+      "properties": {
+        "id": "249-26-zrt-barrere",
+        "name": "ZRT BARRERE",
+        "zoneType": "ZRT",
+        "beta": true,
+        "supAip": "249/26",
+        "title": "Création de 2 Zones Réglementées Temporaires (ZRT) dans la région de Barèges (65).",
+        "validFrom": "2026-12-03T00:00:00Z",
+        "validTo": "2027-04-01T23:59:59Z",
+        "activationMode": "notam",
+        "activationText": "TOUTES LES ZONES - Du 03 décembre 2026 au 01 avril 2027 H24 tous les jours sauf Samedi, Dimanche et jours fériés Activable par NOTAM avec préavis de 72 h - Sauf du samedi 19 décembre 2026 au dimanche 3 janvier 2027 inclus, et du samedi 6 février 2027 au dimanche 21 février 2027 inclus",
+        "lowerLimit": "SFC",
+        "upperLimit": "FL 160",
+        "verticalLimitsExtracted": true,
+        "verticalLimitNotice": null,
+        "sourcePdf": "https://www.sia.aviation-civile.gouv.fr/documents/download/f/d/15094311/",
+        "sourcePage": "https://www.sia.aviation-civile.gouv.fr/documents/supaip/aip/id/6",
+        "sourcePageNumber": 2,
+        "dataScope": "auto-sia",
+        "geometrySource": "automatic-layout-v3",
+        "geometryConfidence": "high",
+        "geometryWarnings": [],
+        "sourceFingerprint": "acf73c488284cf5995fa",
+        "parserVersion": "capclair-supaip-parser-3.0.3",
+        "frequency": "PYRENEES INFO : 126,530 MHz"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              0.1727778,
+              42.8616667
+            ],
+            [
+              0.1869444,
+              42.885
+            ],
+            [
+              0.1319444,
+              42.8980556
+            ],
+            [
+              0.1194444,
+              42.8891667
+            ],
+            [
+              0.1727778,
+              42.8616667
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "247-26-zrt-cahors-ad-charlie",
+      "properties": {
+        "id": "247-26-zrt-cahors-ad-charlie",
+        "name": "ZRT CAHORS AD CHARLIE",
+        "zoneType": "ZRT",
+        "beta": true,
+        "supAip": "247/26",
+        "title": "Création de trois zones réglementées temporaires « ZRT CAHORS AD ALPHA, BRAVO & CHARLIE » et de points de compte-rendu sur l'aérodrome de Cahors Lalbenque LFCC",
+        "validFrom": "2026-12-01T00:00:00Z",
+        "validTo": "2027-05-31T23:59:59Z",
+        "activationMode": "notam",
+        "activationText": "Horaires été -01H00 ZRT CAHORS AD ALPHA - Du 01 décembre 2026 au 31 mai 2027 Activable de 0700 à 2300 tous les jours sauf Samedi, Dimanche et jours fériés ZRT CAHORS AD BRAVO / ZRT CAHORS AD CHARLIE - Du 01 décembre 2026 au 31 mai 2027 de 0700 à 2300 tous les jours sauf Samedi, Dimanche et jours fériés Activable par NOTAM avec préavis de 72 h",
+        "lowerLimit": "SFC",
+        "upperLimit": "800 ft ASFC",
+        "verticalLimitsExtracted": true,
+        "verticalLimitNotice": null,
+        "sourcePdf": "https://www.sia.aviation-civile.gouv.fr/documents/download/f/d/15094307/",
+        "sourcePage": "https://www.sia.aviation-civile.gouv.fr/documents/supaip/aip/id/6",
+        "sourcePageNumber": 4,
+        "dataScope": "auto-sia",
+        "geometrySource": "automatic-layout-v3",
+        "geometryConfidence": "high",
+        "geometryWarnings": [],
+        "sourceFingerprint": "cc4999c32b052eaf8781",
+        "parserVersion": "capclair-supaip-parser-3.0.3",
+        "frequency": "Cahors AFIS : 119,230 MHz | Clermont INFO : 133,725 MHz | ne permettent pas le contournement de la zone après contact avec CAHORS Info 119.230 MHz. | Fréquence : 119.230 MHz"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              1.4783333,
+              44.3713889
+            ],
+            [
+              1.4916667,
+              44.3627778
+            ],
+            [
+              1.4980556,
+              44.3480556
+            ],
+            [
+              1.4883333,
+              44.3466667
+            ],
+            [
+              1.4636111,
+              44.3602778
+            ],
+            [
+              1.4783333,
+              44.3713889
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "247-26-zrt-cahors-ad-bravo",
+      "properties": {
+        "id": "247-26-zrt-cahors-ad-bravo",
+        "name": "ZRT CAHORS AD BRAVO",
+        "zoneType": "ZRT",
+        "beta": true,
+        "supAip": "247/26",
+        "title": "Création de trois zones réglementées temporaires « ZRT CAHORS AD ALPHA, BRAVO & CHARLIE » et de points de compte-rendu sur l'aérodrome de Cahors Lalbenque LFCC",
+        "validFrom": "2026-12-01T00:00:00Z",
+        "validTo": "2027-05-31T23:59:59Z",
+        "activationMode": "notam",
+        "activationText": "Horaires été -01H00 ZRT CAHORS AD ALPHA - Du 01 décembre 2026 au 31 mai 2027 Activable de 0700 à 2300 tous les jours sauf Samedi, Dimanche et jours fériés ZRT CAHORS AD BRAVO / ZRT CAHORS AD CHARLIE - Du 01 décembre 2026 au 31 mai 2027 de 0700 à 2300 tous les jours sauf Samedi, Dimanche et jours fériés Activable par NOTAM avec préavis de 72 h",
+        "lowerLimit": "SFC",
+        "upperLimit": "500 ft ASFC",
+        "verticalLimitsExtracted": true,
+        "verticalLimitNotice": null,
+        "sourcePdf": "https://www.sia.aviation-civile.gouv.fr/documents/download/f/d/15094307/",
+        "sourcePage": "https://www.sia.aviation-civile.gouv.fr/documents/supaip/aip/id/6",
+        "sourcePageNumber": 4,
+        "dataScope": "auto-sia",
+        "geometrySource": "automatic-layout-v3",
+        "geometryConfidence": "high",
+        "geometryWarnings": [],
+        "sourceFingerprint": "cc4999c32b052eaf8781",
+        "parserVersion": "capclair-supaip-parser-3.0.3",
+        "frequency": "Cahors AFIS : 119,230 MHz | Clermont INFO : 133,725 MHz | ne permettent pas le contournement de la zone après contact avec CAHORS Info 119.230 MHz. | Fréquence : 119.230 MHz"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              1.4783333,
+              44.3713889
+            ],
+            [
+              1.4916667,
+              44.3627778
+            ],
+            [
+              1.4980556,
+              44.3480556
+            ],
+            [
+              1.4883333,
+              44.3466667
+            ],
+            [
+              1.4636111,
+              44.3602778
+            ],
+            [
+              1.4783333,
+              44.3713889
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "247-26-zrt-cahors-ad-alpha",
+      "properties": {
+        "id": "247-26-zrt-cahors-ad-alpha",
+        "name": "ZRT CAHORS AD ALPHA",
+        "zoneType": "ZRT",
+        "beta": true,
+        "supAip": "247/26",
+        "title": "Création de trois zones réglementées temporaires « ZRT CAHORS AD ALPHA, BRAVO & CHARLIE » et de points de compte-rendu sur l'aérodrome de Cahors Lalbenque LFCC",
+        "validFrom": "2026-12-01T00:00:00Z",
+        "validTo": "2027-05-31T23:59:59Z",
+        "activationMode": "notam",
+        "activationText": "Horaires été -01H00 ZRT CAHORS AD ALPHA - Du 01 décembre 2026 au 31 mai 2027 Activable de 0700 à 2300 tous les jours sauf Samedi, Dimanche et jours fériés ZRT CAHORS AD BRAVO / ZRT CAHORS AD CHARLIE - Du 01 décembre 2026 au 31 mai 2027 de 0700 à 2300 tous les jours sauf Samedi, Dimanche et jours fériés Activable par NOTAM avec préavis de 72 h",
+        "lowerLimit": "SFC",
+        "upperLimit": "800 ft ASFC",
+        "verticalLimitsExtracted": true,
+        "verticalLimitNotice": null,
+        "sourcePdf": "https://www.sia.aviation-civile.gouv.fr/documents/download/f/d/15094307/",
+        "sourcePage": "https://www.sia.aviation-civile.gouv.fr/documents/supaip/aip/id/6",
+        "sourcePageNumber": 4,
+        "dataScope": "auto-sia",
+        "geometrySource": "automatic-layout-v3",
+        "geometryConfidence": "high",
+        "geometryWarnings": [],
+        "sourceFingerprint": "cc4999c32b052eaf8781",
+        "parserVersion": "capclair-supaip-parser-3.0.3",
+        "frequency": "Cahors AFIS : 119,230 MHz | Clermont INFO : 133,725 MHz | ne permettent pas le contournement de la zone après contact avec CAHORS Info 119.230 MHz. | Fréquence : 119.230 MHz"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              1.4636111,
+              44.3602778
+            ],
+            [
+              1.4872222,
+              44.3472222
+            ],
+            [
+              1.4855556,
+              44.3455556
+            ],
+            [
+              1.4613889,
+              44.3586111
+            ],
+            [
+              1.4636111,
+              44.3602778
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
       "id": "246-26-zrt-blaye-lesparre-medoc",
       "properties": {
         "id": "246-26-zrt-blaye-lesparre-medoc",
@@ -59554,8 +60215,8 @@
       }
     }
   ],
-  "generatedAt": "2026-11-18T20:40:07Z",
-  "datasetGeneratedAt": "2026-11-18T20:40:07Z",
-  "datasetRevision": "7c6ba1e314b0e6f255c21bddf02b57fbf03f7bffe682492dafe684a1b61269b2",
-  "businessContentSha256": "7c6ba1e314b0e6f255c21bddf02b57fbf03f7bffe682492dafe684a1b61269b2"
+  "generatedAt": "2026-11-19T07:36:44Z",
+  "datasetGeneratedAt": "2026-11-19T07:36:44Z",
+  "datasetRevision": "631e4b1bdea3e6d40e9f04fbbed121f801b59b487cf225a9487b484fbac191b6",
+  "businessContentSha256": "631e4b1bdea3e6d40e9f04fbbed121f801b59b487cf225a9487b484fbac191b6"
 }
