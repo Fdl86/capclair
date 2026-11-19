@@ -1,9 +1,9 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-11-19T07:36:44Z",
-  "datasetGeneratedAt": "2026-11-19T07:36:44Z",
-  "datasetRevision": "631e4b1bdea3e6d40e9f04fbbed121f801b59b487cf225a9487b484fbac191b6",
-  "businessContentSha256": "631e4b1bdea3e6d40e9f04fbbed121f801b59b487cf225a9487b484fbac191b6",
+  "generatedAt": "2026-11-19T20:46:18Z",
+  "datasetGeneratedAt": "2026-11-19T20:46:18Z",
+  "datasetRevision": "34b8f07a9fab058e39408ee1aa86c2ca92d3e69a65f6440acb62e6ce7554bb2a",
+  "businessContentSha256": "34b8f07a9fab058e39408ee1aa86c2ca92d3e69a65f6440acb62e6ce7554bb2a",
   "sourceUrl": "https://www.sia.aviation-civile.gouv.fr/documents/supaip/aip/id/6",
   "parserVersion": "capclair-supaip-parser-3.0.3",
   "publications": [
@@ -717,10 +717,10 @@
     },
     {
       "supAip": "192/26",
-      "title": "AD LFPO - Restriction d’utilisation de l'AD Paris-Orly cause travaux sur piste 06/24",
+      "title": "Ce SUP AIP sera remplacé par un SUP AIP publié le 10 décembre 2026 AD LFPO - Restriction d’utilisation de l'AD Paris-Orly cause travaux sur piste 06/24",
       "spatial": false,
       "sourcePdf": "https://www.sia.aviation-civile.gouv.fr/documents/download/f/d/15077212/",
-      "sourceFingerprint": "99ceb8afd241fff5ae84",
+      "sourceFingerprint": "d1d02ce7ae4543c27987",
       "parserVersion": "capclair-supaip-parser-3.0.3"
     },
     {
@@ -1932,20 +1932,20 @@
   "publicationsWithGeometry": 82,
   "featuresWithVerticalLimits": 493,
   "featuresWithoutVerticalLimits": 2,
-  "geoJsonSha256": "1e1004358590daa147730df1c8e0ba23a1351f994156607ddcf74a1cdb6ea703",
+  "geoJsonSha256": "299d87b2e04f95e6521ae8a3f048aab5db01ce57de56d619b9dac27dd6832a81",
   "geoJsonSize": 1790952,
   "files": {
     "data.geojson": {
-      "sha256": "1e1004358590daa147730df1c8e0ba23a1351f994156607ddcf74a1cdb6ea703",
+      "sha256": "299d87b2e04f95e6521ae8a3f048aab5db01ce57de56d619b9dac27dd6832a81",
       "size": 1790952
     },
     "status.json": {
-      "sha256": "e489b7b0bceba2c99b10d987894f43ce68ccf5912552f631d6b0228778483e9e",
+      "sha256": "2c578c5308f19206b87d7ccb2ad9fd90e29f9138a0ed524c538f18530f0bc08d",
       "size": 3756
     },
     "unmapped.json": {
-      "sha256": "76f1ea0c82c42168e36939b6781f5a7d88f504911e28b00223d71a6ea543088b",
-      "size": 98230
+      "sha256": "26cb99e30ba44b2845bfe3e7a804bc60abbb87aa0d1093072e00291ffaa10f07",
+      "size": 98522
     }
   },
   "legacyInvalidGeometryExceptions": [
