@@ -5990,7 +5990,7 @@
         "supAip": "239/26",
         "title": "Création de deux zones dangereuses temporaires (ZDT) pour l’exercice SKYSHARK 26.",
         "validFrom": "2026-11-23T00:00:00Z",
-        "validTo": "2026-11-27T23:59:59Z",
+        "validTo": "2026-11-24T23:59:59Z",
         "activationMode": "notam",
         "activationText": "Les ZDT SKYSHARK 26 et SKYSHARK EXTEND ne seront pas activées du mercredi 25 à 20h30 au jeudi 26 à 03h00. ZDT SKYSHARK 26 - Du 23 novembre 2026 au 27 novembre 2026 H24 Activable par NOTAM avec préavis de 24 h à J-1 ouvré avant 11h00 ZDT SKYSHARK EXTENDED - Du 23 novembre 2026 au 27 novembre 2026 - de 0000 à 0700 Activable par NOTAM avec préavis de 24 h (J-1 ouvré avant 11h00) - de 2300 à 2359 Activable par NOTAM avec préavis de 24 h (J-1 ouvré avant 11h00) FR Page 2/4 © SIA --- PAGE 3 --- SUP AIP 239/26 Date de publication : 05 NOV 2026",
         "lowerLimit": "SFC",
@@ -6004,7 +6004,7 @@
         "geometrySource": "automatic-layout-v3",
         "geometryConfidence": "high",
         "geometryWarnings": [],
-        "sourceFingerprint": "630b9058a938f5474eea",
+        "sourceFingerprint": "2bda9b7e1cb397af9c11",
         "parserVersion": "capclair-supaip-parser-3.0.3",
         "frequency": "CAZAUX APP : 119,600 MHz | MARINA (CDC Mont de Marsan) : 143,550 MHz 317,500 MHz | RAKI (CDC Cinq Mars La Pile) : 143,550 MHz 317,500 MHz | ARMOR (CCMAR Atlantique) : 124,725 MHz"
       },
@@ -6051,7 +6051,7 @@
         "supAip": "239/26",
         "title": "Création de deux zones dangereuses temporaires (ZDT) pour l’exercice SKYSHARK 26.",
         "validFrom": "2026-11-23T00:00:00Z",
-        "validTo": "2026-11-27T23:59:59Z",
+        "validTo": "2026-11-24T23:59:59Z",
         "activationMode": "notam",
         "activationText": "Les ZDT SKYSHARK 26 et SKYSHARK EXTEND ne seront pas activées du mercredi 25 à 20h30 au jeudi 26 à 03h00. ZDT SKYSHARK 26 - Du 23 novembre 2026 au 27 novembre 2026 H24 Activable par NOTAM avec préavis de 24 h à J-1 ouvré avant 11h00 ZDT SKYSHARK EXTENDED - Du 23 novembre 2026 au 27 novembre 2026 - de 0000 à 0700 Activable par NOTAM avec préavis de 24 h (J-1 ouvré avant 11h00) - de 2300 à 2359 Activable par NOTAM avec préavis de 24 h (J-1 ouvré avant 11h00) FR Page 2/4 © SIA --- PAGE 3 --- SUP AIP 239/26 Date de publication : 05 NOV 2026",
         "lowerLimit": "SFC",
@@ -6065,7 +6065,7 @@
         "geometrySource": "automatic-layout-v3",
         "geometryConfidence": "high",
         "geometryWarnings": [],
-        "sourceFingerprint": "630b9058a938f5474eea",
+        "sourceFingerprint": "2bda9b7e1cb397af9c11",
         "parserVersion": "capclair-supaip-parser-3.0.3",
         "frequency": "CAZAUX APP : 119,600 MHz | MARINA (CDC Mont de Marsan) : 143,550 MHz 317,500 MHz | RAKI (CDC Cinq Mars La Pile) : 143,550 MHz 317,500 MHz | ARMOR (CCMAR Atlantique) : 124,725 MHz"
       },
@@ -60215,8 +60215,8 @@
       }
     }
   ],
-  "generatedAt": "2026-11-25T08:48:08Z",
-  "datasetGeneratedAt": "2026-11-25T08:48:08Z",
-  "datasetRevision": "40a91d56d49d1d1847c97921b96985cba6efa36958974f30a468621d07d71438",
-  "businessContentSha256": "40a91d56d49d1d1847c97921b96985cba6efa36958974f30a468621d07d71438"
+  "generatedAt": "2026-11-25T21:48:39Z",
+  "datasetGeneratedAt": "2026-11-25T21:48:39Z",
+  "datasetRevision": "af012483d960833faf0846678bdb59ac4f6c82b3f515b58d9ba2dfb4bd232226",
+  "businessContentSha256": "af012483d960833faf0846678bdb59ac4f6c82b3f515b58d9ba2dfb4bd232226"
 }
